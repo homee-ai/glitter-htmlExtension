@@ -7,7 +7,7 @@
     "start:tscAutob": "tsc --project tsconfig.json && tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "create": "node node_modules/@jianzhi.wang/glitter/create.js",
-    "publish": "node publish.js"
+    "publish": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./src & node publish.js"
   },
   "dependencies": {
     "@types/jquery": "^3.5.14",
