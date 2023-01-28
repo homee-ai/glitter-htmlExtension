@@ -4,7 +4,7 @@ let command=[
     "git add --all",
     `git commit -m ${new Date().getTime()}`,
     `git push -u origin main`,
-    `sam28520`
+    `sam28520\n`
 ]
 async function start(){
     for (const a of command){
