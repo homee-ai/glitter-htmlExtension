@@ -6,12 +6,14 @@
   "scripts": {
     "start:tscAutob": "tsc --project tsconfig.json && tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "create": "node node_modules/@jianzhi.wang/glitter/create.js",
     "publish": "node publish.js"
   },
   "dependencies": {
     "@types/jquery": "^3.5.14",
     "child_process": "^1.0.2",
     "ts-node": "^10.9.1",
+    "@jianzhi.wang/glitter": "^1.0.83",
     "tscpaths": "^0.0.9",
     "typescript": "~4.4.4"
   },
