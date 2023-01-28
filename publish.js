@@ -15,6 +15,8 @@ async function start(){
                  console.log('stderr: ' + stderr);
                  if(stderr.includes('Enter')!==-1){
 console.log('needEnter')
+                     var spawn = require('child_process').spawn;
+                     spawn('sh',['sam28520.sh'], { stdio: 'inherit' });
                  }
                  if (error !== null) {
                      console.log('exec error: ' + error);
