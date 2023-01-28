@@ -144,7 +144,7 @@ ${(() => {
         title:"Glitter官方插件",
         doc:{
             container:{
-                title:`區塊容器`,
+                title:`元件容器`,
                 doc:`test.`
             }
         }
