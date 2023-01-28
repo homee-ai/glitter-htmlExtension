@@ -1,0 +1,18 @@
+{
+  "name": "glitter-htmlextension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:tscAutob": "tsc --project tsconfig.json && tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/jquery": "^3.5.14",
+    "ts-node": "^10.9.1",
+    "tscpaths": "^0.0.9",
+    "typescript": "~4.4.4"
+  },
+  "author": "",
+  "license": "ISC"
+}
