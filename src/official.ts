@@ -145,7 +145,7 @@ ${(() => {
         doc:{
             container:{
                 title:`元件容器`,
-                doc:`test.`
+                doc:`可以包含元件的父容器.`
             }
         }
     }
