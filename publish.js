@@ -13,6 +13,9 @@ async function start(){
              function (error, stdout, stderr) {
                  console.log('stdout: ' + stdout);
                  console.log('stderr: ' + stderr);
+                 if(stderr.indexOf('Enter')!==-1){
+console.log('needEnter')
+                 }
                  if (error !== null) {
                      console.log('exec error: ' + error);
                      resolve(false)
