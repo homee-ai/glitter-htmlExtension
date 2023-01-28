@@ -3,8 +3,7 @@ var exec = require('child_process').exec;
 let command=[
     "git add --all",
     `git commit -m ${new Date().getTime()}`,
-    `git push -u origin main`,
-    `sam28520\n`
+    `git push -u origin main`
 ]
 async function start(){
     for (const a of command){
