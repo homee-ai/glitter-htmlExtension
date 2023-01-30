@@ -2,7 +2,7 @@
     "compilerOptions": {
         "incremental": true,
         "target": "ES2017",
-        "module": "es6",
+        "module": "ES2020",
         "declaration": false,
         "sourceMap": false,
         "outDir": "./src",

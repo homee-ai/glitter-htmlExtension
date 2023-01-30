@@ -1,6 +1,6 @@
 (() => {
     const glitter = (window as any).glitter
-
+    //每個元件的屬性
     interface HtmlJson {
         rout: string,
         type: string,
@@ -17,11 +17,19 @@
         {
             title:{
                 defaultData:{
-                    font:"12345"
+                    //對widget.data做初值設定 如下對font做設定
+                    font:"16"
                 },
                 render:(gvc: any, widget: HtmlJson, setting: HtmlJson[])=>{
                     return {
-                        view:`<h3 style="color: ${widget.data.color ?? "black"};font-size: ${widget.data.font ?? ""}px;">${widget.data.title}</h3>`,
+                        //分為二 view決定中間該顯示的樣子
+                        //editor決定右方供人輸入的樣子
+                        view:`<h3 style="color: ${widget.data.color ?? "black"};font-size: ${widget.data.font ?? ""}px;"
+                        onclick="${gvc.event(()=>{
+                            glitter.addMtScript(['http://127.0.0.1:3090/test/TEST.js'],()=>{
+                                glitter.share.apiModel.showAlert()
+                            },()=>{})
+                        })}">${widget.data.title}</h3>`,
                         editor:gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
@@ -100,6 +108,7 @@
                 },
             },
         }
+    //這裡決定在插件的函式路徑名稱 檔名則影響測試區 正式區呼叫的路徑
     glitter.share.htmlExtension["empty"] = obj
     glitter.share.htmlExtension["empty"].document = {
         title: "empty",

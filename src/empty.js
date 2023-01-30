@@ -4,12 +4,17 @@
     const obj = {
         title: {
             defaultData: {
-                font: "12345"
+                font: "16"
             },
             render: (gvc, widget, setting) => {
                 var _a, _b, _c;
                 return {
-                    view: `<h3 style="color: ${(_a = widget.data.color) !== null && _a !== void 0 ? _a : "black"};font-size: ${(_b = widget.data.font) !== null && _b !== void 0 ? _b : ""}px;">${widget.data.title}</h3>`,
+                    view: `<h3 style="color: ${(_a = widget.data.color) !== null && _a !== void 0 ? _a : "black"};font-size: ${(_b = widget.data.font) !== null && _b !== void 0 ? _b : ""}px;"
+                        onclick="${gvc.event(() => {
+                        glitter.addMtScript(['http://127.0.0.1:3090/test/TEST.js'], () => {
+                            glitter.share.apiModel.showAlert();
+                        }, () => { });
+                    })}">${widget.data.title}</h3>`,
                     editor: gvc.map([
                         glitter.htmlGenerate.editeInput({
                             gvc: gvc,
