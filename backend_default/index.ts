@@ -1,13 +1,22 @@
 import * as Glitter from '@jianzhi.wang/glitter';
 import path from "path";
 import express from 'express';
+import cors from 'cors';
 //Glitter FrontEnd Rout
 const app = express();
 (async () => {
-    await app.listen(3080);
+    const corsOptions = {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    };
+
+    app.use(cors(corsOptions));
+    await app.listen(3090);
 })();
+
 /*
-*
+* http://127.0.0.1:3090/test/official.js
 * */
 Glitter.setUP(app, [
     {
