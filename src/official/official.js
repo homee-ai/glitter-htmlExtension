@@ -1,5 +1,5 @@
 'use strict';
-import { Plugin } from '../test.js';
+import { Plugin } from '../plugin-creater.js';
 Plugin.create(import.meta.url, (glitter) => {
     function escape(text) {
         return text.replace(/&/g, '&').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, "'");

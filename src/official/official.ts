@@ -1,5 +1,5 @@
 'use strict';
-import {Plugin} from '../test.js'
+import {Plugin} from '../plugin-creater.js'
 
 Plugin.create(import.meta.url,(glitter)=>{
     function escape (text: string){
