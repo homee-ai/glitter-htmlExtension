@@ -142,28 +142,28 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return arr;
                             }
                             return `
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
-<div class="mt-2"></div>
-${data.link.map((dd, index) => {
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
+                            <div class="mt-2"></div>
+                            ${data.link.map((dd, index) => {
                                 var _a;
                                 return `<div class="d-flex align-items-center mb-3 mt-3">
-<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                    <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                                     data.link.splice(index, 1);
                                     widget.refreshAll();
                                 })}"></i>
-<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
-<div class="d-flex flex-column mx-2">
-<i class="fa-duotone fa-up  text-white ${(index === 0) ? `d-none` : ``}"  style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                    <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
+                                    <div class="d-flex flex-column mx-2">
+                                        <i class="fa-duotone fa-up  text-white ${(index === 0) ? `d-none` : ``}"  style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                                     data.link = swapArr(data.link, index, index - 1);
                                     widget.refreshAll();
                                 })}"></i>
-<i class="fa-regular fa-down  text-white ${(index === data.link.length - 1) ? `d-none` : ``}" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                        <i class="fa-regular fa-down  text-white ${(index === data.link.length - 1) ? `d-none` : ``}" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                                     data.link = swapArr(data.link, index, index + 1);
                                     widget.refreshAll();
                                 })}"></i>
-</div>
-<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                    </div>
+                                    <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
                                     glitter.ut.chooseMediaCallback({
                                         single: true,
                                         accept: 'image/*',
@@ -175,8 +175,8 @@ ${data.link.map((dd, index) => {
                                         }
                                     });
                                 })}"></i>
-</div>
-${glitter.htmlGenerate.editeText({
+                            </div>
+                                ${glitter.htmlGenerate.editeText({
                                     gvc: gvc,
                                     title: "程式碼",
                                     default: (_a = dd.code) !== null && _a !== void 0 ? _a : "",
@@ -188,7 +188,7 @@ ${glitter.htmlGenerate.editeText({
                                 })}
 `;
                             }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
-<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                            <div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
                                 data.link.push({ img: `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg` });
                                 widget.refreshAll();
                             })}">添加輪播圖</div>

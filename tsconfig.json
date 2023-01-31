@@ -2,15 +2,7 @@
     "compilerOptions": {
         "incremental": true,
         "target": "ES2017",
-<<<<<<< HEAD
         "module": "ES2020",
-=======
-<<<<<<< HEAD
-        "module": "ES2020",
-=======
-        "module": "es2020",
->>>>>>> ad5c0cf (1675133953128)
->>>>>>> ff6e1597 (merge)
         "declaration": false,
         "sourceMap": false,
         "outDir": "./src",
