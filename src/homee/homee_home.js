@@ -1,6 +1,6 @@
-"use strict";
-(() => {
-    const glitter = window.glitter;
+'use strict';
+import { Plugin } from '../test.js';
+Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
             glitter.share.dialog.dataLoading({ text: '上傳中', visible: true });
@@ -33,10 +33,12 @@
             });
         }
     };
-    const obj = {
+    return {
         banner: {
-            defaultData: {},
-            render: (gvc, widget, setting) => {
+            defaultData: {
+                link: []
+            },
+            render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
                 function slideControl(pageImgArray, pagination, navigation, scrollbar) {
                     const glitter = gvc.glitter;
@@ -114,7 +116,7 @@
                                         el: `.${id} .swiper-scrollbar`,
                                     },
                                 });
-                            });
+                            }, () => { });
                         }
                     })}
         `;
@@ -199,7 +201,7 @@ ${glitter.htmlGenerate.editeText({
         },
         rankingBlock: {
             defaultData: {},
-            render: (gvc, widget, setting) => {
+            render: (gvc, widget, setting, hoverID) => {
                 var _a;
                 widget.data.titleStyle = (_a = widget.data.titleStyle) !== null && _a !== void 0 ? _a : `font-family: 'Noto Sans TC';
 font-style: normal;
@@ -257,7 +259,7 @@ color: #FE5541;">$ 3,125</span>
         },
         productItem: {
             defaultData: {},
-            render: (gvc, widget, setting) => {
+            render: (gvc, widget, setting, hoverID) => {
                 var _a, _b;
                 return {
                     view: `<div class="${(_a = widget.data.class) !== null && _a !== void 0 ? _a : ""} p-0" style="${(_b = widget.data.style) !== null && _b !== void 0 ? _b : ""} 
@@ -323,14 +325,4 @@ color: #858585;">
             },
         }
     };
-    glitter.share.htmlExtension["homee_home"] = obj;
-    glitter.share.htmlExtension["homee_home"].document = {
-        title: "HOMEE官方插件",
-        doc: {
-            banner: {
-                title: `輪播圖`,
-                doc: `廣告輪播圖`,
-            }
-        }
-    };
-})();
+});

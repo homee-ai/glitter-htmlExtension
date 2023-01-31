@@ -1,16 +1,15 @@
-"use strict";
-(() => {
-    const glitter = window.glitter;
+'use strict';
+import { Plugin } from '../test.js';
+Plugin.create(import.meta.url, (glitter) => {
     function escape(text) {
         return text.replace(/&/g, '&').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, "'");
     }
-    ;
-    const obj = {
+    return {
         container: {
             defaultData: {
                 setting: []
             },
-            render: (gvc, widget, setting, hoverID = []) => {
+            render: (gvc, widget, setting, hoverID) => {
                 var _a;
                 widget.data.setting = (_a = widget.data.setting) !== null && _a !== void 0 ? _a : [];
                 const htmlGenerate = new glitter.htmlGenerate(widget.data.setting, hoverID);
@@ -66,7 +65,7 @@ ${(() => {
         },
         image: {
             defaultData: {},
-            render: (gvc, widget, setting) => {
+            render: (gvc, widget, setting, hoverID) => {
                 var _a, _b, _c;
                 return {
                     view: ` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${(_a = widget.data.link) !== null && _a !== void 0 ? _a : `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
@@ -122,27 +121,19 @@ glitter.share.publicInterface={
         },
         label: {
             defaultData: {},
-            render: (gvc, widget, setting) => {
+            render: (gvc, widget, setting, hoverID) => {
                 var _a, _b;
                 return {
-                    view: `<h3 class="${(_a = widget.data.class) !== null && _a !== void 0 ? _a : ""}" style="${(_b = widget.data.style) !== null && _b !== void 0 ? _b : ""}">${widget.label}</h3>`,
+                    view: `<h3 style="${(_a = widget.data.style) !== null && _a !== void 0 ? _a : ""}" class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""}">${widget.label}</h3>`,
                     editor: gvc.map([
                         glitter.htmlGenerate.editeInput({
-                            gvc: gvc,
-                            title: "Class",
-                            default: widget.data.class,
-                            placeHolder: "請輸入Class",
-                            callback: (text) => {
+                            gvc: gvc, title: "Class", default: widget.data.class, placeHolder: "請輸入Class", callback: (text) => {
                                 widget.data.class = text;
                                 widget.refreshAll();
                             }
                         }),
                         glitter.htmlGenerate.editeText({
-                            gvc: gvc,
-                            title: "Style",
-                            default: widget.data.style,
-                            placeHolder: "請輸入Style",
-                            callback: (text) => {
+                            gvc: gvc, title: "Style", default: widget.data.style, placeHolder: "請輸入標題Style", callback: (text) => {
                                 widget.data.style = text;
                                 widget.refreshAll();
                             }
@@ -152,14 +143,4 @@ glitter.share.publicInterface={
             }
         }
     };
-    glitter.share.htmlExtension["Glitter"] = obj;
-    glitter.share.htmlExtension["Glitter"].document = {
-        title: "Glitter官方插件",
-        doc: {
-            container: {
-                title: `元件容器`,
-                doc: `可以用來包覆多項子元件.`,
-            }
-        }
-    };
-})();
+});

@@ -33,9 +33,21 @@ const app = (0, express_1.default)();
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
         allowedHeaders: ['Content-Type', 'Authorization'],
     };
+<<<<<<< HEAD
     app.use((0, cors_1.default)(corsOptions));
     await app.listen(3090);
 })();
+=======
+    app.use(express_1.default.text());
+    app.use(express_1.default.json());
+    app.use((0, cors_1.default)(corsOptions));
+    await app.listen(3090);
+})();
+app.post("/gb", async function (req, res) {
+    console.log(req.body);
+    return res.send(req.body);
+});
+>>>>>>> ff6e1597 (merge)
 Glitter.setUP(app, [
     {
         rout: '/test',

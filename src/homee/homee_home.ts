@@ -1,17 +1,7 @@
-(() => {
-    const glitter = (window as any).glitter
+'use strict';
+import {Plugin} from '../test.js'
 
-    interface HtmlJson {
-        rout: string,
-        type: string,
-        id: string,
-        label: string,
-        data: any,
-        js: string,
-        refreshAll: () => void,
-        refreshComponent: () => void
-    }
-
+Plugin.create(import.meta.url,(glitter)=>{
     const api={
         upload:(photoFile:any,callback:(link:string)=>void)=>{
             glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
@@ -44,10 +34,12 @@
             });
         }
     }
-    const obj:{[name:string]:{defaultData:any,render:(gvc: any, widget: HtmlJson, setting: HtmlJson[],hoverID:string[])=>void}}={
+    return {
         banner: {
-            defaultData:{},
-            render:(gvc: any, widget: HtmlJson, setting: HtmlJson[]) => {
+            defaultData:{
+                link:[]
+            },
+            render:(gvc, widget, setting, hoverID) => {
                 const data: { link: { img: string,code?:string }[] } = widget.data
 
                 function slideControl(pageImgArray: any, pagination: boolean, navigation: boolean, scrollbar: boolean) {
@@ -134,7 +126,7 @@
 
 
                                 });
-                            })
+                            },()=>{})
                         }
                     })}
         `;
@@ -222,7 +214,7 @@ ${glitter.htmlGenerate.editeText({
         },
         rankingBlock:{
             defaultData:{},
-            render: (gvc: any, widget: HtmlJson, setting: HtmlJson[]) => {
+            render: (gvc, widget, setting, hoverID) => {
                 widget.data.titleStyle= widget.data.titleStyle ?? `font-family: 'Noto Sans TC';
 font-style: normal;
 color: black;
@@ -279,7 +271,7 @@ color: #FE5541;">$ 3,125</span>
         },
         productItem: {
             defaultData:{},
-            render:(gvc: any, widget: HtmlJson, setting: HtmlJson[]) => {
+            render:(gvc, widget, setting, hoverID) => {
                 return {
                     view: `<div class="${widget.data.class ?? ""} p-0" style="${widget.data.style ?? ""} 
 height: auto;background: #FBF9F6;border: 4px solid rgba(248, 243, 237, 0.3);
@@ -344,14 +336,4 @@ color: #858585;">
             },
         }
     }
-    glitter.share.htmlExtension["homee_home"] = obj
-    glitter.share.htmlExtension["homee_home"].document={
-        title:"HOMEE官方插件",
-        doc:{
-            banner:{
-                title:`輪播圖`,
-                doc:`廣告輪播圖`,
-            }
-        }
-    }
-})()
+});

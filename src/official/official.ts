@@ -1,30 +1,16 @@
-(() => {
-    const glitter = (window as any).glitter
+'use strict';
+import {Plugin} from '../test.js'
 
-    interface HtmlJson {
-        route: string,
-        type: string,
-        id: string,
-        label: string,
-        data: any,
-        js: string,
-        class?: string,
-        style?: string,
-        refreshAll?: () => void,
-        refreshComponent?: () => void,
-        refreshComponentParameter?: { view1: () => void, view2: () => void }
-        refreshAllParameter?: { view1: () => void, view2: () => void }
-    }
+Plugin.create(import.meta.url,(glitter)=>{
     function escape (text: string){
         return text.replace(/&/g, '&').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, "'");
-    };
-    const obj={
-        /*****Layout*****/
+    }
+    return {
         container: {
             defaultData:{
                 setting:[]
             },
-            render:(gvc: any, widget: HtmlJson, setting: HtmlJson[],hoverID:string[]=[]) => {
+            render:(gvc, widget, setting, hoverID) => {
                 widget.data.setting = widget.data.setting ?? []
                 const htmlGenerate = new glitter.htmlGenerate(widget.data.setting,hoverID);
                 return {
@@ -79,7 +65,7 @@ ${(() => {
         },
         image:{
             defaultData:{},
-            render:(gvc: any, widget: HtmlJson, setting: HtmlJson[])=>{
+            render:(gvc, widget, setting, hoverID)=>{
                 return {
                     view:` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${widget.data.link ?? `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
  >`,
@@ -134,48 +120,40 @@ glitter.share.publicInterface={
         },
         label:{
             defaultData:{},
-            render:(gvc: any, widget: HtmlJson, setting: HtmlJson[])=>{
+            render:(gvc, widget, setting, hoverID)=>{
                 return {
-                    view:`<h3 class="${widget.data.class ?? ""}" style="${widget.data.style ?? ""}">${
-                        widget.label
-                    }</h3>`,
+                    view:`<h3 style="${widget.data.style ?? ""}" class="${widget.data.class ?? ""}">${widget.label}</h3>`,
                     editor:gvc.map([
                         glitter.htmlGenerate.editeInput({
-                            gvc:gvc,
-                            title:"Class",
-                            default:widget.data.class,
-                            placeHolder:"請輸入Class",
-                            callback:(text:string)=>{
+                            gvc: gvc, title: "Class", default: widget.data.class, placeHolder: "請輸入Class", callback: (text:string) => {
                                 widget.data.class=text
-                                widget.refreshAll!()
+                                widget.refreshAll()
                             }
                         }),
                         glitter.htmlGenerate.editeText({
-                            gvc:gvc,
-                            title:"Style",
-                            default:widget.data.style,
-                            placeHolder:"請輸入Style",
-                            callback:(text:string)=>{
+                            gvc: gvc, title: "Style", default: widget.data.style , placeHolder: "請輸入標題Style", callback: (text:string) => {
                                 widget.data.style=text
-                                widget.refreshAll!()
+                                widget.refreshAll()
                             }
                         })
                     ])
                 }
             }
         }
-    };
-    glitter.share.htmlExtension["Glitter"] = obj
-
-    glitter.share.htmlExtension["Glitter"].document={
-        title:"Glitter官方插件",
-        doc:{
-            container:{
-                title:`元件容器`,
-                doc:`可以用來包覆多項子元件.`,
-            }
-        }
     }
-})()
+});
+
+// (() => {
+//     glitter.share.htmlExtension["Glitter"] = obj
+//     glitter.share.htmlExtension["Glitter"].document={
+//         title:"Glitter官方插件",
+//         doc:{
+//             container:{
+//                 title:`元件容器`,
+//                 doc:`可以用來包覆多項子元件.`,
+//             }
+//         }
+//     }
+// })()
 
 
