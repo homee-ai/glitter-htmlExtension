@@ -40,40 +40,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 searchDefault:"大家都在搜尋:"
             },
             render:(gvc, widget, setting, hoverID) => {
-                gvc.addStyle(`
-                    .search-bar{
-                        /* Noto Sans TC - Regular - 14 */
-            
-                        font-family: 'Noto Sans TC',serif;
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 14px;
-                        line-height: 40px;
-                        /* identical to box height, or 21px */
-                        margin-right: 16px;
-            
-                        /* HOMEE grey */
-            
-                        color: #858585;
-            
-                        position: relative;
-                        height: 40px;
-                    }
-                    .search-input{
-                        padding-left: 40px;
-            
-                        background: rgba(51, 51, 51, 0.1);
-                        border: 1px solid #FFFFFF;
-                        border-radius: 20px;
-                    }
-                    .search-bar .search-icon{
-                        position: absolute;
-                        left: 10px;
-                        top: 10px;
-                        width: 20px;
-                        height: 20px;
-            
-                    }
+                gvc.addStyle(`                    
                     `)
                 glitter.runJsInterFace("getTopInset", {}, (response:any) => {
                     if (widget.data?.topInset != response.data){
@@ -464,17 +431,17 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].icon}">
                                     <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
                                     <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
-                                glitter.ut.chooseMediaCallback({
-                                    single:true,
-                                    accept:'image/*',
-                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
-                                            widget.data.dataList[index].icon=link;
-                                            widget.refreshAll!()
+                                        glitter.ut.chooseMediaCallback({
+                                            single:true,
+                                            accept:'image/*',
+                                            callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                                glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                                    widget.data.dataList[index].icon=link;
+                                                    widget.refreshAll!()
+                                                })
+                                            }
                                         })
-                                    }
-                                })
-                            })}"></i>
+                                    })}"></i>
                                 </div>
 
                             `
@@ -495,3 +462,4 @@ Plugin.create(import.meta.url,(glitter)=>{
         }
     }
 });
+
