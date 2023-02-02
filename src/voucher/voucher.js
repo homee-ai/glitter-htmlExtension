@@ -1,5 +1,6 @@
 'use strict';
-import { Plugin } from '../plugin-creater.js';
+import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
+import { LegacyPage } from "./legacy/interface.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -104,73 +105,77 @@ Plugin.create(import.meta.url, (glitter) => {
                     });
                 }
                 return {
-                    view: gvc.map([
-                        drawNav("優惠卷", `<img class="" src="${import.meta.resolve('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                        })}">`, `<img class="" src="${import.meta.resolve('../img/component/service.png', import.meta.url)}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
-                        })}">`)
-                    ]),
-                    editor: gvc.map([
-                        `
+                    view: () => {
+                        return gvc.map([
+                            drawNav("優惠卷", `<img class="" src="${import.meta.resolve('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                            })}">`, `<img class="" src="${import.meta.resolve('../img/component/service.png', import.meta.url)}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                            })}">`)
+                        ]);
+                    },
+                    editor: () => {
+                        return gvc.map([
+                            `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
                             <div class="my-3 border border-white"></div>
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.nav.leftIcon}">
                                 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
                                 <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
-                            glitter.ut.chooseMediaCallback({
-                                single: true,
-                                accept: 'image/*',
-                                callback(data) {
-                                    api.upload(data[0].file, (link) => {
-                                        widget.data.nav.leftIcon = link;
-                                        widget.refreshAll();
-                                    });
-                                }
-                            });
-                        })}"></i>
+                                glitter.ut.chooseMediaCallback({
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.nav.leftIcon = link;
+                                            widget.refreshAll();
+                                        });
+                                    }
+                                });
+                            })}"></i>
                             </div>
                         `,
-                        glitter.htmlGenerate.editeInput({
-                            gvc: gvc,
-                            title: `返回的頁面`,
-                            default: widget.data.nav.leftPage,
-                            placeHolder: widget.data.nav.leftPage,
-                            callback: (text) => {
-                                widget.data.nav.leftPage = text;
-                                widget.refreshAll();
-                            }
-                        }),
-                        `
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `返回的頁面`,
+                                default: widget.data.nav.leftPage,
+                                placeHolder: widget.data.nav.leftPage,
+                                callback: (text) => {
+                                    widget.data.nav.leftPage = text;
+                                    widget.refreshAll();
+                                }
+                            }),
+                            `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右方icon</h3>
                             <div class="my-3 border border-white"></div>
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.nav.rightIcon}">
                                 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
                                 <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
-                            glitter.ut.chooseMediaCallback({
-                                single: true,
-                                accept: 'image/*',
-                                callback(data) {
-                                    api.upload(data[0].file, (link) => {
-                                        widget.data.nav.rightIcon = link;
-                                        widget.refreshAll();
-                                    });
-                                }
-                            });
-                        })}"></i>
+                                glitter.ut.chooseMediaCallback({
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.nav.rightIcon = link;
+                                            widget.refreshAll();
+                                        });
+                                    }
+                                });
+                            })}"></i>
                             </div>
                         `,
-                        glitter.htmlGenerate.editeInput({
-                            gvc: gvc,
-                            title: `右方icon跳轉的頁面`,
-                            default: widget.data.nav.rightPage,
-                            placeHolder: widget.data.nav.rightPage,
-                            callback: (text) => {
-                                widget.data.nav.rightPage = text;
-                                widget.refreshAll();
-                            }
-                        }),
-                    ])
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `右方icon跳轉的頁面`,
+                                default: widget.data.nav.rightPage,
+                                placeHolder: widget.data.nav.rightPage,
+                                callback: (text) => {
+                                    widget.data.nav.rightPage = text;
+                                    widget.refreshAll();
+                                }
+                            }),
+                        ]);
+                    }
                 };
             },
         },
@@ -194,41 +199,46 @@ Plugin.create(import.meta.url, (glitter) => {
                     
                 `);
                 return {
-                    view: gvc.map([
-                        gvc.bindView({
-                            bind: "inputVoucherCode",
-                            view: () => {
-                                return `
+                    view: () => {
+                        return gvc.map([
+                            gvc.bindView({
+                                bind: "inputVoucherCode",
+                                view: () => {
+                                    return `
                                     <input class="voucherInput w-100 border-0" style="position: relative" placeholder="${widget.data.voucherPlaceholder}">
                                     <div class="btnInput" style="font-weight: 700;font-size: 18px;line-height: 26px;color: #FE5541;position: absolute;right:16px;top: 13px;" onclick="${gvc.event(() => {
-                                    let data = document.querySelector(".voucherInput");
-                                    let value = data.value;
-                                })}">
+                                        let data = document.querySelector(".voucherInput");
+                                        let value = data.value;
+                                    })}">
                                         套用
                                     </div>
                                 `;
-                            },
-                            divCreate: { style: "margin:24px;padding:13px 16px;border: 1px solid #E0E0E0 ;border-radius: 8px;position: relative;", class: "" }
-                        })
-                    ]),
-                    editor: gvc.map([
-                        glitter.htmlGenerate.editeInput({
-                            gvc: gvc,
-                            title: `輸入預測文字`,
-                            default: widget.data.voucherPlaceholder,
-                            placeHolder: widget.data.voucherPlaceholder,
-                            callback: (text) => {
-                                widget.data.voucherPlaceholder = text;
-                                widget.refreshAll();
-                            }
-                        }),
-                    ])
+                                },
+                                divCreate: { style: "margin:24px;padding:13px 16px;border: 1px solid #E0E0E0 ;border-radius: 8px;position: relative;", class: "" }
+                            })
+                        ]);
+                    },
+                    editor: () => {
+                        return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `輸入預測文字`,
+                                default: widget.data.voucherPlaceholder,
+                                placeHolder: widget.data.voucherPlaceholder,
+                                callback: (text) => {
+                                    widget.data.voucherPlaceholder = text;
+                                    widget.refreshAll();
+                                }
+                            }),
+                        ]);
+                    }
                 };
             },
         },
         voucherList: {
             defaultData: {
                 voucherCardList: [{
+                        vendor_id: "0",
                         vendor_icon: import.meta.resolve('../img/component/voucher/cardIcon.png', import.meta.url),
                         vendor_name: "HOMEE",
                         vendor_context: "優惠券內容",
@@ -238,16 +248,19 @@ Plugin.create(import.meta.url, (glitter) => {
                         lowCostNumber: "NT$ 30,000",
                         dateText: "有效期限：",
                         date: "31 三月 2025",
+                        dateType: "",
                     }, {
+                        vendor_id: "1",
                         vendor_icon: import.meta.resolve('../img/component/voucher/cardIcon.png', import.meta.url),
                         vendor_name: "HOMEE",
                         vendor_context: "優惠券內容",
-                        name: "用戶邀請朋友成功獎勵",
-                        discount: "現折 10,000 元",
+                        name: "門市消費滿萬贈 HOMEE $500 優惠券",
+                        discount: "現折 500 元",
                         lowCostText: "最低消費：",
-                        lowCostNumber: "NT$ 30,000",
-                        dateText: "有效期限：",
-                        date: "31 三月 2025",
+                        lowCostNumber: "NT$ 0",
+                        dateText: "即將失效：",
+                        date: "剩下 8 小時",
+                        dateType: "warning-"
                     }]
             },
             render: (gvc, widget, setting, hoverID) => {
@@ -257,7 +270,8 @@ Plugin.create(import.meta.url, (glitter) => {
                         border-radius: 20px;
                         padding:8px 0;
                         box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);
-                        
+                        margin-bottom:16px;
+                        position:relative;
                     }
                     .vendor_name{
                         font-weight: 400;
@@ -269,6 +283,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         font-weight: 700;
                         font-size: 12px;
                         color: #FE5541;
+                    }
+                    .vendor_context:hover{
+                        cursor: pointer;
                     }
                     .name{
                         font-weight: 700;
@@ -303,20 +320,55 @@ Plugin.create(import.meta.url, (glitter) => {
                         font-size: 12px;
                         color: #1E1E1E;
                     }
+                    .warning-dateText{
+                        font-weight: 400;
+                        font-size: 12px;
+                        color: #FF0000;
+                    }
+                    .warning-date{
+                        font-weight: 700;
+                        font-size: 12px;
+                        color: #FF0000;
+                    }
+                    .lackCircle{
+                        width:24px;
+                        height:24px;
+                        border-radius:50%;
+                        background:#E5E5E5;  
+                    }
+                    .leftCircle{                        
+                        position:absolute;
+                        left:-12px;
+                        top:calc(50% - 12px);
+                                              
+                    }
+                    .rightCircle{
+                        width:24px;
+                        height:24px;
+                        border-radius:50%;
+                        position:absolute;
+                        right:-12px;
+                        top:calc(50% - 12px);                      
+                    }
                     
                 `);
                 return {
-                    view: gvc.map([
-                        gvc.bindView({
-                            bind: "voucherCardList",
-                            view: () => {
-                                return gvc.map(widget.data.voucherCardList.map((data) => {
-                                    return `
+                    view: () => {
+                        return gvc.map([
+                            gvc.bindView({
+                                bind: "voucherCardList",
+                                view: () => {
+                                    return gvc.map(widget.data.voucherCardList.map((data) => {
+                                        return `
                                         <div class="voucherCard"> 
                                             <div class="d-flex" style="padding: 8px 22px;">
                                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${data.vendor_name}</div>
-                                                <div class="vendor_context ms-auto">${data.vendor_context}</div>
+                                                <div class="vendor_context ms-auto" onclick="${gvc.event(() => {
+                                            LegacyPage.execute(gvc.glitter, () => {
+                                                gvc.glitter.changePage(LegacyPage.getLink("jsPage/user/couponDetail.js"), "subCategory", true, {});
+                                            });
+                                        })}">${data.vendor_context}</div>
                                             </div>
                                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                                             <div class="" style="padding: 8px 22px;">
@@ -326,22 +378,26 @@ Plugin.create(import.meta.url, (glitter) => {
                                                     <div class="lowCostText">${data.lowCostText}</div>
                                                     <div class="lowCostNumber">${data.lowCostNumber}</div>
                                                     <div class="ms-auto d-flex">
-                                                        <div class="dateText">${data.dateText}</div>
-                                                        <div class="date">${data.date}</div>
+                                                        <div class="${data.dateType}dateText">${data.dateText}</div>
+                                                        <div class="${data.dateType}date">${data.date}</div>
                                                     </div>
                                                     
                                                 </div>
                                             </div>
-                                            
+                                            <div class="lackCircle leftCircle"></div>
+                                            <div class="lackCircle rightCircle"></div>
                                         </div>
                                         
                                     `;
-                                }));
-                            },
-                            divCreate: { style: `padding:24px 24px 0;`, class: `w-100` }
-                        })
-                    ]),
-                    editor: ``
+                                    }));
+                                },
+                                divCreate: { style: `padding:24px 24px 0;`, class: `w-100` }
+                            })
+                        ]);
+                    },
+                    editor: () => {
+                        return ``;
+                    }
                 };
             },
         }

@@ -54,7 +54,8 @@ export class ClickEvent {
                             }
                             widget.refreshAll()
                         })}">
-${gvc.map(Object.keys(glitter.share.clickEvent).map((key) => {
+                        
+                        ${gvc.map(Object.keys(glitter.share?.clickEvent||{}).map((key) => {
                                 const value = glitter.share.clickEvent[key]
                                 return gvc.map(Object.keys(value).map((v2) => {
                                     const value2 = value[v2]
@@ -90,7 +91,7 @@ ${gvc.bindView(()=>{
         onCreate:()=>{
             glitter.share.clickEvent=glitter.share.clickEvent ?? {}
             try {
-                console.log(glitter.share.clickEvent[obj.clickEvent.src])
+                
                 if(!glitter.share.clickEvent[obj.clickEvent.src]){
                     glitter.addMtScript([
                         {src:obj.clickEvent.src,type:'module'}

@@ -33,6 +33,7 @@ export class ClickEvent {
             return {
                 bind: ``,
                 view: () => {
+                    var _a;
                     var select = false;
                     return `<select class="form-select" onchange="${gvc.event((e) => {
                         if (e.value === 'undefined') {
@@ -43,7 +44,8 @@ export class ClickEvent {
                         }
                         widget.refreshAll();
                     })}">
-${gvc.map(Object.keys(glitter.share.clickEvent).map((key) => {
+                        
+                        ${gvc.map(Object.keys(((_a = glitter.share) === null || _a === void 0 ? void 0 : _a.clickEvent) || {}).map((key) => {
                         const value = glitter.share.clickEvent[key];
                         return gvc.map(Object.keys(value).map((v2) => {
                             const value2 = value[v2];
@@ -80,7 +82,6 @@ ${gvc.bindView(() => {
                                 var _a;
                                 glitter.share.clickEvent = (_a = glitter.share.clickEvent) !== null && _a !== void 0 ? _a : {};
                                 try {
-                                    console.log(glitter.share.clickEvent[obj.clickEvent.src]);
                                     if (!glitter.share.clickEvent[obj.clickEvent.src]) {
                                         glitter.addMtScript([
                                             { src: obj.clickEvent.src, type: 'module' }

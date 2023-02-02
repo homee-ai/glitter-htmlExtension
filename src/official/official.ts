@@ -72,13 +72,7 @@ ${(() => {
                 return {
                     view:()=>{
                         return ` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${widget.data.link ?? `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
- onclick="${gvc.event(()=>{
-                            ClickEvent.trigger({
-                                gvc:gvc,
-                                widget:widget,
-                                clickEvent:widget.data.clickEvent
-                            })
-                        })}">`
+                        onclick="">`
                     },
                     editor:()=>{
                         return `
