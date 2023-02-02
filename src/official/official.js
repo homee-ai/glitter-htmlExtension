@@ -76,7 +76,11 @@ ${(() => {
                         var _a;
                         return ` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${(_a = widget.data.link) !== null && _a !== void 0 ? _a : `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
                         onclick="${gvc.event(() => {
-                            ClickEvent.editer(gvc, widget, widget.data.clickEvent);
+                            ClickEvent.trigger({
+                                gvc,
+                                widget,
+                                clickEvent: widget.data.clickEvent
+                            });
                         })}">`;
                     },
                     editor: () => {
