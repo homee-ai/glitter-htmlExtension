@@ -2,7 +2,6 @@ import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import { Api } from './api/homee-api.js';
 import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
-
 ClickEvent.create(import.meta.url,{
     link:{
         title:"連結跳轉",
@@ -137,6 +136,10 @@ ClickEvent.create(import.meta.url,{
                       id:obj.data.id
                   },(res)=>{
 
+                  },{
+                      webFunction(data: any, callback: (data: any) => void): any {
+                          alert('APP會跳轉至商品ID:'+obj.data.id+"的頁面")
+                      }
                   })
                 }
             }

@@ -5,7 +5,7 @@ import {EditerApi} from "./api/editer-api.js";
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js"
 import {LegacyPage} from "./legacy/interface.js"
 Plugin.create(import.meta.url, (glitter) => {
-    const rootURL=import.meta.url.replace("homee/homee_home.js","")
+    const rootURL=new URL("../",import.meta.url).href
     const api = {
         upload: (photoFile: any, callback: (link: string) => void) => {
             glitter.share.dialog.dataLoading({text: '上傳中', visible: true})
@@ -225,17 +225,26 @@ font-size: 16px;
 margin-top: 16px;
 margin-left: 12px;
 font-weight: 700;`
+                widget.data.rank=widget.data.rank ?? [{},{},{}]
                 return {
                     view: ()=>{
                         return `
                 <div class="" style="background-color: ${widget.data.bgcolor};border-radius:${widget.data.radius}px;">
                 <h3 style="${widget.data.titleStyle}">${widget.label}</h3>
                    <div class="d-flex align-items-center justify-content-around " style="width:calc(100% -24px);margin-left: 12px;margin-right: 12px;gap: 8px;padding-bottom: 15px;">
-               ${gvc.map(['firstRank.svg', 'secondRank.svg', 'thirdRank.svg'].map((dd) => {
+               ${gvc.map(['firstRank.svg', 'secondRank.svg', 'thirdRank.svg'].map((dd,index) => {
+                   const data=widget.data.rank[index]
+                            data.data = data.data ?? {}
                             return ` <div class="d-flex flex-column align-items-center justify-content-center" style="width:calc(100% - 16px);">
- <div class="bg-white flex-fill position-relative" style="width:100%;border-radius: 8px;padding-bottom: calc(100%);
- background:50% / cover , url(${glitter.share.sourcePrefix}/img/homeeExtension/testChair.svg) no-repeat center;">
-         <img src="${glitter.share.sourcePrefix}/img/homeeExtension/${dd}" class="position-absolute" style="top: 0px;">       
+ <div class="bg-white flex-fill position-relative" style="width:100%;border-radius: 8px;padding-bottom: calc(100%);" onclick="${gvc.event(()=>{
+                                ClickEvent.trigger({
+                                    gvc,
+                                    widget,
+                                    clickEvent:data
+                                })
+                            })}">
+ <img src="${data.data.preview_image}" class="position-absolute w-100 h-100" style="top: 0px;">
+         <img src="${rootURL}img/homeeExtension/${dd}" class="position-absolute" style="top: 0px;">       
 </div>
 <span class="" style="font-family: 'Noto Sans TC';
 font-style: normal;
@@ -244,7 +253,7 @@ font-size: 10px;
 line-height: 14px;
 text-align: center;
 margin-top: 4px;
-color: #FE5541;">$ 3,125</span>
+color: #FE5541;">$ ${data.data.sale_price}</span>
 </div>`
                         }))}
 </div>
@@ -282,31 +291,60 @@ color: #FE5541;">$ 3,125</span>
                                     widget.data.titleStyle = text
                                     widget.refreshAll()
                                 }
-                            })
+                            }),
+                            gvc.map(widget.data.rank.map((dd:any,index:number)=>{
+                                return ClickEvent.editer(gvc,widget,dd,{
+                                    option:['toProductDetail'],
+                                    hover:true,
+                                    title:"點擊事件-"+(index+1)
+                                })
+                            }))
                         ])
                     }
                 }
             }
         },
         productItem: {
-            defaultData: {},
+            style: "width:calc(50% - 8px);",
+            defaultData: {
+                "data": {
+                    "id": 8837303,
+                    "name": "HOVE 雙人床架",
+                    "price": 23580,
+                    "sale_price": 23580,
+                    "preview_image": "https://cdn.store-assets.com/s/349867/i/51305748.png?width=720"
+                },
+                "clickEvent": {
+                    "src": "http://127.0.0.1:3090/test/homee/event.js",
+                    "route": "toProductDetail"
+                }
+            },
             render: (gvc, widget, setting, hoverID) => {
+                widget.data.data=widget.data.data ?? {}
                 return {
                     view: ()=>{
-                        return `<div class="${widget.data.class ?? ""} p-0" style="${widget.data.style ?? ""} 
+                        return `<div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""} 
 height: auto;background: #FBF9F6;border: 4px solid rgba(248, 243, 237, 0.3);
-border-radius: 16px;">
+border-radius: 16px;" onclick="${gvc.event(()=>{
+      ClickEvent.trigger({
+          gvc,
+          widget,
+          clickEvent:widget.data
+      })
+                        })}">
 <div class=" w-100 m-0" style="
 box-sizing:border-box;
 border-radius: 16px;
-padding-bottom: 100%;background: 50%/cover no-repeat url('https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675171909286')"></div>
-<h3 style="font-family: 'Noto Sans TC';
+padding-bottom: 100%;background: 50%/cover no-repeat url('${widget.data.data.preview_image}'), white;"></div>
+<h3 class="w-100" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 700;
 font-size: 14px;
 margin-top: 8px;
+word-break: break-word;
+white-space: normal;
 margin-bottom: 0px;
-color: #292929;">MERETA 茶几</h3>
+color: #292929;">${widget.data.data.name ?? "尚未設定"}</h3>
 <div class="d-flex align-items-baseline" style="margin-top: 8px;margin-bottom: 8px;">
 <span style="font-family: 'Noto Sans TC';
 font-style: normal;
@@ -314,18 +352,18 @@ font-weight: 400;
 font-size: 14px;
 color: #FD6A58;
 line-height: 150%;">
-NT$ 6,900 up
+NT$ ${widget.data.data.price ?? "尚未設定"} up
 </span>
 <div class="flex-fill"></div>
-<span style="font-family: 'Noto Sans TC';
+<span class="${(widget.data.data.price === widget.data.data.sale_price) ? `d-none`:``}" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 400;
 font-size: 10px;
 line-height: 14px;
 text-align: right;
 text-decoration-line: line-through;
-color: #858585;">
- NT$ 12,400
+color: #858585;" >
+ NT$ ${widget.data.data.sale_price}
 </span>
 </div>
 
@@ -333,26 +371,10 @@ color: #858585;">
                     },
                     editor: ()=>{
                         return gvc.map([
-                            glitter.htmlGenerate.editeInput({
-                                gvc: gvc,
-                                title: "Class",
-                                default: widget.data.class,
-                                placeHolder: "請輸入Class",
-                                callback: (text: string) => {
-                                    widget.data.class = text
-                                    widget.refreshAll!()
-                                }
-                            }),
-                            glitter.htmlGenerate.editeText({
-                                gvc: gvc,
-                                title: "Style",
-                                default: widget.data.style,
-                                placeHolder: "請輸入Style",
-                                callback: (text: string) => {
-                                    widget.data.style = text
-                                    widget.refreshAll!()
-                                }
-                            })
+                           ClickEvent.editer(gvc,widget,widget.data,{
+                               option:['toProductDetail'],
+                               hover:true
+                           })
                         ])
                     }
                 }
@@ -380,7 +402,7 @@ style="
 width: ${([undefined,''].indexOf(widget.data.logo.width)!==-1) ? 'auto':widget.data.logo.width};
 height: ${([undefined,''].indexOf(widget.data.logo.height)!==-1) ? 'auto':widget.data.logo.height};
 "
-src="${(!widget.data.logo.src || widget.data.logo.src==='') ? import.meta.resolve!('./src/home_logo.svg',import.meta.url) : widget.data.logo.src}"><h3 class="p-0 m-0" style="${widget.data.titleStyle ?? ""}">${widget.data.title ?? ""}</h3></div>`,
+src="${(!widget.data.logo.src || widget.data.logo.src==='') ? new URL('./src/home_logo.svg',import.meta.url) : widget.data.logo.src}"><h3 class="p-0 m-0" style="${widget.data.titleStyle ?? ""}">${widget.data.title ?? ""}</h3></div>`,
                            rightIcon:`
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(()=>{

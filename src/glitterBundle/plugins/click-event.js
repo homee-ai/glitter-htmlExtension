@@ -25,17 +25,20 @@ export class ClickEvent {
         }
         run().then();
     }
-    static editer(gvc, widget, obj) {
+    static editer(gvc, widget, obj, option = { hover: false, option: [] }) {
+        var _a, _b;
+        gvc.glitter.share.clickEvent = (_a = gvc.glitter.share.clickEvent) !== null && _a !== void 0 ? _a : {};
         const glitter = gvc.glitter;
-        return `<div class="">
- <h3 class="" style="font-size: 16px;">點擊事件</h3>
+        const selectID = glitter.getUUID();
+        return `<div class="mt-2 ${(option.hover) ? `alert alert-dark` : ``}">
+ <h3 class="m-0" style="font-size: 16px;">${(_b = option.title) !== null && _b !== void 0 ? _b : "點擊事件"}</h3>
  ${gvc.bindView(() => {
             return {
-                bind: ``,
+                bind: selectID,
                 view: () => {
                     var _a;
                     var select = false;
-                    return `<select class="form-select" onchange="${gvc.event((e) => {
+                    return `<select class="form-select m-0 mt-2" onchange="${gvc.event((e) => {
                         if (e.value === 'undefined') {
                             obj.clickEvent = undefined;
                         }
@@ -48,6 +51,11 @@ export class ClickEvent {
                         ${gvc.map(Object.keys(((_a = glitter.share) === null || _a === void 0 ? void 0 : _a.clickEvent) || {}).map((key) => {
                         const value = glitter.share.clickEvent[key];
                         return gvc.map(Object.keys(value).map((v2) => {
+                            if (option.option.length > 0) {
+                                if (option.option.indexOf(v2) === -1) {
+                                    return ``;
+                                }
+                            }
                             const value2 = value[v2];
                             const selected = JSON.stringify({
                                 src: key,
@@ -86,7 +94,7 @@ ${gvc.bindView(() => {
                                         glitter.addMtScript([
                                             { src: obj.clickEvent.src, type: 'module' }
                                         ], () => {
-                                            gvc.notifyDataChange(id);
+                                            gvc.notifyDataChange(selectID);
                                         }, () => {
                                             alert(obj.clickEvent.src);
                                         });
