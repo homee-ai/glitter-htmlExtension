@@ -92,7 +92,6 @@ ClickEvent.create(import.meta.url, {
                     `;
                 },
                 event: () => {
-                    alert('test');
                     LegacyPage.execute(gvc.glitter, () => {
                         gvc.glitter.changePage(LegacyPage.getLink("jsPage/category/subCategory.js"), "subCategory", true, { title: object.name, parent_category_id: object.value, category: "sub_category_id", category_id: object.value, index: 0 });
                     });
