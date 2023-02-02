@@ -99,6 +99,7 @@ ClickEvent.create(import.meta.url,{
                     `
                 },
                 event:()=>{
+                    alert('test')
                     LegacyPage.execute(gvc.glitter,()=>{
                         gvc.glitter.changePage(
                             LegacyPage.getLink("jsPage/category/subCategory.js"),

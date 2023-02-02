@@ -1,7 +1,7 @@
 [
   {
     "id": "s6s5sfs0s3s1s3s2-s0s1ses8-4s6scsb-s9s7s7sf-sfs8s1s8sbses4scs9s0ses2",
-    "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
     "data": {
       "logo": {
         "src": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675147810222",
@@ -20,7 +20,7 @@
   },
   {
     "id": "s0s4s0sfs3s0ses8-sfsas3sf-4s2sfsa-s8s6sasc-sasbs1s5s8s3s6sasbs4sdse",
-    "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
     "data": {
       "link": [
         {
@@ -37,7 +37,7 @@
           "title": "dssamkldsaml",
           "value": 615628,
           "clickEvent": {
-            "src": "http://192.168.4.109:3090/test/homee/event.js",
+            "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
             "route": "toProductDetail"
           }
         },
@@ -45,7 +45,7 @@
           "img": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675254859051",
           "link": "https://bbs.huaweicloud.com/blogs/361558",
           "clickEvent": {
-            "src": "http://192.168.4.109:3090/test/homee/event.js",
+            "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
             "route": "link"
           }
         }
@@ -63,7 +63,7 @@
   },
   {
     "id": "s8s3sbs0s7sfsds9-sbsesbs5-4s8s7s1-s8scs9se-s1s7sfs8s2s1sbs0sds7sfs2",
-    "js": "http://192.168.4.109:3090/test/official/official.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
     "data": {
       "class": " align-items-center justify-content-center",
       "style": "",
@@ -71,7 +71,7 @@
       "setting": [
         {
           "id": "s1s4s4scscs4s8s8-sbs4s5s0-4s6sbs7-s8sfsds4-s6s7s4s4s0scs3s8s8sfsbs2",
-          "js": "http://192.168.4.109:3090/test/official/official.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
           "data": {
             "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674471891850",
             "class": "m-0",
@@ -83,7 +83,7 @@
               "name": "夏。創造海島中的儀式感",
               "value": 2025881,
               "clickEvent": {
-                "src": "http://192.168.4.109:3090/test/homee/event.js",
+                "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                 "route": "category"
               }
             }
@@ -99,7 +99,7 @@
         },
         {
           "id": "s0s9sesbs8s6s9s0-s8s8sbsf-4ses3s7-s8sdsfsb-s7sas5scsbsds7sbs7s6s4se",
-          "js": "http://192.168.4.109:3090/test/official/official.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
           "data": {
             "class": "m-0",
             "style": "",
@@ -107,7 +107,7 @@
             "setting": [
               {
                 "id": "sdscscs1ses7s7sf-sas8sbsb-4sesas3-sases5sb-s4sfs8sbs5s2sds8s1s7sfs8",
-                "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+                "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
                 "data": {
                   "rank": [
                     {
@@ -119,7 +119,7 @@
                         "preview_image": "https://cdn.store-assets.com/s/349867/i/51204532.png?width=720"
                       },
                       "clickEvent": {
-                        "src": "http://192.168.4.109:3090/test/homee/event.js",
+                        "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                         "route": "toProductDetail"
                       }
                     },
@@ -132,7 +132,7 @@
                         "preview_image": "https://cdn.store-assets.com/s/349867/i/49971700.jpeg?width=720"
                       },
                       "clickEvent": {
-                        "src": "http://192.168.4.109:3090/test/homee/event.js",
+                        "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                         "route": "toProductDetail"
                       }
                     },
@@ -145,7 +145,7 @@
                         "preview_image": "https://cdn.store-assets.com/s/349867/i/46084917.png?width=720"
                       },
                       "clickEvent": {
-                        "src": "http://192.168.4.109:3090/test/homee/event.js",
+                        "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                         "route": "toProductDetail"
                       }
                     }
@@ -172,7 +172,7 @@
               },
               {
                 "id": "scsescses2scs8s4-ses2s5s0-4ses8s0-s8sas8sa-s8sds8s9sbsds1sfses7scs2",
-                "js": "http://192.168.4.109:3090/test/official/official.js",
+                "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
                 "data": {
                   "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674471817556",
                   "class": "",
@@ -220,7 +220,7 @@
   },
   {
     "id": "s8s5scs6scs9sds7-s7s2s9sf-4s6s8s2-s8scs5sc-s5sas7ses3sas9s9s5s1s1s8",
-    "js": "http://192.168.4.109:3090/test/official/official.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
     "data": {
       "class": "p-0 m-0 w-100 justify-content-between",
       "layout": "d-flex",
@@ -228,7 +228,7 @@
       "setting": [
         {
           "id": "s7s2s2s4sasbscs5-sds6s5s1-4s3scsf-sbs4sase-s3ses0s3s4sdsesasds8sfs3",
-          "js": "http://192.168.4.109:3090/test/official/official.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
           "data": {
             "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978765418",
             "class": "",
@@ -241,7 +241,7 @@
               "name": "每30分鐘就賣出一張的岩板餐桌",
               "value": 1885264,
               "clickEvent": {
-                "src": "http://192.168.4.109:3090/test/homee/event.js",
+                "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                 "route": "category"
               }
             }
@@ -254,11 +254,11 @@
           "style": "width: calc((100% - 20px) / 3);",
           "expand": false,
           "clickEvent": {
-            "src": "http://192.168.4.109:3090/test/homee/event.js",
+            "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
             "link": "https://mttmp.com/co76dnp.html",
             "route": "link",
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "link"
             }
           },
@@ -268,7 +268,7 @@
         },
         {
           "id": "sas9s9sfs6sfs7sa-s9s6sas2-4sfsbsa-s9s2s3s6-sas7s1s6seses7s7ses1s6s9",
-          "js": "http://192.168.4.109:3090/test/official/official.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
           "data": {
             "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978777300",
             "class": "",
@@ -283,7 +283,7 @@
                 "preview_image": "https://cdn.store-assets.com/s/349867/i/51204532.png?width=720"
               },
               "clickEvent": {
-                "src": "http://192.168.4.109:3090/test/homee/event.js",
+                "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                 "route": "toProductDetail"
               }
             }
@@ -299,14 +299,14 @@
         },
         {
           "id": "sdsds6sds5sasasf-sesesds6-4sfs8sb-sas7sds8-s7s1scs5s1sesbs8s8s2s3s8",
-          "js": "http://192.168.4.109:3090/test/official/official.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
           "data": {
             "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978786967",
             "class": "",
             "clickEvent": {
               "link": "https://mttmp.com/co76dnp.html",
               "clickEvent": {
-                "src": "http://192.168.4.109:3090/test/homee/event.js",
+                "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
                 "route": "link"
               }
             }
@@ -318,7 +318,7 @@
           "route": "Glitter",
           "style": "width: calc((100% - 20px) / 3);",
           "clickEvent": {
-            "src": "http://192.168.4.109:3090/test/homee/event.js",
+            "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
             "route": "link"
           },
           "expandStyle": false,
@@ -342,7 +342,7 @@
   },
   {
     "id": "s5s4s1sdsbses6s5-sbs8s8s0-4s9s9s7-sbsasesb-s3s7sbs1s8s6s4sfs4s8sasf",
-    "js": "http://192.168.4.109:3090/test/official/official.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
     "data": {
       "class": "d-flex align-items-center justify-content-center",
       "style": "font-family: 'Noto Sans TC';\nfont-style: normal;\nfont-weight: 700;\nfont-size: 24px;\nline-height: 35px;\n/* identical to box height */\n\nfont-feature-settings: 'pnum' on, 'lnum' on;\n/* HOMEE black */\ncolor: #292929;",
@@ -360,7 +360,7 @@
   },
   {
     "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
-    "js": "http://192.168.4.109:3090/test/official/official.js",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
     "data": {
       "class": "m-0 p-0 flex-wrap justify-content-around",
       "style": "gap:10px;",
@@ -371,7 +371,7 @@
       "setting": [
         {
           "id": "sbs7s7ses9sas3s8-s0s4s0s6-4scsbs8-sbs5s6s8-s7s0scs7s5s0s6s3s4s5sese",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 7932550,
@@ -381,7 +381,7 @@
               "preview_image": "https://cdn.store-assets.com/s/349867/i/46084917.png?width=720"
             },
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
@@ -395,7 +395,7 @@
         },
         {
           "id": "sesasbsfs5s1sbsc-s0s4s1s7-4s0s4se-sbs0sbs0-sfs9s6s6s2scsbs2s7s6s6s7",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 8830041,
@@ -405,7 +405,7 @@
               "preview_image": "https://cdn.store-assets.com/s/349867/i/51202943.png?width=720"
             },
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
@@ -419,7 +419,7 @@
         },
         {
           "id": "s7s4s1s1sfs4ses6-sdsas3se-4sds6sa-sas1sfse-s4s2sbs1sbscs4s4s8s4s4sb",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 8835119,
@@ -429,7 +429,7 @@
               "preview_image": "https://cdn.store-assets.com/s/349867/i/51308941.png?width=720"
             },
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
@@ -443,7 +443,7 @@
         },
         {
           "id": "sdsbsesbscsasbs8-s3sas1sd-4sas0s7-s9sdscs1-s9sfscs3s2s6s1s7s3s5s6sf",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 8837303,
@@ -453,7 +453,7 @@
               "preview_image": "https://cdn.store-assets.com/s/349867/i/51305748.png?width=720"
             },
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
@@ -467,7 +467,7 @@
         },
         {
           "id": "s7sasfs0s7s5s1sb-s8s8sbs2-4s4s6sc-s9sesase-s1ses1s3s9sescsesascsas6",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 5554580,
@@ -477,7 +477,7 @@
               "preview_image": "https://cdn.store-assets.com/s/349867/i/31621770.png?width=720"
             },
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
@@ -491,7 +491,7 @@
         },
         {
           "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
-          "js": "http://192.168.4.109:3090/test/homee/homee_home.js",
+          "js": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/homee_home.js",
           "data": {
             "data": {
               "id": 5555761,
@@ -504,7 +504,7 @@
             "paddingL": "",
             "paddingR": "",
             "clickEvent": {
-              "src": "http://192.168.4.109:3090/test/homee/event.js",
+              "src": "https://homee-ai.github.io/glitter-htmlExtension/src/homee/event.js",
               "route": "toProductDetail"
             }
           },
