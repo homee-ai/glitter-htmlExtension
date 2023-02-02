@@ -51,4 +51,13 @@ Glitter.setUP(app, [
         }
     },
 ]);
+Glitter.setUP(app, [
+    {
+        rout: '/test2',
+        path: path_1.default.resolve(__dirname, '../../src'),
+        seoManager: () => {
+            return '';
+        }
+    },
+]);
 //# sourceMappingURL=index.js.map
