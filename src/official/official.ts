@@ -1,6 +1,6 @@
 'use strict';
-import {Plugin} from '../plugin-creater.js'
-
+import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
+import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 Plugin.create(import.meta.url,(glitter)=>{
     function escape (text: string){
         return text.replace(/&/g, '&').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, "'");
@@ -14,7 +14,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                 widget.data.setting = widget.data.setting ?? []
                 const htmlGenerate = new glitter.htmlGenerate(widget.data.setting,hoverID);
                 return {
-                    view: htmlGenerate.render(gvc, {class:`m-0 ${widget.data.layout} ${widget.data.class}`,style:`${widget.data.style}`}),
+                    view: ()=>{
+                        return htmlGenerate.render(gvc, {class:`m-0 ${widget.data.layout} ${widget.data.class}`,style:`${widget.data.style}`})
+                    },
                     editor: (() => {
                         return gvc.map([
                             `<div class="my-2"></div>
@@ -59,27 +61,37 @@ ${(() => {
                             })()
                         ])
 
-                    })()
+                    })
                 }
             }
         },
         image:{
             defaultData:{},
             render:(gvc, widget, setting, hoverID)=>{
+                widget.data.clickEvent=widget.data.clickEvent ?? {}
                 return {
-                    view:` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${widget.data.link ?? `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
- >`,
-                    editor:`
+                    view:()=>{
+                        return ` <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${widget.data.link ?? `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
+ onclick="${gvc.event(()=>{
+                            ClickEvent.trigger({
+                                gvc:gvc,
+                                widget:widget,
+                                clickEvent:widget.data.clickEvent
+                            })
+                        })}">`
+                    },
+                    editor:()=>{
+                        return `
 <span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Class</span>
 <input class="form-control" value="${widget.data.class ?? ""}" onchange="${gvc.event((e:any)=>{
-                        widget.data.class=e.value
-                        widget.refreshAll!()
-                    })}">
+                            widget.data.class=e.value
+                            widget.refreshAll!()
+                        })}">
 <span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Style</span>
 <input class="form-control" value="${widget.data.style ?? ""}" onchange="${gvc.event((e:any)=>{
-                        widget.data.style=e.value
-                        widget.refreshAll!()
-                    })}">
+                            widget.data.style=e.value
+                            widget.refreshAll!()
+                        })}">
 <div class="mt-2"></div>
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
@@ -87,34 +99,21 @@ ${(() => {
 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.link}">
 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
 <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
-                        glitter.ut.chooseMediaCallback({
-                            single:true,
-                            accept:'image/*',
-                            callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
-                                    widget.data.link=link;
-                                    widget.refreshAll!()
-                                })
-                            }
-                        })
-                    })}"></i>
+                            glitter.ut.chooseMediaCallback({
+                                single:true,
+                                accept:'image/*',
+                                callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                    glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                        widget.data.link=link;
+                                        widget.refreshAll!()
+                                    })
+                                }
+                            })
+                        })}"></i>
 </div>
-<div class="alert alert-warning" role="alert" style="word-break: break-word;white-space: normal;">
-  <i class="fa-duotone fa-triangle-exclamation"></i>
-  注意! 如需啟用圖片上傳功能，需於glitter.share.publicInterface中進行定義:
-  <br>
-  
-<pre class="line-numbers mt-2" tabindex="0"><code id="" class="typescript">${escape(`//photoFile:選擇的檔案,callback:上傳後的連結回調
-glitter.share.publicInterface={
-    glitter:{
-        upload:(photoFile:any,callback:(link:string)=>void)=>{
-        //Your upload api
-       }
-    }
-}
-`)}</code></pre>
-</div>
+${ClickEvent.editer(gvc,widget,widget.data.clickEvent)}
                 `
+                    }
                 }
             }
         },
@@ -122,38 +121,30 @@ glitter.share.publicInterface={
             defaultData:{},
             render:(gvc, widget, setting, hoverID)=>{
                 return {
-                    view:`<h3 style="${widget.data.style ?? ""}" class="${widget.data.class ?? ""}">${widget.label}</h3>`,
-                    editor:gvc.map([
-                        glitter.htmlGenerate.editeInput({
-                            gvc: gvc, title: "Class", default: widget.data.class, placeHolder: "請輸入Class", callback: (text:string) => {
-                                widget.data.class=text
-                                widget.refreshAll()
-                            }
-                        }),
-                        glitter.htmlGenerate.editeText({
-                            gvc: gvc, title: "Style", default: widget.data.style , placeHolder: "請輸入標題Style", callback: (text:string) => {
-                                widget.data.style=text
-                                widget.refreshAll()
-                            }
-                        })
-                    ])
+                    view:()=>{
+                        return `<h3 style="${widget.data.style ?? ""}" class="${widget.data.class ?? ""}">${widget.label}</h3>`
+                    },
+                    editor:()=>{
+                        return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc, title: "Class", default: widget.data.class, placeHolder: "請輸入Class", callback: (text:string) => {
+                                    widget.data.class=text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeText({
+                                gvc: gvc, title: "Style", default: widget.data.style , placeHolder: "請輸入標題Style", callback: (text:string) => {
+                                    widget.data.style=text
+                                    widget.refreshAll()
+                                }
+                            })
+                        ])
+                    }
                 }
             }
         }
     }
 });
 
-// (() => {
-//     glitter.share.htmlExtension["Glitter"] = obj
-//     glitter.share.htmlExtension["Glitter"].document={
-//         title:"Glitter官方插件",
-//         doc:{
-//             container:{
-//                 title:`元件容器`,
-//                 doc:`可以用來包覆多項子元件.`,
-//             }
-//         }
-//     }
-// })()
 
 

@@ -131,7 +131,7 @@ export class HtmlGenerate {
                                     }))} ${gvc.map(['marginT', 'marginB', 'marginL', 'marginR'].map((d2, index) => {
                                         let k = ['margin-top', 'margin-bottom', 'margin-left', 'margin-right'];
                                         return `${k[index]}:${(dd.data[d2] && dd.data[d2]!=='') ? dd.data[d2] : '0'};`;
-                                    }))} ${dd.style ?? ''} ${(hover.indexOf(dd.id) !== -1) ? `border: 4px solid dodgerblue;border-radius: 5px;box-sizing: border-box;z-index: 999;`:``}`,
+                                    }))} ${dd.style ?? ''} ${(hover.indexOf(dd.id) !== -1) ? `border: 4px solid dodgerblue;border-radius: 5px;box-sizing: border-box;`:``}`,
                                     class: `position-relative ${dd.class ?? ''}`
                                 }
                             });
@@ -139,7 +139,9 @@ export class HtmlGenerate {
                         }));
                     }
                 },
-                divCreate: {class: option.class, style: option.style}
+                divCreate: {class: option.class, style: option.style},
+                onCreate:()=>{
+                }
             });
         };
         this.editor = (gvc: GVC, option = {
@@ -325,3 +327,5 @@ ${HtmlGenerate.editeText({
     }
 
 }
+
+

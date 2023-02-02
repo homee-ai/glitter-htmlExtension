@@ -64,14 +64,16 @@ export class HtmlGenerate {
                                     }))} ${gvc.map(['marginT', 'marginB', 'marginL', 'marginR'].map((d2, index) => {
                                         let k = ['margin-top', 'margin-bottom', 'margin-left', 'margin-right'];
                                         return `${k[index]}:${(dd.data[d2] && dd.data[d2] !== '') ? dd.data[d2] : '0'};`;
-                                    }))} ${(_a = dd.style) !== null && _a !== void 0 ? _a : ''} ${(hover.indexOf(dd.id) !== -1) ? `border: 4px solid dodgerblue;border-radius: 5px;box-sizing: border-box;z-index: 999;` : ``}`,
+                                    }))} ${(_a = dd.style) !== null && _a !== void 0 ? _a : ''} ${(hover.indexOf(dd.id) !== -1) ? `border: 4px solid dodgerblue;border-radius: 5px;box-sizing: border-box;` : ``}`,
                                     class: `position-relative ${(_b = dd.class) !== null && _b !== void 0 ? _b : ''}`
                                 }
                             });
                         }));
                     }
                 },
-                divCreate: { class: option.class, style: option.style }
+                divCreate: { class: option.class, style: option.style },
+                onCreate: () => {
+                }
             });
         };
         this.editor = (gvc, option = {

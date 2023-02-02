@@ -2,7 +2,11 @@
     "compilerOptions": {
         "incremental": true,
         "target": "ES2017",
+<<<<<<< HEAD
         "module": "ES2020",
+=======
+       "module": "es2020",
+>>>>>>> 0fe232a7 (develop event)
         "declaration": false,
         "sourceMap": false,
         "outDir": "./src",

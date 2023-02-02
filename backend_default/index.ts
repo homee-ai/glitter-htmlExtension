@@ -35,3 +35,12 @@ Glitter.setUP(app, [
         }
     },
 ]);
+Glitter.setUP(app, [
+    {
+        rout: '/test2',
+        path: path.resolve(__dirname, '../../src'),
+        seoManager:()=>{
+            return ''
+        }
+    },
+]);
