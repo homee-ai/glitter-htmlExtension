@@ -11,7 +11,6 @@ export class SharedView {
             }
         });
         this.navigationBar = (item) => {
-            topInset = glitter.share.topInset;
             return gvc.bindView({
                 bind: `nav`,
                 view: () => {

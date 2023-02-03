@@ -106,7 +106,7 @@ ${(() => {
                             });
                         })}"></i>
 </div>
-<div class="alert alert-warning" role="alert" style="word-break: break-word;white-space: normal;">
+<div class="alert alert-warning " role="alert" style="word-break: break-word;white-space: normal;">
   <i class="fa-duotone fa-triangle-exclamation"></i>
   注意! 如需啟用圖片上傳功能，需於glitter.share.publicInterface中進行定義:
   <br>

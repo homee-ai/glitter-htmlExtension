@@ -1,5 +1,6 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
+import { SharedView } from "../homee/shareView.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -36,7 +37,7 @@ Plugin.create(import.meta.url, (glitter) => {
     return {
         nav: {
             defaultData: {
-                searchDefault: "大家都在搜尋:"
+                searchDefault: "大家都在搜尋:沙發"
             },
             render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`                    
@@ -54,28 +55,39 @@ Plugin.create(import.meta.url, (glitter) => {
                 });
                 return {
                     view: () => {
-                        return `
-                        <div class="d-flex align-items-center" style="margin-top: ${widget.data.topInset}px;padding: 0 16px;">
-                            <img class="" src="${import.meta.resolve('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                        })}">
-                            <div class="search-bar d-flex " style="width: calc(100vw - 60px);">
-                                <img class="search-icon" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473" alt="" >
-                                <input class="w-100 search-input" placeholder="${widget.data.searchDefault}" oninput="${gvc.event((e) => {
-                        })}">
-                            </div>
-                                <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                        })}">
+                        const sharedView = new SharedView(gvc);
+                        return sharedView.navigationBar({
+                            title: ``,
+                            leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                            })}">
+ <input class="  form-control flex-fill" style="
+border-radius: 20px;
+font-family: 'Noto Sans TC';
+padding-left: 30px;
+font-style: normal;
+font-weight: 400;
+background: url(https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473) no-repeat scroll 7px 7px,rgba(41, 41, 41, 0.1);;
+background-size: 20px;
+font-size: 14px;
+line-height: 150%;
+color: #858585;
+width: calc(100vw - 180px);
+" placeholder="${widget.data.searchDefault}" oninput="${gvc.event((e) => { })}">
+`,
+                            rightIcon: `
+                             <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                            })}">
                                 <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061418331" style="width: 28px;height: 28px;" alt="" onclick="${gvc.event(() => {
-                        })}">
-                            </div>
-                    `;
+                            })}">
+                            `
+                        });
                     },
                     editor: () => {
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
                                 title: "預設搜尋內容",
-                                default: widget.data.title,
+                                default: widget.data.searchDefault,
                                 placeHolder: "大家都在搜尋:沙發",
                                 callback: (text) => {
                                     widget.data.searchDefault = text;
@@ -212,15 +224,27 @@ Plugin.create(import.meta.url, (glitter) => {
                                      <div class="d-flex flex-column " style="width:20%;padding-right: 16px;" onclick="${gvc.event(() => {
                                         data.click();
                                     })}">                                        
-                                        <div style="width:100%;height:auto;padding: 0 4px 100%;background: #FBF9F6 url(${data.img}) no-repeat center;background-size: contain;margin-right: 18px;"></div>
-                                        <div class="w-100 d-flex align-items-center justify-content-center" style="font-weight: 400;font-size: 14px;line-height: 20px;display: flex;align-items: center;text-align: center;color: #1E1E1E;word-break:break-word;white-space: normal;">${data.title}</div>
+                                        <div style="width:64px;height:64px;border-radius: 18px;width:100%;height:auto;padding: 0 4px 100%;background: #FBF9F6 url(${data.img}) no-repeat center;background-size: contain;margin-right: 18px;"></div>
+                                        <div class="w-100 d-flex align-items-center justify-content-center" style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 100%;
+white-space: normal;
+word-break: break-all;
+display: flex;
+align-items: center;
+text-align: center;
+margin-bottom: 16px;
+margin-top: 4px;
+color: #1E1E1E;">${data.title}</div>
                                     </div>
                                 
                                 `;
                                 }));
                                 return `
                             <div style="margin-bottom:12px;padding-left:16px;font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">品類</div>
-                            <div class="d-flex flex-wrap" style="padding-left:16px">
+                            <div class="d-flex flex-wrap" style="padding-left:16px;">
                             ${returnHTML}
                             </div>
                         `;
