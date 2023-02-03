@@ -1,4 +1,5 @@
 'use strict';
+var _a;
 export class Api {
     constructor(gvc) {
         const $ = window.$;
@@ -58,4 +59,4 @@ export class Api {
         };
     }
 }
-Api.serverURL = 'http://192.168.4.109:3080';
+Api.serverURL = (_a = window.glitter.share.apiURL) !== null && _a !== void 0 ? _a : 'http://192.168.4.109:3080';
