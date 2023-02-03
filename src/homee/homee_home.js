@@ -4,6 +4,7 @@ import { SharedView } from './shareView.js';
 import { EditerApi } from "./api/editer-api.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { LegacyPage } from "./legacy/interface.js";
+import { Api } from "./api/homee-api.js";
 Plugin.create(import.meta.url, (glitter) => {
     const rootURL = new URL("../", import.meta.url).href;
     const api = {
@@ -400,8 +401,13 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                             rightIcon: `
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(() => {
-                                LegacyPage.execute(gvc.glitter, () => {
-                                    glitter.changePage(new URL('./legacy/jsPage/category/category.js', import.meta.url).href, 'category', true, {});
+                                const api = new Api(gvc);
+                                api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=category', method: 'get' }, (res) => {
+                                    Plugin.initial(gvc, res.result[0].config).then(() => {
+                                        LegacyPage.execute(gvc.glitter, () => {
+                                            gvc.glitter.changePage(LegacyPage.getLink("jsPage/htmlGenerater.js"), 'category', true, res.result[0].config);
+                                        });
+                                    });
                                 });
                             })}">
                        <img src="${rootURL}/homee/src/bell.svg" onclick="${gvc.event(() => {
@@ -471,7 +477,7 @@ ${gvc.map([EditerApi.upload("Logo", (_b = widget.data.logo.src) !== null && _b !
                                         widget.data.titleStyle = text;
                                         widget.refreshAll();
                                     }
-                                })])}</div>`
+                                })])}</div>`,
                         ]);
                     }
                 };

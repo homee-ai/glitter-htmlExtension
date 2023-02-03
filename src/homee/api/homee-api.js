@@ -58,3 +58,4 @@ export class Api {
         };
     }
 }
+Api.serverURL = 'http://192.168.4.109:3080';

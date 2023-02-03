@@ -31,6 +31,64 @@ ClickEvent.create(import.meta.url, {
             };
         }
     },
+    pageSwitch: {
+        title: "頁面跳轉",
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    var _a;
+                    const vm = {
+                        loading: true,
+                        data: []
+                    };
+                    const id = gvc.glitter.getUUID();
+                    const api = new Api(gvc);
+                    object.selectPage = (_a = object.selectPage) !== null && _a !== void 0 ? _a : {};
+                    api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name', method: 'get' }, (res) => {
+                        vm.data = res.result;
+                        vm.loading = false;
+                        gvc.notifyDataChange(id);
+                    });
+                    return `
+<h3 class="m-0 mb-2 mt-2" style="font-size: 16px;">選擇頁面</h3>
+${gvc.bindView(() => {
+                        return {
+                            bind: id,
+                            view: () => {
+                                var _a;
+                                if (vm.loading) {
+                                    return `<option value='${JSON.stringify(object.selectPage)}'>${(_a = object.selectPage.name) !== null && _a !== void 0 ? _a : "尚未選擇"}</option>`;
+                                }
+                                let haveData = false;
+                                return gvc.map(vm.data.map((dd) => {
+                                    haveData = haveData || object.selectPage.tag === dd.tag;
+                                    return `<option value='${JSON.stringify(dd)}' ${(object.selectPage.tag === dd.tag) ? `selected` : ``}>${dd.name}</option>`;
+                                })) + ((haveData) ? `` : `<option selected>尚未定義</option>`);
+                            },
+                            divCreate: { class: `form-control`, elem: `select`, option: [
+                                    {
+                                        key: 'onChange',
+                                        value: gvc.event((e, event) => {
+                                            object.selectPage = JSON.parse(e.value);
+                                            widget.refreshAll();
+                                        })
+                                    }
+                                ] }
+                        };
+                    })}
+`;
+                },
+                event: () => {
+                    const api = new Api(gvc);
+                    api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag, method: 'get' }, (res) => {
+                        LegacyPage.execute(gvc.glitter, () => {
+                            gvc.glitter.changePage(LegacyPage.getLink("jsPage/htmlGenerater.js"), object.selectPage.tag, true, res.result[0].config);
+                        });
+                    });
+                }
+            };
+        }
+    },
     category: {
         title: "商品分類",
         fun: (gvc, widget, object) => {
@@ -108,7 +166,7 @@ ClickEvent.create(import.meta.url, {
                     var _a, _b;
                     const funnel = new Funnel(gvc);
                     return funnel.optionSreach({
-                        path: location.origin + '/api/v1/product?product_name=',
+                        path: Api.serverURL + '/api/v1/product?product_name=',
                         key: 'name',
                         def: (_b = ((_a = obj.data) !== null && _a !== void 0 ? _a : {}).name) !== null && _b !== void 0 ? _b : "",
                         searchData: "product_list"
