@@ -148,12 +148,12 @@ width: calc(100vw - 180px);
                         })}">
                                 <div class="bannerTitle">${widget.data.dataList[0].title}</div>
                             </div>
-                            <div class="w-50 d-flex flex-column" style="margin-left: 7px;" onclick="${gvc.event(()=>{
+                            <div class="w-50 d-flex flex-column" style="margin-left: 7px;" >
+                                <div class="banner-card" style="margin-bottom:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[1].img});position: relative;" onclick="${gvc.event(()=>{
                             ClickEvent.trigger({
                                 gvc,widget,clickEvent:widget.data.dataList[1]
                             })
                         })}">
-                                <div class="banner-card" style="margin-bottom:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[1].img});position: relative;">
                                     <div class="bannerTitle">${widget.data.dataList[1].title}</div>
                                 </div>
                                 <div class="banner-card" style="margin-top:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[2].img});position: relative;" onclick="${gvc.event(()=>{

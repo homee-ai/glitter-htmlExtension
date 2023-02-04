@@ -2,6 +2,7 @@ import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { Api } from './api/homee-api.js';
 import { LegacyPage } from "./legacy/interface.js";
 import { Funnel } from "./funnel.js";
+import { DialogHelper } from "../dialog/dialog-helper.js";
 ClickEvent.create(import.meta.url, {
     link: {
         title: "連結跳轉",
@@ -80,8 +81,16 @@ ${gvc.bindView(() => {
                 },
                 event: () => {
                     const api = new Api(gvc);
+                    DialogHelper.dataLoading({
+                        text: "",
+                        visible: true
+                    });
                     api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag, method: 'get' }, (res) => {
                         LegacyPage.execute(gvc.glitter, () => {
+                            DialogHelper.dataLoading({
+                                text: "",
+                                visible: false
+                            });
                             gvc.glitter.changePage(LegacyPage.getLink("jsPage/htmlGenerater.js"), object.selectPage.tag, true, res.result[0].config);
                         });
                     });
@@ -150,7 +159,15 @@ ${gvc.bindView(() => {
                     `;
                 },
                 event: () => {
+                    DialogHelper.dataLoading({
+                        text: "",
+                        visible: true
+                    });
                     LegacyPage.execute(gvc.glitter, () => {
+                        DialogHelper.dataLoading({
+                            text: "",
+                            visible: false
+                        });
                         gvc.glitter.changePage(LegacyPage.getLink("jsPage/category/subCategory.js"), "subCategory", true, { title: object.name, parent_category_id: object.value, category: "sub_category_id", category_id: object.value, index: 0 });
                     });
                 }

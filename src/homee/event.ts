@@ -2,6 +2,7 @@ import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import { Api } from './api/homee-api.js';
 import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
+import {DialogHelper} from "../dialog/dialog-helper.js";
 
 ClickEvent.create(import.meta.url,{
     link:{
@@ -89,8 +90,16 @@ ${
                 },
                 event:()=>{
                     const api=new Api(gvc)
+                    DialogHelper.dataLoading({
+                        text:"",
+                        visible:true
+                    })
                     api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag='+object.selectPage.tag, method: 'get' }, (res) => {
                         LegacyPage.execute(gvc.glitter,()=>{
+                            DialogHelper.dataLoading({
+                                text:"",
+                                visible:false
+                            })
                             gvc.glitter.changePage(
                                 LegacyPage.getLink("jsPage/htmlGenerater.js"),
                                 object.selectPage.tag! ,
@@ -165,7 +174,15 @@ ${
                     `
                 },
                 event:()=>{
+                    DialogHelper.dataLoading({
+                        text:"",
+                        visible:true
+                    })
                     LegacyPage.execute(gvc.glitter,()=>{
+                        DialogHelper.dataLoading({
+                            text:"",
+                            visible:false
+                        })
                         gvc.glitter.changePage(
                             LegacyPage.getLink("jsPage/category/subCategory.js"),
                             "subCategory",
