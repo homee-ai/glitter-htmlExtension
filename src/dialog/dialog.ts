@@ -9,7 +9,7 @@ init((gvc, glitter, gBundle) => {
                 case 'dataLoading':
                     return `<div class="vw-100 vh-100 position-fixed top-0 left-0"  style="background-color: rgba(0,0,0,0.5);z-index: 10000;">
 <div class="bg-white rounded" style="width: 100px;height: 100px;position: absolute;z-index: 999;transform: translate(-50%,-50%);left: 50%;top:50%;">
-         <img src="${new URL("./img/loading.gif",import.meta.url)}"  background="transparent"  speed="1"  style="position:relative;width: 70px; height: 70px;transform: translateX(-50%);left: 50%;"  loop  autoplay>
+         <img src="${new URL("../img/loading.gif",import.meta.url)}"  background="transparent"  speed="1"  style="position:relative;width: 70px; height: 70px;transform: translateX(-50%);left: 50%;"  loop  autoplay>
          <h3 style="color: #323643;font-size: 13px;margin-top: 0px;width: 100%;text-align: center">${gBundle.obj.text ?? '請稍候...'}</h3>
      </div>
 </div>`
