@@ -5,6 +5,7 @@ import {EditerApi} from "./api/editer-api.js";
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js"
 import {LegacyPage} from "./legacy/interface.js"
 import {Api} from "./api/homee-api.js";
+import {DialogHelper} from "../dialog/dialog-helper.js";
 Plugin.create(import.meta.url, (glitter) => {
     const rootURL=new URL("../",import.meta.url).href
     const api = {
@@ -408,9 +409,17 @@ src="${(!widget.data.logo.src || widget.data.logo.src==='') ? new URL('./src/hom
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(()=>{
                                const api=new Api(gvc)
+                               DialogHelper.dataLoading({
+                                   text:"",
+                                   visible:true
+                               })
                                api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag=category', method: 'get' }, (res) => {
                                    Plugin.initial(gvc,res.result[0].config).then(()=>{
                                        LegacyPage.execute(gvc.glitter,()=>{
+                                           DialogHelper.dataLoading({
+                                               text:"",
+                                               visible:false
+                                           })
                                            gvc.glitter.changePage(
                                                LegacyPage.getLink("jsPage/htmlGenerater.js"),
                                                'category' ,
