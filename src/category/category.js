@@ -60,20 +60,20 @@ Plugin.create(import.meta.url, (glitter) => {
                             title: ``,
                             leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                             })}">
- <input class="  form-control flex-fill" style="
-border-radius: 20px;
-font-family: 'Noto Sans TC';
-padding-left: 30px;
-font-style: normal;
-font-weight: 400;
-background: url(https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473) no-repeat scroll 7px 7px,rgba(41, 41, 41, 0.1);;
-background-size: 20px;
-font-size: 14px;
-line-height: 150%;
-color: #858585;
-width: calc(100vw - 180px);
+                             <input class="  form-control flex-fill" style="
+                            border-radius: 20px;
+                            font-family: 'Noto Sans TC';
+                            padding-left: 30px;
+                            font-style: normal;
+                            font-weight: 400;
+                            background: url(https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473) no-repeat scroll 7px 7px,rgba(41, 41, 41, 0.1);;
+                            background-size: 20px;
+                            font-size: 14px;
+                            line-height: 150%;
+                            color: #858585;
+                            width: calc(100vw - 180px);
 " placeholder="${widget.data.searchDefault}" oninput="${gvc.event((e) => { })}">
-`,
+                            `,
                             rightIcon: `
                              <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                             })}">
