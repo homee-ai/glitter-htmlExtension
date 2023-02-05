@@ -9,17 +9,18 @@ export class SharedView {
         let topInset: number = 0
         glitter.runJsInterFace("getTopInset", {}, (response) => {
             topInset=response.data
-            gvc.notifyDataChange('nav')
+            gvc.notifyDataChange(['nav','ddd'])
         }, {
             webFunction: () => {
                 return {data: 0}
             }
         })
         this.navigationBar = (item: { title: string, leftIcon: string, rightIcon: string , }) => {
-            return gvc.bindView({
-                bind: `nav`,
-                view: () => {
-                    return `
+            return gvc.map([
+                gvc.bindView({
+                    bind: `nav`,
+                    view: () => {
+                        return `
                     <nav class="bg-white w-100" style="position: fixed;z-index: 3;padding-top: ${topInset - 20}px;width: 100vw;">
                         <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: #FFFFFF;box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.05);position:relative;">
                             <div class="me-auto p-0 d-flex align-items-center" style="">
@@ -30,23 +31,29 @@ export class SharedView {
                     font-size: 16px;
                     font-weight: 700;">${item.title}</div>
                             ${(()=>{
-                        if (item.rightIcon){
-                            return `
-                                    <div class="d-flex ms-auto align-items-center" style="">
+                            if (item.rightIcon){
+                                return `<div class="d-flex ms-auto align-items-center" style="">
                                         ${item.rightIcon}
                                     </div>`
-                        }else
-                            return ``
-                    })()}
+                            }else
+                                return ``
+                        })()}
                         
                         </div>
                     </nav>
                         `
-                },
-                divCreate: {style:`width:100vw;height:calc(63px + ${topInset - 20}px)`},
-                onCreate: () => {
-                }
-            })
+                    },
+                    divCreate: {style:`width:100vw;height:calc(63px + ${topInset - 20}px);`},
+                    onCreate: () => { }
+                }),
+                gvc.bindView({
+                    bind:`ddd`,
+                    view:()=>{
+                        return `<div class="w-100" style="height:calc(${topInset || 20}px);"></div>`
+                    },
+                    divCreate:{}
+                })
+            ])
         }
             this.biggerTitle = (item: { title: string, leftIcon: string, rightIcon: string }) => {
                 glitter.runJsInterFace("getTopInset", {}, (response) => {

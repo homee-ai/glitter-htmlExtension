@@ -1,8 +1,7 @@
-import { Glitter } from '../Glitter.js';
 export class HtmlGenerate {
     constructor(setting, hover = []) {
         this.setting = setting;
-        const editContainer = Glitter.glitter.getUUID();
+        const editContainer = window.glitter.getUUID();
         setting.map((dd) => {
             var _a, _b;
             dd.refreshAllParameter = (_a = dd.refreshAllParameter) !== null && _a !== void 0 ? _a : {
@@ -26,8 +25,34 @@ export class HtmlGenerate {
             return dd;
         });
         this.render = (gvc, option = { class: ``, style: `` }) => {
-            var loading = false;
+            var loading = true;
             const container = gvc.glitter.getUUID();
+            function getData() {
+                async function add(set) {
+                    for (const a of set) {
+                        if (!gvc.glitter.share.htmlExtension[a.js]) {
+                            await new Promise((resolve, reject) => {
+                                gvc.glitter.addMtScript([
+                                    { src: `${a.js}`, type: 'module' }
+                                ], () => {
+                                    resolve(true);
+                                }, () => {
+                                    resolve(false);
+                                });
+                            });
+                        }
+                        if (a.type === 'container') {
+                            await add(a.data.setting);
+                        }
+                    }
+                    return true;
+                }
+                add(setting).then((data) => {
+                    loading = false;
+                    gvc.notifyDataChange(container);
+                });
+            }
+            getData();
             return gvc.bindView({
                 bind: container,
                 view: () => {
@@ -49,23 +74,38 @@ export class HtmlGenerate {
                                 view: () => {
                                     return `${(() => {
                                         try {
-                                            return gvc.glitter.share.htmlExtension[dd.route][dd.type].render(gvc, dd, setting, hover).view;
+                                            return gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).view();
                                         }
                                         catch (e) {
-                                            return `render error`;
+                                            return `解析錯誤:${e.message}
+<br>
+${e.stack}
+<br>
+${e.line}`;
                                         }
                                     })()}
                                     `;
                                 },
                                 divCreate: {
-                                    style: `${gvc.map(['paddingT', 'paddingB', 'paddingL', 'paddingR'].map((d2, index) => {
+                                    style: `
+                                    ${gvc.map(['paddingT', 'paddingB', 'paddingL', 'paddingR'].map((d2, index) => {
                                         let k = ['padding-top', 'padding-bottom', 'padding-left', 'padding-right'];
                                         return `${k[index]}:${(dd.data[d2] && dd.data[d2] !== '') ? dd.data[d2] : '0'};`;
-                                    }))} ${gvc.map(['marginT', 'marginB', 'marginL', 'marginR'].map((d2, index) => {
+                                    }))} 
+                                    ${gvc.map(['marginT', 'marginB', 'marginL', 'marginR'].map((d2, index) => {
                                         let k = ['margin-top', 'margin-bottom', 'margin-left', 'margin-right'];
                                         return `${k[index]}:${(dd.data[d2] && dd.data[d2] !== '') ? dd.data[d2] : '0'};`;
                                     }))} ${(_a = dd.style) !== null && _a !== void 0 ? _a : ''} ${(hover.indexOf(dd.id) !== -1) ? `border: 4px solid dodgerblue;border-radius: 5px;box-sizing: border-box;` : ``}`,
                                     class: `position-relative ${(_b = dd.class) !== null && _b !== void 0 ? _b : ''}`
+                                },
+                                onCreate: () => {
+                                    if (hover.indexOf(dd.id) !== -1) {
+                                        console.log('hover');
+                                        setTimeout(() => {
+                                            const scrollTOP = (gvc.glitter.$('#' + gvc.id(component)).offset().top) - (gvc.glitter.$('html').offset().top) + (gvc.glitter.$('html').scrollTop());
+                                            gvc.glitter.$('html').animate({ scrollTop: scrollTOP - gvc.glitter.$('html').height() / 2 }, 200);
+                                        }, 100);
+                                    }
                                 }
                             });
                         }));
@@ -83,8 +123,37 @@ export class HtmlGenerate {
             setting: setting,
             deleteEvent: () => { }
         }) => {
-            var loading = false;
+            var loading = true;
             const oset = this.setting;
+            function getData() {
+                var _a;
+                async function add(set) {
+                    for (const a of set) {
+                        if (!gvc.glitter.share.htmlExtension[a.js]) {
+                            await new Promise((resolve, reject) => {
+                                gvc.glitter.addMtScript([
+                                    { src: `${a.js}`, type: 'module' }
+                                ], () => {
+                                    resolve(true);
+                                }, () => {
+                                    resolve(false);
+                                });
+                            });
+                        }
+                        if (a.type === 'container') {
+                            await add(a.data.setting);
+                        }
+                    }
+                    return true;
+                }
+                add((_a = option.setting) !== null && _a !== void 0 ? _a : setting).then((data) => {
+                    loading = false;
+                    setTimeout(() => {
+                        gvc.notifyDataChange(editContainer);
+                    }, 100);
+                });
+            }
+            getData();
             return gvc.bindView({
                 bind: editContainer,
                 view: () => {
@@ -94,8 +163,13 @@ export class HtmlGenerate {
                     }
                     else {
                         return gvc.map(((_a = option.setting) !== null && _a !== void 0 ? _a : setting).map((dd, index) => {
+                            var _a, _b;
                             try {
                                 const component = gvc.glitter.getUUID();
+                                dd.refreshAllParameter = (_a = dd.refreshAllParameter) !== null && _a !== void 0 ? _a : { view1: () => { }, view2: () => { } };
+                                dd.refreshComponentParameter = (_b = dd.refreshComponentParameter) !== null && _b !== void 0 ? _b : {
+                                    view1: () => { }, view2: () => { }
+                                };
                                 dd.refreshAllParameter.view2 = () => {
                                     gvc.notifyDataChange(editContainer);
                                 };
@@ -140,7 +214,19 @@ ${gvc.bindView({
 <h3 style="color: white;font-size: 16px;" class="m-0">${dd.label}</h3>
 <div class="flex-fill"></div>
 ${(option.return_) ? (dd.expand ? `<div style="cursor: pointer;" onclick="${toggleEvent}">收合<i class="fa-solid fa-up ms-2 text-white"></i></div>` : `<div style="cursor: pointer;" onclick="${toggleEvent}">展開<i class="fa-solid fa-down ms-2 text-white"></i></div>\``) : ``}
-</div>`;
+</div>
+${(false) ? HtmlGenerate.editeInput({
+                                            gvc: gvc,
+                                            title: "模塊資源路徑",
+                                            default: dd.js,
+                                            placeHolder: "請輸入模塊路徑",
+                                            callback: (text) => {
+                                                dd.js = text;
+                                                option.refreshAll();
+                                                dd.refreshAll();
+                                            }
+                                        }) : ``}
+`;
                                     },
                                     divCreate: {}
                                 })}
@@ -173,7 +259,7 @@ ${gvc.bindView({
                                                         bind: uid,
                                                         view: () => {
                                                             var _a, _b;
-                                                            return `<div class="w-100  rounded p-2" style="background-color: #0062c0;">
+                                                            return `<div class="w-100  rounded p-2 " style="background-color: #0062c0;">
 <div class="w-100 d-flex p-0 align-items-center" onclick="${toggleEvent}" style="cursor: pointer;"><h3 style="font-size: 16px;" class="m-0 p-0">容器版面設計</h3>
 <div class="flex-fill"></div>
 ${(dd.expandStyle ? `<div style="cursor: pointer;" >收合<i class="fa-solid fa-up ms-2 text-white"></i></div>` : `<div style="cursor: pointer;">展開<i class="fa-solid fa-down ms-2 text-white"></i></div>\``)}
@@ -230,12 +316,18 @@ ${HtmlGenerate.editeText({
                                                     };
                                                 }),
                                                 ,
-                                                gvc.glitter.share.htmlExtension[dd.route][dd.type].render(gvc, dd, setting, hover).editor
+                                                gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).editor()
                                             ]);
                                         }
                                         catch (e) {
-                                            return `<div style="word-break: break-all;white-space: normal;">
-資料錯誤:${e.message}
+                                            return `<div class="alert alert-danger mt-2" role="alert" style="word-break: break-word;white-space: normal;">
+  <i class="fa-duotone fa-triangle-exclamation"></i>
+  <br>
+解析錯誤:${e.message}
+<br>
+${e.stack}
+<br>
+${e.line}
 </div>`;
                                         }
                                     },
@@ -243,14 +335,23 @@ ${HtmlGenerate.editeText({
                                 })}</div>`;
                             }
                             catch (e) {
-                                return `<div style="word-break: break-all;white-space: normal;" >
-資料錯誤:${e.message}
+                                return `
+<div class="alert alert-danger" role="alert" style="word-break: break-word;white-space: normal;">
+  <i class="fa-duotone fa-triangle-exclamation"></i>
+<br>
+解析錯誤:${e.message}
+<br>
+${e.stack}
+<br>
+${e.line}
 </div>`;
                             }
                         }));
                     }
                 },
-                divCreate: {}
+                divCreate: {},
+                onCreate: () => {
+                }
             });
         };
         this.exportJson = (setting) => {
@@ -259,31 +360,10 @@ ${HtmlGenerate.editeText({
     }
     static editeInput(obj) {
         var _a;
-        console.log("test");
         return `<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${obj.title}</h3>
 <input class="form-control" placeholder="${obj.placeHolder}" onchange="${obj.gvc.event((e) => {
             obj.callback(e.value);
         })}" value="${(_a = obj.default) !== null && _a !== void 0 ? _a : ''}">`;
-    }
-    ;
-    static imgInput(obj) {
-        return `
-            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${obj.title}</h3>
-            <div class="mt-2"></div>
-            <div class="d-flex align-items-center mb-3">
-                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${obj.default}">
-                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${obj.gvc.event(() => {
-            obj.glitter.ut.chooseMediaCallback({
-                single: true,
-                accept: 'image/*',
-                callback(data) {
-                    obj.callback(data);
-                }
-            });
-        })}"></i>
-            </div>
-        `;
     }
     ;
     static editeText(obj) {

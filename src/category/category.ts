@@ -2,6 +2,8 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {SharedView} from "../homee/shareView.js";
+import {Api} from "../homee/api/homee-api";
+import {LegacyPage} from "../homee/legacy/interface";
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -60,28 +62,32 @@ Plugin.create(import.meta.url,(glitter)=>{
                         return sharedView.navigationBar({
                             title:``,
                             leftIcon:`<img class="" src="${new URL('../img/component/left-arrow.svg',import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                //    todo
+                              gvc.glitter.goBack()
                             })}">
-                             <input class="  form-control flex-fill" style="
-                            border-radius: 20px;
-                            font-family: 'Noto Sans TC';
-                            padding-left: 30px;
-                            font-style: normal;
-                            font-weight: 400;
-                            background: url(https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473) no-repeat scroll 7px 7px,rgba(41, 41, 41, 0.1);;
-                            background-size: 20px;
-                            font-size: 14px;
-                            line-height: 150%;
-                            color: #858585;
-                            width: calc(100vw - 180px);
-" placeholder="${widget.data.searchDefault}" oninput="${gvc.event((e:any)=>{ })}">
-                            `,
+
+ <input class="  form-control flex-fill" style="
+border-radius: 20px;
+font-family: 'Noto Sans TC';
+padding-left: 30px;
+font-style: normal;
+font-weight: 400;
+background: url(https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061987473) no-repeat scroll 7px 7px,rgba(41, 41, 41, 0.1);;
+background-size: 20px;
+font-size: 14px;
+line-height: 150%;
+color: #858585;
+width: calc(100vw - 180px);
+" placeholder="${widget.data.searchDefault}" onfocus="${gvc.event(()=>{
+                               glitter.changePage(new URL('../homee/jspage/search-page.js',import.meta.url).href,'searchPage',true,{},{animation:glitter.animation.fade})
+                            })}" >
+`,
+
                             rightIcon:`
                              <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-
+                                glitter.runJsInterFace("noticeBell",{},()=>{})
                             })}">
                                 <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061418331" style="width: 28px;height: 28px;" alt="" onclick="${gvc.event(() => {
-
+                                glitter.runJsInterFace("qrcodeScanner",{},()=>{})
                             })}">
                             `
                         })
@@ -106,7 +112,8 @@ Plugin.create(import.meta.url,(glitter)=>{
         },
         banner:{
             defaultData:{
-                dataList:[{title:"精選人氣商品" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675063161788"},
+                dataList:[
+                    {title:"精選人氣商品" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675063161788"},
                     {title:"岩板餐桌系列" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675063296082"},
                     {title:"本週新品（ NEW ）" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675063314153"}
                 ],
@@ -136,14 +143,26 @@ Plugin.create(import.meta.url,(glitter)=>{
                     view: ()=>{
                         return `
                         <div class="w-100 d-flex" style="padding: 16px;">
-                            <div class="w-50 banner-card" style="margin-right:7px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[0].img});position: relative">
+                            <div class="w-50 banner-card" style="margin-right:7px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[0].img});position: relative" onclick="${gvc.event(()=>{
+                            ClickEvent.trigger({
+                                gvc,widget,clickEvent:widget.data.dataList[0]
+                            })
+                        })}">
                                 <div class="bannerTitle">${widget.data.dataList[0].title}</div>
                             </div>
-                            <div class="w-50 d-flex flex-column" style="margin-left: 7px;">
-                                <div class="banner-card" style="margin-bottom:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[1].img});position: relative;">
+                            <div class="w-50 d-flex flex-column" style="margin-left: 7px;" >
+                                <div class="banner-card" style="margin-bottom:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[1].img});position: relative;" onclick="${gvc.event(()=>{
+                            ClickEvent.trigger({
+                                gvc,widget,clickEvent:widget.data.dataList[1]
+                            })
+                        })}">
                                     <div class="bannerTitle">${widget.data.dataList[1].title}</div>
                                 </div>
-                                <div class="banner-card" style="margin-top:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[2].img});position: relative;">
+                                <div class="banner-card" style="margin-top:6px;padding-top: 50%;background:50% / cover url(${widget.data.dataList[2].img});position: relative;" onclick="${gvc.event(()=>{
+                            ClickEvent.trigger({
+                                gvc,widget,clickEvent:widget.data.dataList[2]
+                            })
+                        })}">
                                     <div class="bannerTitle">${widget.data.dataList[2].title}</div>
                                 </div>
                             </div>
@@ -152,8 +171,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                     },
                     editor: ()=>{
                         return gvc.map(widget.data.dataList.map((dd:any,index:number)=>{
-
-                            return glitter.htmlGenerate.editeInput({
+                            return `<div class="alert alert-dark mt-2">
+${glitter.htmlGenerate.editeInput({
                                     gvc: gvc,
                                     title: `banner標題${index+1}`,
                                     default: dd.title,
@@ -162,28 +181,27 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         widget.data.dataList[index].title = text
                                         widget.refreshAll!()
                                     }
-                                })+
-                                `
-                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index+1}</h3>
+                                })}
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index+1}</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
                                     <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].img}">
                                     <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
                                     <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
-                                    glitter.ut.chooseMediaCallback({
-                                        single:true,
-                                        accept:'image/*',
-                                        callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                            glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
-                                                widget.data.dataList[index].img=link;
-                                                widget.refreshAll!()
-                                            })
-                                        }
-                                    })
-                                })}"></i>
+                                glitter.ut.chooseMediaCallback({
+                                    single:true,
+                                    accept:'image/*',
+                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                        glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                            widget.data.dataList[index].img=link;
+                                            widget.refreshAll!()
+                                        })
+                                    }
+                                })
+                            })}"></i>
                                 </div>
-
-                            `
+${ClickEvent.editer(gvc,widget,dd)}
+</div>`
                         }))
                     }
 
@@ -203,7 +221,8 @@ Plugin.create(import.meta.url,(glitter)=>{
         },
         category12:{
             defaultData:{
-                dataList:[{title:"餐桌" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675071897159", toPage:""},
+                dataList:[
+                    {title:"餐桌" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675071897159", toPage:""},
                     {title:"椅子" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072457700" , toPage:""},
                     {title:"沙發" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072481671" , toPage:""},
                     {title:"茶几" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072593723" , toPage:""},
@@ -244,7 +263,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 let returnHTML = gvc.map(widget.data.dataList.map((data:any)=>{
                                     return `
                                      <div class="d-flex flex-column " style="width:20%;padding-right: 16px;" onclick="${gvc.event(() => {
-                                        data.click();
+                                        ClickEvent.trigger({
+                                            gvc,widget,clickEvent:data
+                                        })
                                     })}">                                        
                                         <div style="width:64px;height:64px;border-radius: 18px;width:100%;height:auto;padding: 0 4px 100%;background: #FBF9F6 url(${data.img}) no-repeat center;background-size: contain;margin-right: 18px;"></div>
                                         <div class="w-100 d-flex align-items-center justify-content-center" style="font-family: 'Noto Sans TC';
@@ -280,7 +301,7 @@ color: #1E1E1E;">${data.title}</div>
                         return `<div class="d-flex flex-column">                   
                         ${gvc.map(widget.data.dataList.map((dd:any,index:number)=>{
                             return `
-                            <div class="d-flex flex-column my-3">
+                            <div class="d-flex flex-column my-3 alert alert-dark">
                                 <div class="d-flex align-items-center">
                                     <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;display: inline-block" onclick="${gvc.event(() => {
                                     widget.data.dataList.splice(index, 1)
@@ -296,59 +317,43 @@ color: #1E1E1E;">${data.title}</div>
                                         widget.data.dataList[index].title = text
                                         widget.refreshAll!()
                                     }
-                                })}                             
-                                `+
-                                `
-                                    <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片${index+1}</h3>
+                                })}     
+                                 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片${index+1}</h3>
                                     <div class="mt-2"></div>
                                     <div class="d-flex align-items-center mb-3">
                                         <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].img}">
                                         <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
                                         <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
-                                    glitter.ut.chooseMediaCallback({
-                                        single:true,
-                                        accept:'image/*',
-                                        callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                            api.upload(data[0].file,(link)=>{
-                                                widget.data.dataList[index].img=link;
-                                                widget.refreshAll()
-                                            })
-                                        }
-                                    })
-                                })}"></i>
-                                    </div>
-        
-                                    `
-                                //todo
-                                +glitter.htmlGenerate.editeInput({
-                                    gvc: gvc,
-                                    title: `該圖${index+1}通往的頁面`,
-                                    default: dd.toPage,
-                                    placeHolder: dd.toPage,
-                                    callback: (text: string) => {
-                                        widget.data.dataList[index].toPage = text
-                                        widget.refreshAll!()
+                                glitter.ut.chooseMediaCallback({
+                                    single:true,
+                                    accept:'image/*',
+                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                        api.upload(data[0].file,(link)=>{
+                                            widget.data.dataList[index].img=link;
+                                            widget.refreshAll()
+                                        })
                                     }
                                 })
+                            })}"></i>
+                                    </div>
+                                ${ClickEvent.editer(gvc,widget,dd)}  
+                            </div>                 
+                                `
                         }))}
                         ${(()=>{
-                            if (widget.data.dataList.length < 10){
-                                gvc.addStyle(`
+                            gvc.addStyle(`
                                     .add-btn:hover{
                                         cursor: pointer;
                                     }
                                 `)
-                                return `
-                                    <div class="add-btn text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${
-                                    gvc.event(() => {
-                                        widget.data.dataList.push({img: `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg` , title : `` , toPage : ``})
-                                        widget.refreshAll()
-                                    })
-                                }">添加目錄區塊</div>
-                                `
-                            }
                             return `
-                            `
+                                    <div class="add-btn text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${
+                                gvc.event(() => {
+                                    widget.data.dataList.push({img: `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg` , title : `` , toPage : ``})
+                                    widget.refreshAll()
+                                })
+                            }">添加目錄區塊</div>
+                                `
                         })()}
                     </div>`
                     }
@@ -356,13 +361,12 @@ color: #1E1E1E;">${data.title}</div>
                 }
             }
         },
-
         footer:{
             defaultData:{
                 dataList:[
                     {
                         title : "首頁",
-                        icon : import.meta.resolve!('../img/component/footer/home.svg',import.meta.url),
+                        icon : new URL('../img/component/footer/home.svg',import.meta.url).href,
                         toPage:"",
                         click : ()=>{
 
@@ -370,7 +374,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     {
                         title : "靈感",
-                        icon : import.meta.resolve!('../img/component/footer/idea.svg',import.meta.url),
+                        icon : new URL('../img/component/footer/idea.svg',import.meta.url).href,
                         toPage:"",
                         click : ()=>{
 
@@ -378,7 +382,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     {
                         title : "我的空間",
-                        icon : import.meta.resolve!('../img/component/footer/myspace.svg',import.meta.url),
+                        icon : new URL('../img/component/footer/myspace.svg',import.meta.url).href,
                         toPage:"",
                         click : ()=>{
 
@@ -386,7 +390,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     {
                         title : "購物車",
-                        icon : import.meta.resolve!('../img/component/footer/shoopingCart.svg',import.meta.url),
+                        icon : new URL('../img/component/footer/shoopingCart.svg',import.meta.url).href,
                         toPage:"",
                         click : ()=>{
 
@@ -394,7 +398,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     {
                         title : "會員",
-                        icon : import.meta.resolve!('../img/component/footer/user.svg',import.meta.url),
+                        icon : new URL('../img/component/footer/user.svg',import.meta.url).href,
                         toPage:"",
                         click : ()=>{
 
@@ -441,7 +445,11 @@ color: #1E1E1E;">${data.title}</div>
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data:any , index:number)=>{
                                 return `
-                                                    <div class="d-flex flex-column align-items-center">
+                                                    <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e)=>{
+                                    ClickEvent.trigger({
+                                        gvc,widget,clickEvent:data
+                                    })
+                                })}">
                                                         <img src=${data.icon} style="width: 28px;height: 28px;">
                                                         <div class="footerTitle ${(() => {if (index==0) return "selected"})()}">${data.title}</div>
                                                     </div>
@@ -482,19 +490,8 @@ color: #1E1E1E;">${data.title}</div>
                                     })
                                 })}"></i>
                                 </div>
-
                             `
-                                //todo
-                                +glitter.htmlGenerate.editeInput({
-                                    gvc: gvc,
-                                    title: `超連結${index+1}通往的頁面`,
-                                    default: dd.toPage,
-                                    placeHolder: dd.toPage,
-                                    callback: (text: string) => {
-                                        widget.data.dataList[index].toPage = text
-                                        widget.refreshAll!()
-                                    }
-                                })
+                                +ClickEvent.editer(gvc,widget,dd)
                         }))
                     }
 

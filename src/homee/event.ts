@@ -2,6 +2,8 @@ import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import { Api } from './api/homee-api.js';
 import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
+import {DialogHelper} from "../dialog/dialog-helper.js";
+
 ClickEvent.create(import.meta.url,{
     link:{
         title:"連結跳轉",
@@ -32,6 +34,79 @@ ClickEvent.create(import.meta.url,{
                         }
                     })
 
+                }
+            }
+        }
+    },
+    pageSwitch:{
+        title:"頁面跳轉",
+        fun:(gvc,widget,object:{selectPage:{tag?:string,name?:string}})=>{
+            return {
+                editor:()=>{
+                    const vm:{
+                        loading:boolean,
+                        data:{name:string,tag:string}[]
+                    }={
+                        loading:true,
+                        data:[]
+                    }
+                    const id=gvc.glitter.getUUID()
+                    const api=new Api(gvc)
+                    object.selectPage=object.selectPage ?? {}
+                    api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name', method: 'get' }, (res) => {
+                        vm.data=res.result
+                        vm.loading=false
+                        gvc.notifyDataChange(id)
+                    })
+                    return `
+<h3 class="m-0 mb-2 mt-2" style="font-size: 16px;">選擇頁面</h3>
+${
+                        gvc.bindView(()=>{
+                            return {
+                                bind:id,
+                                view:()=>{
+                                    if(vm.loading){
+                                        return `<option value='${JSON.stringify(object.selectPage)}'>${object.selectPage.name ?? "尚未選擇"}</option>`
+                                    }
+                                    let haveData=false
+                                    return  gvc.map(vm.data.map((dd)=>{
+                                        haveData=haveData || object.selectPage.tag === dd.tag
+                                        return `<option value='${JSON.stringify(dd)}' ${(object.selectPage.tag === dd.tag) ? `selected`:``}>${dd.name}</option>`
+                                    })) + ((haveData) ? ``:`<option selected>尚未定義</option>`)
+                                },
+                                divCreate:{class:`form-control`,elem:`select`,option:[
+                                        {
+                                            key:'onChange',
+                                            value:gvc.event((e, event)=>{
+                                                object.selectPage=JSON.parse(e.value)
+                                                widget.refreshAll()
+                                            })
+                                        }
+                                    ]}
+                            }
+                        })
+                    }
+`
+                },
+                event:()=>{
+                    const api=new Api(gvc)
+                    DialogHelper.dataLoading({
+                        text:"",
+                        visible:true
+                    })
+                    api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag='+object.selectPage.tag, method: 'get' }, (res) => {
+                        LegacyPage.execute(gvc.glitter,()=>{
+                            DialogHelper.dataLoading({
+                                text:"",
+                                visible:false
+                            })
+                            gvc.glitter.changePage(
+                                LegacyPage.getLink("jsPage/htmlGenerater.js"),
+                                object.selectPage.tag! ,
+                                true,
+                                res.result[0].config)
+                        })
+                    })
                 }
             }
         }
@@ -99,7 +174,15 @@ ClickEvent.create(import.meta.url,{
                     `
                 },
                 event:()=>{
+                    DialogHelper.dataLoading({
+                        text:"",
+                        visible:true
+                    })
                     LegacyPage.execute(gvc.glitter,()=>{
+                        DialogHelper.dataLoading({
+                            text:"",
+                            visible:false
+                        })
                         gvc.glitter.changePage(
                             LegacyPage.getLink("jsPage/category/subCategory.js"),
                             "subCategory",
@@ -120,7 +203,7 @@ ClickEvent.create(import.meta.url,{
                     const funnel=new Funnel(gvc)
                     return funnel.optionSreach(
                         {
-                            path: location.origin+'/api/v1/product?product_name=',
+                            path: Api.serverURL+'/api/v1/product?product_name=',
                             key: 'name',
                             def: (obj.data ?? {}).name ?? "",
                             searchData:"product_list"

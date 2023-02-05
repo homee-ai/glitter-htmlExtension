@@ -69,12 +69,13 @@ export class PageManager {
     static setHome(url, tag, obj, option = {}) {
         var _a, _b;
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.setHome(url, tag, obj, option);
             }, 100);
         }
         else {
+            PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             for (let a = glitter.pageConfig.length - 1; a >= 0; a--) {
                 if (glitter.pageConfig[a].type !== GVCType.Dialog) {
@@ -95,7 +96,7 @@ export class PageManager {
             });
             glitter.nowPageConfig = config;
             let module = glitter.modelJsList.find((dd) => {
-                return dd.src === url;
+                return `${dd.src}` == url;
             });
             if (module) {
                 module.create(glitter);
@@ -108,7 +109,6 @@ export class PageManager {
                 glitter.pageConfig = [];
                 glitter.pageConfig.push(config);
                 glitter.setUrlParameter('page', tag);
-                glitter.waitChangePage = false;
             }
             else {
                 glitter.addMtScript([{
@@ -125,7 +125,6 @@ export class PageManager {
                     glitter.pageConfig = [];
                     glitter.pageConfig.push(config);
                     glitter.setUrlParameter('page', tag);
-                    glitter.waitChangePage = false;
                 }, () => {
                     console.log("can't find script src:" + url);
                     glitter.waitChangePage = false;
@@ -164,22 +163,27 @@ export class PageManager {
                 });
             }
         }
-        page.getElement().addClass(`position-absolute`);
+        page.getElement().addClass(`position-fixed`);
         page.getElement().show();
         page.animation.inView(page, () => {
             closePreviousPage();
-            page.getElement().removeClass('position-absolute');
+            page.getElement().removeClass('position-fixed');
+            glitter.waitChangePage = true;
+            setTimeout(() => {
+                glitter.waitChangePage = false;
+            }, 100);
         });
     }
     static changePage(url, tag, goBack, obj, option = {}) {
         var _a, _b;
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.changePage(url, tag, goBack, obj, option);
             }, 100);
         }
         else {
+            PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             const config = new PageConfig({
                 id: glitter.getUUID(),
@@ -195,15 +199,14 @@ export class PageManager {
             });
             glitter.nowPageConfig = config;
             let module = glitter.modelJsList.find((dd) => {
-                return dd.src === url;
+                return `${dd.src}` == url;
             });
             if (module) {
-                module.create(glitter);
                 const search = glitter.setSearchParam(glitter.removeSearchParam(glitter.window.location.search, "page"), "page", tag);
                 glitter.window.history.pushState({}, glitter.document.title, search);
                 glitter.pageConfig.push(config);
                 glitter.setUrlParameter('page', tag);
-                glitter.waitChangePage = false;
+                module.create(glitter);
             }
             else {
                 glitter.addMtScript([{
@@ -214,7 +217,6 @@ export class PageManager {
                     const search = glitter.setSearchParam(glitter.removeSearchParam(glitter.window.location.search, "page"), "page", tag);
                     glitter.window.history.pushState({}, glitter.document.title, search);
                     glitter.pageConfig.push(config);
-                    glitter.waitChangePage = false;
                 }, () => {
                     console.log("can't find script src:" + url);
                     glitter.waitChangePage = false;
@@ -234,12 +236,13 @@ export class PageManager {
     static openDiaLog(url, tag, obj, option = {}) {
         var _a, _b;
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.openDiaLog(url, tag, obj, option);
             }, 100);
         }
         else {
+            PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             const config = new PageConfig({
                 id: glitter.getUUID(),
@@ -255,13 +258,12 @@ export class PageManager {
             });
             glitter.nowPageConfig = config;
             let module = glitter.modelJsList.find((dd) => {
-                return dd.src === url;
+                return `${dd.src}` == url;
             });
             if (module) {
                 module.create(glitter);
                 glitter.pageConfig.push(config);
                 glitter.setUrlParameter('dialog', tag);
-                glitter.waitChangePage = false;
             }
             else {
                 glitter.addMtScript([{
@@ -271,7 +273,6 @@ export class PageManager {
                     }], () => {
                     glitter.pageConfig.push(config);
                     glitter.setUrlParameter('dialog', tag);
-                    glitter.waitChangePage = false;
                 }, () => {
                     console.log("can't find script src:" + url);
                     glitter.waitChangePage = false;
@@ -282,12 +283,13 @@ export class PageManager {
     ;
     static closeDiaLog(tag) {
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.closeDiaLog(tag);
             }, 100);
         }
         else {
+            PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             for (let a = glitter.pageConfig.length - 1; a >= 0; a--) {
                 if (glitter.pageConfig[a].type === GVCType.Dialog && ((glitter.pageConfig[a].tag === tag) || tag === undefined)) {
@@ -359,4 +361,13 @@ export class PageManager {
     }
 }
 PageManager.changeWait = function () {
+};
+PageManager.clock = {
+    start: new Date(),
+    stop: function () {
+        return ((new Date()).getTime() - (this.start).getTime());
+    },
+    zeroing: function () {
+        this.start = new Date();
+    }
 };

@@ -32,6 +32,25 @@ export class Plugin {
         const glitter = (window as any).glitter
         glitter.share.htmlExtension[url] = fun(glitter)
     }
+    public static async  initial(gvc:GVC,set:any[]){
+        for (const a of set){
+            if(!gvc.glitter.share.htmlExtension[a.js]){
+                await new Promise((resolve, reject)=>{
+                    gvc.glitter.addMtScript([
+                        {src: `${a.js}`,type:'module'}
+                    ],()=>{
+                        resolve(true)
+                    },()=>{
+                        resolve(false)
+                    })
+                })
+            }
+            if(a.type==='container'){
+                await Plugin.initial(gvc,a.data.setting)
+            }
+        }
+        return true
+    }
 }
 
 function getUrlParameter(url: string, sParam: string): any {
