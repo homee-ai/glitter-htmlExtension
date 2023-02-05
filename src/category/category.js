@@ -62,8 +62,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                 gvc.glitter.goBack();
                             })}">
-
- <input class="  form-control flex-fill" style="
+ <div class="  form-control flex-fill" style="
 border-radius: 20px;
 font-family: 'Noto Sans TC';
 padding-left: 30px;
@@ -75,9 +74,9 @@ font-size: 14px;
 line-height: 150%;
 color: #858585;
 width: calc(100vw - 180px);
-" placeholder="${widget.data.searchDefault}" onfocus="${gvc.event(() => {
+" placeholder="${widget.data.searchDefault}" onclick="${gvc.event(() => {
                                 glitter.changePage(new URL('../homee/jspage/search-page.js', import.meta.url).href, 'searchPage', true, {}, { animation: glitter.animation.fade });
-                            })}" >
+                            })}" >${widget.data.searchDefault}</div>
 `,
                             rightIcon: `
                              <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {

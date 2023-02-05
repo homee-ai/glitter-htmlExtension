@@ -171,13 +171,19 @@
         },
         {
           "img": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072765031",
+          "name": "首頁推薦",
           "title": "全部",
+          "value": 609912,
           "toPage": "",
           "clickEvent": {
             "src": "http://192.168.4.109:3090/test/homee/event.js",
-            "route": "pageSwitch"
+            "route": "category"
           },
-          "selectPage": {}
+          "selectPage": {
+            "tag": "category",
+            "name": "分類頁",
+            "group": "分類頁"
+          }
         }
       ]
     },
