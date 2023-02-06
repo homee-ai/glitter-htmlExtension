@@ -59,4 +59,4 @@ export class Api {
         };
     }
 }
-Api.serverURL = (_a = window.glitter.share.apiURL) !== null && _a !== void 0 ? _a : new URL('', import.meta.url).origin;
+Api.serverURL = (_a = window.glitter.share.apiURL) !== null && _a !== void 0 ? _a : "https://machi-app.com";
