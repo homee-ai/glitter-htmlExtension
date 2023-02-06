@@ -2,7 +2,7 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {LegacyPage} from "./legacy/interface.js";
-import {Api} from "../homee/api/homee-api";
+import {Api} from "../homee/api/homee-api.js";
 
 
 Plugin.create(import.meta.url,(glitter)=>{

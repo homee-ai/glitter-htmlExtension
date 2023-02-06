@@ -2,7 +2,7 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {SharedView} from "../homee/shareView.js";
-import {Api} from "../homee/api/homee-api";
+import {Api} from "../homee/api/homee-api.js";
 import {LegacyPage} from "../homee/legacy/interface";
 
 Plugin.create(import.meta.url,(glitter)=>{
