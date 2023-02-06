@@ -87,7 +87,7 @@ export class Entry {
             webFunction(data: any, callback: (data: any) => void): any {
                 callback({
                     // url: "http://127.0.0.1:3080"
-                    url: "http://43.206.78.215:3080"
+                    url: "https://machi-app.com"
                 })
             }
         })

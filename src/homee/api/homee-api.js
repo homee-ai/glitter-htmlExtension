@@ -59,4 +59,4 @@ export class Api {
         };
     }
 }
-Api.serverURL = (_a = window.glitter.share.apiURL) !== null && _a !== void 0 ? _a : 'http://192.168.4.109:3080';
+Api.serverURL = (_a = window.glitter.share.apiURL) !== null && _a !== void 0 ? _a : "https://machi-app.com";

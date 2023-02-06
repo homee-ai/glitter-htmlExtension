@@ -1,12 +1,13 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { LegacyPage } from "./legacy/interface.js";
+import { Api } from "../homee/api/homee-api.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
             glitter.share.dialog.dataLoading({ text: '上傳中', visible: true });
             $.ajax({
-                url: glitter.share.apiPrefix + '/api/v1/scene/getSignedUrl',
+                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
                 type: 'post',
                 data: JSON.stringify({ file_name: `${new Date().getTime()}` }),
                 contentType: 'application/json; charset=utf-8',

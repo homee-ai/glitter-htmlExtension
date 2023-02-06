@@ -2,13 +2,15 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {LegacyPage} from "./legacy/interface.js";
+import {Api} from "../homee/api/homee-api.js";
+
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
         upload:(photoFile:any,callback:(link:string)=>void)=>{
             glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
             $.ajax({
-                url: glitter.share.apiPrefix+'/api/v1/scene/getSignedUrl',
+                url: Api.serverURL+'/api/v1/scene/getSignedUrl',
                 type: 'post',
                 data: JSON.stringify({ file_name:`${new Date().getTime()}`}),
                 contentType: 'application/json; charset=utf-8',
