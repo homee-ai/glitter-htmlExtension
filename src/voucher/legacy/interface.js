@@ -87,7 +87,7 @@ export class LegacyPage {
             }, {
                 webFunction(data, callback) {
                     callback({
-                        url: "http://43.206.78.215:3080"
+                        url: "https://machi-app.com"
                     });
                 }
             });
