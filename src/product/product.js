@@ -1,5 +1,6 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
+import { SharedView } from "../homee/shareView.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -62,58 +63,19 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `);
-                function drawNav(title, leftIcon, rightIcon) {
-                    glitter.runJsInterFace("getTopInset", {}, (response) => {
-                        var _a;
-                        if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.topInset) != response.data) {
-                            widget.data.topInset = response.data;
-                            widget.refreshAll();
-                        }
-                    }, {
-                        webFunction: () => {
-                            return { data: 10 };
-                        }
-                    });
-                    return gvc.bindView({
-                        bind: `nav`,
-                        view: () => {
-                            return `
-                    <nav class="bg-white w-100" style="padding-top: ${widget.data.topInset - 20}px;">
-                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0;height: 63px; padding: 0 16px; background: #FFFFFF;box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.05);position:relative;">
-                            <div class="me-auto p-0 d-flex align-items-center" style="">
-                                ${leftIcon}
-                            </div>
-                            <div class=" d-flex align-items-center justify-content-center" style="font-family: 'Noto Sans TC',serif;font-style: normal;font-size: 16px;font-weight: 700;color: #1E1E1E;">${title}</div>
-                            ${(() => {
-                                if (rightIcon) {
-                                    return `
-                                    <div class="d-flex ms-auto align-items-center" style="">
-                                        ${rightIcon}
-                                    </div>`;
-                                }
-                                else
-                                    return ``;
-                            })()}
-                        
-                        </div>
-                    </nav>
-                        `;
-                        },
-                        divCreate: { style: `width:100vw;height:calc(63px + ${widget.data.topInset - 20}px)` },
-                        onCreate: () => {
-                        }
-                    });
-                }
+                const sharedView = new SharedView(gvc);
                 return {
                     view: () => {
-                        return gvc.map([
-                            drawNav("", `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                            })}">`, `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                        return sharedView.navigationBar({
+                            title: "",
+                            leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                            })}">`,
+                            rightIcon: `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
                             })}">
                                 <img class="" src="${widget.data.nav.rightIcon2}" style="width: 24px;height: 24px;margin-left: 10px;" alt="" onclick="${gvc.event(() => {
                             })}">
-                                `)
-                        ]);
+                            `
+                        });
                     },
                     editor: () => {
                         return gvc.map([
@@ -223,7 +185,16 @@ Plugin.create(import.meta.url, (glitter) => {
                     {
                         title: "定製尺寸",
                         kind: ["120公分", "140公分", "160公分"],
-                        selected: 0
+                        able: [true, true, true],
+                        selected: 0,
+                        sizeSelect: [
+                            {
+                                title: "定製顏色",
+                                kind: ["黑色", "白色"],
+                                able: [true, true],
+                                selected: 0,
+                            }
+                        ]
                     }
                 ],
                 intro: [{
@@ -233,6 +204,7 @@ Plugin.create(import.meta.url, (glitter) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
+                let bottomInset = 0;
                 gvc.addStyle(`
                     .productTitleRow{
                         margin-top:16px;
@@ -273,6 +245,34 @@ Plugin.create(import.meta.url, (glitter) => {
                         font-weight: 700;
                         font-size: 24px;
                         margin:0 16px;
+                        color: #292929;
+                    }
+                    .kindUnselected{                                        
+                        border: 1px solid #D6D6D6;
+                        border-radius: 5px;
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 14px;
+                        color: #292929;
+                        margin-right : 8px;
+                        padding: 4px 12px 3px;
+                    }
+                    .kindSelected{                                        
+                        background: rgba(41, 41, 41, 0.1);                                                                                
+                        border: 1px solid #292929;
+                        border-radius: 5px;
+        
+                    }
+                    .kindArray{
+                        margin-top : 8px;
+                        margin-bottom: 20px;
+                    }
+                    .sizeSelectTitle{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 15px;
                         color: #292929;
                     }
                 `);
@@ -327,58 +327,43 @@ Plugin.create(import.meta.url, (glitter) => {
                         ${gvc.bindView({
                             bind: "sizeSelect",
                             view: () => {
-                                gvc.addStyle(`
-                                    .kindUnselected{                                        
-                                        border: 1px solid #D6D6D6;
-                                        border-radius: 5px;
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 500;
-                                        font-size: 14px;
-                                        color: #292929;
-                                        margin-right : 8px;
-                                    }
-                                    .kindSelected{                                        
-                                        background: rgba(41, 41, 41, 0.1);                                                                                
-                                        border: 1px solid #292929;
-                                        border-radius: 5px;
-
-                                    }
-                                    .kindArray{
-                                        margin-top : 8px;
-                                    }
-                                    .sizeSelectTitle{
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 15px;
-                                        color: #292929;
-                                    }
-                                `);
-                                return gvc.map(widget.data.sizeSelect.map((sizeType, index) => {
+                                function productKindDom(index, sizeType) {
                                     return `
                                         ${gvc.bindView({
                                         bind: `type${index}`,
                                         view: () => {
                                             return `
-                                                    <div class="sizeSelectTitle">
-                                                        ${sizeType.title}
-                                                    </div>
-                                                    <div class="kindArray d-flex">
-                                                        ${gvc.map(sizeType.kind.map((kind, index) => {
+                                                <div class="sizeSelectTitle">
+                                                    ${sizeType.title}
+                                                </div>
+                                                <div class="kindArray d-flex">
+                                                    ${gvc.map(sizeType.kind.map((kind, index) => {
                                                 let className = "kindUnselected";
                                                 if (index == sizeType.selected) {
                                                     className += " kindSelected";
                                                 }
                                                 return `
-                                                                <div class="${className}">${kind}</div>
-                                                            `;
+                                                            <div class="${className}">${kind}</div>
+                                                        `;
                                             }))}
-                                                    </div>
+                                                </div>      
                                                 `;
                                         }, divCreate: { class: ``, style: `` },
                                     })}
+                                        
                                     `;
+                                }
+                                let index = 0;
+                                return gvc.map(widget.data.sizeSelect.map((sizeType) => {
+                                    let returnHTML = ``;
+                                    do {
+                                        returnHTML += `
+                                            ${productKindDom(index, sizeType)}
+                                        `;
+                                        sizeType = (sizeType.sizeSelect) ? sizeType === null || sizeType === void 0 ? void 0 : sizeType.sizeSelect[(sizeType === null || sizeType === void 0 ? void 0 : sizeType.selected) || 0] : undefined;
+                                        index++;
+                                    } while (sizeType);
+                                    return returnHTML;
                                 }));
                             }, divCreate: { class: ``, style: "padding-bottom:32px;border-bottom: 1px solid #292929;" },
                         })}
@@ -418,6 +403,81 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }))}
                                 `;
                             }, divCreate: { class: ``, style: `padding-top:40px;` }
+                        })}
+                        
+                        ${gvc.bindView({
+                            bind: "footer",
+                            view: () => {
+                                glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                                    if (bottomInset != response.data) {
+                                        bottomInset = response.data;
+                                        gvc.notifyDataChange("footer");
+                                    }
+                                }, {
+                                    webFunction: () => {
+                                        return { data: 20 };
+                                    }
+                                });
+                                gvc.addStyle(`
+                                    .footerIMG {
+                                        width: 22px;
+                                        height: 20px;
+                                    }
+                                    .footerText{
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        line-height: 17px;
+                                        text-align: center;
+                                        color: #858585;
+                                    }
+                                    .footerBTN{
+                                        
+                                    }
+                                    .footerBTNLeft{
+                                        background: #FFDC6A;
+                                        padding:14px 29px;
+                                        border-radius: 24px 0px 0px 24px;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 14px;
+                                        color: #1E1E1E;
+                                    }
+                                    .footerBTNRight{
+                                        background: #FE5541;
+                                        padding:14px 29px;
+                                        border-radius: 0px 24px 24px 0px;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 14px;
+                                        color: #FFFFFF;
+                                    }
+                                `);
+                                return `
+                                <div class="footer d-flex align-items-center" style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
+                                    <div class="d-flex flex-column align-items-center" style="width: 40px;">
+                                        <img class="footerIMG" src="${import.meta.resolve('../img/component/customer_service.png', import.meta.url)}" >
+                                        <div class="footerText">
+                                            客服
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-center" style="width: 40px;">
+                                        <img class="footerIMG" src="${import.meta.resolve('../img/component/send.svg', import.meta.url)}">
+                                        <div class="footerText">
+                                            分享給
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="footerBTN ms-auto d-flex">
+                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center">加入至空間</div>
+                                        <div class="footerBTNRight d-flex align-items-center justify-content-center">加入購物車</div>
+                                    </div>
+                                </div>
+                                `;
+                            }, divCreate: { style: ``, class: `` }
                         })}
                     `;
                     },
