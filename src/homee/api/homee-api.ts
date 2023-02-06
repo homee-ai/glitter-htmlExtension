@@ -2,7 +2,7 @@
 import { GVC } from '../../glitterBundle/GVController.js';
 
 export class Api {
-    public static serverURL=(window as any).glitter.share.apiURL ?? 'http://192.168.4.109:3080'
+    public static serverURL=(window as any).glitter.share.apiURL ?? new URL('',import.meta.url).origin
     public homeeAJAX: (data: { api?: string; route: string; method: string; data?: any }, callback?: (res: any) => void) => void;
     public encodeImageFileAsURL: (element: { files: Blob[] }, callback: (resp: string) => void) => void;
     public squareAJAX: (routName: string, functionName: string, data: any, callBack: (resp: any) => void, timeout?: number) => void;
