@@ -290,7 +290,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                     return num.toLocaleString();
                 }
                 function qtyChange(action:boolean=true){
-
                     widget.data.qty += (action)?1:-1;
 
                     if (widget.data.qty < 0){
