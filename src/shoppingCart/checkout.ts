@@ -2,6 +2,7 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
 import {SharedView} from "../homee/shareView.js";
+import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -218,6 +219,49 @@ Plugin.create(import.meta.url,(glitter)=>{
                         ]
                     },
                 ],
+                dataList:[
+                    {
+                        title : "首頁",
+                        icon : new URL('../img/component/footer/homeBlack.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "靈感",
+                        icon : new URL('../img/component/footer/idea.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "我的空間",
+                        icon : new URL('../img/component/footer/myspace.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "購物車",
+                        icon : new URL('../img/component/footer/shoopingCartRed.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "會員",
+                        icon : new URL('../img/component/footer/user.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                ],
+
 
             },
             render:(gvc, widget, setting, hoverID) => {
@@ -227,15 +271,27 @@ Plugin.create(import.meta.url,(glitter)=>{
                         box-sizing: border-box;    
                         font-family: 'Noto Sans TC';        
                         font-style: normal;
+                        background:#F8F3ED;
+                    }
+                    input[type="number"]::-webkit-inner-spin-button, 
+                    input[type="number"]::-webkit-outer-spin-button { 
+                      margin: 0;
+                      -webkit-appearance: none;
+                      appearance: none;
                     }
                     
                     
                 `)
                 const sharedView=new SharedView(gvc);
-                let cartIn:any[]=[]
-                let cartOut:any[]=[]
+
+                let cartIn:any[]=[];
+                let cartOut:any[]=[];
                 let itemIndex = -1;
                 let categoryIndex = -1;
+                let voucherUse = 0;
+                let voucher = 500;
+                let subTotal = 0;
+                let total = 0;
                 widget.data.cartItem.forEach((cartCategory:any)=>{
                     let checkPush=false;
                     cartCategory.item.forEach((item:any)=>{
@@ -251,11 +307,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                 })
 
                 function addThousandSeparator(item: any): string {
-
-                    return (item.qty * item.price).toLocaleString();
+                    item.subtotal = item.qty * item.price;
+                    return (item.subtotal ).toLocaleString();
                 }
-
-
+                //todo nextstep?
+                function checkOut(){
+                //    total 目前結帳金額 ,voucherUse用掉的優惠內容 todo 核銷哪些優惠卷內容沒加上去
+                }
 
                 return {
                     view: ()=>{
@@ -285,7 +343,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     }
                                     .
                                 `)
-                                return gvc.map(cartIn.map((category:any)=>{
+                                return gvc.map(cartIn.map((category:any , categoryIndex)=>{
                                     return `
                                     ${gvc.bindView({
                                         bind:category.category_id,
@@ -302,111 +360,152 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                 <img class="checkboxImg" alt="選擇" src="${import.meta.resolve!(`${checkPic}`,import.meta.url)}" onclick="${gvc.event(()=>{
                                                     category.item.forEach((item:any)=>{
                                                         item.select = !categoryCheck;
-                                                        
                                                     })
                                                     widget.refreshAll()
                                                 })}">
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(()=>{
-                                                    
+                                                    category.delete = (category?.delete) ? !category.delete : true;
+                                                    gvc.notifyDataChange(`itemGroup${category.category_id}`);
                                                 })}">編輯</div>
                                             </div>
-                                            <div style="height:1px; width: 100%;background: #E0E0E0;"></div>
-                                            <div style="padding:0 12px;">                                        
-                                                ${(()=>{
-                                                    gvc.addStyle(`
-                                                    .item-name{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 15px;
-                                                        color: #1E1E1E;
-                                                    }
-                                                    .item-kind{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 10px;
-                                                        color: #858585;
-                                                    }
-                                                    .itemImg{
-                                                        width:64px;
-                                                        height:64px;
-                                                        border-radius: 12px;
-                                                        background:white;
-                                                        margin-right:16px;
-                                                    }
-                                                    .item-price{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 15px;
-                                                        color: #FE5541;
-                                                    }
-                                                `)
-                                                    return gvc.map(category.item.map((item:any)=>{
-                                                        return gvc.bindView({
-                                                            bind:`item${item.item_id}`,
-                                                            view:()=>{
-                                                                let checkPic = (item.select) ?'../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png'
-                                                                return `
-                                                                <img class="checkboxImg" alt="選擇" src="${import.meta.resolve!(`${checkPic}`,import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                    item.select = !item.select;
-                                                                    widget.refreshAll();
-                                                                })}">
-                                                                <img class="itemImg" src="${item.img}">
-                                                                <div class="d-flex flex-column flex-grow-1">
-                                                                    <div class="item-name">${item.name}</div>
-                                                                    <div class="d-flex">
-                                                                        ${(()=>{
-                                                                            if (item.kind){
-                                                                                return `
-                                                                                    <div class="item-kind">${item.kind}</div>
-                                                                                    <img style="width:16px;height:16px;" src="${import.meta.resolve!('../img/component/shoppingCart/downArrow.svg',import.meta.url)}">
-                                                                                ` 
+                                            <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
+                                            <div style="padding:0 12px;">   
+                                                ${gvc.bindView({
+                                                    bind:`itemGroup${category.category_id}`,
+                                                    view : ()=>{
+                                                        gvc.addStyle(`
+                                                            .item-name{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 15px;
+                                                                color: #1E1E1E;
+                                                            }
+                                                            .item-kind{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 10px;
+                                                                color: #858585;
+                                                            }
+                                                            .itemImg{
+                                                                width:64px;
+                                                                height:64px;
+                                                                border-radius: 12px;
+                                                                background:white;
+                                                                margin-right:16px;
+                                                            }
+                                                            .item-price{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 15px;
+                                                                color: #FE5541;
+                                                            }
+                                                        `)
+                                                        return gvc.map(category.item.map((item:any , itemIndex:number)=>{
+                                                            return gvc.bindView({
+                                                                bind:`item${item.item_id}`,
+                                                                view:()=>{
+                                                                    let chooseEvent = ()=>{
+                                                                        item.select = !item.select;
+                                                                        widget.refreshAll();
+                                                                        // gvc.notifyDataChange(`item${item.item_id}`);
+                                                                        // gvc.notifyDataChange('cartinCount');
+                                                                    }
+                                                                    let checkPic = (item.select) ?'../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png'
+                                                                    if (category.delete){
+                                                                        checkPic = '../img/component/shoppingCart/deleteCircle.png'
+                                                                        chooseEvent = ()=>{
+                                                                            let check = confirm("確定要刪除嘛?");
+                                                                            if (check){
+                                                                                if (item.select){
+                                                                                    category.item.splice(itemIndex , 1);
+                                                                                    widget.refreshAll();
+                                                                                }
+                                                                                category.item.splice(itemIndex , 1);
+
+                                                                                if (category.item.length==0){
+                                                                                    let indexToRemove = widget.data.cartItem.findIndex((item:any) => item.category_id == category.category_id);
+                                                                                    widget.data.cartItem.splice(indexToRemove , 1);
+                                                                                    widget.refreshAll();
+                                                                                }else {
+                                                                                    gvc.notifyDataChange(category.category_id);
+                                                                                    gvc.notifyDataChange('cartSubtotal');
+                                                                                }
+                                                                                
                                                                             }
-                                                                            return ``
-                                                                        })()}                                                                        
-                                                                    </div>
-                                                                    <div class="d-flex " style="margin-top: 13px;">
-                                                                        <div class="d-flex" style="">
-                                                                            <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                                item.qty--;
-                                                                                item.qty = (item.qty<1) ? 1 : item.qty;
-                                                                                gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                            })}">
+                                                                        }
+                                                                    }
+                                                                    
+                                                                    return `
+                                                                    <img class="checkboxImg" alt="選擇" src="${import.meta.resolve!(`${checkPic}`,import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                        chooseEvent();
+                                                                    })}">
+                                                                    <img class="itemImg" src="${item.img}">
+                                                                    <div class="d-flex flex-column flex-grow-1">
+                                                                        <div class="item-name">${item.name}</div>
+                                                                        <div class="d-flex">
+                                                                            ${(()=>{
+                                                                                if (item.kind){
+                                                                                    return `
+                                                                                            <div class="item-kind">${item.kind}</div>
+                                                                                            <img style="width:16px;height:16px;" src="${import.meta.resolve!('../img/component/shoppingCart/downArrow.svg',import.meta.url)}">
+                                                                                        `
+                                                                                }
+                                                                                return ``
+                                                                            })()}                                                                        
+                                                                        </div>
+                                                                        <div class="d-flex " style="margin-top: 13px;">
+                                                                            <div class="d-flex" style="">
+                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                                    item.qty--;
+                                                                                    item.qty = (item.qty<1) ? 1 : item.qty;
+                                                                                    item.subtotal = item.qty * item.price;
+                                                                                    gvc.notifyDataChange(`qtyNumber${item.item_id}`);
+                                                                                    gvc.notifyDataChange(`cartSubtotal`);
+                                                                                    gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                                })}">
                                                                                 ${gvc.bindView({
-                                                                                bind:`qtyNumber${item.item_id}`,
+                                                                                    bind:`qtyNumber${item.item_id}`,
                                                                                 view : ()=>{
                                                                                     return `
-                                                                                    <input class="border-0" style="width: 48px;text-align: center;"  value="${item.qty}" onchange="${gvc.event((e:HTMLInputElement)=>{
-                                                                                        item.qty = e.value
-                                                                                        if (widget.data.qty < 1){
-                                                                                            item.qty = 1;
+                                                                                        <input class="border-0" style="width: 48px;text-align: center;" type="number" value="${item.qty}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                                                                            item.qty = e.value
+                                                                                            if (widget.data.qty < 1){
+                                                                                                item.qty = 1;
+                                                                                            }
+                                                                                            item.subtotal = item.qty * item.price;
                                                                                             gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                                        }
-                                                                                    })}">`
-                                                                                },divCreate : {class : `qtyNumber` , style : ``}
+                                                                                            gvc.notifyDataChange(`cartSubtotal`);
+                                                                                            gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                                        })}">`
+                                                                                    },divCreate : {class : `qtyNumber` , style : ``}
                                                                                 })}
-                                                                            <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                                item.qty++;
-                                                                                
-                                                                                gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                            })}">                                        
+                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                                    item.qty++;
+                                                                                    item.subtotal = item.qty * item.price;
+                                                                                    gvc.notifyDataChange(`cartSubtotal`);
+                                                                                    gvc.notifyDataChange(`qtyNumber${item.item_id}`);
+                                                                                    gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                                })}">                                        
+                                                                            </div>
+                                                                            ${gvc.bindView({
+                                                                                bind:`itemTotal${item.item_id}`,
+                                                                                view : ()=>{
+                                                                                    return `NT$ ${addThousandSeparator(item)}`
+                                                                                },divCreate : {class : `item-price ms-auto` , style : ``}
+                                                                            })}                                                                        
                                                                         </div>
-                                                                        ${gvc.bindView({
-                                                                            bind:`itemTotal${item.item_id}`,
-                                                                            view : ()=>{
-                                                                                return `NT$ ${addThousandSeparator(item)}`
-                                                                            },divCreate : {class : `item-price ms-auto` , style : ``}
-                                                                        })}                                                                        
-                                                                    </div>
-                                                                </div>                                                            
+                                                                    </div>                                                            
                                                                 `
-                                                            },divCreate:{class:`d-flex align-items-center` , style:``}
-                                                        })
-                                                    }))
-                                                })()}
+                                                                },divCreate:{class:`d-flex align-items-center` , style:`margin-bottom:16px;`}
+                                                            })
+                                                        }))
+                                                    },divCreate : {style:`` , class:``}
+                                                })}                                     
+                         
                                             </div>
                                             
                                             `
@@ -417,8 +516,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 }))
                             },divCreate : {class:`d-flex flex-column` , style:``}
                         })}
-                        
-                        
                         ${gvc.bindView({
                             bind:"cartSubtotal",
                             view : ()=>{
@@ -462,11 +559,38 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         color: #1E1E1E;
                                         margin-left:8px;
                                     }
+                                    .checkout-left{
+                                        width:60%;
+                                        background:#FFDC6A;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 500;
+                                        font-size: 24px;
+                                        border-radius: 26px 0px 0px 26px;
+                                        padding-left:28px;
+                                        color: #1E1E1E;
+                                    }
+                                    .checkout-right{
+                                        width:40%;
+                                        background:#FE5541;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 20px;
+                                        border-radius: 0px 26px 26px 0px;
+                                        color: #FFFFFF;                                        
+                                        letter-spacing: 0.15em;
+                                    }
                                 `)
-                                let subTotal = 52020;
-                                let voucher = 0;
-                                let voucherUse = 0;
-                                let total = subTotal - voucherUse;
+                                subTotal = 0;
+                                cartIn.forEach((category:any)=>{
+                                    category.item.forEach((item:any)=>{
+                                        if (item.select){
+                                            subTotal+=item.subtotal;
+                                        }
+                                    })
+                                })
+                                total = subTotal - voucherUse;
                                 return `
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:12px;">
                                         <div>小計金額</div>
@@ -481,8 +605,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:0 12px;margin-bottom:13px;">
                                         <div style="font-size: 12px;">你有<span class="voucher" style="font-size: 15px;">$${voucher.toLocaleString()}</span>點數回饋</div>
                                         <div class="d-flex">- NT$
-                                            <input class="voucherInput" value="${voucherUse}" style="text-align: right" onchange="${gvc.event((e:HTMLInputElement)=>{
-                                                e.value = String(voucherUse);
+                                            <input class="voucherInput" type="number" value="${voucherUse}" style="text-align: right" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                                voucherUse = (Number(e.value) > voucher) ? voucher : Number(e.value);
+                                                console.log(voucherUse)
+                                                gvc.notifyDataChange('cartSubtotal');
                                             })}">
                                         </div>
                                     </div>
@@ -492,10 +618,18 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         <div class="d-flex">
                                             <div class="totalText">總計金額:</div>
                                             <div class="total">
-                                                NT$ ${total}
+                                                NT$ ${total.toLocaleString()}
                                             </div>
                                         </div>
                                         
+                                    </div>
+
+                                    <div class="w-100 d-flex" style="position:fixed;left:0;bottom:116px;height:52px;">
+                                        <div class="checkout-left d-flex align-items-center">NT$ ${total.toLocaleString()}</div>
+                                        <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
+                                            // todo  結帳要幹嘛
+                                            checkOut();
+                                        })}">結帳</div>
                                     </div>
                                 `
                             },divCreate : {class:`d-flex flex-column border` , style:`background: #FFFFFF;border-radius: 20px;margin:12px`}
@@ -503,7 +637,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         ${gvc.bindView({
                             bind:"cartOut",
                             view : ()=>{
-                                return gvc.map(cartOut.map((category:any)=>{
+                                return gvc.map(cartOut.map((category:any , categoryIndex)=>{
                                     return `
                                     ${gvc.bindView({
                                         bind:category.category_id,
@@ -526,113 +660,234 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                 })}">
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(()=>{
-
-                                            })}">編輯</div>
+                                                    category.delete = (category?.delete) ? !category.delete : true;
+                                                    gvc.notifyDataChange(`itemGroup${category.category_id}`);
+                                                })}">編輯</div>
                                             </div>
-                                            <div style="height:1px; width: 100%;background: #E0E0E0;"></div>
-                                            <div style="padding:0 12px;">                                        
-                                                ${(()=>{
-                                                gvc.addStyle(`
-                                                    .item-name{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 15px;
-                                                        color: #1E1E1E;
-                                                    }
-                                                    .item-kind{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 10px;
-                                                        color: #858585;
-                                                    }
-                                                    .itemImg{
-                                                        width:64px;
-                                                        height:64px;
-                                                        border-radius: 12px;
-                                                        background:white;
-                                                        margin-right:16px;
-                                                    }
-                                                    .item-price{
-                                                        font-family: 'Noto Sans TC';
-                                                        font-style: normal;
-                                                        font-weight: 400;
-                                                        font-size: 15px;
-                                                        color: #FE5541;
-                                                    }
-                                                `)
-                                                return gvc.map(category.item.map((item:any)=>{
-                                                    return gvc.bindView({
-                                                        bind:`item${itemIndex}`,
-                                                        view:()=>{
-                                                            let checkPic = (item.select) ?'../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png'
-                                                            return `
-                                                                <img class="checkboxImg" alt="選擇" src="${import.meta.resolve!(`${checkPic}`,import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                item.select = !item.select;
-                                                                widget.refreshAll();
-                                                            })}">
-                                                                <img class="itemImg" src="${item.img}">
-                                                                <div class="d-flex flex-column flex-grow-1">
-                                                                    <div class="item-name">${item.name}</div>
-                                                                    <div class="d-flex">
-                                                                        ${(()=>{
-                                                                            if (item.kind){
-                                                                                return `
-                                                                                    <div class="item-kind">${item.kind}</div>
-                                                                                    <img style="width:16px;height:16px;" src="${import.meta.resolve!('../img/component/shoppingCart/downArrow.svg',import.meta.url)}">
-                                                                                `
+                                            <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
+                                            <div style="padding:0 12px;">       
+                                                ${gvc.bindView({
+                                                    bind:`itemGroup${category.category_id}`,
+                                                    view : ()=>{
+                                                        gvc.addStyle(`
+                                                            .item-name{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 15px;
+                                                                color: #1E1E1E;
+                                                            }
+                                                            .item-kind{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 10px;
+                                                                color: #858585;
+                                                            }
+                                                            .itemImg{
+                                                                width:64px;
+                                                                height:64px;
+                                                                border-radius: 12px;
+                                                                background:white;
+                                                                margin-right:16px;
+                                                            }
+                                                            .item-price{
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 15px;
+                                                                color: #FE5541;
+                                                            }
+                                                        `)
+                                                        return gvc.map(category.item.map((item:any , itemIndex:number)=>{
+                                                            return gvc.bindView({
+                                                                bind:`item${itemIndex}`,
+                                                                view:()=>{
+                                                                    let chooseEvent = ()=>{
+                                                                        item.select = !item.select;
+                                                                        widget.refreshAll();
+                                                                    }
+                                                                    let checkPic = (item.select) ?'../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png'
+                                                                    if (category.delete){
+                                                                        checkPic = '../img/component/shoppingCart/deleteCircle.png'
+                                                                        chooseEvent = ()=>{
+                                                                            let check = confirm("確定要刪除嘛?");
+                                                                            if (check){
+                                                                                category.item.splice(itemIndex , 1);
+                                                                                if (category.item.length==0){
+                                                                                    let indexToRemove = widget.data.cartItem.findIndex((item:any) => item.category_id == category.category_id);
+                                                                                    widget.data.cartItem.splice(indexToRemove , 1);
+                                                                                    
+                                                                                    widget.refreshAll();
+                                                                                }else {
+                                                                                    gvc.notifyDataChange(category.category_id);
+                                                                                }
+
                                                                             }
-                                                                            return ``
-                                                                        })()}
-                                                                        
-                                                                    </div>
-                                                                    <div class="d-flex " style="margin-top: 13px;">
-                                                                        <div class="d-flex" style="">
-                                                                            <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                                item.qty--;
-                                                                                item.qty = (item.qty<1) ? 1 : item.qty;
-                                                                                gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                            })}">
+                                                                        }
+                                                                    }
+
+                                                                    return `
+                                                                    <img class="checkboxImg" alt="選擇" src="${import.meta.resolve!(`${checkPic}`,import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                        chooseEvent();
+                                                                    })}">
+                                                                    <img class="itemImg" src="${item.img}">
+                                                                    <div class="d-flex flex-column flex-grow-1">
+                                                                        <div class="item-name">${item.name}</div>
+                                                                        <div class="d-flex">
+                                                                            ${(()=>{
+                                                                                if (item.kind){
+                                                                                    return `
+                                                                                            <div class="item-kind">${item.kind}</div>
+                                                                                            <img style="width:16px;height:16px;" src="${import.meta.resolve!('../img/component/shoppingCart/downArrow.svg',import.meta.url)}">
+                                                                                        `
+                                                                                }
+                                                                                return ``
+                                                                            })()}                                                                            
+                                                                        </div>
+                                                                        <div class="d-flex " style="margin-top: 13px;">
+                                                                            <div class="d-flex" style="">
+                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                                    item.qty--;
+                                                                                    item.qty = (item.qty<1) ? 1 : item.qty;
+                                                                                    item.subtotal = item.qty * item.price;
+                                                                                    gvc.notifyDataChange(`item${item.item_id}`);
+                                                                                })}">
                                                                                 ${gvc.bindView({
                                                                                     bind:`qtyNumber${item.item_id}`,
                                                                                     view : ()=>{
                                                                                         return `
-                                                                                        <input class="border-0" style="width: 48px;text-align: center;"  value="${item.qty}" onchange="${gvc.event((e:HTMLInputElement)=>{
-                                                                                            item.qty = e.value
-                                                                                            if (widget.data.qty < 1){
-                                                                                                item.qty = 1;
-                                                                                                gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                                            }
-                                                                                        })}">`
+                                                                                            <input class="border-0" style="width: 48px;text-align: center;" type="number" value="${item.qty}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                                                                                item.qty = e.value
+                                                                                                if (widget.data.qty < 1){
+                                                                                                    item.qty = 1;
+                                                                                                }
+                                                                                                item.subtotal = item.qty * item.price;
+                                                                                                gvc.notifyDataChange(`item${item.item_id}`);
+                                                                                            })}">`
                                                                                     },divCreate : {class : `qtyNumber` , style : ``}
                                                                                 })}
-                                                                            <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
-                                                                                item.qty++;
-                                                                                
-                                                                                gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                            })}">                                        
+                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve!('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                                                                    item.qty++;
+                                                                                    item.subtotal = item.qty * item.price;
+                                                                                    gvc.notifyDataChange(`item${item.item_id}`);
+                                                                                })}">                                        
+                                                                            </div>
+                                                                            <div class="item-price ms-auto">NT$ ${addThousandSeparator(item)}</div>
                                                                         </div>
-                                                                        <div class="item-price ms-auto">NT$ ${addThousandSeparator(item)}</div>
-                                                                    </div>
-                                                                </div>                                                            
+                                                                    </div>                                                            
                                                                 `
-                                                        },divCreate:{class:`d-flex align-items-center` , style:``}
-                                                    })
+                                                                },divCreate:{class:`d-flex align-items-center` , style:`margin-bottom:16px;`}
+                                                            })
 
-                                                }))
-                                            })()}
+                                                        }))
+                                                    },divCreate : {style : `` , class : ``}
+                                                
+                                                })}                                                                                 
                                             </div>
                                             
                                             `
                                         }
-                                        ,divCreate : {class:`border` , style:`background: #FFFFFF;border-radius: 20px;margin:12px;`}
+                                        ,divCreate : {class:`border` , style:`background: #FFFFFF;border-radius: 20px;margin:12px;padding-bottom:100px;`}
                                     })}
                                     `
                                 }))
                             },divCreate : {class:`d-flex flex-column` , style:``}
                         })}
-                        
+                        ${gvc.bindView({
+                            bind:"footer",
+                            view : ()=>{
+                                glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
+                                    if (widget.data?.bottomInset != response.data){
+                                        widget.data.bottomInset = response.data;
+                                        widget.refreshAll!();
+                                    }
+                                }, {
+                                    webFunction: () => {
+                                        return {data: 10}
+                                    }
+                                })
+                                gvc.addStyle(`
+                                    footer{
+                                        background:white;
+                                        box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);
+                                        padding-top:18px;
+                                    }
+                                    .footerTitle{
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        line-height: 17px;
+                                        text-align: center;
+                                        color: #1E1E1E;
+                                    }
+                                    .selected{
+                                        color:#FE5541;
+                                    }
+                                    .cartinCount{
+                                        width : 16px;
+                                        height : 16px;
+                                        background: #FE5541;
+                                        
+                                        font-weight: 500;
+                                        font-size: 10px;
+                                       
+                                        border: 1px solid #FFFFFF;
+                                        border-radius: 8px;
+                                        color:white;
+                                        
+                                        position: absolute;
+                                        top:0;
+                                        right:0;
+                                    }
+                                `)
+                                return `
+                                    <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
+                                        ${(() => {
+                                            return gvc.map(widget.data.dataList.map((data:any , index:number)=>{
+                                                return `
+                                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e)=>{
+                                                    ClickEvent.trigger({
+                                                        gvc,widget,clickEvent:data
+                                                    })
+                                                })}">
+                                                    <div style="position:relative">
+                                                        <img src=${data.icon} style="width: 28px;height: 28px;">
+                                                        ${gvc.bindView({
+                                                            bind:"cartinCount",
+                                                            view :()=>{
+                                                                if (index==3){
+                                                                    let count = 0;
+                                                                    cartIn.forEach((category:any)=>{
+                                                                        category.item.forEach((item:any)=>{
+                                                                            if (item.select){
+                                                                                count++;
+                                                                            }
+                                                                        })
+                                                                    })
+                                                                    return `
+                                                                    <div class="cartinCount d-flex align-items-center justify-content-center">
+                                                                        ${count}
+                                                                    </div>    
+                                                                `;    
+                                                                }else {
+                                                                    return ``
+                                                                }
+                                                                
+                                                            },divCreate:{style:'' , class:``}
+                                                        })}                                                      
+                                                    </div>
+                                                    
+                                                    <div class="footerTitle ${(() => {if (index==0) return "selected"})()}">${data.title}</div>
+                                                </div>
+                                                        `
+                                            }))
+                                        })()}
+                                    </footer>
+                                `
+                            },divCreate : {}
+                        })}
                         `
 
                     },
@@ -643,6 +898,5 @@ Plugin.create(import.meta.url,(glitter)=>{
                 }
             },
         },
-
     }
 });

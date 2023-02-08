@@ -406,7 +406,7 @@ color: #1E1E1E;">${data.title}</div>
                 ],
             },
             render:(gvc, widget, setting, hoverID)=>{
-                glitter.runJsInterFace("getTopInset", {}, (response:any) => {
+                glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
                     if (widget.data?.bottomInset != response.data){
                         widget.data.bottomInset = response.data;
                         widget.refreshAll!();
