@@ -750,7 +750,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                         </div>
                                                                     </div>                                                            
                                                                 `;
-                                                            }, divCreate: { class: `d-flex align-items-center`, style: `margin-bottom:16px;` }
+                                                            }, divCreate: { class: `d-flex align-items-center`, style: `` }
                                                         });
                                                     }));
                                                 }, divCreate: { style: ``, class: `` }
@@ -759,11 +759,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                             
                                             `;
                                         },
-                                        divCreate: { class: `border`, style: `background: #FFFFFF;border-radius: 20px;margin:12px;padding-bottom:100px;` }
+                                        divCreate: { class: `border`, style: `background: #FFFFFF;border-radius: 20px;margin:12px;margin-bottom:16px` }
                                     })}
                                     `;
                                 }));
-                            }, divCreate: { class: `d-flex flex-column`, style: `` }
+                            }, divCreate: { class: `d-flex flex-column`, style: `padding-bottom:100px;` }
                         })}
                         ${gvc.bindView({
                             bind: "footer",
