@@ -584,7 +584,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="d-flex">- NT$
                                             <input class="voucherInput" type="number" value="${voucherUse}" style="text-align: right" onchange="${gvc.event((e) => {
                                     voucherUse = (Number(e.value) > voucher) ? voucher : Number(e.value);
-                                    console.log(voucherUse);
                                     gvc.notifyDataChange('cartSubtotal');
                                 })}">
                                         </div>
@@ -676,7 +675,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         `);
                                                     return gvc.map(category.item.map((item, itemIndex) => {
                                                         return gvc.bindView({
-                                                            bind: `item${itemIndex}`,
+                                                            bind: `item${item.item_id}`,
                                                             view: () => {
                                                                 let chooseEvent = () => {
                                                                     item.select = !item.select;
@@ -740,9 +739,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                         })}">`;
                                                                     }, divCreate: { class: `qtyNumber`, style: `` }
                                                                 })}
-                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event((e) => {
                                                                     item.qty++;
                                                                     item.subtotal = item.qty * item.price;
+                                                                    console.log(`item${item.item_id}`);
                                                                     gvc.notifyDataChange(`item${item.item_id}`);
                                                                 })}">                                        
                                                                             </div>
