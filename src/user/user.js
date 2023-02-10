@@ -39,6 +39,7 @@ Plugin.create(import.meta.url, (glitter) => {
         nav: {
             defaultData: {
                 nav: {
+                    title: "",
                     leftIcon: import.meta.resolve('../img/component/left-arrow.svg', import.meta.url),
                     leftPage: "",
                 },
@@ -64,7 +65,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 return {
                     view: () => {
                         return sharedView.navigationBar({
-                            title: "設置",
+                            title: widget.data.nav.title,
                             leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
                             })}">`,
                             rightIcon: ``
@@ -72,6 +73,16 @@ Plugin.create(import.meta.url, (glitter) => {
                     },
                     editor: () => {
                         return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `文字`,
+                                default: widget.data.nav.title,
+                                placeHolder: widget.data.nav.title,
+                                callback: (text) => {
+                                    widget.data.nav.title = text;
+                                    widget.refreshAll();
+                                }
+                            }),
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
                             <div class="my-3 border border-white"></div>
@@ -101,7 +112,75 @@ Plugin.create(import.meta.url, (glitter) => {
                                     widget.data.nav.leftPage = text;
                                     widget.refreshAll();
                                 }
-                            }),
+                            })
+                        ]);
+                    }
+                };
+            },
+        },
+        banner: {
+            defaultData: {
+                img: import.meta.resolve('../img/component/ourServiceBanner.png', import.meta.url),
+                text: "文字",
+                click: () => {
+                }
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                gvc.addStyle(`
+                    .banner-text{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 15px;
+                        color: #1E1E1E;
+                        word-wrap:break-word;
+                        white-space:pre-wrap; 
+                        margin-top : 16px;
+                        padding:0 27px;
+                    }
+                `);
+                return {
+                    view: () => {
+                        return `
+                        <div style="padding:0 42px;">
+                            <img class="w-100" src="${widget.data.img}">
+                        </div>
+                        <div class="banner-text">${widget.data.text}</div>
+                        
+                        `;
+                    },
+                    editor: () => {
+                        return gvc.map([
+                            `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
+                            <div class="my-3 border border-white"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.img}">
+                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                glitter.ut.chooseMediaCallback({
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.img = link;
+                                            widget.refreshAll();
+                                        });
+                                    }
+                                });
+                            })}"></i>
+                            </div>
+                        `,
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `文字內容`,
+                                default: widget.data.text,
+                                placeHolder: widget.data.text,
+                                callback: (text) => {
+                                    widget.data.text = text;
+                                    widget.refreshAll();
+                                }
+                            })
                         ]);
                     }
                 };
