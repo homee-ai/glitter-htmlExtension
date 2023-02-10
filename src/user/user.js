@@ -175,6 +175,38 @@ Plugin.create(import.meta.url, (glitter) => {
                 };
             },
         },
+        button: {
+            defaultData: {
+                text: "文字",
+                click: () => {
+                }
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                return {
+                    view: () => {
+                        return `
+                        <buttom class="btn" onclick="${gvc.event(() => {
+                            widget.data.click();
+                        })}">${widget.data.text}</buttom>
+                        `;
+                    },
+                    editor: () => {
+                        return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `中間文字內容`,
+                                default: widget.data.text,
+                                placeHolder: widget.data.text,
+                                callback: (text) => {
+                                    widget.data.text = text;
+                                    widget.refreshAll();
+                                }
+                            })
+                        ]);
+                    }
+                };
+            },
+        },
         empty: {
             defaultData: {
                 link: []
