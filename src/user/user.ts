@@ -198,7 +198,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 return {
                     view: ()=>{
                         return `
-                        <buttom class="btn" onclick="${gvc.event(()=>{
+                        <buttom class="" onclick="${gvc.event(()=>{
                             widget.data.click();    
                         })}">${widget.data.text}</buttom>
                         `
@@ -208,6 +208,41 @@ Plugin.create(import.meta.url,(glitter)=>{
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
                                 title: `中間文字內容`,
+                                default: widget.data.text,
+                                placeHolder: widget.data.text,
+                                callback: (text: string) => {
+                                    widget.data.text = text
+                                    widget.refreshAll!()
+                                }
+                            })
+
+                        ])
+                    }
+                }
+            },
+        },
+        text: {
+            defaultData:{
+                text:"文字",
+                click:()=>{
+
+                }
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+                return {
+                    view: ()=>{
+                        return `
+                        <div class="" onclick="${gvc.event(()=>{
+                            widget.data.click();
+                        })}">${widget.data.text}</div>
+                        `
+                    },
+                    editor: ()=>{
+                        return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `文字內容`,
                                 default: widget.data.text,
                                 placeHolder: widget.data.text,
                                 callback: (text: string) => {
