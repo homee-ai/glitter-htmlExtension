@@ -158,7 +158,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 
                                 margin-bottom : 12px;
                             }      
-                            .left{
+                            .leftText{
                                 font-family: 'Noto Sans TC';
                                 font-style: normal;
                                 font-weight: 500;
@@ -170,7 +170,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 color: #292929;
                 
                             }   
-                            .right{
+                            .rightText{
                                 font-family: 'Noto Sans TC';
                                 font-style: normal;
                                 font-weight: 400;
@@ -189,10 +189,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         <div class="d-flex align-items-center  w-100 serviceRow" onclick="${gvc.event(() => {
                             widget.data.click();
                         })}">
-                            <div class="d-flex me-auto" style="padding-left:2px;height: 29px;align-items: center;" >
+                            <div class="d-flex me-auto leftText" style="padding-left:2px;height: 29px;align-items: center;" >
                                 ${widget.data.left}
                             </div>
-                            <div class="d-flex align-items-center ms-auto">
+                            <div class="d-flex align-items-center ms-auto rightText">
                                 ${widget.data.right}
                                 <img class="ms-auto" src="${import.meta.resolve(`../img/component/angle-right.svg`, import.meta.url)}" alt="" style="width: 16px;height: 16px;">
                             </div>
