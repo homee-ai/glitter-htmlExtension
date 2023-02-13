@@ -443,15 +443,15 @@ color: #1E1E1E;">${data.title}</div>
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data:any , index:number)=>{
                                 return `
-                                                    <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e)=>{
+                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e)=>{
                                     ClickEvent.trigger({
                                         gvc,widget,clickEvent:data
                                     })
                                 })}">
-                                                        <img src=${data.icon} style="width: 28px;height: 28px;">
-                                                        <div class="footerTitle ${(() => {if (index==0) return "selected"})()}">${data.title}</div>
-                                                    </div>
-                                                `
+                                    <img src=${data.icon} style="width: 28px;height: 28px;">
+                                    <div class="footerTitle ${(() => {if (index==0) return "selected"})()}">${data.title}</div>
+                                </div>
+                                `
                             }))
                         })()}
                         </footer>

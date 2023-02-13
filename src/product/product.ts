@@ -427,7 +427,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                         ${gvc.bindView({
                             bind : "footer",
                             view : ()=>{
-                                
                                 glitter.runJsInterFace("getBottomInset", {}, (response) => {
                                     if (bottomInset != response.data){
                                         bottomInset=response.data;

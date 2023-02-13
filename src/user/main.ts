@@ -1,6 +1,7 @@
 'use strict';
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
+import {ClickEvent} from "../glitterBundle/plugins/click-event";
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -268,40 +269,41 @@ Plugin.create(import.meta.url,(glitter)=>{
                 return {
                     view: ()=>{
                         gvc.addStyle(`
-         .mySpaceCount{
-            width: 16px;
-            height: 16px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 10px;
-            line-height: 15px;
-            text-align: center;
-            background: #FD6A58;
-            /* HOMEE white */
-
-            border: 1px solid #FFFFFF;
-            border-radius: 8px;
-            /* HOMEE white */
-
-            color: #FFFFFF;
-
-        }
-        `)
+                     .mySpaceCount{
+                        width: 16px;
+                        height: 16px;
+            
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 10px;
+                        line-height: 15px;
+                        text-align: center;
+                        background: #FD6A58;
+                        /* HOMEE white */
+            
+                        border: 1px solid #FFFFFF;
+                        border-radius: 8px;
+                        /* HOMEE white */
+            
+                        color: #FFFFFF;
+            
+                    }
+                    `)
                         return gvc.bindView({
                             bind : "funPuzzle",
                             view : ()=>{
                                 return gvc.map(widget.data.model.map((item:any , index:number)=>{
                                     let length = widget.data.model.length;
-                                    console.log(length)
-                                    let width = (100 / length)
+                                    let width = (100 / length);
+                                    let style = (index != length - 1)? "border-right:1px solid #EAD8C2" : "";
+
                                     return `
-                                    <div class="d-flex flex-column align-items-center" style="width: ${width}%;height: 56px;" onclick="${gvc.event(()=>{
+                                    <div class="d-flex flex-column align-items-center" style="width: ${width}%;height: 56px; ${style}" onclick="${gvc.event(()=>{
                                             item.click()
                                     })}">
                                         <div style="position: relative;width: 26px;height: 24px;">
@@ -316,17 +318,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         <div class="indexTitle" style="margin-top: 5px">
                                             ${item.title}
                                         </div>
-                                        ${(()=>{
-                                                if (index != length - 1)
-                                                    return  `<div style="width: 1px;height: 48px;background-color: #EAD8C2;"></div>   `
-                                                else
-                                                    return ``
-                                        })()}
+                                        
                                     </div>
+                   
                             `
                                 }))
                             },divCreate : {class: `d-flex justify-content-between`,
-                                style: `padding: 28px 20px;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;`}
+                                style: `padding: 0px 20px;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;`}
                         })
 
                     },
@@ -336,16 +334,99 @@ Plugin.create(import.meta.url,(glitter)=>{
                 }
             },
         },
-
-        empty: {
+        footer: {
             defaultData:{
-                link:[]
+                dataList:[
+                    {
+                        title : "首頁",
+                        icon : new URL('../img/component/footer/homeBlack.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "靈感",
+                        icon : new URL('../img/component/footer/idea.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "我的空間",
+                        icon : new URL('../img/component/footer/myspace.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "購物車",
+                        icon : new URL('../img/component/footer/shoopingCart.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+                    {
+                        title : "會員",
+                        icon : new URL('../img/component/footer/userRed.svg',import.meta.url).href,
+                        toPage:"",
+                        click : ()=>{
+
+                        }
+                    },
+
+                ],
             },
             render:(gvc, widget, setting, hoverID) => {
-                const data: { link: { img: string,code?:string }[] } = widget.data
-
+                glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
+                    if (widget.data?.bottomInset != response.data){
+                        widget.data.bottomInset = response.data;
+                        widget.refreshAll!();
+                    }
+                }, {
+                    webFunction: () => {
+                        return {data: 10}
+                    }
+                })
                 return {
-                    view: ()=>{return ``},
+                    view: ()=>{
+                        gvc.addStyle(`
+                        footer{
+                            background:white;
+                            box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);
+                            padding-top:18px;
+                        }
+                        .footerTitle{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 12px;
+                            line-height: 17px;
+                            text-align: center;
+                            color: #1E1E1E;
+                        }
+                        .selected{
+                            color:#FE5541;
+                        }
+                    `)
+                        return `
+                        <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
+                            ${(() => {
+                            return gvc.map(widget.data.dataList.map((data:any , index:number)=>{
+                                return `
+                                <div class="d-flex flex-column align-items-center" onclick="">
+                                    <img src=${data.icon} style="width: 28px;height: 28px;">
+                                    <div class="footerTitle ${(() => {if (index==4) return "selected"})()}">${data.title}</div>
+                                </div>
+                                `
+                            }))
+                        })()}
+                        </footer>
+                    `
+                    },
                     editor: ()=>{
                         return ``
                     }
