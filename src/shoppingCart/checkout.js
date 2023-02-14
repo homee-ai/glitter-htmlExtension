@@ -905,7 +905,6 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                                                                                 <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event((e) => {
                                                                 item.qty++;
                                                                 item.subtotal = item.qty * item.price;
-                                                                console.log(`item${item.item_id}`);
                                                                 refreshCart();
                                                             })}">                                        
                                                                             </div>

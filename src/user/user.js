@@ -2,6 +2,7 @@
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Api } from "../homee/api/homee-api.js";
 import { SharedView } from "../homee/shareView.js";
+import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -839,21 +840,70 @@ Plugin.create(import.meta.url, (glitter) => {
         },
         voucher: {
             defaultData: {
-                voucherShowType: 99,
-                voucher: {
-                    id: "0",
-                    vendor_name: "供應商名稱",
-                    vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
-                    name: "優惠卷名稱",
-                    config: {},
-                    title: "現折 10,000 元",
-                    subTitle: "滿 30,000 元",
-                    startTime: "",
-                    endTime: "",
-                    formatEndTime: "有效期限：2025.03.31",
-                    isUse: false,
-                },
-                customer: {}
+                voucherList: [
+                    {
+                        id: "0",
+                        vendor_name: "供應商名稱",
+                        vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                        name: "優惠卷名稱",
+                        config: {},
+                        title: "現折 10,000 元",
+                        subTitle: "滿 30,000 元",
+                        startTime: "",
+                        endTime: "",
+                        formatEndTime: "有效期限：2025.03.31",
+                        isUse: false,
+                        status: 0,
+                    },
+                    {
+                        id: "1",
+                        vendor_name: "供應商名稱",
+                        vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                        name: "優惠卷名稱",
+                        config: {},
+                        title: "現折 10,000 元",
+                        subTitle: "滿 30,000 元",
+                        startTime: "",
+                        endTime: "",
+                        formatEndTime: "即將失效：剩下 8 小時",
+                        isUse: false,
+                        status: 1,
+                    },
+                    {
+                        id: "2",
+                        vendor_name: "供應商名稱",
+                        vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                        name: "優惠卷名稱",
+                        config: {},
+                        title: "現折 10,000 元",
+                        subTitle: "滿 30,000 元",
+                        startTime: "",
+                        endTime: "",
+                        formatEndTime: "有效期限：2025.03.31",
+                        isUse: false,
+                        status: 2,
+                    },
+                    {
+                        id: "3",
+                        vendor_name: "供應商名稱",
+                        vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                        name: "優惠卷名稱",
+                        config: {},
+                        title: "現折 10,000 元",
+                        subTitle: "滿 30,000 元",
+                        startTime: "",
+                        endTime: "",
+                        formatEndTime: "有效期限：2025.03.31",
+                        isUse: false,
+                        status: 3,
+                    }
+                ],
+                cEvent: {},
+                eventList: {
+                    status0: {},
+                    status1: {},
+                    status2: {}
+                }
             },
             render: (gvc, widget, setting, hoverID) => {
                 let voucherStatus;
@@ -865,15 +915,38 @@ Plugin.create(import.meta.url, (glitter) => {
                 })(voucherStatus || (voucherStatus = {}));
                 return {
                     view: () => {
-                        let coupon = widget.data.voucher;
-                        if (widget.data.voucherShowType != 99) {
-                        }
-                        else {
-                            if (coupon.formatEndTime[0] != "有") {
-                                console.log("test");
+                        gvc.addStyle(`
+                            .unusedDate{
+                                color : #FF0000;
                             }
-                        }
-                        return `
+                            .normalDate{
+                                color : #858585;
+                            }
+                            .useBTNtext{                            
+                                border-radius: 4px;                               
+                                font-family: 'Noto Sans TC';
+                                font-style: normal;
+                                font-weight: 400;
+                                font-size: 12px;
+                                line-height: 17px;
+                                margin-right: 10px;
+                                padding: 1px 6px 2px;
+                            }
+                            .useBTNtext.on{
+                                background: #FE5541;
+                                color: #FFFFFF;
+                            }
+                            .useBTNtext.off{
+                                background: #EAD8C2;
+                                color: #858585;
+                            }
+                            .useBTNtext.passed{
+                                background: #E0E0E0;
+                                color: #858585;
+                            }
+                        `);
+                        return gvc.map(widget.data.voucherList.map((coupon) => {
+                            return `
                             <div
                                 class="d-flex align-items-center border"
                                 style="
@@ -884,138 +957,131 @@ Plugin.create(import.meta.url, (glitter) => {
                                     border-radius: 20px;
                                 "
                                 onclick="${gvc.event(() => {
-                            switch (widget.data.viewType) {
-                                case 'Preview':
-                                case 'History':
-                                    glitter.changePage('jsPage/user/couponDetail.js', 'couponDetail', true, { data: coupon });
-                                    break;
-                                case 'Select':
-                                    glitter.runJsInterFace('selectVoucher', {
-                                        code: coupon.code,
-                                    }, () => { });
-                                    break;
-                            }
-                        })}"
+                                ClickEvent.trigger({
+                                    gvc,
+                                    widget,
+                                    clickEvent: widget.data
+                                });
+                            })}">
+                            <div
+                                class="d-flex flex-column align-items-center"
+                                style="width: 60px;overflow: hidden;"
                             >
-                                <div
-                                    class="d-flex flex-column align-items-center"
-                                    style="width: 60px;overflow: hidden;"
-                                >
-                                    <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
-                                    <span
-                                        style="
-                                            font-family: 'Noto Sans TC';
-                                            font-style: normal;
-                                            font-weight: 400;
-                                            font-size: 10px;
-                                            width: 60px;
-                                            line-height: 12px;
-                                            margin-top: 4px;
-                                            word-break: break-all;
-                                            overflow: hidden; 
-                                            white-space: nowrap;
-                                            text-overflow: ellipsis;
-                                            -webkit-line-clamp: 1;
-                                            -webkit-box-orient: vertical;  
-                                            overflow: hidden;
-                                            text-align: center;
-                                        "
-                                        >${coupon.vendor_name}</span
-                                    >
-                                </div>
-                                <div
+                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
+                                <span
                                     style="
-                                        width: 1px;
-                                        height: 64px;
-                                        background: #D6D6D6;
-                                        margin-left: 24px;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 10px;
+                                        width: 60px;
+                                        line-height: 12px;
+                                        margin-top: 4px;
+                                        word-break: break-all;
+                                        overflow: hidden; 
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 1;
+                                        -webkit-box-orient: vertical;  
+                                        overflow: hidden;
+                                        text-align: center;
                                     "
-                                ></div>
-                                <div
-                                    class="d-flex flex-column justify-content-center"
-                                    style="margin-left: 20px;width: calc(100% - 170px);">
-                                    <span       
-                                        style="
-                                            font-family: 'Noto Sans TC';
-                                            font-style: normal;
-                                            font-weight: 700;
-                                            font-size: 18px;
-                                            line-height: 26px;
-                                            font-feature-settings: 'pnum' on, 'lnum' on;
-                                            color: #FD6A58;
-                                        " 
-                                        >${coupon.title}</span
-                                    >
-                                    <span
-                                        style="
-                                            font-family: 'Noto Sans TC';
-                                            font-style: normal;
-                                            font-weight: 400;
-                                            font-size: 12px;
-                                            line-height: 17px;
-                                        "
-                                        >${coupon.subTitle}</span
-                                    >
-                                    <span class="${(() => {
-                        })()}"
-                                        style="
-                                            font-family: 'Noto Sans TC';
-                                            font-style: normal;
-                                            font-weight: 400;
-                                            font-size: 10px;
-                                            line-height: 14px;color: #858585;
-                                        "
-                                        >${coupon.formatEndTime}</span
-                                    >
-                                </div>
-                                <div class="flex-fill"></div>
-                                ${glitter.print(() => {
-                            if (coupon.isUse) {
-                                return `
-                                    <div
-                                        class="px-2"
-                                        style="
-                                            background: #E0E0E0;
-                                            border-radius: 4px;
-                                            color: #858585;
-                                            font-family: 'Noto Sans TC';
-                                            font-style: normal;
-                                            font-weight: 400;
-                                            font-size: 12px;
-                                            line-height: 17px;
-                                            margin-right: 10px;
-                                        "
-                                    >
-                                        已使用
-                                    </div>
-                                `;
-                            }
-                            else {
-                                return `
-                                <div
-                                    class="px-2"
+                                    >${coupon.vendor_name}</span
+                                >
+                            </div>
+                            <div
+                                style="
+                                    width: 1px;
+                                    height: 64px;
+                                    background: #D6D6D6;
+                                    margin-left: 24px;
+                                "
+                            ></div>
+                            <div
+                                class="d-flex flex-column justify-content-center"
+                                style="margin-left: 20px;width: calc(100% - 170px);">
+                                <span       
                                     style="
-                                        background: #FD6A58;
-                                        border-radius: 4px;
-                                        color: white;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 18px;
+                                        line-height: 26px;
+                                        font-feature-settings: 'pnum' on, 'lnum' on;
+                                        color: #FD6A58;
+                                    " 
+                                    >${coupon.title}</span
+                                >
+                                <span
+                                    style="
                                         font-family: 'Noto Sans TC';
                                         font-style: normal;
                                         font-weight: 400;
                                         font-size: 12px;
                                         line-height: 17px;
-                                        margin-right: 10px;
                                     "
+                                    >${coupon.subTitle}</span
                                 >
-                                    使用
-                                </div>
-                            `;
-                            }
-                        })}
+                                <span class="${(() => {
+                                if (coupon.status == voucherStatus.expire) {
+                                    return "unusedDate";
+                                }
+                                else {
+                                    return "normalDate";
+                                }
+                            })()}"
+                                    style="
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 10px;
+                                        line-height: 14px;
+                                    "
+                                    >${coupon.formatEndTime}</span
+                                >
+                            </div>
+                            <div class="flex-fill"></div>
+                            <div class="useBTNtext ${(() => {
+                                switch (coupon.status) {
+                                    case voucherStatus.unused: {
+                                        return `on`;
+                                    }
+                                    case voucherStatus.expire: {
+                                        return `on`;
+                                    }
+                                    case voucherStatus.used: {
+                                        return `off`;
+                                    }
+                                    case voucherStatus.passed: {
+                                        return `passed`;
+                                    }
+                                }
+                            })()}">${(() => {
+                                switch (coupon.status) {
+                                    case voucherStatus.unused: {
+                                        return `使用`;
+                                    }
+                                    case voucherStatus.expire: {
+                                        return `使用`;
+                                    }
+                                    case voucherStatus.used: {
+                                        return `已使用`;
+                                    }
+                                    case voucherStatus.passed: {
+                                        return `已過期`;
+                                    }
+                                }
+                            })()}</div>
+                               
                         </div>
                         `;
+                        }));
                     },
                     editor: () => {
-                        return ``;
+                        return ClickEvent.editer(gvc, widget, widget.data, {
+                            option: [],
+                            hover: true
+                        });
                     }
                 };
             },
