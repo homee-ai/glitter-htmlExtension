@@ -2,6 +2,8 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
 import {SharedView} from "../homee/shareView.js";
+import {Voucher} from "../homee/legacy/api/voucher.js";
+
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -80,7 +82,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                     editor: ()=>{
                         return gvc.map([
                         `
-                            <h3>是否需要底線</h3>
+                            <h3 style="font-size: 16px;">是否需要底線</h3>
                             <select class="form-control" onchange="${gvc.event((e)=>{
                                 widget.data.nav.boxShadow = (e.value == 1);    
                                 widget.refreshAll;
@@ -830,6 +832,251 @@ Plugin.create(import.meta.url,(glitter)=>{
                 })
                 return {
                     view: ()=>{return ``},
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+        pointsRewardBlock: {
+            defaultData:{
+                backPoint:600,
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+
+                return {
+                    view: ()=>{return `
+                        ${gvc.bindView({
+                        bind: 'backPoint',
+                        view: () => {
+                            gvc.addStyle(`
+                                .giveBack {
+                                    font-weight: 500;
+                                    font-size: 18px;
+                                    line-height: 200%;
+                                    color: #292929;
+                                    font-feature-settings: 'pnum' on, 'lnum' on;
+                                }
+                                .backPoint {
+                                    font-weight: 700;
+                                    font-size: 32px;
+                                    line-height: 46px;
+                                    font-feature-settings: 'pnum' on, 'lnum' on;
+                                    color: #fd6a58;
+                                }
+                            `);
+                            return /*html*/ `
+                                <div class="d-flex align-items-baseline justify-content-center">
+                                    <div class="giveBack">點數回饋：</div>
+                                    <div class="backPoint">${widget.data.backPoint}</div>
+                                </div>
+                            `;
+                        },
+                        divCreate: {
+                            style: `height:96px;background: #FBF9F6;border-radius: 20px;margin-top:24px;`,
+                            class: `w-100 d-flex justify-content-center align-items-center `,
+                        },
+                    })}
+                    `},
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+        voucher: {
+            defaultData:{
+                voucherShowType:99,
+                voucher:{
+                    id: "0",
+                    vendor_name: "供應商名稱",
+                    vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                    name: "優惠卷名稱",
+                    config: {},
+                    title: "現折 10,000 元",
+                    subTitle: "滿 30,000 元",
+                    startTime: "",
+                    endTime: "",
+                    formatEndTime: "有效期限：2025.03.31",
+                    isUse: false,
+                },
+                customer:{
+
+                }
+
+
+            },
+            render:(gvc, widget, setting, hoverID) => {
+                enum voucherStatus {
+                    unused,
+                    expire,
+                    used,
+                    passed
+                }
+
+                return {
+                    view: ()=>{
+                        let coupon = widget.data.voucher;
+                        if (widget.data.voucherShowType!=99){
+                            //    todo 強制改型
+                        }else{
+                            //    todo 判定這張優惠卷要顯示怎樣類型
+                            if (coupon.formatEndTime[0] != "有"){
+                                console.log("test")
+                            }
+                        }
+                        return `
+                            <div
+                                class="d-flex align-items-center border"
+                                style="
+                                    padding:13px 16px;
+                                    height: 104px;
+                                    background: #FBF9F6;
+                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
+                                    border-radius: 20px;
+                                "
+                                onclick="${gvc.event(() => {
+                                switch (widget.data.viewType) {
+                                case 'Preview':
+                                case 'History':
+                                    glitter.changePage(
+                                        'jsPage/user/couponDetail.js',
+                                        'couponDetail',
+                                        true,
+                                        { data: coupon }
+                                    );
+                                    break;
+                                case 'Select':
+                                    glitter.runJsInterFace(
+                                        'selectVoucher',
+                                        {
+                                            code: coupon.code,
+                                        },
+                                        () => {}
+                                    );
+                                    break;
+                                }
+                                })}"
+                            >
+                                <div
+                                    class="d-flex flex-column align-items-center"
+                                    style="width: 60px;overflow: hidden;"
+                                >
+                                    <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
+                                    <span
+                                        style="
+                                            font-family: 'Noto Sans TC';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 10px;
+                                            width: 60px;
+                                            line-height: 12px;
+                                            margin-top: 4px;
+                                            word-break: break-all;
+                                            overflow: hidden; 
+                                            white-space: nowrap;
+                                            text-overflow: ellipsis;
+                                            -webkit-line-clamp: 1;
+                                            -webkit-box-orient: vertical;  
+                                            overflow: hidden;
+                                            text-align: center;
+                                        "
+                                        >${coupon.vendor_name}</span
+                                    >
+                                </div>
+                                <div
+                                    style="
+                                        width: 1px;
+                                        height: 64px;
+                                        background: #D6D6D6;
+                                        margin-left: 24px;
+                                    "
+                                ></div>
+                                <div
+                                    class="d-flex flex-column justify-content-center"
+                                    style="margin-left: 20px;width: calc(100% - 170px);">
+                                    <span       
+                                        style="
+                                            font-family: 'Noto Sans TC';
+                                            font-style: normal;
+                                            font-weight: 700;
+                                            font-size: 18px;
+                                            line-height: 26px;
+                                            font-feature-settings: 'pnum' on, 'lnum' on;
+                                            color: #FD6A58;
+                                        " 
+                                        >${coupon.title}</span
+                                    >
+                                    <span
+                                        style="
+                                            font-family: 'Noto Sans TC';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 12px;
+                                            line-height: 17px;
+                                        "
+                                        >${coupon.subTitle}</span
+                                    >
+                                    <span class="${(()=>{
+                                        
+                                    })()}"
+                                        style="
+                                            font-family: 'Noto Sans TC';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 10px;
+                                            line-height: 14px;color: #858585;
+                                        "
+                                        >${coupon.formatEndTime}</span
+                                    >
+                                </div>
+                                <div class="flex-fill"></div>
+                                ${glitter.print(() => {
+                            if (coupon.isUse) {
+                                return /*html*/ `
+                                    <div
+                                        class="px-2"
+                                        style="
+                                            background: #E0E0E0;
+                                            border-radius: 4px;
+                                            color: #858585;
+                                            font-family: 'Noto Sans TC';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 12px;
+                                            line-height: 17px;
+                                            margin-right: 10px;
+                                        "
+                                    >
+                                        已使用
+                                    </div>
+                                `;
+                            } else {
+                                return /*html*/ `
+                                <div
+                                    class="px-2"
+                                    style="
+                                        background: #FD6A58;
+                                        border-radius: 4px;
+                                        color: white;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        line-height: 17px;
+                                        margin-right: 10px;
+                                    "
+                                >
+                                    使用
+                                </div>
+                            `;
+                            }
+                        })}
+                        </div>
+                        `
+
+                    },
                     editor: ()=>{
                         return ``
                     }
