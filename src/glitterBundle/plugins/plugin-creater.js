@@ -1,9 +1,8 @@
 export class Plugin {
-    constructor() {
-    }
+    constructor() { }
     static create(url, fun) {
         const glitter = window.glitter;
-        glitter.share.htmlExtension[url] = fun(glitter);
+        glitter.share.htmlExtension[url] = fun(glitter, window.parent.editerData !== undefined);
     }
     static async initial(gvc, set) {
         for (const a of set) {
@@ -23,6 +22,29 @@ export class Plugin {
             }
         }
         return true;
+    }
+    static initialConfig(name) {
+        var _a, _b, _c;
+        const glitter = window.glitter;
+        glitter.lowCodeAPP = (_a = glitter.lowCodeAPP) !== null && _a !== void 0 ? _a : {};
+        glitter.lowCodeAPP[name] = (_b = glitter.lowCodeAPP[name]) !== null && _b !== void 0 ? _b : {};
+        glitter.lowCodeAPP[name].config = (_c = glitter.lowCodeAPP[name].config) !== null && _c !== void 0 ? _c : {};
+    }
+    static getAppConfig(name, defaultData) {
+        const glitter = window.glitter;
+        Plugin.initialConfig(name);
+        Object.keys(defaultData).map((dd) => {
+            var _a;
+            defaultData[dd] = (_a = glitter.lowCodeAPP[name].config[dd]) !== null && _a !== void 0 ? _a : defaultData[dd];
+        });
+        return defaultData;
+    }
+    static setAppConfig(name, setData) {
+        const glitter = window.glitter;
+        Plugin.initialConfig(name);
+        Object.keys(setData).map((dd) => {
+            glitter.lowCodeAPP[name].config[dd] = setData[dd];
+        });
     }
 }
 function getUrlParameter(url, sParam) {

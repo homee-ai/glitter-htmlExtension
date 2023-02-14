@@ -40,7 +40,7 @@ Plugin.create(import.meta.url, (glitter) => {
             defaultData: {
                 nav: {
                     title: "",
-                    leftIcon: import.meta.resolve('../img/component/left-arrow.svg', import.meta.url),
+                    leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
                     leftPage: "",
                     boxShadow: true
                 },
@@ -135,7 +135,7 @@ Plugin.create(import.meta.url, (glitter) => {
         },
         banner: {
             defaultData: {
-                img: import.meta.resolve('../img/component/ourServiceBanner.png', import.meta.url),
+                img: new URL('../img/component/ourServiceBanner.png', import.meta.url),
                 text: "文字",
                 click: () => {
                 }
@@ -226,9 +226,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         <div class="d-flex align-items-center  " style="padding:35px 0px;" onclick="${gvc.event(() => {
                             widget.data.click();
                         })}">
-                            <img src="${import.meta.resolve(widget.data.img)}" alt="${widget.data.text}" style="width: 32px;height: 32px;margin-right: 16px;">
+                            <img src="${new URL(widget.data.img)}" alt="${widget.data.text}" style="width: 32px;height: 32px;margin-right: 16px;">
                             <div class="rowText">${widget.data.text}</div>
-                            <img class="ms-auto" src="${import.meta.resolve("../img/component/right-arrow.svg")}" alt="右箭頭" style="height: 24px;width: 24px;" >
+                            <img class="ms-auto" src="${new URL("../img/component/right-arrow.svg")}" alt="右箭頭" style="height: 24px;width: 24px;" >
                         </div>
                         `;
                     },

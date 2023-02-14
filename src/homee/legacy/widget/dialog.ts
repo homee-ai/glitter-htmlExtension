@@ -4,7 +4,7 @@ export class Dialog{
     public dataLoading: (show: Boolean,text?:String) => void;
     public confirm: (title:string,callback: (result: Boolean) => void) => void;
     public showInfo: (title: string) => void;
-    constructor(gvc:GVC) {
+    constructor(gvc:any) {
         const glitter=gvc.glitter
         //loading view
         this.dataLoading=(show:Boolean,text?:String)=>{
@@ -12,7 +12,7 @@ export class Dialog{
                 case glitter.deviceTypeEnum.Web:
                     break
                 default:
-                    glitter.runJsInterFace("dataLoading",{show:show,text:text},(response)=>{})
+                    glitter.runJsInterFace("dataLoading",{show:show,text:text},(response:any)=>{})
                     break
             }
         }
@@ -20,7 +20,7 @@ export class Dialog{
         this.confirm=(title:string,callback:(result:Boolean)=>void)=>{
             glitter.runJsInterFace("confirm",{
                 title:title
-            },(response)=>{
+            },(response:any)=>{
                callback(response)
             },{
                 webFunction(data: {}, callback: (data: any) => void): any {
@@ -32,7 +32,7 @@ export class Dialog{
         this.showInfo=(title:string)=>{
             glitter.runJsInterFace("showInfo",{
                 title:title
-            },(response)=>{
+            },(response:any)=>{
             },{
                 webFunction(data: {}, callback: (data: any) => void): any {
                     return confirm(title)

@@ -67,6 +67,8 @@ export class Funnel {
                                 location.reload();
                                 break;
                             default:
+                                alert('發生錯誤！');
+                                location.reload();
                                 break;
                         }
                     },

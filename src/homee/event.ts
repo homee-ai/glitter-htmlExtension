@@ -1,33 +1,34 @@
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
-import { Api } from './api/homee-api.js';
+import {Api} from './api/homee-api.js';
 import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
 import {DialogHelper} from "../dialog/dialog-helper.js";
 
-ClickEvent.create(import.meta.url,{
-    link:{
-        title:"連結跳轉",
-        fun:(gvc,widget,object)=>{
+ClickEvent.create(import.meta.url, {
+    link: {
+        title: "連結跳轉",
+        fun: (gvc, widget, object) => {
             return {
-                editor:()=>{
+                editor: () => {
                     return gvc.glitter.htmlGenerate.editeInput({
-                        gvc:gvc,
-                        title:"連結跳轉",
-                        default:object.link,
-                        placeHolder:"輸入跳轉的連結",
-                        callback:(text:string)=>{
-                            object.link=text
+                        gvc: gvc,
+                        title: "連結跳轉",
+                        default: object.link,
+                        placeHolder: "輸入跳轉的連結",
+                        callback: (text: string) => {
+                            object.link = text
                             widget.refreshAll()
                         }
                     })
                 },
-                event:()=>{
+                event: () => {
                     /**
-                    * 網頁直接跳轉連結，如為APP則打開WEBVIEW
-                    * */
-                    gvc.glitter.runJsInterFace("openWeb",{
-                        url:object.link
-                    },(data)=>{ },{
+                     * 網頁直接跳轉連結，如為APP則打開WEBVIEW
+                     * */
+                    gvc.glitter.runJsInterFace("openWeb", {
+                        url: object.link
+                    }, (data) => {
+                    }, {
                         webFunction(data: any, callback: (data: any) => void): any {
                             gvc.glitter.openNewTab(object.link)
                             // gvc.glitter.location.href=object.link
@@ -38,71 +39,81 @@ ClickEvent.create(import.meta.url,{
             }
         }
     },
-    pageSwitch:{
-        title:"頁面跳轉",
-        fun:(gvc,widget,object:{selectPage:{tag?:string,name?:string}})=>{
+    pageSwitch: {
+        title: "頁面跳轉",
+        fun: (gvc, widget, object: { selectPage: { tag?: string, name?: string } }) => {
             return {
-                editor:()=>{
-                    const vm:{
-                        loading:boolean,
-                        data:{name:string,tag:string}[]
-                    }={
-                        loading:true,
-                        data:[]
+                editor: () => {
+                    const vm: {
+                        loading: boolean,
+                        data: { name: string, tag: string }[]
+                    } = {
+                        loading: true,
+                        data: []
                     }
-                    const id=gvc.glitter.getUUID()
-                    const api=new Api(gvc)
-                    object.selectPage=object.selectPage ?? {}
-                    api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name', method: 'get' }, (res) => {
-                        vm.data=res.result
-                        vm.loading=false
+                    const id = gvc.glitter.getUUID()
+                    const api = new Api()
+                    object.selectPage = object.selectPage ?? {}
+                    api.homeeAJAX({
+                        api: Api.serverURL,
+                        route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name',
+                        method: 'get'
+                    }, (res) => {
+                        vm.data = res.result
+                        vm.loading = false
                         gvc.notifyDataChange(id)
                     })
                     return `
 <h3 class="m-0 mb-2 mt-2" style="font-size: 16px;">選擇頁面</h3>
 ${
-                        gvc.bindView(()=>{
+                        gvc.bindView(() => {
                             return {
-                                bind:id,
-                                view:()=>{
-                                    if(vm.loading){
+                                bind: id,
+                                view: () => {
+                                    if (vm.loading) {
                                         return `<option value='${JSON.stringify(object.selectPage)}'>${object.selectPage.name ?? "尚未選擇"}</option>`
                                     }
-                                    let haveData=false
-                                    return  gvc.map(vm.data.map((dd)=>{
-                                        haveData=haveData || object.selectPage.tag === dd.tag
-                                        return `<option value='${JSON.stringify(dd)}' ${(object.selectPage.tag === dd.tag) ? `selected`:``}>${dd.name}</option>`
-                                    })) + ((haveData) ? ``:`<option selected>尚未定義</option>`)
+                                    let haveData = false
+                                    return gvc.map(vm.data.map((dd) => {
+                                        haveData = haveData || object.selectPage.tag === dd.tag
+                                        return `<option value='${JSON.stringify(dd)}' ${(object.selectPage.tag === dd.tag) ? `selected` : ``}>${dd.name}</option>`
+                                    })) + ((haveData) ? `` : `<option selected>尚未定義</option>`)
                                 },
-                                divCreate:{class:`form-control`,elem:`select`,option:[
+                                divCreate: {
+                                    class: `form-control`, elem: `select`, option: [
                                         {
-                                            key:'onChange',
-                                            value:gvc.event((e, event)=>{
-                                                object.selectPage=JSON.parse(e.value)
+                                            key: 'onChange',
+                                            value: gvc.event((e, event) => {
+                                                object.selectPage = JSON.parse(e.value)
                                                 widget.refreshAll()
                                             })
                                         }
-                                    ]}
+                                    ]
+                                }
                             }
                         })
                     }
 `
                 },
-                event:()=>{
-                    const api=new Api(gvc)
+                event: () => {
+                    const api = new Api()
                     DialogHelper.dataLoading({
-                        text:"",
-                        visible:true
+                        text: "",
+                        visible: true
                     })
-                    api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag='+object.selectPage.tag, method: 'get' }, (res) => {
-                        LegacyPage.execute(gvc.glitter,()=>{
+                    api.homeeAJAX({
+                        api: Api.serverURL,
+                        route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag,
+                        method: 'get'
+                    }, (res) => {
+                        LegacyPage.execute(gvc.glitter, () => {
                             DialogHelper.dataLoading({
-                                text:"",
-                                visible:false
+                                text: "",
+                                visible: false
                             })
                             gvc.glitter.changePage(
                                 LegacyPage.getLink("jsPage/htmlGenerater.js"),
-                                object.selectPage.tag! ,
+                                object.selectPage.tag!,
                                 true,
                                 res.result[0].config)
                         })
@@ -111,27 +122,28 @@ ${
             }
         }
     },
-    category:{
-        title:"商品分類",
-        fun:(gvc,widget,object)=>{
+    category: {
+        title: "商品分類",
+        fun: (gvc, widget, object) => {
             return {
-                editor:()=>{
-                    const api=new Api(gvc)
+                editor: () => {
+                    const api = new Api()
                     return `
                     <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">選擇分類</h3>
-                    ${gvc.bindView(()=>{
-                        const id=gvc.glitter.getUUID()
-                        const vm={
-                            loading:true,
-                            colOption:''
+                    ${gvc.bindView(() => {
+                        const id = gvc.glitter.getUUID()
+                        const vm = {
+                            loading: true,
+                            colOption: ''
                         }
-                        function load(){
-                            api.homeeAJAX({ route: '/collection', method: 'get' }, (res) => {
+
+                        function load() {
+                            api.homeeAJAX({route: '/collection', method: 'get'}, (res) => {
                                 res.map((x: { id: number; name: string; group: { id: number; name: string }[] }) => {
                                     vm.colOption += /*html*/ `
                                         <option value='${JSON.stringify({
-                                        id:x.id,
-                                        name:x.name
+                                        id: x.id,
+                                        name: x.name
                                     })}' ${x.name == object.name ? `selected=""` : ``}>
                                             ===== ${x.name} =====
                                         </option>
@@ -140,8 +152,8 @@ ${
                                         (y) =>
                                             (vm.colOption += /*html*/ ` <option
                                                 value='${JSON.stringify({
-                                                id:y.id,
-                                                name:y.name
+                                                id: y.id,
+                                                name: y.name
                                             })}'
                                                 ${y.name == object.name ? `selected=""` : ``}
                                             >
@@ -152,80 +164,101 @@ ${
                                 gvc.notifyDataChange(id)
                             });
                         }
+
                         load()
                         return {
-                            bind:id,
-                            view:()=>{
+                            bind: id,
+                            view: () => {
                                 return `<select
                                 class="form-select mb-3 "
                                 onchange="${gvc.event((e) => {
-                                    const val=JSON.parse(e.value)
+                                    const val = JSON.parse(e.value)
                                     object.value = val.id;
                                     object.name = val.name;
                                     widget.refreshAll()
                                 })}"
                             >
-                               ${(vm.colOption === '') ? `<option>${object.name ?? "請稍候..."}</option>`:vm.colOption}
+                               ${(vm.colOption === '') ? `<option>${object.name ?? "請稍候..."}</option>` : vm.colOption}
                             </select>`
                             },
-                            divCreate:{}
+                            divCreate: {}
                         }
                     },)}
                     `
                 },
-                event:()=>{
+                event: () => {
                     DialogHelper.dataLoading({
-                        text:"",
-                        visible:true
+                        text: "",
+                        visible: true
                     })
-                    LegacyPage.execute(gvc.glitter,()=>{
+                    LegacyPage.execute(gvc.glitter, () => {
                         DialogHelper.dataLoading({
-                            text:"",
-                            visible:false
+                            text: "",
+                            visible: false
                         })
                         gvc.glitter.changePage(
                             LegacyPage.getLink("jsPage/category/subCategory.js"),
                             "subCategory",
                             true,
-                            {title:object.name , parent_category_id:object.value , category:"sub_category_id"  , category_id:object.value , index:0})
+                            {
+                                title: object.name,
+                                parent_category_id: object.value,
+                                category: "sub_category_id",
+                                category_id: object.value,
+                                index: 0
+                            })
                     })
 
                 }
             }
         }
     },
-    toProductDetail:{
-        title:"商品詳情",
-        fun:(gvc, widget, obj)=>{
-            const api=new Api(gvc)
+    toProductDetail: {
+        title: "商品詳情",
+        fun: (gvc, widget, obj) => {
+            const api = new Api()
             return {
-                editor:()=>{
-                    const funnel=new Funnel(gvc)
+                editor: () => {
+                    const funnel = new Funnel(gvc)
                     return funnel.optionSreach(
                         {
-                            path: Api.serverURL+'/api/v1/product?product_name=',
+                            path: Api.serverURL + '/api/v1/product?product_name=',
                             key: 'name',
                             def: (obj.data ?? {}).name ?? "",
-                            searchData:"product_list"
+                            searchData: "product_list"
                         },
                         (res) => {
-                            obj.data=res
+                            obj.data = res
                             widget.refreshAll()
                         }
                     )
                 },
-                event:()=>{
-                  gvc.glitter.runJsInterFace("toProductPage",{
-                      id:obj.data.id
-                  },(res)=>{
+                event: () => {
+                    gvc.glitter.runJsInterFace("toProductPage", {
+                        id: obj.data.id
+                    }, (res) => {
 
-                  },{
-                      webFunction(data: any, callback: (data: any) => void): any {
-                          alert('APP會跳轉至商品ID:'+obj.data.id+"的頁面")
-                      }
-                  })
+                    }, {
+                        webFunction(data: any, callback: (data: any) => void): any {
+                            alert('APP會跳轉至商品ID:' + obj.data.id + "的頁面")
+                        }
+                    })
                 }
             }
         }
-    }
+    },
+    goBack: {
+        title: "返回上一頁",
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``
+                },
+                event: () => {
+                    gvc.glitter.goBack()
+                }
+            }
+        }
+    },
+
 })

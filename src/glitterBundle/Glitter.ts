@@ -15,7 +15,9 @@ export class Glitter {
     public defaultSetting = new DefaultSetting({
         pageBgColor: "white",
         pageAnimation: this.animation.none,
-        dialogAnimation: this.animation.none
+        dialogAnimation: this.animation.none,
+        pageLoading:()=>{},
+        pageLoadingFinish:()=>{}
     })
     /*Parameter*/
     public htmlGenerate=HtmlGenerate
@@ -322,6 +324,8 @@ export class Glitter {
                             script.onreadystatechange = null;
                             index++
                             addScript()
+                        }else{
+                            alert(script.readyState)
                         }
                     }
                 } else {
@@ -333,16 +337,21 @@ export class Glitter {
                         }
                     }
                 }
+                script.addEventListener('error',()=>{
+                    error("")
+                });
                 if (scritem.type === 'text/babel') {
                     glitter.$('body').append(`<script type="text/babel" src="${scritem.src}"></script>`)
                 } else if (scritem.type !== undefined) {
                     script.setAttribute('type', scritem.type);
                     script.setAttribute('src', scritem.src ?? undefined);
+                    script.setAttribute('crossorigin',true)
                     script.setAttribute('id', scritem.id ?? undefined);
                     document.getElementsByTagName("head")[0].appendChild(script);
                 } else {
                     script.setAttribute('src', scritem.src ?? scritem);
                     script.setAttribute('id', scritem.id ?? undefined);
+                    script.setAttribute('crossorigin',true)
                     document.getElementsByTagName("head")[0].appendChild(script);
                 }
 

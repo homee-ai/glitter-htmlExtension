@@ -25,7 +25,7 @@ export class Animation {
             finish()
         }, 500)
     }, (page: PageConfig, finish: () => void) => {
-        page.getElement().addClass('position-absolute')
+        page.getElement().addClass('position-fixed')
         page.getElement().css("opacity", "1.0")
         page.getElement().animate({"opacity": "0.1"}, 500);
         setTimeout(() => {
@@ -80,7 +80,7 @@ export class Animation {
             finish()
         }, 500)
     }, (pageConfig: PageConfig, finish: () => void) => {
-        pageConfig.getElement().addClass('position-absolute')
+        pageConfig.getElement().addClass('position-fixed')
         pageConfig.getElement().addClass(`inRightToLeftDismiss`)
         setTimeout(() => {
             finish()
@@ -134,7 +134,7 @@ export class Animation {
             finish()
         }, 500)
     }, (pageConfig: PageConfig, finish: () => void) => {
-        pageConfig.getElement().addClass('position-absolute')
+        pageConfig.getElement().addClass('position-fixed')
         pageConfig.getElement().addClass(`TopToBtnDismiss`)
         setTimeout(() => {
             finish()

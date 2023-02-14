@@ -1,6 +1,12 @@
 import { Glitter } from "../Glitter.js";
 export class DefaultSetting {
     constructor(obj) {
+        this.pageLoading = () => {
+        };
+        this.pageLoadingFinish = () => {
+        };
+        this.pageLoading = obj.pageLoading;
+        this.pageLoadingFinish = obj.pageLoadingFinish;
         this.pageBgColor = obj.pageBgColor;
         this.pageAnimation = obj.pageAnimation;
         this.dialogAnimation = obj.dialogAnimation;
@@ -35,8 +41,8 @@ export class PageManager {
             const index = glitter.pageConfig.map((data) => {
                 return data.id;
             }).indexOf(id);
-            glitter.pageConfig[index].deleteResource();
             if (del) {
+                glitter.pageConfig[index].deleteResource();
                 glitter.$(`#page` + glitter.pageConfig[index].id).remove();
                 glitter.$(`#` + glitter.pageConfig[index].id).remove();
                 glitter.pageConfig.splice(index, 1);
@@ -75,6 +81,7 @@ export class PageManager {
             }, 100);
         }
         else {
+            glitter.defaultSetting.pageLoading();
             PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             for (let a = glitter.pageConfig.length - 1; a >= 0; a--) {
@@ -88,8 +95,10 @@ export class PageManager {
                 goBack: true,
                 src: url,
                 tag: tag,
-                deleteResource: () => { },
-                createResource: () => { },
+                deleteResource: () => {
+                },
+                createResource: () => {
+                },
                 backGroundColor: (_a = option.backGroundColor) !== null && _a !== void 0 ? _a : "white",
                 type: GVCType.Page,
                 animation: (_b = option.animation) !== null && _b !== void 0 ? _b : glitter.animation.none
@@ -165,6 +174,7 @@ export class PageManager {
         }
         page.getElement().addClass(`position-fixed`);
         page.getElement().show();
+        glitter.defaultSetting.pageLoadingFinish();
         page.animation.inView(page, () => {
             closePreviousPage();
             page.getElement().removeClass('position-fixed');
@@ -183,6 +193,7 @@ export class PageManager {
             }, 100);
         }
         else {
+            glitter.defaultSetting.pageLoading();
             PageManager.clock.zeroing();
             glitter.waitChangePage = true;
             const config = new PageConfig({
@@ -191,8 +202,10 @@ export class PageManager {
                 goBack: goBack,
                 src: url,
                 tag: tag,
-                deleteResource: () => { },
-                createResource: () => { },
+                deleteResource: () => {
+                },
+                createResource: () => {
+                },
                 backGroundColor: (_a = option.backGroundColor) !== null && _a !== void 0 ? _a : "white",
                 type: GVCType.Page,
                 animation: (_b = option.animation) !== null && _b !== void 0 ? _b : glitter.defaultSetting.pageAnimation
@@ -250,8 +263,10 @@ export class PageManager {
                 goBack: true,
                 src: url,
                 tag: tag,
-                deleteResource: () => { },
-                createResource: () => { },
+                deleteResource: () => {
+                },
+                createResource: () => {
+                },
                 backGroundColor: (_a = option.backGroundColor) !== null && _a !== void 0 ? _a : "transparent",
                 type: GVCType.Dialog,
                 animation: (_b = option.animation) !== null && _b !== void 0 ? _b : glitter.defaultSetting.dialogAnimation

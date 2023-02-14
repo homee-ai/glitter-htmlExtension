@@ -72,8 +72,10 @@ export class HtmlGenerate {
             return dd;
         });
         this.render = (gvc: GVC, option: { class: string, style: string } = {class: ``, style: ``}) => {
+            gvc.glitter.share.loaginR=(gvc.glitter.share.loaginR ?? 0)  + 1
             var loading = true;
             const container = gvc.glitter.getUUID();
+            gvc.glitter.defaultSetting.pageLoading()
             function getData(){
                 async function add(set:any[]){
                     for (const a of set){
@@ -96,7 +98,10 @@ export class HtmlGenerate {
                 }
                 add(setting).then((data)=>{
                     loading=false
+                    gvc.glitter.defaultSetting.pageLoadingFinish()
                     gvc.notifyDataChange(container);
+                    gvc.glitter.share.loaginfC = (gvc.glitter.share.loaginfC ?? 0)  + 1
+                    console.log('loaging:'+gvc.glitter.share.loaginfC )
                 })
             }
             getData()
@@ -121,15 +126,10 @@ export class HtmlGenerate {
                                         try {
                                             return gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).view();
                                         }catch (e:any){
-                                            return `解析錯誤:${e.message}
-<br>
-${e.stack}
-<br>
-${e.line}`
+                                            return `解析錯誤:${e.message}<br>${e.stack}<br>${e.line}`
                                         }
                                     })()}
                                     `
-
                                 },
                                 divCreate: {
                                     style: `
@@ -151,7 +151,7 @@ ${e.line}`
                                             gvc.glitter.$('html').animate({ scrollTop: scrollTOP - gvc.glitter.$('html').height() / 2 }, 200);
                                         },100)
                                     }
-
+                                    console.log('onCreate')
                                 }
                             });
 
