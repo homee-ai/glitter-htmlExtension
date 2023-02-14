@@ -11,7 +11,7 @@ export function appConfig(): {
     //Upload image
     uploadImage:(photoFile:any,callback:(result:string)=>void)=>void,
     //Change to other page
-    changePage:(gvc:GVC,tag:string)=>void
+    changePage:(gvc:GVC,tag:string,obj?:any)=>void
 } {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
@@ -48,23 +48,30 @@ export function appConfig(): {
                 },
             });
         },
-        changePage:(gvc:GVC,tag:string)=>{
+        changePage:(gvc:GVC,tag:string,obj?:any)=>{
             const api=new Api()
             DialogHelper.dataLoading({
                 text:"",
                 visible:true
             })
             api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag='+tag, method: 'get' }, (res) => {
-                LegacyPage.execute(gvc.glitter,()=>{
-                    DialogHelper.dataLoading({
-                        text:"",
-                        visible:false
+                DialogHelper.dataLoading({
+                    text: "",
+                    visible: false
+                })
+                gvc.glitter.changePage(
+                    `${new URL('./htmlGenerater.js',import.meta.url)}`,
+                    tag,
+                    true,
+                    {
+                        config:res.result[0].config,
+                        data:obj
                     })
-                    gvc.glitter.changePage(
-                        LegacyPage.getLink("jsPage/htmlGenerater.js"),
-                        tag ,
-                        true,
-                        res.result[0].config)
+                setTimeout(()=>{
+                    DialogHelper.dataLoading({
+                        text: "",
+                        visible: false,
+                    })
                 })
             })
         }

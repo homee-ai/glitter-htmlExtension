@@ -1,0 +1,104 @@
+[
+  {
+    "id": "s8s0s5s6sds3s1s0-s5s8sds4-4s1s0sd-sbs0scs1-sbs3s9sbs9sas9scses5scs0",
+    "js": "http://172.20.10.2:3090/test/voucher/voucher.js",
+    "data": {
+      "nav": {
+        "leftIcon": "http://172.20.10.2:3090/test/img/component/left-arrow.svg",
+        "leftPage": "",
+        "rightIcon": "http://172.20.10.2:3090/test/img/component/service.png",
+        "rightPage": ""
+      },
+      "topInset": 10,
+      "leftEvent": {
+        "link": "https://medium.com/@esther.tsai/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-android-studio-import-aar-7a7174407e99",
+        "clickEvent": {
+          "src": "http://172.20.10.2:3090/test/homee/event.js",
+          "route": "goBack"
+        },
+        "selectPage": {
+          "tag": "home",
+          "name": "首頁",
+          "group": "首頁"
+        }
+      },
+      "rightEvent": {
+        "name": "餐桌",
+        "value": 759423,
+        "selectPage": {
+          "tag": "voucher",
+          "name": "優惠券頁面",
+          "group": "優惠券頁面"
+        }
+      },
+      "voucherPlaceholder": "輸入優惠代碼"
+    },
+    "type": "nav",
+    "label": "nav",
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  },
+  {
+    "id": "s7s6s7s7ses5s6se-s9s5s1s4-4sbs4s4-sbs8s5sf-sesases8scses2s9s4s7s9s8",
+    "js": "https://homee-ai.github.io/glitter-htmlExtension/src/official/official.js",
+    "data": {
+      "setting": [
+        {
+          "id": "sbsds0s2s6s1s6s1-s0s2s3s8-4s2sas8-s8s3s5s0-sasbs5s5sescs2s4s3s0sfs2",
+          "js": "http://172.20.10.2:3090/test/voucher/voucher.js",
+          "data": {
+            "voucherPlaceholder": "輸入優惠代碼"
+          },
+          "type": "voucherInput",
+          "label": "voucherInput",
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "s7s3s6s1scs3s6sf-s2s7sbsa-4scsesa-s9ses9sb-sdsas4scsfs4s9s3s0s8sdsb",
+          "js": "http://172.20.10.2:3090/test/voucher/voucher.js",
+          "data": {
+            "voucherCardList": [
+              {
+                "date": "31 三月 2025",
+                "name": "用戶邀請朋友成功獎勵",
+                "dateText": "有效期限：",
+                "dateType": "",
+                "discount": "現折 10,000 元",
+                "vendor_id": "0",
+                "lowCostText": "最低消費：",
+                "vendor_icon": "http://172.20.10.2:3090/test/img/component/voucher/cardIcon.png",
+                "vendor_name": "HOMEE",
+                "lowCostNumber": "NT$ 30,000",
+                "vendor_context": "優惠券內容"
+              },
+              {
+                "date": "剩下 8 小時",
+                "name": "門市消費滿萬贈 HOMEE $500 優惠券",
+                "dateText": "即將失效：",
+                "dateType": "warning-",
+                "discount": "現折 500 元",
+                "vendor_id": "1",
+                "lowCostText": "最低消費：",
+                "vendor_icon": "http://172.20.10.2:3090/test/img/component/voucher/cardIcon.png",
+                "vendor_name": "HOMEE",
+                "lowCostNumber": "NT$ 0",
+                "vendor_context": "優惠券內容"
+              }
+            ]
+          },
+          "type": "voucherList",
+          "label": "voucherList",
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        }
+      ],
+      "paddingB": "100px"
+    },
+    "type": "container",
+    "label": "container",
+    "expandStyle": true,
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  }
+]

@@ -261,7 +261,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         Checkout.setCheckOut({
                             data: skuAmount, callback: (data) => {
                                 if (data) {
-                                    console.log(data);
                                     cartSubTotalVM.data = data;
                                     cartSubTotalVM.loading = false;
                                     total = cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount;
@@ -435,9 +434,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     return (item.subtotal).toLocaleString();
                 }
                 function checkOut() {
+                    refreshCart();
                     dialog.dataLoading(true);
                     glitter.runJsInterFace("toCheckOutPage", {}, () => {
+                        widget.data.cartItem = [];
                         dialog.dataLoading(false);
+                        widget.refreshComponent();
                     });
                 }
                 return {
@@ -518,24 +520,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                 if (category.delete) {
                                                                     checkPic = '../img/component/shoppingCart/deleteCircle.png';
                                                                     chooseEvent = () => {
-                                                                        let check = confirm("確定要刪除嘛?");
-                                                                        if (check) {
-                                                                            if (item.select) {
+                                                                        dialog.confirm("確定要刪除嘛?", (result) => {
+                                                                            if (result) {
+                                                                                if (item.select) {
+                                                                                    category.item.splice(itemIndex, 1);
+                                                                                    refreshCart();
+                                                                                }
                                                                                 category.item.splice(itemIndex, 1);
-                                                                                refreshCart();
+                                                                                item.deleteEvent();
+                                                                                if (category.item.length == 0) {
+                                                                                    let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
+                                                                                    widget.data.cartItem.splice(indexToRemove, 1);
+                                                                                    refreshCart();
+                                                                                }
+                                                                                else {
+                                                                                    gvc.notifyDataChange(category.category_id);
+                                                                                    gvc.notifyDataChange('cartSubtotal');
+                                                                                }
                                                                             }
-                                                                            category.item.splice(itemIndex, 1);
-                                                                            item.deleteEvent();
-                                                                            if (category.item.length == 0) {
-                                                                                let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
-                                                                                widget.data.cartItem.splice(indexToRemove, 1);
-                                                                                refreshCart();
-                                                                            }
-                                                                            else {
-                                                                                gvc.notifyDataChange(category.category_id);
-                                                                                gvc.notifyDataChange('cartSubtotal');
-                                                                            }
-                                                                        }
+                                                                        });
                                                                     };
                                                                 }
                                                                 return `
@@ -698,12 +701,26 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     return `
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:12px;">
                                         <div>小計金額</div>
-                                        <div>${(cartSubTotalVM.loading) ? `loading...` : subTotal.toLocaleString()}</div>
+                                        <div>${(cartSubTotalVM.loading) ? `計算中...` : subTotal.toLocaleString()}</div>
                                     </div>
                                     <div class="d-flex align-items-center" style="padding:0 12px; margin-bottom:7px;">
                                         <img style="width: 20px;height: 16px;margin-right:10px;" src="${new URL(`../img/component/ticket.svg`, import.meta.url)}">
                                         <div class="voucherBlock" onclick="${gvc.event(() => {
-                                        appConfig().changePage(gvc, "voucher");
+                                        appConfig().changePage(gvc, "voucher", {
+                                            callback: (code) => {
+                                                dialog.dataLoading(true);
+                                                Checkout.setVoucher({
+                                                    code,
+                                                    callback: (result) => {
+                                                        dialog.dataLoading(false);
+                                                        if (!result) {
+                                                            dialog.showInfo("無法使用此優惠券!");
+                                                        }
+                                                        refreshCart();
+                                                    }
+                                                });
+                                            }
+                                        });
                                     })}">使用優惠卷或輸入優惠代碼</div>
                                     </div>
                                     ${(() => {
@@ -715,16 +732,31 @@ font-style: normal;
 font-weight: 400;
 font-size: 12px;
 line-height: 17px;
-text-align: right;
+text-align: left;
+word-break: break-all;
+white-space: normal;
 color: #1E1E1E;">${dd.name}</span>
                                         <div class="flex-fill"></div>
                                         <span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
 font-size: 15px;
+margin-left: 10px;
 line-height: 150%;
 color: #FE5541;
-">${(dd.code) ? "刪除" : ""}</span>
+" onclick="${gvc.event(() => {
+                                                    dialog.confirm("是否確認刪除優惠券?", (result) => {
+                                                        if (result) {
+                                                            dialog.dataLoading(true);
+                                                            Checkout.deleteVoucher({
+                                                                callback: (result) => {
+                                                                    dialog.dataLoading(false);
+                                                                    widget.refreshComponent();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                })}">${(dd.code) ? "刪除" : ""}</span>
 </div>       `;
                                             }));
                                         }
@@ -751,14 +783,14 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                                         <div class="d-flex">
                                             <div class="totalText">總計金額:</div>
                                             <div class="total">
-                                                NT$ ${(cartSubTotalVM.loading) ? `loading...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}
+                                                NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}
                                             </div>
                                         </div>
                                         
                                     </div>
 
                                     <div class="d-flex" style="position:fixed;left:0;bottom:106px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
-                                        <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `loading...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}</div>
+                                        <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
                                         checkOut();
                                     })}">結帳</div>
@@ -847,19 +879,20 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                                                             if (category.delete) {
                                                                 checkPic = '../img/component/shoppingCart/deleteCircle.png';
                                                                 chooseEvent = () => {
-                                                                    let check = confirm("確定要刪除嘛?");
-                                                                    if (check) {
-                                                                        item.deleteEvent();
-                                                                        category.item.splice(itemIndex, 1);
-                                                                        if (category.item.length == 0) {
-                                                                            let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
-                                                                            widget.data.cartItem.splice(indexToRemove, 1);
-                                                                            refreshCart();
+                                                                    dialog.confirm("確定要刪除嘛?", (check) => {
+                                                                        if (check) {
+                                                                            item.deleteEvent();
+                                                                            category.item.splice(itemIndex, 1);
+                                                                            if (category.item.length == 0) {
+                                                                                let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
+                                                                                widget.data.cartItem.splice(indexToRemove, 1);
+                                                                                refreshCart();
+                                                                            }
+                                                                            else {
+                                                                                gvc.notifyDataChange(category.category_id);
+                                                                            }
                                                                         }
-                                                                        else {
-                                                                            gvc.notifyDataChange(category.category_id);
-                                                                        }
-                                                                    }
+                                                                    });
                                                                 };
                                                             }
                                                             return `

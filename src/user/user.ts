@@ -670,7 +670,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                         ${service.text}
                                                     </div>
                                                     <div class="d-flex align-items-center ms-auto">                                                        
-                                                        <img class="ms-auto" src="${import.meta.resolve!(`../img/component/angle-right.svg`,import.meta.url)}" alt="" style="width: 24px;height: 24px;">
+                                                        <img class="ms-auto" src="${new URL!(`../img/component/angle-right.svg`,import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                     </div>
                                                 </div>
                                               
@@ -758,7 +758,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     view : ()=>{
 
                                         return `
-                                            <div class="" style="padding-top: 57%;width : 100%;background:50% / cover url(${import.meta.resolve!(`../img/component/kanban.png`,import.meta.url)})"></div>
+                                            <div class="" style="padding-top: 57%;width : 100%;background:50% / cover url(${new URL!(`../img/component/kanban.png`,import.meta.url)})"></div>
                                         `
                                     },
                                     divCreate:{class:`` , style:`width : 100%;`}

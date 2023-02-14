@@ -3,6 +3,7 @@ import {Api} from './api/homee-api.js';
 import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
 import {DialogHelper} from "../dialog/dialog-helper.js";
+import {appConfig} from "../config.js";
 
 ClickEvent.create(import.meta.url, {
     link: {
@@ -96,28 +97,7 @@ ${
 `
                 },
                 event: () => {
-                    const api = new Api()
-                    DialogHelper.dataLoading({
-                        text: "",
-                        visible: true
-                    })
-                    api.homeeAJAX({
-                        api: Api.serverURL,
-                        route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag,
-                        method: 'get'
-                    }, (res) => {
-                        LegacyPage.execute(gvc.glitter, () => {
-                            DialogHelper.dataLoading({
-                                text: "",
-                                visible: false
-                            })
-                            gvc.glitter.changePage(
-                                LegacyPage.getLink("jsPage/htmlGenerater.js"),
-                                object.selectPage.tag!,
-                                true,
-                                res.result[0].config)
-                        })
-                    })
+                    appConfig().changePage(gvc,object.selectPage.tag!)
                 }
             }
         }

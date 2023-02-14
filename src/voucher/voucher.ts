@@ -3,8 +3,9 @@ import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {Api} from "../homee/api/homee-api.js";
 import {LegacyPage} from "../homee/legacy/interface.js";
+import {Checkout} from "../api/checkout.js";
 
-
+import {SharedView} from "../homee/shareView.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile: any, callback: (link: string) => void) => {
@@ -66,64 +67,24 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
-
-                function drawNav(title: string, leftIcon: string, rightIcon: string): string {
-                    glitter.runJsInterFace("getTopInset", {}, (response: any) => {
-                        if (widget.data?.topInset != response.data) {
-                            widget.data.topInset = response.data;
-                            widget.refreshAll!();
-                        }
-                    }, {
-                        webFunction: () => {
-                            return {data: 10}
-                        }
-                    })
-                    return gvc.bindView({
-                        bind: `nav`,
-                        view: () => {
-                            return `
-                    <nav class="bg-white w-100" style="padding-top: ${widget.data.topInset - 20}px;">
-                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0;height: 63px; padding: 0 16px; background: #FFFFFF;box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.05);position:relative;">
-                            <div class="me-auto p-0 d-flex align-items-center" style="">
-                                ${leftIcon}
-                            </div>
-                            <div class=" d-flex align-items-center justify-content-center" style="font-family: 'Noto Sans TC',serif;font-style: normal;font-size: 16px;font-weight: 700;color: #1E1E1E;">${title}</div>
-                            ${(() => {
-                                if (rightIcon) {
-                                    return `
-                                    <div class="d-flex ms-auto align-items-center" style="">
-                                        ${rightIcon}
-                                    </div>`
-                                } else
-                                    return ``
-                            })()}
-                        
-                        </div>
-                    </nav>
-                        `
-                        },
-                        divCreate: {style: `width:100vw;height:calc(63px + ${widget.data.topInset - 20}px)`},
-                        onCreate: () => {
-                        }
-                    })
-                }
-
+                const sharedView = new SharedView(gvc);
                 return {
                     view: () => {
-                        return gvc.map([
-                            drawNav("優惠卷",
-                                `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                                    ClickEvent.trigger({gvc,widget,clickEvent:widget.data.leftEvent})
-                                })}">`,
-                                `<img class="" src="${new URL('../img/component/service.png', import.meta.url)}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
-                                    ClickEvent.trigger({gvc,widget,clickEvent:widget.data.rightEvent})
-                                })}">`)
-                        ])
+                           return sharedView.navigationBar({
+                            title: "優惠券",
+                            leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                                ClickEvent.trigger({gvc,widget,clickEvent:widget.data.leftEvent})
+                            })}">`,
+                            rightIcon: `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                            })}">
+                            `
+
+                        })
                     },
                     editor: () => {
                         return gvc.map([
                             `
-                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">左方icon</h3>
                             <div class="my-3 border border-white"></div>
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.nav.leftIcon}">
@@ -196,18 +157,21 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
+
                 return {
                     view: () => {
                         return gvc.map([
                             gvc.bindView({
                                 bind: "inputVoucherCode",
                                 view: () => {
+                                    let code=""
                                     return `
-                                    <input class="voucherInput w-100 border-0" style="position: relative" placeholder="${widget.data.voucherPlaceholder}">
+                                    <input class="voucherInput w-100 border-0" style="position: relative" onchange="${gvc.event((e)=>{
+                                        code=e.value
+                                    })}" placeholder="${widget.data.voucherPlaceholder}">
                                     <div class="btnInput" style="font-weight: 700;font-size: 18px;line-height: 26px;color: #FE5541;position: absolute;right:16px;top: 13px;" onclick="${gvc.event(() => {
-                                        let data = document.querySelector(".voucherInput") as HTMLInputElement;
-                                        let value = data.value;
-                                        //    todo
+                                        gvc.parameter.pageConfig?.obj.data.callback(code)
+                                        gvc.glitter.goBack()
                                     })}">
                                         套用
                                     </div>
@@ -356,6 +320,38 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
+                try{
+
+                    if(!(window.parent as any).editerData){
+                        widget.data.voucherCardList=[]
+                        Checkout.getVoucher('Select',(data)=>{
+                            data=(data as VoucherModel[]).filter((dd)=>{
+                                return dd.config.howToPlay !== 'rebate'
+                            })
+                            widget.data.voucherCardList=(data as any).map((dd:any)=>{
+                                return {
+                                    vendor_id: dd.id,
+                                    vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
+                                    vendor_name: dd.vendor_name,
+                                    vendor_context: "優惠券內容",
+                                    name: dd.subTitle,
+                                    discount: dd.title,
+                                    //最低消費：->後續要加
+                                    lowCostText: "",
+                                    //NT$ 30,000->後續要加
+                                    lowCostNumber: "",
+                                    dateText: "有效期限：",
+                                    date: dd.formatEndTime,
+                                    dateType: "",
+                                    code:dd.code
+                                }
+                            })
+                            gvc.notifyDataChange('voucherCardList')
+                            console.log(JSON.stringify(data))
+                        })
+                    }
+                }catch (e){}
+
 
                 return {
                     view: () => {
@@ -365,7 +361,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                 view: () => {
                                     return gvc.map(widget.data.voucherCardList.map((data: any) => {
                                         return `
-                                        <div class="voucherCard overflow-hidden"> 
+                                        <div class="voucherCard overflow-hidden" onclick="${gvc.event(()=>{
+                                            gvc.parameter.pageConfig?.obj.data.callback(data.code)
+                                            gvc.glitter.goBack()
+                                        })}"> 
                                             <div class="d-flex" style="padding: 8px 22px;">
                                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${data.vendor_name}</div>
@@ -395,8 +394,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             </div>
                                             <div class="lackCircle leftCircle"></div>
                                             <div class="lackCircle rightCircle"></div>
-                                        </div>
-                                        
+                                        </div>      
                                     `
                                     }))
                                 },

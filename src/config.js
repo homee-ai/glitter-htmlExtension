@@ -1,7 +1,6 @@
 import { Plugin } from "./glitterBundle/plugins/plugin-creater.js";
 import { Api } from "./homee/api/homee-api.js";
 import { DialogHelper } from "./dialog/dialog-helper.js";
-import { LegacyPage } from "./homee/legacy/interface.js";
 export function appConfig() {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
@@ -38,19 +37,26 @@ export function appConfig() {
                 },
             });
         },
-        changePage: (gvc, tag) => {
+        changePage: (gvc, tag, obj) => {
             const api = new Api();
             DialogHelper.dataLoading({
                 text: "",
                 visible: true
             });
             api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag, method: 'get' }, (res) => {
-                LegacyPage.execute(gvc.glitter, () => {
+                DialogHelper.dataLoading({
+                    text: "",
+                    visible: false
+                });
+                gvc.glitter.changePage(`${new URL('./htmlGenerater.js', import.meta.url)}`, tag, true, {
+                    config: res.result[0].config,
+                    data: obj
+                });
+                setTimeout(() => {
                     DialogHelper.dataLoading({
                         text: "",
-                        visible: false
+                        visible: false,
                     });
-                    gvc.glitter.changePage(LegacyPage.getLink("jsPage/htmlGenerater.js"), tag, true, res.result[0].config);
                 });
             });
         }

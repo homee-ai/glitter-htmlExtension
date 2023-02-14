@@ -65,7 +65,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 bind: `notification`,
                                 view: () => {
                                     return ` 
-                                            <img class="ms-auto" src="${import.meta.resolve(`../img/component/notification.svg`, import.meta.url)}" alt="" onclick="${gvc.event(() => {
+                                            <img class="ms-auto" src="${new URL(`../img/component/notification.svg`, import.meta.url)}" alt="" onclick="${gvc.event(() => {
                                         glitter.runJsInterFace("noticeBell", {}, () => {
                                         });
                                     })}">
@@ -77,7 +77,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }
                             };
                         })}
-                                <img  src = "${import.meta.resolve(`../img/component/setting.svg`, import.meta.url)}" alt="" style="margin-left: 20px" onclick="${gvc.event(() => {
+                                <img  src = "${new URL(`../img/component/setting.svg`, import.meta.url)}" alt="" style="margin-left: 20px" onclick="${gvc.event(() => {
                             glitter.changePage('', "", true, {});
                         })}">
                             </div>
@@ -111,7 +111,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex position-relative">
                                         <img src="${widget.data.userData.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
-                                        <img src="${import.meta.resolve(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
+                                        <img src="${new URL(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
                                 })}">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center align-baseline" style="margin-left: 32px;">
@@ -194,7 +194,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             </div>
                             <div class="d-flex align-items-center ms-auto rightText">
                                 ${widget.data.right}
-                                <img class="ms-auto" src="${import.meta.resolve(`../img/component/angle-right.svg`, import.meta.url)}" alt="" style="width: 16px;height: 16px;">
+                                <img class="ms-auto" src="${new URL(`../img/component/angle-right.svg`, import.meta.url)}" alt="" style="width: 16px;height: 16px;">
                             </div>
                         </div>
                         `;
@@ -231,21 +231,21 @@ Plugin.create(import.meta.url, (glitter) => {
                 model: [
                     {
                         title: "我的空間",
-                        icon: import.meta.resolve(`../img/component/footer/homeBlack.svg`, import.meta.url),
+                        icon: new URL(`../img/component/footer/homeBlack.svg`, import.meta.url),
                         count: 0,
                         click: () => {
                         }
                     },
                     {
                         title: "我的靈感",
-                        icon: import.meta.resolve(`../img/component/footer/idea.svg`, import.meta.url),
+                        icon: new URL(`../img/component/footer/idea.svg`, import.meta.url),
                         count: 3,
                         click: () => {
                         }
                     },
                     {
                         title: "回饋優惠",
-                        icon: import.meta.resolve(`../img/component/discount.svg`, import.meta.url),
+                        icon: new URL(`../img/component/discount.svg`, import.meta.url),
                         count: 0,
                         click: () => {
                         }
