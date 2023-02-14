@@ -1,7 +1,7 @@
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import { Api } from './api/homee-api.js';
-import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
+import {LegacyPage} from "../homee/legacy/interface.js";
 
 ClickEvent.create(import.meta.url,{
     test:{

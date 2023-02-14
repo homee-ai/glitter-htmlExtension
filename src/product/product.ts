@@ -26,6 +26,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             callback(data1.fullUrl)
                         },
                         error: (err: any) => {
+                            glitter.share.dialog.dataLoading({visible:false})
                             glitter.share.dialog.successMessage({text:"上傳失敗"})
                         },
                     });
@@ -40,11 +41,11 @@ Plugin.create(import.meta.url,(glitter)=>{
         nav: {
             defaultData:{
                 nav:{
-                    leftIcon:import.meta.resolve!('../img/component/left-arrow.svg',import.meta.url),
+                    leftIcon:new URL('../img/component/left-arrow.svg',import.meta.url),
                     leftPage:"",
-                    rightIcon:import.meta.resolve!('../img/component/searchBlack.png',import.meta.url),
+                    rightIcon:new URL('../img/component/searchBlack.png',import.meta.url),
                     rightPage:"",
-                    rightIcon2:import.meta.resolve!('../img/component/shoppingCart.png',import.meta.url),
+                    rightIcon2:new URL('../img/component/shoppingCart.png',import.meta.url),
                     rightPage2:"",
                 },
 
@@ -71,7 +72,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 return {
                     view: ()=>{
                         return sharedView.navigationBar({
-                            title:"",
+                            title:"購物車",
                             leftIcon : `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
                             })}">`,
                             rightIcon : `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
@@ -309,10 +310,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                             </div>
                         </div>
                         
-                        <div class="productQTYRow d-flex align-items-center justify-content-between">
+                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="">
                             <div class="qtyBar"></div>
                             <div class="d-flex">
-                                <img src="${import.meta.resolve!('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                <img src="${new URL('../img/component/minusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
                                     qtyChange(false);    
                                 })}">
                                 ${gvc.bindView({
@@ -330,7 +331,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         })}">`
                                     },divCreate : {class : `qtyNumber` , style : ``}
                                 })}
-                                <img src="${import.meta.resolve!('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
+                                <img src="${new URL('../img/component/plusCircle.svg',import.meta.url)}" onclick="${gvc.event(()=>{
                                     qtyChange();
                                 })}">
                                 
@@ -477,27 +478,27 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     }
                                 `)
                                 return `
-                                <div class="footer d-flex align-items-center" style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
+                                <div class="footer d-flex align-items-center " style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
                                     <div class="d-flex flex-column align-items-center" style="width: 40px;">
-                                        <img class="footerIMG" src="${import.meta.resolve!('../img/component/customer_service.png',import.meta.url)}" >
+                                        <img class="footerIMG" src="${new URL('../img/component/customer_service.png',import.meta.url)}" >
                                         <div class="footerText">
                                             客服
                                         </div>
                                     </div>
                                     <div class="d-flex flex-column align-items-center" style="width: 40px;">
-                                        <img class="footerIMG" src="${import.meta.resolve!('../img/component/send.svg',import.meta.url)}">
+                                        <img class="footerIMG" src="${new URL('../img/component/send.svg',import.meta.url)}">
                                         <div class="footerText">
                                             分享給
                                         </div>
                                         
                                     </div>
-                                    <div class="footerBTN ms-auto d-flex">
+                                    <div class="footerBTN ms-auto d-flex ">
                                         <div class="footerBTNLeft d-flex align-items-center justify-content-center">加入至空間</div>
                                         <div class="footerBTNRight d-flex align-items-center justify-content-center">加入購物車</div>
                                     </div>
                                 </div>
                                 `
-                            },divCreate : {style : `` , class : ``}
+                            },divCreate : {style : `left: 0px;` , class : `position-fixed bottom-0 w-100 m-0 left-0 p-0`}
                         })}
                     `},
                     editor: ()=>{

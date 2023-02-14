@@ -17,11 +17,10 @@ export interface HtmlJson {
 }
 
 export class Plugin {
-    constructor() {
-    }
+    constructor() {}
 
     public static create(url: string, fun: (
-        glitter: Glitter) => {
+        glitter: Glitter,editMode:boolean) => {
         [name: string]: {
             defaultData: any, render: (gvc: GVC, widget: HtmlJson, setting: HtmlJson[], hoverID: string[]) => {
                 view: ()=>string,
@@ -30,8 +29,9 @@ export class Plugin {
         }
     }) {
         const glitter = (window as any).glitter
-        glitter.share.htmlExtension[url] = fun(glitter)
+        glitter.share.htmlExtension[url] = fun(glitter,(window.parent as any).editerData!==undefined)
     }
+
     public static async  initial(gvc:GVC,set:any[]){
         for (const a of set){
             if(!gvc.glitter.share.htmlExtension[a.js]){
@@ -50,6 +50,29 @@ export class Plugin {
             }
         }
         return true
+    }
+
+    public static initialConfig(name:string){
+        const glitter=(window as any).glitter
+        glitter.lowCodeAPP=glitter.lowCodeAPP ?? {}
+        glitter.lowCodeAPP[name]=glitter.lowCodeAPP[name] ?? {}
+        glitter.lowCodeAPP[name].config= glitter.lowCodeAPP[name].config ?? {}
+    }
+    public static  getAppConfig(name:string,defaultData:any){
+        const glitter=(window as any).glitter
+        Plugin.initialConfig(name)
+        Object.keys(defaultData).map((dd)=>{
+            defaultData[dd]=glitter.lowCodeAPP[name].config[dd] ?? defaultData[dd]
+        })
+        return defaultData
+    }
+
+    public static setAppConfig(name:string,setData:any){
+        const glitter=(window as any).glitter
+        Plugin.initialConfig(name)
+        Object.keys(setData).map((dd)=>{
+            glitter.lowCodeAPP[name].config[dd]=setData[dd]
+        })
     }
 }
 

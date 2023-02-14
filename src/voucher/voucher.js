@@ -1,7 +1,8 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
-import { LegacyPage } from "./legacy/interface.js";
+import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { Api } from "../homee/api/homee-api.js";
+import { LegacyPage } from "../homee/legacy/interface.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -39,9 +40,9 @@ Plugin.create(import.meta.url, (glitter) => {
         nav: {
             defaultData: {
                 nav: {
-                    leftIcon: import.meta.resolve('../img/component/left-arrow.svg', import.meta.url),
+                    leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
                     leftPage: "",
-                    rightIcon: import.meta.resolve('../img/component/service.png', import.meta.url),
+                    rightIcon: new URL('../img/component/service.png', import.meta.url),
                     rightPage: ""
                 },
                 voucherPlaceholder: "輸入優惠代碼"
@@ -108,8 +109,10 @@ Plugin.create(import.meta.url, (glitter) => {
                 return {
                     view: () => {
                         return gvc.map([
-                            drawNav("優惠卷", `<img class="" src="${import.meta.resolve('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                            })}">`, `<img class="" src="${import.meta.resolve('../img/component/service.png', import.meta.url)}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                            drawNav("優惠卷", `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                                ClickEvent.trigger({ gvc, widget, clickEvent: widget.data.leftEvent });
+                            })}">`, `<img class="" src="${new URL('../img/component/service.png', import.meta.url)}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
+                                ClickEvent.trigger({ gvc, widget, clickEvent: widget.data.rightEvent });
                             })}">`)
                         ]);
                     },
@@ -135,16 +138,11 @@ Plugin.create(import.meta.url, (glitter) => {
                             })}"></i>
                             </div>
                         `,
-                            glitter.htmlGenerate.editeInput({
-                                gvc: gvc,
-                                title: `返回的頁面`,
-                                default: widget.data.nav.leftPage,
-                                placeHolder: widget.data.nav.leftPage,
-                                callback: (text) => {
-                                    widget.data.nav.leftPage = text;
-                                    widget.refreshAll();
-                                }
-                            }),
+                            (() => {
+                                var _a;
+                                widget.data.leftEvent = (_a = widget.data.leftEvent) !== null && _a !== void 0 ? _a : {};
+                                return ClickEvent.editer(gvc, widget, widget.data.leftEvent, { hover: true, option: [], title: "左方按鈕點擊" });
+                            })(),
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右方icon</h3>
                             <div class="my-3 border border-white"></div>
@@ -165,16 +163,11 @@ Plugin.create(import.meta.url, (glitter) => {
                             })}"></i>
                             </div>
                         `,
-                            glitter.htmlGenerate.editeInput({
-                                gvc: gvc,
-                                title: `右方icon跳轉的頁面`,
-                                default: widget.data.nav.rightPage,
-                                placeHolder: widget.data.nav.rightPage,
-                                callback: (text) => {
-                                    widget.data.nav.rightPage = text;
-                                    widget.refreshAll();
-                                }
-                            }),
+                            (() => {
+                                var _a;
+                                widget.data.rightEvent = (_a = widget.data.rightEvent) !== null && _a !== void 0 ? _a : {};
+                                return ClickEvent.editer(gvc, widget, widget.data.rightEvent, { hover: true, option: [], title: "右方按鈕點擊" });
+                            })(),
                         ]);
                     }
                 };
@@ -215,7 +208,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                     </div>
                                 `;
                                 },
-                                divCreate: { style: "margin:24px;padding:13px 16px;border: 1px solid #E0E0E0 ;border-radius: 8px;position: relative;", class: "" }
+                                divCreate: {
+                                    style: "margin:24px;padding:13px 16px;border: 1px solid #E0E0E0 ;border-radius: 8px;position: relative;",
+                                    class: ""
+                                }
                             })
                         ]);
                     },
@@ -240,7 +236,7 @@ Plugin.create(import.meta.url, (glitter) => {
             defaultData: {
                 voucherCardList: [{
                         vendor_id: "0",
-                        vendor_icon: import.meta.resolve('../img/component/voucher/cardIcon.png', import.meta.url),
+                        vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
                         vendor_name: "HOMEE",
                         vendor_context: "優惠券內容",
                         name: "用戶邀請朋友成功獎勵",
@@ -252,7 +248,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         dateType: "",
                     }, {
                         vendor_id: "1",
-                        vendor_icon: import.meta.resolve('../img/component/voucher/cardIcon.png', import.meta.url),
+                        vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
                         vendor_name: "HOMEE",
                         vendor_context: "優惠券內容",
                         name: "門市消費滿萬贈 HOMEE $500 優惠券",
@@ -335,7 +331,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         width:24px;
                         height:24px;
                         border-radius:50%;
-                        background:#E5E5E5;  
+                        background:rgba(0, 0, 0, 0.05);
                     }
                     .leftCircle{                        
                         position:absolute;
@@ -361,7 +357,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 view: () => {
                                     return gvc.map(widget.data.voucherCardList.map((data) => {
                                         return `
-                                        <div class="voucherCard"> 
+                                        <div class="voucherCard overflow-hidden"> 
                                             <div class="d-flex" style="padding: 8px 22px;">
                                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${data.vendor_name}</div>

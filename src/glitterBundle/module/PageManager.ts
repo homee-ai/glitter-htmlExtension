@@ -6,11 +6,20 @@ export class DefaultSetting {
     public pageAnimation: AnimationConfig
     public dialogAnimation: AnimationConfig
 
+    public pageLoading = () => {
+    }
+    public pageLoadingFinish = () => {
+    }
+
     constructor(obj: {
         pageBgColor: string,
         pageAnimation: AnimationConfig,
-        dialogAnimation: AnimationConfig
+        dialogAnimation: AnimationConfig,
+        pageLoading: () => void,
+        pageLoadingFinish: () => void
     }) {
+        this.pageLoading = obj.pageLoading
+        this.pageLoadingFinish = obj.pageLoadingFinish
         this.pageBgColor = obj.pageBgColor
         this.pageAnimation = obj.pageAnimation
         this.dialogAnimation = obj.dialogAnimation
@@ -40,7 +49,7 @@ export class PageConfig {
 
     constructor(par: {
         id: string, obj: any, goBack: boolean, src: string, tag: string, createResource: () => void, deleteResource: () => void,
-        type: GVCType, animation: AnimationConfig,backGroundColor:string
+        type: GVCType, animation: AnimationConfig, backGroundColor: string
     }) {
         this.tag = par.tag
         this.id = par.id
@@ -63,8 +72,8 @@ export class PageManager {
             const index = glitter.pageConfig.map((data) => {
                 return data.id
             }).indexOf(id)
-            glitter.pageConfig[index].deleteResource()
             if (del) {
+                glitter.pageConfig[index].deleteResource()
                 glitter.$(`#page` + glitter.pageConfig[index].id).remove()
                 glitter.$(`#` + glitter.pageConfig[index].id).remove()
                 glitter.pageConfig.splice(index, 1)
@@ -94,13 +103,14 @@ export class PageManager {
         Glitter.glitter.$('#loadingView').hide();
     }
 
-    public static setHome(url: string, tag: string, obj: any, option: { animation?: AnimationConfig,backGroundColor?:string } = { }) {
+    public static setHome(url: string, tag: string, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string } = {}) {
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage||PageManager.clock.stop()<300) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.setHome(url, tag, obj, option)
             }, 100)
         } else {
+            glitter.defaultSetting.pageLoading()
             PageManager.clock.zeroing()
             glitter.waitChangePage = true
             for (let a = glitter.pageConfig.length - 1; a >= 0; a--) {
@@ -111,15 +121,17 @@ export class PageManager {
             const config = new PageConfig(
                 {
                     id: glitter.getUUID(),
-                    obj:obj,
-                    goBack:true,
-                    src:url,
-                    tag:tag,
-                    deleteResource:()=>{},
-                    createResource:()=>{},
+                    obj: obj,
+                    goBack: true,
+                    src: url,
+                    tag: tag,
+                    deleteResource: () => {
+                    },
+                    createResource: () => {
+                    },
                     backGroundColor: option.backGroundColor ?? "white",
-                    type:GVCType.Page,
-                    animation:option.animation ?? glitter.animation.none
+                    type: GVCType.Page,
+                    animation: option.animation ?? glitter.animation.none
                 }
             )
             glitter.nowPageConfig = config
@@ -185,6 +197,7 @@ export class PageManager {
 
     public static setAnimation(page: PageConfig) {
         const glitter = Glitter.glitter
+
         // glitter.$('html').scrollTop(0);
         function closePreviousPage() {
             //Only remove page view
@@ -199,16 +212,18 @@ export class PageManager {
 
         page.getElement().addClass(`position-fixed`)
         page.getElement().show()
+        glitter.defaultSetting.pageLoadingFinish()
         page.animation.inView(page, () => {
             closePreviousPage()
             page.getElement().removeClass('position-fixed')
-            glitter.waitChangePage=true
-            setTimeout(()=>{
-                glitter.waitChangePage=false
-            },100)
+            glitter.waitChangePage = true
+            setTimeout(() => {
+                glitter.waitChangePage = false
+            }, 100)
         })
     }
-    public static clock={
+
+    public static clock = {
         start: new Date(),
         stop: function () {
             return ((new Date()).getTime() - (this.start).getTime())
@@ -217,27 +232,32 @@ export class PageManager {
             this.start = new Date()
         }
     }
-    public static changePage(url: string, tag: string, goBack: boolean, obj: any, option: { animation?: AnimationConfig,backGroundColor?:string } = {}) {
+
+    public static changePage(url: string, tag: string, goBack: boolean, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string } = {}) {
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage || PageManager.clock.stop()<300) {
+
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.changePage(url, tag, goBack, obj, option)
             }, 100)
         } else {
+            glitter.defaultSetting.pageLoading()
             PageManager.clock.zeroing()
             glitter.waitChangePage = true
             const config = new PageConfig(
                 {
                     id: glitter.getUUID(),
-                    obj:obj,
-                    goBack:goBack,
-                    src:url,
-                    tag:tag,
-                    deleteResource:()=>{},
-                    createResource:()=>{},
+                    obj: obj,
+                    goBack: goBack,
+                    src: url,
+                    tag: tag,
+                    deleteResource: () => {
+                    },
+                    createResource: () => {
+                    },
                     backGroundColor: option.backGroundColor ?? "white",
-                    type:GVCType.Page,
-                    animation:option.animation ?? glitter.defaultSetting.pageAnimation
+                    type: GVCType.Page,
+                    animation: option.animation ?? glitter.defaultSetting.pageAnimation
                 }
             )
             glitter.nowPageConfig = config
@@ -276,9 +296,9 @@ export class PageManager {
         }
     };
 
-    public static openDiaLog(url: string, tag: string, obj: any, option: { animation?: AnimationConfig,backGroundColor?:string } = {}) {
+    public static openDiaLog(url: string, tag: string, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string } = {}) {
         const glitter = Glitter.glitter;
-        if (glitter.waitChangePage||PageManager.clock.stop()<300) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.openDiaLog(url, tag, obj, option)
             }, 100)
@@ -288,15 +308,17 @@ export class PageManager {
             const config = new PageConfig(
                 {
                     id: glitter.getUUID(),
-                    obj:obj,
-                    goBack:true,
-                    src:url,
-                    tag:tag,
-                    deleteResource:()=>{},
-                    createResource:()=>{},
+                    obj: obj,
+                    goBack: true,
+                    src: url,
+                    tag: tag,
+                    deleteResource: () => {
+                    },
+                    createResource: () => {
+                    },
                     backGroundColor: option.backGroundColor ?? "transparent",
-                    type:GVCType.Dialog,
-                    animation:option.animation ?? glitter.defaultSetting.dialogAnimation
+                    type: GVCType.Dialog,
+                    animation: option.animation ?? glitter.defaultSetting.dialogAnimation
                 }
             )
 
@@ -330,7 +352,7 @@ export class PageManager {
 
     public static closeDiaLog(tag?: string) {
         const glitter = Glitter.glitter
-        if (glitter.waitChangePage||PageManager.clock.stop()<300) {
+        if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.closeDiaLog(tag)
             }, 100)

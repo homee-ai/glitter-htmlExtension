@@ -25,8 +25,11 @@ export class HtmlGenerate {
             return dd;
         });
         this.render = (gvc, option = { class: ``, style: `` }) => {
+            var _a;
+            gvc.glitter.share.loaginR = ((_a = gvc.glitter.share.loaginR) !== null && _a !== void 0 ? _a : 0) + 1;
             var loading = true;
             const container = gvc.glitter.getUUID();
+            gvc.glitter.defaultSetting.pageLoading();
             function getData() {
                 async function add(set) {
                     for (const a of set) {
@@ -48,8 +51,12 @@ export class HtmlGenerate {
                     return true;
                 }
                 add(setting).then((data) => {
+                    var _a;
                     loading = false;
+                    gvc.glitter.defaultSetting.pageLoadingFinish();
                     gvc.notifyDataChange(container);
+                    gvc.glitter.share.loaginfC = ((_a = gvc.glitter.share.loaginfC) !== null && _a !== void 0 ? _a : 0) + 1;
+                    console.log('loaging:' + gvc.glitter.share.loaginfC);
                 });
             }
             getData();
@@ -77,11 +84,7 @@ export class HtmlGenerate {
                                             return gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).view();
                                         }
                                         catch (e) {
-                                            return `解析錯誤:${e.message}
-<br>
-${e.stack}
-<br>
-${e.line}`;
+                                            return `解析錯誤:${e.message}<br>${e.stack}<br>${e.line}`;
                                         }
                                     })()}
                                     `;
@@ -106,6 +109,7 @@ ${e.line}`;
                                             gvc.glitter.$('html').animate({ scrollTop: scrollTOP - gvc.glitter.$('html').height() / 2 }, 200);
                                         }, 100);
                                     }
+                                    console.log('onCreate');
                                 }
                             });
                         }));

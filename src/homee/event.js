@@ -23,7 +23,8 @@ ClickEvent.create(import.meta.url, {
                 event: () => {
                     gvc.glitter.runJsInterFace("openWeb", {
                         url: object.link
-                    }, (data) => { }, {
+                    }, (data) => {
+                    }, {
                         webFunction(data, callback) {
                             gvc.glitter.openNewTab(object.link);
                         }
@@ -43,9 +44,13 @@ ClickEvent.create(import.meta.url, {
                         data: []
                     };
                     const id = gvc.glitter.getUUID();
-                    const api = new Api(gvc);
+                    const api = new Api();
                     object.selectPage = (_a = object.selectPage) !== null && _a !== void 0 ? _a : {};
-                    api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name', method: 'get' }, (res) => {
+                    api.homeeAJAX({
+                        api: Api.serverURL,
+                        route: '/api/v1/lowCode/pageConfig?query=tag,`group`,name',
+                        method: 'get'
+                    }, (res) => {
                         vm.data = res.result;
                         vm.loading = false;
                         gvc.notifyDataChange(id);
@@ -66,7 +71,8 @@ ${gvc.bindView(() => {
                                     return `<option value='${JSON.stringify(dd)}' ${(object.selectPage.tag === dd.tag) ? `selected` : ``}>${dd.name}</option>`;
                                 })) + ((haveData) ? `` : `<option selected>尚未定義</option>`);
                             },
-                            divCreate: { class: `form-control`, elem: `select`, option: [
+                            divCreate: {
+                                class: `form-control`, elem: `select`, option: [
                                     {
                                         key: 'onChange',
                                         value: gvc.event((e, event) => {
@@ -74,18 +80,23 @@ ${gvc.bindView(() => {
                                             widget.refreshAll();
                                         })
                                     }
-                                ] }
+                                ]
+                            }
                         };
                     })}
 `;
                 },
                 event: () => {
-                    const api = new Api(gvc);
+                    const api = new Api();
                     DialogHelper.dataLoading({
                         text: "",
                         visible: true
                     });
-                    api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag, method: 'get' }, (res) => {
+                    api.homeeAJAX({
+                        api: Api.serverURL,
+                        route: '/api/v1/lowCode/pageConfig?query=config&tag=' + object.selectPage.tag,
+                        method: 'get'
+                    }, (res) => {
                         LegacyPage.execute(gvc.glitter, () => {
                             DialogHelper.dataLoading({
                                 text: "",
@@ -103,7 +114,7 @@ ${gvc.bindView(() => {
         fun: (gvc, widget, object) => {
             return {
                 editor: () => {
-                    const api = new Api(gvc);
+                    const api = new Api();
                     return `
                     <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">選擇分類</h3>
                     ${gvc.bindView(() => {
@@ -168,7 +179,13 @@ ${gvc.bindView(() => {
                             text: "",
                             visible: false
                         });
-                        gvc.glitter.changePage(LegacyPage.getLink("jsPage/category/subCategory.js"), "subCategory", true, { title: object.name, parent_category_id: object.value, category: "sub_category_id", category_id: object.value, index: 0 });
+                        gvc.glitter.changePage(LegacyPage.getLink("jsPage/category/subCategory.js"), "subCategory", true, {
+                            title: object.name,
+                            parent_category_id: object.value,
+                            category: "sub_category_id",
+                            category_id: object.value,
+                            index: 0
+                        });
                     });
                 }
             };
@@ -177,7 +194,7 @@ ${gvc.bindView(() => {
     toProductDetail: {
         title: "商品詳情",
         fun: (gvc, widget, obj) => {
-            const api = new Api(gvc);
+            const api = new Api();
             return {
                 editor: () => {
                     var _a, _b;
@@ -204,5 +221,18 @@ ${gvc.bindView(() => {
                 }
             };
         }
-    }
+    },
+    goBack: {
+        title: "返回上一頁",
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``;
+                },
+                event: () => {
+                    gvc.glitter.goBack();
+                }
+            };
+        }
+    },
 });

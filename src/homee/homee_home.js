@@ -402,7 +402,7 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                             rightIcon: `
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(() => {
-                                const api = new Api(gvc);
+                                const api = new Api();
                                 DialogHelper.dataLoading({
                                     text: "",
                                     visible: true

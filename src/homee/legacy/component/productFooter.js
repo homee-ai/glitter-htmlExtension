@@ -106,8 +106,8 @@ init((gvc, glitter, gBundle) => {
                             return returnHTML;
                         }
                     })}
-                        <div class="d-flex ms-auto footerTwinBTNFont " style="">
-                            <div class="footerLeft d-flex align-items-center justify-content-center">加入至空間</div>
+                        <div class="d-flex ms-auto footerTwinBTNFont position-fixed" style="">
+                            <div class="footerLeft d-flex align-items-center justify-content-center">加入至dd空間</div>
                             <div class="footerRight d-flex align-items-center justify-content-center">加入購物車</div>
                         </div>                        
                         

@@ -19,7 +19,7 @@ Animation.fade = new AnimationConfig((page, finish) => {
         finish();
     }, 500);
 }, (page, finish) => {
-    page.getElement().addClass('position-absolute');
+    page.getElement().addClass('position-fixed');
     page.getElement().css("opacity", "1.0");
     page.getElement().animate({ "opacity": "0.1" }, 500);
     setTimeout(() => {
@@ -73,7 +73,7 @@ Animation.rightToLeft = new AnimationConfig((pageConfig, finish) => {
         finish();
     }, 500);
 }, (pageConfig, finish) => {
-    pageConfig.getElement().addClass('position-absolute');
+    pageConfig.getElement().addClass('position-fixed');
     pageConfig.getElement().addClass(`inRightToLeftDismiss`);
     setTimeout(() => {
         finish();
@@ -126,7 +126,7 @@ Animation.topToBottom = new AnimationConfig((pageConfig, finish) => {
         finish();
     }, 500);
 }, (pageConfig, finish) => {
-    pageConfig.getElement().addClass('position-absolute');
+    pageConfig.getElement().addClass('position-fixed');
     pageConfig.getElement().addClass(`TopToBtnDismiss`);
     setTimeout(() => {
         finish();

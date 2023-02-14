@@ -6,7 +6,7 @@ init((gvc, glitter, gBundle) => {
     return {
         onCreateView: () => {
             const sharedView = new SharedView(gvc);
-            const api = new Api(gvc);
+            const api = new Api();
             let clock = 0;
             let vm = {
                 loading: false,

@@ -1,46 +1,15 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
-import { Api } from "../homee/api/homee-api.js";
 import { SharedView } from "../homee/shareView.js";
-import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
-Plugin.create(import.meta.url, (glitter) => {
-    const api = {
-        upload: (photoFile, callback) => {
-            glitter.share.dialog.dataLoading({ text: '上傳中', visible: true });
-            $.ajax({
-                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
-                type: 'post',
-                data: JSON.stringify({ file_name: `${new Date().getTime()}` }),
-                contentType: 'application/json; charset=utf-8',
-                headers: { Authorization: glitter.getCookieByName('token') },
-                success: (data1) => {
-                    $.ajax({
-                        url: data1.url,
-                        type: 'put',
-                        data: photoFile,
-                        processData: false,
-                        crossDomain: true,
-                        success: (data2) => {
-                            glitter.share.dialog.dataLoading({ visible: false });
-                            glitter.share.dialog.successMessage({ text: "上傳成功" });
-                            callback(data1.fullUrl);
-                        },
-                        error: (err) => {
-                            glitter.share.dialog.successMessage({ text: "上傳失敗" });
-                        },
-                    });
-                },
-                error: (err) => {
-                    glitter.share.dialog.successMessage({ text: "上傳失敗" });
-                },
-            });
-        }
-    };
+import { appConfig } from "../config.js";
+import { Checkout } from "../api/checkout.js";
+import { Dialog } from "../homee/legacy/widget/dialog.js";
+Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         nav: {
             defaultData: {
                 nav: {
-                    rightIcon: import.meta.resolve('../img/component/service.png', import.meta.url),
+                    rightIcon: new URL('../img/component/service.png', import.meta.url),
                     rightPage: "",
                 },
             },
@@ -78,7 +47,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     single: true,
                                     accept: 'image/*',
                                     callback(data) {
-                                        api.upload(data[0].file, (link) => {
+                                        appConfig().uploadImage(data[0].file, (link) => {
                                             widget.data.nav.rightIcon = link;
                                             widget.refreshAll();
                                         });
@@ -112,7 +81,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             {
                                 item_id: "1",
                                 name: "SORIA 雙抽玻璃移門電視櫃",
-                                img: `${import.meta.resolve('../img/component/shoppingCart/img.png', import.meta.url)}`,
+                                img: `${new URL('../img/component/shoppingCart/img.png', import.meta.url)}`,
                                 kind: "150公分",
                                 qty: 1,
                                 price: 11520,
@@ -212,47 +181,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         ]
                     },
                 ],
-                dataList: [
-                    {
-                        title: "首頁",
-                        icon: new URL('../img/component/footer/homeBlack.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "靈感",
-                        icon: new URL('../img/component/footer/idea.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "我的空間",
-                        icon: new URL('../img/component/footer/myspace.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "購物車",
-                        icon: new URL('../img/component/footer/shoopingCartRed.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "會員",
-                        icon: new URL('../img/component/footer/user.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                ],
             },
             render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
-                    html{
+                                         html{
                         margin: 0;
                         box-sizing: border-box;    
                         font-family: 'Noto Sans TC';        
@@ -264,46 +196,7 @@ Plugin.create(import.meta.url, (glitter) => {
                       margin: 0;
                       -webkit-appearance: none;
                       appearance: none;
-                    }
-                    
-                    
-                `);
-                const sharedView = new SharedView(gvc);
-                let cartIn = [];
-                let cartOut = [];
-                let itemIndex = -1;
-                let categoryIndex = -1;
-                let voucherUse = 0;
-                let voucher = 500;
-                let subTotal = 0;
-                let total = 0;
-                widget.data.cartItem.forEach((cartCategory) => {
-                    let checkPush = false;
-                    cartCategory.item.forEach((item) => {
-                        if (item.select) {
-                            checkPush = true;
-                        }
-                    });
-                    if (checkPush) {
-                        cartIn.push(cartCategory);
-                    }
-                    else {
-                        cartOut.push(cartCategory);
-                    }
-                });
-                function addThousandSeparator(item) {
-                    item.subtotal = item.qty * item.price;
-                    return (item.subtotal).toLocaleString();
-                }
-                function checkOut() {
-                }
-                return {
-                    view: () => {
-                        return `
-                        ${gvc.bindView({
-                            bind: "cartIn",
-                            view: () => {
-                                gvc.addStyle(`
+                    } 
                                     .item-title{
                                         font-family: 'Noto Sans TC';
                                         font-style: normal;
@@ -323,11 +216,238 @@ Plugin.create(import.meta.url, (glitter) => {
                                         height:20px;
                                         margin-right:10px;
                                     }
-                                    .
                                 `);
+                widget.data.cartItem = [];
+                const cartSubTotalVM = {
+                    loading: true,
+                    result: false
+                };
+                const sharedView = new SharedView(gvc);
+                let cartIn = [];
+                let cartOut = [];
+                let itemIndex = -1;
+                let categoryIndex = -1;
+                let voucherUse = 0;
+                let voucher = 0;
+                let subTotal = 0;
+                let total = 0;
+                let refreshTimer = 0;
+                function refreshCart() {
+                    initial();
+                    gvc.notifyDataChange(['cartIn', 'cartSubtotal', 'cartOut']);
+                    glitter.runJsInterFace("storeCartInfo", {
+                        data: JSON.stringify({ cartData: cartData })
+                    }, () => {
+                    });
+                    cartSubTotalVM.loading = true;
+                    clearInterval(refreshTimer);
+                    setTimeout(() => {
+                        let skuAmount = [];
+                        widget.data.cartItem.map((d3) => {
+                            d3.item.map((dd) => {
+                                if (dd.select) {
+                                    const it = skuAmount.find((d2) => {
+                                        return dd.item_id === d2.sku_id;
+                                    });
+                                    if (!it) {
+                                        skuAmount.push({ sku_id: dd.item_id, amount: dd.qty });
+                                    }
+                                    else {
+                                        it.amount += dd.qty;
+                                    }
+                                }
+                            });
+                        });
+                        Checkout.setCheckOut({
+                            data: skuAmount, callback: (data) => {
+                                if (data) {
+                                    console.log(data);
+                                    cartSubTotalVM.data = data;
+                                    cartSubTotalVM.loading = false;
+                                    total = cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount;
+                                }
+                            }
+                        });
+                    }, 1000);
+                }
+                function tryReturn(vo, defaultt) {
+                    try {
+                        return vo();
+                    }
+                    catch (e) {
+                        return defaultt;
+                    }
+                }
+                const skuDataInfo = {};
+                let cartData = undefined;
+                const dialog = new Dialog(gvc);
+                dialog.dataLoading(true);
+                glitter.runJsInterFace("getCartData", {}, (response) => {
+                    console.log(response);
+                    cartData = tryReturn(() => {
+                        return JSON.parse(response.cartData).cartData;
+                    }, {});
+                    let needGetInfoSku = [];
+                    Object.keys(cartData).map((dd) => {
+                        const obj = cartData[dd];
+                        return {
+                            category: dd,
+                            category_id: dd,
+                            item: Object.keys(obj).map((d4) => {
+                                if (needGetInfoSku.indexOf(d4) === -1) {
+                                    needGetInfoSku.push(d4);
+                                }
+                            })
+                        };
+                    });
+                    Checkout.getCartSkuInfo({
+                        skuID: needGetInfoSku, next: (response) => {
+                            dialog.dataLoading(false);
+                            if (!response) {
+                                widget.data.cartItem = [];
+                                dialog.showInfo("取得資料異常．");
+                            }
+                            else {
+                                response.map((dd) => {
+                                    skuDataInfo[dd.sku_id] = dd;
+                                });
+                                widget.data.cartItem = Object.keys(cartData).map((dd) => {
+                                    const obj = cartData[dd];
+                                    return {
+                                        category: dd,
+                                        category_id: dd,
+                                        item: Object.keys(obj).map((d4) => {
+                                            const oc = obj[d4];
+                                            needGetInfoSku.push(d4);
+                                            if (!skuDataInfo[d4]) {
+                                                return {
+                                                    item_id: d4,
+                                                    name: "error",
+                                                    img: ``,
+                                                    kind: "error",
+                                                    price: oc.price,
+                                                    subtotal: oc.price,
+                                                    deleteEvent: () => {
+                                                        obj[d4] = undefined;
+                                                    },
+                                                    get qty() {
+                                                        return oc.count;
+                                                    },
+                                                    set qty(newValue) {
+                                                        oc.count = parseInt(newValue, 10);
+                                                    },
+                                                    get select() {
+                                                        return oc.isSelect;
+                                                    },
+                                                    set select(newValue) {
+                                                        oc.isSelect = newValue;
+                                                    }
+                                                };
+                                            }
+                                            else {
+                                                return {
+                                                    item_id: d4,
+                                                    name: skuDataInfo[d4].name,
+                                                    img: skuDataInfo[d4].preview_image,
+                                                    kind: skuDataInfo[d4].attribute_value,
+                                                    price: skuDataInfo[d4].price,
+                                                    subtotal: skuDataInfo[d4].price,
+                                                    deleteEvent: () => {
+                                                        obj[d4] = undefined;
+                                                    },
+                                                    get qty() {
+                                                        return oc.count;
+                                                    },
+                                                    set qty(newValue) {
+                                                        oc.count = parseInt(newValue, 10);
+                                                    },
+                                                    get select() {
+                                                        return oc.isSelect;
+                                                    },
+                                                    set select(newValue) {
+                                                        oc.isSelect = newValue;
+                                                    }
+                                                };
+                                            }
+                                        })
+                                    };
+                                });
+                                widget.data.cartItem = widget.data.cartItem.filter((d4) => {
+                                    return d4.item.length > 0;
+                                });
+                            }
+                            refreshCart();
+                        }
+                    });
+                }, {
+                    webFunction(data, callback) {
+                        return {
+                            cartData: JSON.stringify({
+                                cartData: {
+                                    "product": {
+                                        "A010001-1-1-1": {
+                                            "isSelect": true,
+                                            "count": 1,
+                                            "price": 6900,
+                                            "sku": "A010001-1-1-1"
+                                        },
+                                        "A010085-1": {
+                                            "isSelect": false,
+                                            "count": 1,
+                                            "price": 7900,
+                                            "sku": "A010085-1"
+                                        }
+                                    },
+                                    "2023-02-10 08:05": {
+                                        "A010001-1-1-1": {
+                                            "isSelect": true,
+                                            "count": 3,
+                                            "price": 6900,
+                                            "sku": "A010001-1-1-1"
+                                        }
+                                    }
+                                }
+                            })
+                        };
+                    }
+                });
+                function initial() {
+                    cartIn = [];
+                    cartOut = [];
+                    widget.data.cartItem.forEach((cartCategory) => {
+                        let checkPush = false;
+                        cartCategory.item.forEach((item) => {
+                            if (item.select) {
+                                checkPush = true;
+                            }
+                        });
+                        if (checkPush) {
+                            cartIn.push(cartCategory);
+                        }
+                        else {
+                            cartOut.push(cartCategory);
+                        }
+                    });
+                }
+                initial();
+                function addThousandSeparator(item) {
+                    item.subtotal = item.qty * item.price;
+                    return (item.subtotal).toLocaleString();
+                }
+                function checkOut() {
+                    dialog.dataLoading(true);
+                    glitter.runJsInterFace("toCheckOutPage", {}, () => {
+                        dialog.dataLoading(false);
+                    });
+                }
+                return {
+                    view: () => {
+                        return `
+                        ${gvc.bindView({
+                            bind: "cartIn",
+                            view: () => {
                                 return gvc.map(cartIn.map((category, categoryIndex) => {
-                                    return `
-                                    ${gvc.bindView({
+                                    return gvc.bindView({
                                         bind: category.category_id,
                                         view: () => {
                                             let categoryCheck = true;
@@ -339,16 +459,16 @@ Plugin.create(import.meta.url, (glitter) => {
                                             let checkPic = (categoryCheck) ? '../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png';
                                             return `
                                             <div class="w-100 d-flex align-items-center" style="padding: 12px;">
-                                                <img class="checkboxImg" alt="選擇" src="${import.meta.resolve(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
+                                                <img class="checkboxImg" alt="選擇" src="${new URL(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
                                                 category.item.forEach((item) => {
                                                     item.select = !categoryCheck;
                                                 });
-                                                widget.refreshAll();
+                                                refreshCart();
                                             })}">
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(() => {
                                                 category.delete = (category === null || category === void 0 ? void 0 : category.delete) ? !category.delete : true;
-                                                gvc.notifyDataChange(`itemGroup${category.category_id}`);
+                                                refreshCart();
                                             })}">編輯</div>
                                             </div>
                                             <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
@@ -388,11 +508,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         `);
                                                     return gvc.map(category.item.map((item, itemIndex) => {
                                                         return gvc.bindView({
-                                                            bind: `item${item.item_id}`,
+                                                            bind: `item${category.category_id}${item.item_id}`,
                                                             view: () => {
                                                                 let chooseEvent = () => {
                                                                     item.select = !item.select;
-                                                                    widget.refreshAll();
+                                                                    refreshCart();
                                                                 };
                                                                 let checkPic = (item.select) ? '../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png';
                                                                 if (category.delete) {
@@ -402,13 +522,14 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                         if (check) {
                                                                             if (item.select) {
                                                                                 category.item.splice(itemIndex, 1);
-                                                                                widget.refreshAll();
+                                                                                refreshCart();
                                                                             }
                                                                             category.item.splice(itemIndex, 1);
+                                                                            item.deleteEvent();
                                                                             if (category.item.length == 0) {
                                                                                 let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
                                                                                 widget.data.cartItem.splice(indexToRemove, 1);
-                                                                                widget.refreshAll();
+                                                                                refreshCart();
                                                                             }
                                                                             else {
                                                                                 gvc.notifyDataChange(category.category_id);
@@ -418,18 +539,18 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                     };
                                                                 }
                                                                 return `
-                                                                    <img class="checkboxImg" alt="選擇" src="${import.meta.resolve(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
+                                                                    <img class="checkboxImg" alt="選擇" src="${new URL(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
                                                                     chooseEvent();
                                                                 })}">
                                                                     <img class="itemImg" src="${item.img}">
                                                                     <div class="d-flex flex-column flex-grow-1">
                                                                         <div class="item-name">${item.name}</div>
                                                                         <div class="d-flex">
-                                                                            ${(() => {
+                                                                    ${(() => {
                                                                     if (item.kind) {
                                                                         return `
-                                                                                            <div class="item-kind">${item.kind}</div>
-                                                                                            <img style="width:16px;height:16px;" src="${import.meta.resolve('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
+                                                                        <div class="item-kind">${item.kind}</div>
+                                                                        <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `;
                                                                     }
                                                                     return ``;
@@ -437,13 +558,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                         </div>
                                                                         <div class="d-flex " style="margin-top: 13px;">
                                                                             <div class="d-flex" style="">
-                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty--;
                                                                     item.qty = (item.qty < 1) ? 1 : item.qty;
                                                                     item.subtotal = item.qty * item.price;
-                                                                    gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                    gvc.notifyDataChange(`cartSubtotal`);
-                                                                    gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                    refreshCart();
                                                                 })}">
                                                                                 ${gvc.bindView({
                                                                     bind: `qtyNumber${item.item_id}`,
@@ -455,49 +574,56 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                                 item.qty = 1;
                                                                             }
                                                                             item.subtotal = item.qty * item.price;
-                                                                            gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                            gvc.notifyDataChange(`cartSubtotal`);
-                                                                            gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                            refreshCart();
                                                                         })}">`;
                                                                     }, divCreate: { class: `qtyNumber`, style: `` }
                                                                 })}
-                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty++;
                                                                     item.subtotal = item.qty * item.price;
-                                                                    gvc.notifyDataChange(`cartSubtotal`);
-                                                                    gvc.notifyDataChange(`qtyNumber${item.item_id}`);
-                                                                    gvc.notifyDataChange(`itemTotal${item.item_id}`);
+                                                                    refreshCart();
                                                                 })}">                                        
                                                                             </div>
                                                                             ${gvc.bindView({
                                                                     bind: `itemTotal${item.item_id}`,
                                                                     view: () => {
                                                                         return `NT$ ${addThousandSeparator(item)}`;
-                                                                    }, divCreate: { class: `item-price ms-auto`, style: `` }
+                                                                    },
+                                                                    divCreate: { class: `item-price ms-auto`, style: `` }
                                                                 })}                                                                        
                                                                         </div>
                                                                     </div>                                                            
                                                                 `;
-                                                            }, divCreate: { class: `d-flex align-items-center`, style: `margin-bottom:16px;` }
+                                                            },
+                                                            divCreate: {
+                                                                class: `d-flex align-items-center`,
+                                                                style: `margin-bottom:16px;`
+                                                            }
                                                         });
                                                     }));
                                                 }, divCreate: { style: ``, class: `` }
-                                            })}                                     
-                         
+                                            })}   
                                             </div>
-                                            
                                             `;
                                         },
-                                        divCreate: { class: `border`, style: `background: #FFFFFF;border-radius: 20px;margin:12px` }
-                                    })}
-                                    `;
+                                        divCreate: {
+                                            class: `border`,
+                                            style: `background: #FFFFFF;border-radius: 20px;margin:12px`
+                                        }
+                                    });
                                 }));
-                            }, divCreate: { class: `d-flex flex-column`, style: `` }
+                            },
+                            divCreate: { class: `d-flex flex-column`, style: `` }
                         })}
-                        ${gvc.bindView({
-                            bind: "cartSubtotal",
-                            view: () => {
-                                gvc.addStyle(`
+                        ${gvc.bindView(() => {
+                            return {
+                                dataList: [{
+                                        obj: cartSubTotalVM,
+                                        key: "loading",
+                                    }],
+                                bind: "cartSubtotal",
+                                view: () => {
+                                    gvc.addStyle(`
                                     .subTotal{
                                         font-family: 'Noto Sans TC';
                                         font-style: normal;
@@ -560,54 +686,92 @@ Plugin.create(import.meta.url, (glitter) => {
                                         letter-spacing: 0.15em;
                                     }
                                 `);
-                                subTotal = 0;
-                                cartIn.forEach((category) => {
-                                    category.item.forEach((item) => {
-                                        if (item.select) {
-                                            subTotal += item.subtotal;
-                                        }
+                                    subTotal = 0;
+                                    cartIn.forEach((category) => {
+                                        category.item.forEach((item) => {
+                                            if (item.select) {
+                                                subTotal += item.subtotal;
+                                            }
+                                        });
                                     });
-                                });
-                                total = subTotal - voucherUse;
-                                return `
+                                    total = subTotal - voucherUse;
+                                    return `
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:12px;">
                                         <div>小計金額</div>
-                                        <div>${subTotal.toLocaleString()}</div>
+                                        <div>${(cartSubTotalVM.loading) ? `loading...` : subTotal.toLocaleString()}</div>
                                     </div>
-                                    <div class="d-flex" style="padding:0 12px; margin-bottom:7px;">
-                                        <img style="width: 20px;height: 16px;margin-right:10px;" src="${import.meta.resolve(`../img/component/ticket.svg`, import.meta.url)}">
+                                    <div class="d-flex align-items-center" style="padding:0 12px; margin-bottom:7px;">
+                                        <img style="width: 20px;height: 16px;margin-right:10px;" src="${new URL(`../img/component/ticket.svg`, import.meta.url)}">
                                         <div class="voucherBlock" onclick="${gvc.event(() => {
-                                })}">使用優惠卷或輸入優惠代碼</div>
+                                        appConfig().changePage(gvc, "voucher");
+                                    })}">使用優惠卷或輸入優惠代碼</div>
                                     </div>
+                                    ${(() => {
+                                        if (cartSubTotalVM.data) {
+                                            return gvc.map(cartSubTotalVM.data.voucherArray.map((dd) => {
+                                                return `<div class="d-flex w-100 align-items-center" style="padding-left: 12px;padding-right: 12px;margin-top: 12px;margin-bottom: 12px;">
+                                        <span style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 17px;
+text-align: right;
+color: #1E1E1E;">${dd.name}</span>
+                                        <div class="flex-fill"></div>
+                                        <span style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 500;
+font-size: 15px;
+line-height: 150%;
+color: #FE5541;
+">${(dd.code) ? "刪除" : ""}</span>
+</div>       `;
+                                            }));
+                                        }
+                                        else {
+                                            return ``;
+                                        }
+                                    })()}
+                                       
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:0 12px;margin-bottom:13px;">
-                                        <div style="font-size: 12px;">你有<span class="voucher" style="font-size: 15px;">$${voucher.toLocaleString()}</span>點數回饋</div>
-                                        <div class="d-flex">- NT$
-                                            <input class="voucherInput" type="number" value="${voucherUse}" style="text-align: right" onchange="${gvc.event((e) => {
-                                    voucherUse = (Number(e.value) > voucher) ? voucher : Number(e.value);
-                                    gvc.notifyDataChange('cartSubtotal');
-                                })}">
+                                        <div style="font-size: 12px;">你有<span class="voucher mx-1" style="font-size: 15px;">$${voucher.toLocaleString()}</span>點數回饋</div>
+                                        <div class="d-flex align-items-center">- NT$
+                                            <input class="voucherInput ms-1" type="number" value="${voucherUse}" style="border: 1px solid #E0E0E0;
+border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) => {
+                                        voucherUse = (Number(e.value) > voucher) ? voucher : Number(e.value);
+                                        gvc.notifyDataChange('cartSubtotal');
+                                    })}">
                                         </div>
+                                       
                                     </div>
+                                    
                                     <div style="height:1px; width: 100%;background: #E0E0E0;"></div>
                                     <div class="d-flex justify-content-between" style="padding:12px;">
                                         <div class="shippingText">運費將在結帳時計算</div>
                                         <div class="d-flex">
                                             <div class="totalText">總計金額:</div>
                                             <div class="total">
-                                                NT$ ${total.toLocaleString()}
+                                                NT$ ${(cartSubTotalVM.loading) ? `loading...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}
                                             </div>
                                         </div>
                                         
                                     </div>
 
-                                    <div class="w-100 d-flex" style="position:fixed;left:0;bottom:116px;height:52px;">
-                                        <div class="checkout-left d-flex align-items-center">NT$ ${total.toLocaleString()}</div>
+                                    <div class="d-flex" style="position:fixed;left:0;bottom:106px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
+                                        <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `loading...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
-                                    checkOut();
-                                })}">結帳</div>
+                                        checkOut();
+                                    })}">結帳</div>
                                     </div>
                                 `;
-                            }, divCreate: { class: `d-flex flex-column border`, style: `background: #FFFFFF;border-radius: 20px;margin:12px` }
+                                },
+                                divCreate: {
+                                    class: `d-flex flex-column border`,
+                                    style: `border-radius: 20px;margin:12px;background: #FFFFFF;`
+                                },
+                                onCreate: () => {
+                                }
+                            };
                         })}
                         ${gvc.bindView({
                             bind: "cartOut",
@@ -615,7 +779,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return gvc.map(cartOut.map((category, categoryIndex) => {
                                     return `
                                     ${gvc.bindView({
-                                        bind: category.category_id,
+                                        bind: `cartOut` + category.category_id,
                                         view: () => {
                                             let categoryCheck = true;
                                             category.item.forEach((item) => {
@@ -626,24 +790,22 @@ Plugin.create(import.meta.url, (glitter) => {
                                             let checkPic = (categoryCheck) ? '../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png';
                                             return `
                                             <div class="w-100 d-flex align-items-center" style="padding: 12px;">
-                                                <img class="checkboxImg" alt="選擇" src="${import.meta.resolve(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
+                                                <img class="checkboxImg" alt="選擇" src="${new URL(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
                                                 category.item.forEach((item) => {
                                                     item.select = !categoryCheck;
                                                 });
-                                                widget.refreshAll();
+                                                refreshCart();
                                             })}">
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(() => {
                                                 category.delete = (category === null || category === void 0 ? void 0 : category.delete) ? !category.delete : true;
-                                                gvc.notifyDataChange(`itemGroup${category.category_id}`);
+                                                refreshCart();
                                             })}">編輯</div>
                                             </div>
                                             <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
-                                            <div style="padding:0 12px;">       
-                                                ${gvc.bindView({
-                                                bind: `itemGroup${category.category_id}`,
-                                                view: () => {
-                                                    gvc.addStyle(`
+                                            <div style="padding:0 12px;">  
+                                            ${(() => {
+                                                gvc.addStyle(`
                                                             .item-name{
                                                                 font-family: 'Noto Sans TC';
                                                                 font-style: normal;
@@ -673,193 +835,105 @@ Plugin.create(import.meta.url, (glitter) => {
                                                                 color: #FE5541;
                                                             }
                                                         `);
-                                                    return gvc.map(category.item.map((item, itemIndex) => {
-                                                        return gvc.bindView({
-                                                            bind: `item${item.item_id}`,
-                                                            view: () => {
-                                                                let chooseEvent = () => {
-                                                                    item.select = !item.select;
-                                                                    widget.refreshAll();
-                                                                };
-                                                                let checkPic = (item.select) ? '../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png';
-                                                                if (category.delete) {
-                                                                    checkPic = '../img/component/shoppingCart/deleteCircle.png';
-                                                                    chooseEvent = () => {
-                                                                        let check = confirm("確定要刪除嘛?");
-                                                                        if (check) {
-                                                                            category.item.splice(itemIndex, 1);
-                                                                            if (category.item.length == 0) {
-                                                                                let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
-                                                                                widget.data.cartItem.splice(indexToRemove, 1);
-                                                                                widget.refreshAll();
-                                                                            }
-                                                                            else {
-                                                                                gvc.notifyDataChange(category.category_id);
-                                                                            }
+                                                return gvc.map(category.item.map((item, itemIndex) => {
+                                                    return gvc.bindView({
+                                                        bind: `item${item.item_id}`,
+                                                        view: () => {
+                                                            let chooseEvent = () => {
+                                                                item.select = !item.select;
+                                                                refreshCart();
+                                                            };
+                                                            let checkPic = (item.select) ? '../img/component/shoppingCart/select.png' : '../img/component/shoppingCart/unselect.png';
+                                                            if (category.delete) {
+                                                                checkPic = '../img/component/shoppingCart/deleteCircle.png';
+                                                                chooseEvent = () => {
+                                                                    let check = confirm("確定要刪除嘛?");
+                                                                    if (check) {
+                                                                        item.deleteEvent();
+                                                                        category.item.splice(itemIndex, 1);
+                                                                        if (category.item.length == 0) {
+                                                                            let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
+                                                                            widget.data.cartItem.splice(indexToRemove, 1);
+                                                                            refreshCart();
                                                                         }
-                                                                    };
-                                                                }
-                                                                return `
-                                                                    <img class="checkboxImg" alt="選擇" src="${import.meta.resolve(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
-                                                                    chooseEvent();
-                                                                })}">
+                                                                        else {
+                                                                            gvc.notifyDataChange(category.category_id);
+                                                                        }
+                                                                    }
+                                                                };
+                                                            }
+                                                            return `
+                                                                    <img class="checkboxImg" alt="選擇" src="${new URL(`${checkPic}`, import.meta.url)}" onclick="${gvc.event(() => {
+                                                                chooseEvent();
+                                                            })}">
                                                                     <img class="itemImg" src="${item.img}">
                                                                     <div class="d-flex flex-column flex-grow-1">
                                                                         <div class="item-name">${item.name}</div>
                                                                         <div class="d-flex">
                                                                             ${(() => {
-                                                                    if (item.kind) {
-                                                                        return `
+                                                                if (item.kind) {
+                                                                    return `
                                                                                             <div class="item-kind">${item.kind}</div>
-                                                                                            <img style="width:16px;height:16px;" src="${import.meta.resolve('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
+                                                                                            <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `;
-                                                                    }
-                                                                    return ``;
-                                                                })()}                                                                            
+                                                                }
+                                                                return ``;
+                                                            })()}                                                                            
                                                                         </div>
                                                                         <div class="d-flex " style="margin-top: 13px;">
                                                                             <div class="d-flex" style="">
-                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
-                                                                    item.qty--;
-                                                                    item.qty = (item.qty < 1) ? 1 : item.qty;
-                                                                    item.subtotal = item.qty * item.price;
-                                                                    gvc.notifyDataChange(`item${item.item_id}`);
-                                                                })}">
+                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                item.qty--;
+                                                                item.qty = (item.qty < 1) ? 1 : item.qty;
+                                                                item.subtotal = item.qty * item.price;
+                                                                refreshCart();
+                                                            })}">
                                                                                 ${gvc.bindView({
-                                                                    bind: `qtyNumber${item.item_id}`,
-                                                                    view: () => {
-                                                                        return `
+                                                                bind: `qtyNumber${item.item_id}`,
+                                                                view: () => {
+                                                                    return `
                                                                                             <input class="border-0" style="width: 48px;text-align: center;" type="number" value="${item.qty}" onchange="${gvc.event((e) => {
-                                                                            item.qty = e.value;
-                                                                            if (widget.data.qty < 1) {
-                                                                                item.qty = 1;
-                                                                            }
-                                                                            item.subtotal = item.qty * item.price;
-                                                                            gvc.notifyDataChange(`item${item.item_id}`);
-                                                                        })}">`;
-                                                                    }, divCreate: { class: `qtyNumber`, style: `` }
-                                                                })}
-                                                                                <img style="width: 24px;height: 24px;" src="${import.meta.resolve('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event((e) => {
-                                                                    item.qty++;
-                                                                    item.subtotal = item.qty * item.price;
-                                                                    console.log(`item${item.item_id}`);
-                                                                    gvc.notifyDataChange(`item${item.item_id}`);
-                                                                })}">                                        
+                                                                        item.qty = e.value;
+                                                                        if (widget.data.qty < 1) {
+                                                                            item.qty = 1;
+                                                                        }
+                                                                        item.subtotal = item.qty * item.price;
+                                                                        refreshCart();
+                                                                    })}">`;
+                                                                }, divCreate: { class: `qtyNumber`, style: `` }
+                                                            })}
+                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event((e) => {
+                                                                item.qty++;
+                                                                item.subtotal = item.qty * item.price;
+                                                                console.log(`item${item.item_id}`);
+                                                                refreshCart();
+                                                            })}">                                        
                                                                             </div>
                                                                             <div class="item-price ms-auto">NT$ ${addThousandSeparator(item)}</div>
                                                                         </div>
                                                                     </div>                                                            
                                                                 `;
-                                                            }, divCreate: { class: `d-flex align-items-center`, style: `` }
-                                                        });
-                                                    }));
-                                                }, divCreate: { style: ``, class: `` }
-                                            })}                                                                                 
+                                                        },
+                                                        divCreate: {
+                                                            class: `d-flex align-items-center`,
+                                                            style: `margin-bottom:16px;`
+                                                        }
+                                                    });
+                                                }));
+                                            })()}                                                                                
                                             </div>
                                             
                                             `;
                                         },
-                                        divCreate: { class: `border`, style: `background: #FFFFFF;border-radius: 20px;margin:12px;margin-bottom:16px` }
+                                        divCreate: {
+                                            class: `border`,
+                                            style: `background: #FFFFFF;border-radius: 20px;margin:12px;margin-bottom:16px`
+                                        }
                                     })}
                                     `;
                                 }));
-                            }, divCreate: { class: `d-flex flex-column`, style: `padding-bottom:100px;` }
-                        })}
-                        ${gvc.bindView({
-                            bind: "footer",
-                            view: () => {
-                                glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                                    var _a;
-                                    if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
-                                        widget.data.bottomInset = response.data;
-                                        widget.refreshAll();
-                                    }
-                                }, {
-                                    webFunction: () => {
-                                        return { data: 10 };
-                                    }
-                                });
-                                gvc.addStyle(`
-                                    footer{
-                                        background:white;
-                                        box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);
-                                        padding-top:18px;
-                                    }
-                                    .footerTitle{
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                        text-align: center;
-                                        color: #1E1E1E;
-                                    }
-                                    .selected{
-                                        color:#FE5541;
-                                    }
-                                    .cartinCount{
-                                        width : 16px;
-                                        height : 16px;
-                                        background: #FE5541;
-                                        
-                                        font-weight: 500;
-                                        font-size: 10px;
-                                       
-                                        border: 1px solid #FFFFFF;
-                                        border-radius: 8px;
-                                        color:white;
-                                        
-                                        position: absolute;
-                                        top:0;
-                                        right:0;
-                                    }
-                                `);
-                                return `
-                                    <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
-                                        ${(() => {
-                                    return gvc.map(widget.data.dataList.map((data, index) => {
-                                        return `
-                                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
-                                            ClickEvent.trigger({
-                                                gvc, widget, clickEvent: data
-                                            });
-                                        })}">
-                                                    <div style="position:relative">
-                                                        <img src=${data.icon} style="width: 28px;height: 28px;">
-                                                        ${gvc.bindView({
-                                            bind: "cartinCount",
-                                            view: () => {
-                                                if (index == 3) {
-                                                    let count = 0;
-                                                    cartIn.forEach((category) => {
-                                                        category.item.forEach((item) => {
-                                                            if (item.select) {
-                                                                count++;
-                                                            }
-                                                        });
-                                                    });
-                                                    return `
-                                                                    <div class="cartinCount d-flex align-items-center justify-content-center">
-                                                                        ${count}
-                                                                    </div>    
-                                                                `;
-                                                }
-                                                else {
-                                                    return ``;
-                                                }
-                                            }, divCreate: { style: '', class: `` }
-                                        })}                                                      
-                                                    </div>
-                                                    
-                                                    <div class="footerTitle ${(() => { if (index == 0)
-                                            return "selected"; })()}">${data.title}</div>
-                                                </div>
-                                                        `;
-                                    }));
-                                })()}
-                                    </footer>
-                                `;
-                            }, divCreate: {}
+                            },
+                            divCreate: { class: `d-flex flex-column`, style: `padding-bottom:100px;` }
                         })}
                         `;
                     },
