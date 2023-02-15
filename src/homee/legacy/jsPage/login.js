@@ -172,60 +172,60 @@ overflow-x: hidden;
                 view: () => {
                     if (topInset !== undefined) {
                         return `
-       <main style="overflow-x: hidden;">
-                <div class="w-100" style="position: absolute;">
-                <lottie-player src="img/sample/login/login_page.json"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
+                       <main style="overflow-x: hidden;">
+                                <div class="w-100" style="position: absolute;">
+                                <lottie-player src="img/sample/login/login_page.json"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
                             glitter.runJsInterFace("dismiss", {}, () => {
                             });
                         })}" style="width: 450px;height: 900px;position: absolute;transform: translateY(-350px);"  loop  autoplay></lottie-player>
-</div>
-            <div class="loginBoard d-flex flex-column align-items-center">
-                <img src="img/sample/login/logo.svg" alt="">
-                <div class="loginInf d-flex flex-column align-items-center">
-                     <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
-                            <img src="img/sample/login/message.svg" alt="" style="width: 24px;height: 24px;">
-                            <input class="w-100 border-0" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e) => {
+                </div>
+                            <div class="loginBoard d-flex flex-column align-items-center">
+                                <img src="img/sample/login/logo.svg" alt="">
+                                <div class="loginInf d-flex flex-column align-items-center">
+                                     <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
+                                            <img src="img/sample/login/message.svg" alt="" style="width: 24px;height: 24px;">
+                                            <input class="w-100 border-0" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e) => {
                             accountData.account = glitter.$(e).val();
                         })}">
-                        </div>
-                    <div class="loginRow d-flex w-100" style="margin-top: 40px;border-bottom: 1px solid #FD6A58;">
-                        <img src="img/sample/login/password.svg" alt="" style="width: 24px;height: 24px;">
-                        <input type="password" class="w-100 border-0" name="password" placeholder="密碼" onchange="${gvc.event((e) => {
+                                        </div>
+                                    <div class="loginRow d-flex w-100" style="margin-top: 40px;border-bottom: 1px solid #FD6A58;">
+                                        <img src="img/sample/login/password.svg" alt="" style="width: 24px;height: 24px;">
+                                        <input type="password" class="w-100 border-0" name="password" placeholder="密碼" onchange="${gvc.event((e) => {
                             accountData.password = glitter.$(e).val();
                         })}">
-                    </div>
-                    <div class="loginRow w-100 d-flex" style="margin-top: 8px;">
-<!--                    todo sethome trans to changepage-->
-                        <div class="fogetPW ms-auto" onclick="${gvc.event(() => {
+                                    </div>
+                                    <div class="loginRow w-100 d-flex" style="margin-top: 8px;">
+                <!--                    todo sethome trans to changepage-->
+                                        <div class="fogetPW ms-auto" onclick="${gvc.event(() => {
                             glitter.runJsInterFace("MCForgetPwd", {}, function (response) {
                             });
                         })}">忘記密碼？</div>
-                    </div>
-                    <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
+                                    </div>
+                                    <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
                             checkRegister();
                         })}">
-                        登入 / 註冊
-                    </div>
-                    <div class="moreLogin d-flex justify-content-center align-items-center">更多的登入方式</div>
-                    <div class="funGroup d-flex justify-content-between">
-                        <img src="img/sample/login/FB.png" style="height: 50px;width:50px;" alt="" onclick="${gvc.event(() => {
+                                        登入 / 註冊
+                                    </div>
+                                    <div class="moreLogin d-flex justify-content-center align-items-center">更多的登入方式</div>
+                                    <div class="funGroup d-flex justify-content-between">
+                                        <img src="img/sample/login/FB.png" style="height: 50px;width:50px;" alt="" onclick="${gvc.event(() => {
                             glitter.runJsInterFace("loginWithFB", {}, (response) => {
                             });
                         })}">
-                        <img src="img/sample/login/apple.png" style="height: 55px;width:55px;margin-left: 16px;margin-right: 16px;" onclick="${gvc.event(() => {
+                                        <img src="img/sample/login/apple.png" style="height: 55px;width:55px;margin-left: 16px;margin-right: 16px;" onclick="${gvc.event(() => {
                             glitter.runJsInterFace("loginWithApple", {}, () => {
                             });
                         })}" alt="">
-                        <img src="img/sample/login/FET.png"  style="height: 45px;width:45px;" onclick="${gvc.event(() => {
+                                        <img src="img/sample/login/FET.png"  style="height: 45px;width:45px;" onclick="${gvc.event(() => {
                             glitter.runJsInterFace("loginWithFet", {}, () => {
                             });
                         })}" alt="" >
-                    </div>
-                </div>
-
-            </div>
-        </main>
-       `;
+                                    </div>
+                                </div>
+                
+                            </div>
+                        </main>
+                       `;
                     }
                     else {
                         return ``;

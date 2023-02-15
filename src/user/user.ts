@@ -324,9 +324,7 @@ Plugin.create(import.meta.url,(glitter)=>{
         text: {
             defaultData:{
                 text:"文字",
-                click:()=>{
-
-                }
+                click:{}
             },
             render:(gvc, widget, setting, hoverID) => {
 
@@ -334,7 +332,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                     view: ()=>{
                         return `
                         <div class="" onclick="${gvc.event(()=>{
-                            widget.data.click();
+                            ClickEvent.trigger({
+                                gvc,
+                                widget,
+                                clickEvent:widget.data.click
+                            })
                         })}">${widget.data.text}</div>
                         `
                     },
@@ -349,7 +351,32 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     widget.data.text = text
                                     widget.refreshAll!()
                                 }
-                            })
+                            }),
+                            ClickEvent.editer(gvc,widget,widget.data.click)
+
+                        ])
+                    }
+                }
+            },
+        },
+        dividingLine: {
+            defaultData:{
+                style:"solid",
+                width:1,
+                color:"000"
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+                return {
+                    view: ()=>{
+                        return `
+                        <div class="w-100" style="border-top: ${widget.data.width}px ${widget.data.style} #${widget.data.color};"></div>
+                        
+                        `
+                    },
+                    editor: ()=>{
+                        return gvc.map([
+
 
                         ])
                     }
@@ -979,9 +1006,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 font-style: normal;
                                 font-weight: 400;
                                 font-size: 12px;
-                                line-height: 17px;
+                                line-height: 20px;
                                 margin-right: 10px;
-                                padding: 1px 6px 2px;
+                                width:48px;
+                                text-align: center;
+                                height: 20px;
+                                
                             }
                             .useBTNtext.on{
                                 background: #FE5541;
@@ -1006,6 +1036,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     background: #FBF9F6;
                                     box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
                                     border-radius: 20px;
+                                    margin-top:12px;
                                 "
                                 onclick="${gvc.event(() => {
                                 ClickEvent.trigger({
@@ -1092,7 +1123,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     >${coupon.formatEndTime}</span
                                 >
                             </div>
-                            <div class="flex-fill"></div>
+                            <div class="flex-fill" style=""></div>
                             <div class="useBTNtext ${(()=>{
                                 switch (coupon.status){
                                     case voucherStatus.unused:{

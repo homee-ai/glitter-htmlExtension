@@ -183,7 +183,6 @@ overflow-x: hidden;
             glitter.runJsInterFace("register", loginData, () => {
             })
         }
-
     }
 
     return {
