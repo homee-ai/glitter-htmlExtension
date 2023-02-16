@@ -392,6 +392,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                             bind : `intro`,
                             view : ()=>{
                                 gvc.addStyle(`
+                                    .intro{
+                                        padding-bottom : 90px;
+                                    }
                                     .introTitle{
                                         font-family : 'Noto Sans TC';
                                         font-style : normal;
@@ -408,7 +411,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         color: #292929;
                                         white-space:normal;
                                         word-wrap:break-word;
-                                        word-break:break-all;                                       
+                                        word-break:break-all;        
+                                                                       
                                     }
                                     
                                 `)
