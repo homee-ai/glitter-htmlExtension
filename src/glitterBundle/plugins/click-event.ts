@@ -18,6 +18,7 @@ export class ClickEvent {
     public static trigger(oj:{
         gvc: GVC, widget: HtmlJson,clickEvent:any
     }){
+        const glitter = (window as any).glitter
         const event:{src:string,route:string}=oj.clickEvent.clickEvent
         async function run(){
             oj.gvc.glitter.share.clickEvent=oj.gvc.glitter.share.clickEvent ?? {}
@@ -91,10 +92,10 @@ ${gvc.bindView(()=>{
         bind:id,
         view:()=>{
             try{
-                if(!glitter.share.clickEvent[obj.clickEvent.src]){
+                if(!glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)]){
                     return  ``
                 }
-                return glitter.share.clickEvent[obj.clickEvent.src][obj.clickEvent.route].fun(gvc,widget,obj).editor()
+                return glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)][obj.clickEvent.route].fun(gvc,widget,obj).editor()
             }catch (e){
                 return ``
             }
@@ -104,13 +105,13 @@ ${gvc.bindView(()=>{
             glitter.share.clickEvent=glitter.share.clickEvent ?? {}
             try {
                 
-                if(!glitter.share.clickEvent[obj.clickEvent.src]){
+                if(!glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)]){
                     glitter.addMtScript([
-                        {src:obj.clickEvent.src,type:'module'}
+                        {src:glitter.htmlGenerate.resourceHook(obj.clickEvent.src),type:'module'}
                     ],()=>{
                         gvc.notifyDataChange(selectID)
                     },()=>{
-                        alert(obj.clickEvent.src)
+                        console.log(`loadingError:`+obj.clickEvent.src)
                     })
                 }
             }catch (e){}

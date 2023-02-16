@@ -111,7 +111,14 @@ export class Glitter {
         return value;
     }
 
-    public setPro(tag: string, data: string, callBack: (data: {}) => void, option: { defineType?: any, webFunction: (data: {}) => any }) {
+    public setPro(tag: string, data: string = "", callBack: (data: {}) => void, option:
+        { defineType?: any, webFunction: (data: any, callback: (data: any) => void) => any }
+        = {
+        webFunction: (data: any, callback: (data: any) => void) => {
+            Glitter.glitter.setCookie(data.name, data.data)
+            callback({result: true})
+        }
+    }) {
         this.runJsInterFace("setPro", {
             uuid: this.uuid,
             name: tag,
@@ -119,7 +126,13 @@ export class Glitter {
         }, callBack, option);
     }
 
-    public getPro(tag: string, callBack: (data: {}) => void, option: { defineType?: any, webFunction: (data: {}) => any }) {
+    public getPro(tag: string, callBack: (data: {}) => void, option: { defineType?: any, webFunction: (data: any, callback: (data: any) => void) => any }
+        = {
+        webFunction: (data: any,callback: (data: any) => void) => {
+            Glitter.glitter.getCookieByName(data.name)
+            callback({result: true})
+        }
+    }) {
         this.runJsInterFace("getPro", {
             uuid: this.uuid,
             name: tag

@@ -209,15 +209,15 @@ ${ClickEvent.editer(gvc, widget, dd)}
         rankingBlock: {
             defaultData: {},
             render: (gvc, widget, setting, hoverID) => {
-                var _a, _b;
-                widget.data.titleStyle = (_a = widget.data.titleStyle) !== null && _a !== void 0 ? _a : `font-family: 'Noto Sans TC';
+                var _b, _c;
+                widget.data.titleStyle = (_b = widget.data.titleStyle) !== null && _b !== void 0 ? _b : `font-family: 'Noto Sans TC';
 font-style: normal;
 color: black;
 font-size: 16px;
 margin-top: 16px;
 margin-left: 12px;
 font-weight: 700;`;
-                widget.data.rank = (_b = widget.data.rank) !== null && _b !== void 0 ? _b : [{}, {}, {}];
+                widget.data.rank = (_c = widget.data.rank) !== null && _c !== void 0 ? _c : [{}, {}, {}];
                 return {
                     view: () => {
                         return `
@@ -225,9 +225,9 @@ font-weight: 700;`;
                 <h3 style="${widget.data.titleStyle}">${widget.label}</h3>
                    <div class="d-flex align-items-center justify-content-around " style="width:calc(100% -24px);margin-left: 12px;margin-right: 12px;gap: 8px;padding-bottom: 15px;">
                ${gvc.map(['firstRank.svg', 'secondRank.svg', 'thirdRank.svg'].map((dd, index) => {
-                            var _a;
+                            var _b;
                             const data = widget.data.rank[index];
-                            data.data = (_a = data.data) !== null && _a !== void 0 ? _a : {};
+                            data.data = (_b = data.data) !== null && _b !== void 0 ? _b : {};
                             return ` <div class="d-flex flex-column align-items-center justify-content-center" style="width:calc(100% - 16px);">
  <div class="bg-white flex-fill position-relative" style="width:100%;border-radius: 8px;padding-bottom: calc(100%);" onclick="${gvc.event(() => {
                                 ClickEvent.trigger({
@@ -313,12 +313,12 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 }
             },
             render: (gvc, widget, setting, hoverID) => {
-                var _a;
-                widget.data.data = (_a = widget.data.data) !== null && _a !== void 0 ? _a : {};
+                var _b;
+                widget.data.data = (_b = widget.data.data) !== null && _b !== void 0 ? _b : {};
                 return {
                     view: () => {
-                        var _a, _b, _c, _d;
-                        return `<div class="${(_a = widget.data.class) !== null && _a !== void 0 ? _a : ""} p-0 " style="${(_b = widget.data.style) !== null && _b !== void 0 ? _b : ""} 
+                        var _b, _c, _d, _e;
+                        return `<div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""} p-0 " style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""} 
 height: auto;background: #FBF9F6;border: 4px solid rgba(248, 243, 237, 0.3);
 border-radius: 16px;" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
@@ -339,7 +339,7 @@ margin-top: 8px;
 word-break: break-word;
 white-space: normal;
 margin-bottom: 0px;
-color: #292929;">${(_c = widget.data.data.name) !== null && _c !== void 0 ? _c : "尚未設定"}</h3>
+color: #292929;">${(_d = widget.data.data.name) !== null && _d !== void 0 ? _d : "尚未設定"}</h3>
 <div class="d-flex align-items-baseline" style="margin-top: 8px;margin-bottom: 8px;">
 <span style="font-family: 'Noto Sans TC';
 font-style: normal;
@@ -347,7 +347,7 @@ font-weight: 400;
 font-size: 14px;
 color: #FD6A58;
 line-height: 150%;">
-NT$ ${(_d = widget.data.data.price) !== null && _d !== void 0 ? _d : "尚未設定"} up
+NT$ ${(_e = widget.data.data.price) !== null && _e !== void 0 ? _e : "尚未設定"} up
 </span>
 <div class="flex-fill"></div>
 <span class="${(widget.data.data.price === widget.data.data.sale_price) ? `d-none` : ``}" style="font-family: 'Noto Sans TC';
@@ -385,20 +385,20 @@ color: #858585;" >
                 const shareView = new SharedView(gvc);
                 return {
                     view: () => {
-                        var _a, _b, _c;
+                        var _b, _c, _d;
                         return shareView.navigationBar({
                             title: `<span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 700;
 font-size: 16px;
 color: #1E1E1E;
-line-height: 150%;">${(_a = widget.data.centerText) !== null && _a !== void 0 ? _a : ""}</span>`,
+line-height: 150%;">${(_b = widget.data.centerText) !== null && _b !== void 0 ? _b : ""}</span>`,
                             leftIcon: `<div class="d-flex align-items-center"><img 
 style="
 width: ${([undefined, ''].indexOf(widget.data.logo.width) !== -1) ? 'auto' : widget.data.logo.width};
 height: ${([undefined, ''].indexOf(widget.data.logo.height) !== -1) ? 'auto' : widget.data.logo.height};
 "
-src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/home_logo.svg', import.meta.url) : widget.data.logo.src}"><h3 class="p-0 m-0" style="${(_b = widget.data.titleStyle) !== null && _b !== void 0 ? _b : ""}">${(_c = widget.data.title) !== null && _c !== void 0 ? _c : ""}</h3></div>`,
+src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/home_logo.svg', import.meta.url) : widget.data.logo.src}"><h3 class="p-0 m-0" style="${(_c = widget.data.titleStyle) !== null && _c !== void 0 ? _c : ""}">${(_d = widget.data.title) !== null && _d !== void 0 ? _d : ""}</h3></div>`,
                             rightIcon: `
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(() => {
@@ -430,12 +430,12 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                         });
                     },
                     editor: () => {
-                        var _a, _b, _c, _d;
+                        var _b, _c, _d, _e;
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
                                 title: "置中內容",
-                                default: (_a = widget.data.centerText) !== null && _a !== void 0 ? _a : "",
+                                default: (_b = widget.data.centerText) !== null && _b !== void 0 ? _b : "",
                                 placeHolder: `請輸入置中內容`,
                                 callback: (text) => {
                                     widget.data.centerText = text;
@@ -445,21 +445,21 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                             `
 <h3 style="color:white;font-size: 16px;" class="my-2">左側內容</h3>
 <div class="alert alert-warning mt-2" role="alert">
-${gvc.map([EditerApi.upload("Logo", (_b = widget.data.logo.src) !== null && _b !== void 0 ? _b : "", gvc, (text) => {
+${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !== void 0 ? _c : "", gvc, (text) => {
                                     widget.data.logo.src = text;
                                     widget.refreshAll();
                                 }),
                                 `<div class="d-flex align-items-center justify-content-around w-100">
 <div class="d-flex align-items-center">
 <h3 style="color: white;font-size: 16px;word-break: break-word;white-space: nowrap;" class="m-0 p-0">寬度</h3>
-<input class="form-control flex-fill ms-2" style="width: calc(100% - 50px);" value="${(_c = widget.data.logo.width) !== null && _c !== void 0 ? _c : ""}" onchange="${gvc.event((e) => {
+<input class="form-control flex-fill ms-2" style="width: calc(100% - 50px);" value="${(_d = widget.data.logo.width) !== null && _d !== void 0 ? _d : ""}" onchange="${gvc.event((e) => {
                                     widget.data.logo.width = e.value;
                                     widget.refreshAll();
                                 })}"></input>
 </div>
 <div class="d-flex align-items-center ms-2">
 <h3 style="color: white;font-size: 16px;word-break: break-word;white-space: nowrap; "  class="m-0 p-0">高度</h3>
-<input class="form-control flex-fill ms-2" style="width: calc(100% - 50px);" value="${(_d = widget.data.logo.height) !== null && _d !== void 0 ? _d : ""}" onchange="${gvc.event((e) => {
+<input class="form-control flex-fill ms-2" style="width: calc(100% - 50px);" value="${(_e = widget.data.logo.height) !== null && _e !== void 0 ? _e : ""}" onchange="${gvc.event((e) => {
                                     widget.data.logo.height = e.value;
                                     widget.refreshAll();
                                 })}"></input>
@@ -488,6 +488,139 @@ ${gvc.map([EditerApi.upload("Logo", (_b = widget.data.logo.src) !== null && _b !
                                     }
                                 })])}</div>`,
                         ]);
+                    }
+                };
+            }
+        },
+        footer: {
+            defaultData: {
+                dataList: [
+                    {
+                        title: "首頁",
+                        icon: new URL('../img/component/footer/home.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "靈感",
+                        icon: new URL('../img/component/footer/idea.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "我的空間",
+                        icon: new URL('../img/component/footer/myspace.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "購物車",
+                        icon: new URL('../img/component/footer/shoopingCart.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "會員",
+                        icon: new URL('../img/component/footer/user.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                ],
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                    var _a;
+                    if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
+                        widget.data.bottomInset = response.data;
+                        widget.refreshAll();
+                    }
+                }, {
+                    webFunction: () => {
+                        return { data: 10 };
+                    }
+                });
+                gvc.addStyle(`
+                        footer{
+                            background:white;
+                            box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);
+                            padding-top:18px;
+                        }
+                        .footerTitle{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 12px;
+                            line-height: 17px;
+                            text-align: center;
+                            color: #1E1E1E;
+                        }
+                        .selected{
+                            color:#FE5541;
+                        }
+                    `);
+                return {
+                    view: () => {
+                        return `
+                        <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
+                            ${(() => {
+                            return gvc.map(widget.data.dataList.map((data, index) => {
+                                return `
+                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
+                                    ClickEvent.trigger({
+                                        gvc, widget, clickEvent: data
+                                    });
+                                })}">
+                                    <img src=${data.icon} style="width: 28px;height: 28px;">
+                                    <div class="footerTitle ${(() => {
+                                    if (index == 0)
+                                        return "selected";
+                                })()}">${data.title}</div>
+                                </div>
+                                `;
+                            }));
+                        })()}
+                        </footer>
+                    `;
+                    },
+                    editor: () => {
+                        return gvc.map(widget.data.dataList.map((dd, index) => {
+                            return glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `footer icon ${index + 1}`,
+                                default: dd.title,
+                                placeHolder: dd.title,
+                                callback: (text) => {
+                                    widget.data.dataList[index].title = text;
+                                    widget.refreshAll();
+                                }
+                            }) +
+                                `
+                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">icon圖片${index + 1}</h3>
+                                <div class="mt-2"></div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].icon}">
+                                    <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                    <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                    glitter.ut.chooseMediaCallback({
+                                        single: true,
+                                        accept: 'image/*',
+                                        callback(data) {
+                                            glitter.share.publicInterface["glitter"].upload(data[0].file, (link) => {
+                                                widget.data.dataList[index].icon = link;
+                                                widget.refreshAll();
+                                            });
+                                        }
+                                    });
+                                })}"></i>
+                                </div>
+                            `
+                                + ClickEvent.editer(gvc, widget, dd);
+                        }));
                     }
                 };
             }

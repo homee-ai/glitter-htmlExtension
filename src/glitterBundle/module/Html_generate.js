@@ -33,10 +33,10 @@ export class HtmlGenerate {
             function getData() {
                 async function add(set) {
                     for (const a of set) {
-                        if (!gvc.glitter.share.htmlExtension[a.js]) {
+                        if (!gvc.glitter.share.htmlExtension[HtmlGenerate.resourceHook(a.js)]) {
                             await new Promise((resolve, reject) => {
                                 gvc.glitter.addMtScript([
-                                    { src: `${a.js}`, type: 'module' }
+                                    { src: `${HtmlGenerate.resourceHook(a.js)}`, type: 'module' }
                                 ], () => {
                                     resolve(true);
                                 }, () => {
@@ -81,7 +81,7 @@ export class HtmlGenerate {
                                 view: () => {
                                     return `${(() => {
                                         try {
-                                            return gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).view();
+                                            return gvc.glitter.share.htmlExtension[HtmlGenerate.resourceHook(dd.js)][dd.type].render(gvc, dd, setting, hover).view();
                                         }
                                         catch (e) {
                                             return `解析錯誤:${e.message}<br>${e.stack}<br>${e.line}`;
@@ -133,10 +133,10 @@ export class HtmlGenerate {
                 var _a;
                 async function add(set) {
                     for (const a of set) {
-                        if (!gvc.glitter.share.htmlExtension[a.js]) {
+                        if (!gvc.glitter.share.htmlExtension[HtmlGenerate.resourceHook(a.js)]) {
                             await new Promise((resolve, reject) => {
                                 gvc.glitter.addMtScript([
-                                    { src: `${a.js}`, type: 'module' }
+                                    { src: `${HtmlGenerate.resourceHook(a.js)}`, type: 'module' }
                                 ], () => {
                                     resolve(true);
                                 }, () => {
@@ -320,7 +320,7 @@ ${HtmlGenerate.editeText({
                                                     };
                                                 }),
                                                 ,
-                                                gvc.glitter.share.htmlExtension[dd.js][dd.type].render(gvc, dd, setting, hover).editor()
+                                                gvc.glitter.share.htmlExtension[HtmlGenerate.resourceHook(dd.js)][dd.type].render(gvc, dd, setting, hover).editor()
                                             ]);
                                         }
                                         catch (e) {
@@ -379,6 +379,7 @@ ${e.line}
     }
     ;
 }
+HtmlGenerate.resourceHook = (src) => { return src; };
 HtmlGenerate.saveEvent = () => {
     alert('save');
 };

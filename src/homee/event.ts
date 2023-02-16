@@ -4,7 +4,6 @@ import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
 import {DialogHelper} from "../dialog/dialog-helper.js";
 import {appConfig} from "../config.js";
-
 ClickEvent.create(import.meta.url, {
     link: {
         title: "連結跳轉",

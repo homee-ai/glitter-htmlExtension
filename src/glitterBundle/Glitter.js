@@ -411,14 +411,24 @@ export class Glitter {
         }
         return value;
     }
-    setPro(tag, data, callBack, option) {
+    setPro(tag, data = "", callBack, option = {
+        webFunction: (data, callback) => {
+            Glitter.glitter.setCookie(data.name, data.data);
+            callback({ result: true });
+        }
+    }) {
         this.runJsInterFace("setPro", {
             uuid: this.uuid,
             name: tag,
             data: data,
         }, callBack, option);
     }
-    getPro(tag, callBack, option) {
+    getPro(tag, callBack, option = {
+        webFunction: (data, callback) => {
+            Glitter.glitter.getCookieByName(data.name);
+            callback({ result: true });
+        }
+    }) {
         this.runJsInterFace("getPro", {
             uuid: this.uuid,
             name: tag

@@ -1,14 +1,14 @@
 import {ClickEvent} from "./glitterBundle/plugins/click-event.js";
 
-ClickEvent.create(import.meta.url,{
-    demo:{
-        title:'demo',
-        fun:(gvc, widget, object)=>{
+ClickEvent.create(import.meta.url, {
+    demo: {
+        title: 'demo',
+        fun: (gvc, widget, object) => {
             return {
-                editor:()=>{
+                editor: () => {
                     return ``
                 },
-                event:()=>{
+                event: () => {
                     alert('asdkaskdkdas')
                 }
             }

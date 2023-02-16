@@ -74,6 +74,8 @@ export class Plugin {
             glitter.lowCodeAPP[name].config[dd]=setData[dd]
         })
     }
+
+
 }
 
 function getUrlParameter(url: string, sParam: string): any {

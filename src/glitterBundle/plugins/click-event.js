@@ -6,6 +6,7 @@ export class ClickEvent {
         glitter.share.clickEvent[url] = event;
     }
     static trigger(oj) {
+        const glitter = window.glitter;
         const event = oj.clickEvent.clickEvent;
         async function run() {
             var _a;
@@ -76,10 +77,10 @@ ${gvc.bindView(() => {
                             bind: id,
                             view: () => {
                                 try {
-                                    if (!glitter.share.clickEvent[obj.clickEvent.src]) {
+                                    if (!glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)]) {
                                         return ``;
                                     }
-                                    return glitter.share.clickEvent[obj.clickEvent.src][obj.clickEvent.route].fun(gvc, widget, obj).editor();
+                                    return glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)][obj.clickEvent.route].fun(gvc, widget, obj).editor();
                                 }
                                 catch (e) {
                                     return ``;
@@ -90,13 +91,13 @@ ${gvc.bindView(() => {
                                 var _a;
                                 glitter.share.clickEvent = (_a = glitter.share.clickEvent) !== null && _a !== void 0 ? _a : {};
                                 try {
-                                    if (!glitter.share.clickEvent[obj.clickEvent.src]) {
+                                    if (!glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)]) {
                                         glitter.addMtScript([
-                                            { src: obj.clickEvent.src, type: 'module' }
+                                            { src: glitter.htmlGenerate.resourceHook(obj.clickEvent.src), type: 'module' }
                                         ], () => {
                                             gvc.notifyDataChange(selectID);
                                         }, () => {
-                                            alert(obj.clickEvent.src);
+                                            console.log(`loadingError:` + obj.clickEvent.src);
                                         });
                                     }
                                 }

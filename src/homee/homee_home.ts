@@ -506,5 +506,136 @@ ${gvc.map([EditerApi.upload("Logo",widget.data.logo.src ?? "",gvc,(text)=>{
                }
             }
         }
+        , footer: {
+            defaultData: {
+                dataList: [
+                    {
+                        title: "首頁",
+                        icon: new URL('../img/component/footer/home.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "靈感",
+                        icon: new URL('../img/component/footer/idea.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "我的空間",
+                        icon: new URL('../img/component/footer/myspace.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "購物車",
+                        icon: new URL('../img/component/footer/shoopingCart.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                    {
+                        title: "會員",
+                        icon: new URL('../img/component/footer/user.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
+                        }
+                    },
+                ],
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                    var _a;
+                    if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
+                        widget.data.bottomInset = response.data;
+                        widget.refreshAll();
+                    }
+                }, {
+                    webFunction: () => {
+                        return { data: 10 };
+                    }
+                });
+                gvc.addStyle(`
+                        footer{
+                            background:white;
+                            box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);
+                            padding-top:18px;
+                        }
+                        .footerTitle{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 12px;
+                            line-height: 17px;
+                            text-align: center;
+                            color: #1E1E1E;
+                        }
+                        .selected{
+                            color:#FE5541;
+                        }
+                    `);
+                return {
+                    view: () => {
+                        return `
+                        <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
+                            ${(() => {
+                            return gvc.map(widget.data.dataList.map((data:any, index:number) => {
+                                return `
+                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
+                                    ClickEvent.trigger({
+                                        gvc, widget, clickEvent: data
+                                    });
+                                })}">
+                                    <img src=${data.icon} style="width: 28px;height: 28px;">
+                                    <div class="footerTitle ${(() => { if (index == 0)
+                                    return "selected"; })()}">${data.title}</div>
+                                </div>
+                                `;
+                            }));
+                        })()}
+                        </footer>
+                    `;
+                    },
+                    editor: () => {
+                        return gvc.map(widget.data.dataList.map((dd:any, index:number) => {
+                            return glitter.htmlGenerate.editeInput({
+                                    gvc: gvc,
+                                    title: `footer icon ${index + 1}`,
+                                    default: dd.title,
+                                    placeHolder: dd.title,
+                                    callback: (text) => {
+                                        widget.data.dataList[index].title = text;
+                                        widget.refreshAll();
+                                    }
+                                }) +
+                                `
+                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">icon圖片${index + 1}</h3>
+                                <div class="mt-2"></div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].icon}">
+                                    <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                    <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                    glitter.ut.chooseMediaCallback({
+                                        single: true,
+                                        accept: 'image/*',
+                                        callback(data) {
+                                            glitter.share.publicInterface["glitter"].upload(data[0].file, (link:string) => {
+                                                widget.data.dataList[index].icon = link;
+                                                widget.refreshAll();
+                                            });
+                                        }
+                                    });
+                                })}"></i>
+                                </div>
+                            `
+                                + ClickEvent.editer(gvc, widget, dd);
+                        }));
+                    }
+                };
+            }
+        }
     }
 });
