@@ -64,7 +64,6 @@ Plugin.create(import.meta.url, (glitter) => {
                     .voucherInput::placeholder{
                         color: #858585;
                     }
-                    
                 `);
                 const sharedView = new SharedView(gvc);
                 return {
@@ -104,7 +103,11 @@ Plugin.create(import.meta.url, (glitter) => {
                             (() => {
                                 var _a;
                                 widget.data.leftEvent = (_a = widget.data.leftEvent) !== null && _a !== void 0 ? _a : {};
-                                return ClickEvent.editer(gvc, widget, widget.data.leftEvent, { hover: true, option: [], title: "左方按鈕點擊" });
+                                return ClickEvent.editer(gvc, widget, widget.data.leftEvent, {
+                                    hover: true,
+                                    option: [],
+                                    title: "左方按鈕點擊"
+                                });
                             })(),
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右方icon</h3>
@@ -129,7 +132,11 @@ Plugin.create(import.meta.url, (glitter) => {
                             (() => {
                                 var _a;
                                 widget.data.rightEvent = (_a = widget.data.rightEvent) !== null && _a !== void 0 ? _a : {};
-                                return ClickEvent.editer(gvc, widget, widget.data.rightEvent, { hover: true, option: [], title: "右方按鈕點擊" });
+                                return ClickEvent.editer(gvc, widget, widget.data.rightEvent, {
+                                    hover: true,
+                                    option: [],
+                                    title: "右方按鈕點擊"
+                                });
                             })(),
                         ]);
                     }
@@ -344,7 +351,8 @@ Plugin.create(import.meta.url, (glitter) => {
                         });
                     }
                 }
-                catch (e) { }
+                catch (e) {
+                }
                 return {
                     view: () => {
                         return gvc.map([

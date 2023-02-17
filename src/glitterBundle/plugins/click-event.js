@@ -1,4 +1,19 @@
 export class ClickEvent {
+    static getUrlParameter(url, sParam) {
+        try {
+            let sPageURL = url.split("?")[1], sURLVariables = sPageURL.split('&'), sParameterName, i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? undefined : decodeURIComponent(sParameterName[1]);
+                }
+            }
+            return undefined;
+        }
+        catch (e) {
+            return undefined;
+        }
+    }
     static create(url, event) {
         var _a;
         const glitter = window.glitter;
@@ -14,7 +29,7 @@ export class ClickEvent {
             if (!oj.gvc.glitter.share.clickEvent[event.src]) {
                 await new Promise((resolve, reject) => {
                     oj.gvc.glitter.addMtScript([
-                        { src: `${event.src}`, type: 'module' }
+                        { src: `${glitter.htmlGenerate.resourceHook(event.src)}`, type: 'module' }
                     ], () => {
                         resolve(true);
                     }, () => {
@@ -22,7 +37,7 @@ export class ClickEvent {
                     });
                 });
             }
-            oj.gvc.glitter.share.clickEvent[event.src][event.route].fun(oj.gvc, oj.widget, oj.clickEvent).event();
+            oj.gvc.glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(event.src)][event.route].fun(oj.gvc, oj.widget, oj.clickEvent).event();
         }
         run().then();
     }
@@ -40,18 +55,23 @@ export class ClickEvent {
                     var _a;
                     var select = false;
                     return `<select class="form-select m-0 mt-2" onchange="${gvc.event((e) => {
+                        var _a;
                         if (e.value === 'undefined') {
                             obj.clickEvent = undefined;
                         }
                         else {
                             obj.clickEvent = JSON.parse(e.value);
+                            obj.clickEvent.src = (_a = ClickEvent.getUrlParameter(obj.clickEvent.src, 'resource')) !== null && _a !== void 0 ? _a : obj.clickEvent.src;
                         }
                         widget.refreshAll();
                     })}">
                         
-                        ${gvc.map(Object.keys(((_a = glitter.share) === null || _a === void 0 ? void 0 : _a.clickEvent) || {}).map((key) => {
+                        ${gvc.map(Object.keys(((_a = glitter.share) === null || _a === void 0 ? void 0 : _a.clickEvent) || {}).filter((dd) => {
+                        return ClickEvent.getUrlParameter(dd, "resource") !== undefined;
+                    }).map((key) => {
                         const value = glitter.share.clickEvent[key];
                         return gvc.map(Object.keys(value).map((v2) => {
+                            var _a;
                             if (option.option.length > 0) {
                                 if (option.option.indexOf(v2) === -1) {
                                     return ``;
@@ -59,7 +79,7 @@ export class ClickEvent {
                             }
                             const value2 = value[v2];
                             const selected = JSON.stringify({
-                                src: key,
+                                src: (_a = ClickEvent.getUrlParameter(key, 'resource')) !== null && _a !== void 0 ? _a : obj.clickEvent.src,
                                 route: v2
                             }) === JSON.stringify(obj.clickEvent);
                             select = selected || select;
@@ -93,7 +113,10 @@ ${gvc.bindView(() => {
                                 try {
                                     if (!glitter.share.clickEvent[glitter.htmlGenerate.resourceHook(obj.clickEvent.src)]) {
                                         glitter.addMtScript([
-                                            { src: glitter.htmlGenerate.resourceHook(obj.clickEvent.src), type: 'module' }
+                                            {
+                                                src: glitter.htmlGenerate.resourceHook(obj.clickEvent.src),
+                                                type: 'module'
+                                            }
                                         ], () => {
                                             gvc.notifyDataChange(selectID);
                                         }, () => {
@@ -101,7 +124,8 @@ ${gvc.bindView(() => {
                                         });
                                     }
                                 }
-                                catch (e) { }
+                                catch (e) {
+                                }
                             }
                         };
                     })}

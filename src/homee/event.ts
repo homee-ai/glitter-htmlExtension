@@ -7,8 +7,7 @@ import {appConfig} from "../config.js";
 ClickEvent.create(import.meta.url, {
     link: {
         title: "連結跳轉",
-        fun: (gvc, widget, object) => {
-            return {
+        fun: (gvc, widget, object) => {return {
                 editor: () => {
                     return gvc.glitter.htmlGenerate.editeInput({
                         gvc: gvc,
@@ -36,8 +35,7 @@ ClickEvent.create(import.meta.url, {
                     })
 
                 }
-            }
-        }
+            }}
     },
     pageSwitch: {
         title: "頁面跳轉",
@@ -213,15 +211,7 @@ ${
                     )
                 },
                 event: () => {
-                    gvc.glitter.runJsInterFace("toProductPage", {
-                        id: obj.data.id
-                    }, (res) => {
-
-                    }, {
-                        webFunction(data: any, callback: (data: any) => void): any {
-                            alert('APP會跳轉至商品ID:' + obj.data.id + "的頁面")
-                        }
-                    })
+                    appConfig().changePage(gvc,"product_show",obj.data)
                 }
             }
         }
@@ -238,6 +228,6 @@ ${
                 }
             }
         }
-    },
-
+    }
 })
+

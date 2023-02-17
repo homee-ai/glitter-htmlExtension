@@ -1,5 +1,6 @@
 export class Plugin {
-    constructor() { }
+    constructor() {
+    }
     static create(url, fun) {
         const glitter = window.glitter;
         glitter.share.htmlExtension[url] = fun(glitter, window.parent.editerData !== undefined);

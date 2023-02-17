@@ -194,14 +194,7 @@ ${gvc.bindView(() => {
                     });
                 },
                 event: () => {
-                    gvc.glitter.runJsInterFace("toProductPage", {
-                        id: obj.data.id
-                    }, (res) => {
-                    }, {
-                        webFunction(data, callback) {
-                            alert('APP會跳轉至商品ID:' + obj.data.id + "的頁面");
-                        }
-                    });
+                    appConfig().changePage(gvc, "product_show", obj.data);
                 }
             };
         }
@@ -218,5 +211,5 @@ ${gvc.bindView(() => {
                 }
             };
         }
-    },
+    }
 });

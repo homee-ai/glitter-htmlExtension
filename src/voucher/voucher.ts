@@ -4,8 +4,8 @@ import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {Api} from "../homee/api/homee-api.js";
 import {LegacyPage} from "../homee/legacy/interface.js";
 import {Checkout} from "../api/checkout.js";
-
 import {SharedView} from "../homee/shareView.js";
+
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile: any, callback: (link: string) => void) => {
@@ -65,15 +65,14 @@ Plugin.create(import.meta.url, (glitter) => {
                     .voucherInput::placeholder{
                         color: #858585;
                     }
-                    
                 `)
                 const sharedView = new SharedView(gvc);
                 return {
                     view: () => {
-                           return sharedView.navigationBar({
+                        return sharedView.navigationBar({
                             title: "優惠券",
                             leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
-                                ClickEvent.trigger({gvc,widget,clickEvent:widget.data.leftEvent})
+                                ClickEvent.trigger({gvc, widget, clickEvent: widget.data.leftEvent})
                             })}">`,
                             rightIcon: `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {
                             })}">
@@ -105,7 +104,11 @@ Plugin.create(import.meta.url, (glitter) => {
                         `,
                             (() => {
                                 widget.data.leftEvent = widget.data.leftEvent ?? {}
-                                return ClickEvent.editer(gvc, widget, widget.data.leftEvent, {hover:true,option:[],title:"左方按鈕點擊"})
+                                return ClickEvent.editer(gvc, widget, widget.data.leftEvent, {
+                                    hover: true,
+                                    option: [],
+                                    title: "左方按鈕點擊"
+                                })
                             })(),
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右方icon</h3>
@@ -129,7 +132,11 @@ Plugin.create(import.meta.url, (glitter) => {
                         `,
                             (() => {
                                 widget.data.rightEvent = widget.data.rightEvent ?? {}
-                                return ClickEvent.editer(gvc, widget, widget.data.rightEvent, {hover:true,option:[],title:"右方按鈕點擊"})
+                                return ClickEvent.editer(gvc, widget, widget.data.rightEvent, {
+                                    hover: true,
+                                    option: [],
+                                    title: "右方按鈕點擊"
+                                })
                             })()
                             ,
                         ])
@@ -164,10 +171,10 @@ Plugin.create(import.meta.url, (glitter) => {
                             gvc.bindView({
                                 bind: "inputVoucherCode",
                                 view: () => {
-                                    let code=""
+                                    let code = ""
                                     return `
-                                    <input class="voucherInput w-100 border-0" style="position: relative" onchange="${gvc.event((e)=>{
-                                        code=e.value
+                                    <input class="voucherInput w-100 border-0" style="position: relative" onchange="${gvc.event((e) => {
+                                        code = e.value
                                     })}" placeholder="${widget.data.voucherPlaceholder}">
                                     <div class="btnInput" style="font-weight: 700;font-size: 18px;line-height: 26px;color: #FE5541;position: absolute;right:16px;top: 13px;" onclick="${gvc.event(() => {
                                         gvc.parameter.pageConfig?.obj.data.callback(code)
@@ -320,15 +327,15 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
-                try{
+                try {
 
-                    if(!(window.parent as any).editerData){
-                        widget.data.voucherCardList=[]
-                        Checkout.getVoucher('Select',(data)=>{
-                            data=(data as VoucherModel[]).filter((dd)=>{
+                    if (!(window.parent as any).editerData) {
+                        widget.data.voucherCardList = []
+                        Checkout.getVoucher('Select', (data) => {
+                            data = (data as VoucherModel[]).filter((dd) => {
                                 return dd.config.howToPlay !== 'rebate'
                             })
-                            widget.data.voucherCardList=(data as any).map((dd:any)=>{
+                            widget.data.voucherCardList = (data as any).map((dd: any) => {
                                 return {
                                     vendor_id: dd.id,
                                     vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
@@ -343,14 +350,15 @@ Plugin.create(import.meta.url, (glitter) => {
                                     dateText: "有效期限：",
                                     date: dd.formatEndTime,
                                     dateType: "",
-                                    code:dd.code
+                                    code: dd.code
                                 }
                             })
                             gvc.notifyDataChange('voucherCardList')
                             console.log(JSON.stringify(data))
                         })
                     }
-                }catch (e){}
+                } catch (e) {
+                }
 
 
                 return {
@@ -361,7 +369,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 view: () => {
                                     return gvc.map(widget.data.voucherCardList.map((data: any) => {
                                         return `
-                                        <div class="voucherCard overflow-hidden" onclick="${gvc.event(()=>{
+                                        <div class="voucherCard overflow-hidden" onclick="${gvc.event(() => {
                                             gvc.parameter.pageConfig?.obj.data.callback(data.code)
                                             gvc.glitter.goBack()
                                         })}"> 

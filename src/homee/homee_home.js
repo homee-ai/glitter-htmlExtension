@@ -142,7 +142,9 @@ Plugin.create(import.meta.url, (glitter) => {
                 gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
                 const editorID = glitter.getUUID();
                 return {
-                    view: () => { return slideControl(data.link, true, false, false); },
+                    view: () => {
+                        return slideControl(data.link, true, false, false);
+                    },
                     editor: () => {
                         return gvc.map([
                             gvc.bindView({
@@ -407,23 +409,31 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                                     text: "",
                                     visible: true
                                 });
-                                api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=category', method: 'get' }, (res) => {
+                                api.homeeAJAX({
+                                    api: Api.serverURL,
+                                    route: '/api/v1/lowCode/pageConfig?query=config&tag=category',
+                                    method: 'get'
+                                }, (res) => {
                                     Plugin.initial(gvc, res.result[0].config).then(() => {
                                         LegacyPage.execute(gvc.glitter, () => {
                                             DialogHelper.dataLoading({
                                                 text: "",
                                                 visible: false
                                             });
-                                            gvc.glitter.changePage(LegacyPage.getLink("jsPage/htmlGenerater.js"), 'category', true, res.result[0].config);
+                                            gvc.glitter.changePage(new URL('../htmlGenerater.js', import.meta.url).href, 'category', true, {
+                                                config: res.result[0].config
+                                            });
                                         });
                                     });
                                 });
                             })}">
                        <img src="${rootURL}/homee/src/bell.svg" onclick="${gvc.event(() => {
-                                glitter.runJsInterFace("noticeBell", {}, () => { });
+                                glitter.runJsInterFace("noticeBell", {}, () => {
+                                });
                             })}">
                        <img src="${rootURL}/img/component/scan.svg" onclick="${gvc.event(() => {
-                                glitter.runJsInterFace("qrcodeScanner", {}, () => { });
+                                glitter.runJsInterFace("qrcodeScanner", {}, () => {
+                                });
                             })}">
 </div>
                        `
@@ -621,6 +631,118 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                             `
                                 + ClickEvent.editer(gvc, widget, dd);
                         }));
+                    }
+                };
+            }
+        },
+        navigationBar: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                var _b, _c;
+                const sharedView = new SharedView(gvc);
+                widget.data.left = (_b = widget.data.left) !== null && _b !== void 0 ? _b : [];
+                widget.data.right = (_c = widget.data.right) !== null && _c !== void 0 ? _c : [];
+                return {
+                    view: () => {
+                        var _b;
+                        return sharedView.navigationBar({
+                            title: (_b = widget.data.title) !== null && _b !== void 0 ? _b : "標題",
+                            leftIcon: widget.data.left.map((dd) => {
+                                return `<img class="" src="${dd.img}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                                    ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                })}">`;
+                            }).join('<div class="mx-2"></div>'),
+                            rightIcon: widget.data.right.map((dd) => {
+                                return `<img class="" src="${dd.img}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                                    ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                })}">`;
+                            }).join('<div class="mx-2"></div>')
+                        });
+                    },
+                    editor: () => {
+                        return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc, title: "標題", default: widget.data.title, placeHolder: "請輸入標題", callback: (text) => {
+                                    widget.data.title = text;
+                                    widget.refreshComponent();
+                                }
+                            }),
+                            `<div class="w-100 alert-dark alert my-2" >
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">左側按鈕</h3>
+${widget.data.left.map((dd, index) => {
+                                var _b;
+                                dd.clickEvent = (_b = dd.clickEvent) !== null && _b !== void 0 ? _b : {};
+                                return `
+<div class="alert alert-dark">
+<div class="d-flex align-items-center mb-3 mt-1 ">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                    widget.data.left.splice(index, 1);
+                                    widget.refreshComponent();
+                                })}"></i>
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
+
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                    glitter.ut.chooseMediaCallback({
+                                        single: true,
+                                        accept: 'image/*',
+                                        callback(data) {
+                                            api.upload(data[0].file, (link) => {
+                                                dd.img = link;
+                                                widget.refreshComponent();
+                                            });
+                                        }
+                                    });
+                                })}"></i>
+</div>
+${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+</div>
+
+`;
+                            }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
+<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                                widget.data.left.push({});
+                                widget.refreshComponent();
+                            })}">添加按鈕</div>
+</div>`, `<div class="w-100 alert-dark alert my-2" >
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右側按鈕</h3>
+${widget.data.right.map((dd, index) => {
+                                var _b;
+                                dd.clickEvent = (_b = dd.clickEvent) !== null && _b !== void 0 ? _b : {};
+                                return `
+<div class="alert alert-dark">
+<div class="d-flex align-items-center mb-3 mt-1 ">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                    widget.data.right.splice(index, 1);
+                                    widget.refreshComponent();
+                                })}"></i>
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
+
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                    glitter.ut.chooseMediaCallback({
+                                        single: true,
+                                        accept: 'image/*',
+                                        callback(data) {
+                                            api.upload(data[0].file, (link) => {
+                                                dd.img = link;
+                                                widget.refreshComponent();
+                                            });
+                                        }
+                                    });
+                                })}"></i>
+</div>
+${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+</div>
+
+`;
+                            }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
+<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                                widget.data.right.push({});
+                                widget.refreshComponent();
+                            })}">添加按鈕</div>
+</div>`
+                        ]);
                     }
                 };
             }

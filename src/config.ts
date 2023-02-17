@@ -3,21 +3,22 @@ import {Api} from "./homee/api/homee-api.js";
 import {DialogHelper} from "./dialog/dialog-helper.js";
 import {LegacyPage} from "./homee/legacy/interface.js";
 import {GVC} from "./glitterBundle/GVController.js";
+
 export function appConfig(): {
     //HOMEE API backend route
     serverURL: string,
     //HOMEE API token
     token: string,
     //Upload image
-    uploadImage:(photoFile:any,callback:(result:string)=>void)=>void,
+    uploadImage: (photoFile: any, callback: (result: string) => void) => void,
     //Change to other page
-    changePage:(gvc:GVC,tag:string,obj?:any)=>void
+    changePage: (gvc: GVC, tag: string, obj?: any) => void
 } {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
         token: "",
-        uploadImage:(photoFile:any,callback:(result:string)=>void)=>{
-            const glitter=(window as any).glitter
+        uploadImage: (photoFile: any, callback: (result: string) => void) => {
+            const glitter = (window as any).glitter
             glitter.share.dialog.dataLoading({text: '上傳中', visible: true})
             $.ajax({
                 url: Api.serverURL + '/api/v1/scene/getSignedUrl',
@@ -48,26 +49,30 @@ export function appConfig(): {
                 },
             });
         },
-        changePage:(gvc:GVC,tag:string,obj?:any)=>{
-            const api=new Api()
+        changePage: (gvc: GVC, tag: string, obj?: any) => {
+            const api = new Api()
             DialogHelper.dataLoading({
-                text:"",
-                visible:true
+                text: "",
+                visible: true
             })
-            api.homeeAJAX({ api:Api.serverURL,route: '/api/v1/lowCode/pageConfig?query=config&tag='+tag, method: 'get' }, (res) => {
+            api.homeeAJAX({
+                api: Api.serverURL,
+                route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
+                method: 'get'
+            }, (res) => {
                 DialogHelper.dataLoading({
                     text: "",
                     visible: false
                 })
                 gvc.glitter.changePage(
-                    `${new URL('./htmlGenerater.js',import.meta.url)}`,
+                    `${new URL('./htmlGenerater.js', import.meta.url)}`,
                     tag,
                     true,
                     {
-                        config:res.result[0].config,
-                        data:obj
+                        config: res.result[0].config,
+                        data: obj
                     })
-                setTimeout(()=>{
+                setTimeout(() => {
                     DialogHelper.dataLoading({
                         text: "",
                         visible: false,

@@ -43,7 +43,11 @@ export function appConfig() {
                 text: "",
                 visible: true
             });
-            api.homeeAJAX({ api: Api.serverURL, route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag, method: 'get' }, (res) => {
+            api.homeeAJAX({
+                api: Api.serverURL,
+                route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
+                method: 'get'
+            }, (res) => {
                 DialogHelper.dataLoading({
                     text: "",
                     visible: false

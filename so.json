@@ -1,103 +1,563 @@
 [
   {
-    "id": "s8s0s5s6sds3s1s0-s5s8sds4-4s1s0sd-sbs0scs1-sbs3s9sbs9sas9scses5scs0",
-    "js": "$homee/voucher/voucher.js",
+    "id": "s6s5sfs0s3s1s3s2-s0s1ses8-4s6scsb-s9s7s7sf-sfs8s1s8sbses4scs9s0ses2",
+    "js": "$homee/homee/homee_home.js",
     "data": {
-      "nav": {
-        "leftIcon": "$homee/img/component/left-arrow.svg",
-        "leftPage": "",
-        "rightIcon": "$homee/img/component/service.png",
-        "rightPage": ""
+      "logo": {
+        "src": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675147810222",
+        "width": "",
+        "height": "20px"
       },
-      "topInset": 10,
-      "leftEvent": {
-        "link": "https://medium.com/@esther.tsai/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-android-studio-import-aar-7a7174407e99",
-        "clickEvent": {
-          "src": "$homee/homee/event.js",
-          "route": "goBack"
-        },
-        "selectPage": {
-          "tag": "home",
-          "name": "首頁",
-          "group": "首頁"
-        }
-      },
-      "rightEvent": {
-        "name": "餐桌",
-        "value": 759423,
-        "selectPage": {
-          "tag": "voucher",
-          "name": "優惠券頁面",
-          "group": "優惠券頁面"
-        }
-      },
-      "voucherPlaceholder": "輸入優惠代碼"
+      "title": "",
+      "centerText": ""
     },
-    "type": "nav",
-    "label": "nav",
+    "type": "homeTitleBar",
+    "label": "標頭",
+    "style": "\n",
+    "expandStyle": false,
     "refreshAllParameter": {},
     "refreshComponentParameter": {}
   },
   {
-    "id": "s7s6s7s7ses5s6se-s9s5s1s4-4sbs4s4-sbs8s5sf-sesases8scses2s9s4s7s9s8",
+    "id": "s0s4s0sfs3s0ses8-sfsas3sf-4s2sfsa-s8s6sasc-sasbs1s5s8s3s6sasbs4sdse",
+    "js": "$homee/homee/homee_home.js",
+    "data": {
+      "link": [
+        {
+          "img": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675254843424",
+          "data": {
+            "id": 8830181,
+            "name": "ELZTAL 沙發",
+            "price": 12135,
+            "sale_price": 12135,
+            "preview_image": "https://cdn.store-assets.com/s/349867/i/51204532.png?width=720"
+          },
+          "link": "https://mttmp.com/co76dnp.html",
+          "name": "人氣活動",
+          "title": "dssamkldsaml",
+          "value": 615628,
+          "clickEvent": {
+            "src": "$homee/homee/event.js",
+            "route": "toProductDetail"
+          }
+        },
+        {
+          "img": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675254859051",
+          "link": "https://bbs.huaweicloud.com/blogs/361558",
+          "clickEvent": {
+            "src": "$homee/homee/event.js",
+            "route": "link"
+          }
+        }
+      ],
+      "title": "靠",
+      "marginT": ""
+    },
+    "type": "banner",
+    "class": "w-100",
+    "label": "輪播圖",
+    "route": "homee_home",
+    "expandStyle": false,
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  },
+  {
+    "id": "s8s3sbs0s7sfsds9-sbsesbs5-4s8s7s1-s8scs9se-s1s7sfs8s2s1sbs0sds7sfs2",
     "js": "$homee/official/official.js",
     "data": {
+      "class": " align-items-center justify-content-center",
+      "style": "",
+      "layout": "row",
       "setting": [
         {
-          "id": "sbsds0s2s6s1s6s1-s0s2s3s8-4s2sas8-s8s3s5s0-sasbs5s5sescs2s4s3s0sfs2",
-          "js": "$homee/voucher/voucher.js",
+          "id": "s1s4s4scscs4s8s8-sbs4s5s0-4s6sbs7-s8sfsds4-s6s7s4s4s0scs3s8s8sfsbs2",
+          "js": "$homee/official/official.js",
           "data": {
-            "voucherPlaceholder": "輸入優惠代碼"
+            "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674471891850",
+            "class": "m-0",
+            "style": "border-radius: 12px;",
+            "setting": [],
+            "paddingL": "12px",
+            "paddingR": "6px",
+            "clickEvent": {
+              "name": "桌子",
+              "value": 615639,
+              "clickEvent": {
+                "src": "$homee/homee/event.js",
+                "route": "pageSwitch"
+              },
+              "selectPage": {
+                "tag": "product_show",
+                "name": "產品展示頁面",
+                "group": "產品頁"
+              }
+            }
           },
-          "type": "voucherInput",
-          "label": "voucherInput",
+          "type": "image",
+          "class": "col-6 ",
+          "label": "圖片",
+          "route": "Glitter",
+          "expand": true,
+          "expandStyle": false,
           "refreshAllParameter": {},
           "refreshComponentParameter": {}
         },
         {
-          "id": "s7s3s6s1scs3s6sf-s2s7sbsa-4scsesa-s9ses9sb-sdsas4scsfs4s9s3s0s8sdsb",
-          "js": "$homee/voucher/voucher.js",
+          "id": "s0s9sesbs8s6s9s0-s8s8sbsf-4ses3s7-s8sdsfsb-s7sas5scsbsds7sbs7s6s4se",
+          "js": "$homee/official/official.js",
           "data": {
-            "voucherCardList": [
+            "class": "m-0",
+            "style": "",
+            "layout": "row",
+            "setting": [
               {
-                "date": "31 三月 2025",
-                "name": "用戶邀請朋友成功獎勵",
-                "dateText": "有效期限：",
-                "dateType": "",
-                "discount": "現折 10,000 元",
-                "vendor_id": "0",
-                "lowCostText": "最低消費：",
-                "vendor_icon": "$homee/img/component/voucher/cardIcon.png",
-                "vendor_name": "HOMEE",
-                "lowCostNumber": "NT$ 30,000",
-                "vendor_context": "優惠券內容"
+                "id": "sdscscs1ses7s7sf-sas8sbsb-4sesas3-sases5sb-s4sfs8sbs5s2sds8s1s7sfs8",
+                "js": "$homee/homee/homee_home.js",
+                "data": {
+                  "rank": [
+                    {
+                      "data": {
+                        "id": 4219757,
+                        "name": "FORLI 岩板餐桌",
+                        "price": 9000,
+                        "sale_price": 6900,
+                        "preview_image": "https://cdn.store-assets.com/s/349867/i/41080954.png?width=720"
+                      },
+                      "clickEvent": {
+                        "src": "$homee/homee/event.js",
+                        "route": "toProductDetail"
+                      }
+                    },
+                    {
+                      "data": {
+                        "id": 8629567,
+                        "name": "LAVIOLLE 休閒椅",
+                        "price": 3825,
+                        "sale_price": 3825,
+                        "preview_image": "https://cdn.store-assets.com/s/349867/i/49971700.jpeg?width=720"
+                      },
+                      "clickEvent": {
+                        "src": "$homee/homee/event.js",
+                        "route": "toProductDetail"
+                      }
+                    },
+                    {
+                      "data": {
+                        "id": 7932550,
+                        "name": "XERACO 寵物沙發",
+                        "price": 999,
+                        "sale_price": 999,
+                        "preview_image": "https://cdn.store-assets.com/s/349867/i/46084917.png?width=720"
+                      },
+                      "clickEvent": {
+                        "src": "$homee/homee/event.js",
+                        "route": "toProductDetail"
+                      }
+                    }
+                  ],
+                  "class": "bg-black flex-column",
+                  "style": "border-radius: 12px;",
+                  "layout": "d-flex",
+                  "radius": "12",
+                  "bgcolor": "#F8F3ED",
+                  "setting": [],
+                  "paddingB": "10px",
+                  "paddingL": "0px",
+                  "titleStyle": "padding-top: 16px;\npadding-left:12px;\nfont-family: 'Noto Sans TC';\nfont-style: normal;\nfont-weight: 700;\nfont-size: 16px;\nline-height: 23px;\n\n/* HOMEE black */\n\ncolor: #292929;"
+                },
+                "type": "rankingBlock",
+                "class": "col-12",
+                "label": "黑色星期五",
+                "route": "homee_home",
+                "style": "",
+                "expand": false,
+                "expandStyle": false,
+                "refreshAllParameter": {},
+                "refreshComponentParameter": {}
               },
               {
-                "date": "剩下 8 小時",
-                "name": "門市消費滿萬贈 HOMEE $500 優惠券",
-                "dateText": "即將失效：",
-                "dateType": "warning-",
-                "discount": "現折 500 元",
-                "vendor_id": "1",
-                "lowCostText": "最低消費：",
-                "vendor_icon": "$homee/img/component/voucher/cardIcon.png",
-                "vendor_name": "HOMEE",
-                "lowCostNumber": "NT$ 0",
-                "vendor_context": "優惠券內容"
+                "id": "scsescses2scs8s4-ses2s5s0-4ses8s0-s8sas8sa-s8sds8s9sbsds1sfses7scs2",
+                "js": "$homee/official/official.js",
+                "data": {
+                  "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674471817556",
+                  "class": "",
+                  "style": "border-radius: 12px;",
+                  "setting": [],
+                  "paddingL": "0px",
+                  "clickEvent": {
+                    "link": "https://github.com/homee-ai/glitter-htmlExtension",
+                    "name": "本週新品（ NEW ）",
+                    "value": 3308514,
+                    "clickEvent": {
+                      "src": "$homee/homee/event.js",
+                      "route": "link"
+                    },
+                    "selectPage": {
+                      "tag": "category",
+                      "name": "分類頁",
+                      "group": "分類頁"
+                    }
+                  }
+                },
+                "type": "image",
+                "class": "w-100",
+                "label": "圖片",
+                "route": "Glitter",
+                "expand": false,
+                "expandStyle": false,
+                "refreshAllParameter": {},
+                "refreshComponentParameter": {}
               }
-            ]
+            ],
+            "paddingB": "0px",
+            "paddingL": "6px",
+            "paddingR": "12px",
+            "paddingT": "0px"
           },
-          "type": "voucherList",
-          "label": "voucherList",
+          "type": "container",
+          "class": "col-6 ",
+          "label": "自定區塊",
+          "route": "Glitter",
+          "expand": false,
+          "expandStyle": false,
           "refreshAllParameter": {},
           "refreshComponentParameter": {}
         }
       ],
-      "paddingB": "100px"
+      "paddingL": "0px",
+      "paddingR": "0px",
+      "paddingT": "10px"
     },
     "type": "container",
-    "label": "container",
+    "class": "",
+    "label": "自定區塊",
+    "route": "Glitter",
     "expandStyle": true,
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  },
+  {
+    "id": "s8s5scs6scs9sds7-s7s2s9sf-4s6s8s2-s8scs5sc-s5sas7ses3sas9s9s5s1s1s8",
+    "js": "$homee/official/official.js",
+    "data": {
+      "class": "p-0 m-0 w-100 justify-content-between",
+      "layout": "d-flex",
+      "marginT": "",
+      "setting": [
+        {
+          "id": "s7s2s2s4sasbscs5-sds6s5s1-4s3scsf-sbs4sase-s3ses0s3s4sdsesasds8sfs3",
+          "js": "$homee/official/official.js",
+          "data": {
+            "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978765418",
+            "class": "",
+            "style": "",
+            "paddingB": "",
+            "paddingL": "",
+            "paddingR": "",
+            "paddingT": "",
+            "clickEvent": {
+              "data": {
+                "id": 8405205,
+                "name": "咦式沐癒 ismore 洗、潤、沐各一三瓶優惠套組 贈梳子1柄",
+                "price": 2340,
+                "sale_price": 2340,
+                "preview_image": "https://cdn.store-assets.com/s/349867/i/48389245.png?width=720"
+              },
+              "name": "每30分鐘就賣出一張的岩板餐桌",
+              "value": 1885264,
+              "clickEvent": {
+                "src": "$homee/homee/event.js",
+                "route": "pageSwitch"
+              },
+              "selectPage": {
+                "tag": "voucher",
+                "name": "優惠券頁面",
+                "group": "優惠券頁面"
+              }
+            }
+          },
+          "link": "https://mttmp.com/co76dnp.html",
+          "type": "image",
+          "class": "",
+          "label": "image",
+          "route": "Glitter",
+          "style": "width: calc((100% - 20px) / 3);",
+          "expand": false,
+          "clickEvent": {
+            "src": "$homee/homee/event.js",
+            "link": "https://mttmp.com/co76dnp.html",
+            "route": "link",
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "link"
+            }
+          },
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "sas9s9sfs6sfs7sa-s9s6sas2-4sfsbsa-s9s2s3s6-sas7s1s6seses7s7ses1s6s9",
+          "js": "$homee/official/official.js",
+          "data": {
+            "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978777300",
+            "class": "",
+            "paddingL": "",
+            "paddingR": "",
+            "clickEvent": {
+              "data": {
+                "id": 8830181,
+                "name": "ELZTAL 沙發",
+                "price": 12135,
+                "sale_price": 12135,
+                "preview_image": "https://cdn.store-assets.com/s/349867/i/51204532.png?width=720"
+              },
+              "link": "https://homee.cc/pages/%E7%94%9F%E7%94%A2%E8%88%87%E4%BE%9B%E6%87%89",
+              "clickEvent": {
+                "src": "$homee/homee/event.js",
+                "route": "link"
+              }
+            }
+          },
+          "type": "image",
+          "class": "",
+          "label": "image",
+          "route": "Glitter",
+          "style": "width: calc((100% - 20px) / 3);",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "sdsds6sds5sasasf-sesesds6-4sfs8sb-sas7sds8-s7s1scs5s1sesbs8s8s2s3s8",
+          "js": "$homee/official/official.js",
+          "data": {
+            "link": "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1674978786967",
+            "class": "",
+            "clickEvent": {
+              "link": "https://homee.cc/pages/%E7%94%9F%E7%94%A2%E8%88%87%E4%BE%9B%E6%87%89-%E5%BE%9E%E6%B6%88%E8%B2%BB%E8%80%85%E5%88%B0%E7%94%9F%E7%94%A2%E8%80%85",
+              "clickEvent": {
+                "src": "$homee/homee/event.js",
+                "route": "link"
+              }
+            }
+          },
+          "link": "https://www.figma.com/file/5JWU25WPFPLb81u1B55ZEx/HOMEE-DECO---Machi-app?node-id=3949%3A38943&t=F0ifR9pAVewLkaoK-0",
+          "type": "image",
+          "class": "",
+          "label": "image",
+          "route": "Glitter",
+          "style": "width: calc((100% - 20px) / 3);",
+          "clickEvent": {
+            "src": "$homee/homee/event.js",
+            "route": "link"
+          },
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        }
+      ],
+      "paddingB": "0px",
+      "paddingL": "12px",
+      "paddingR": "12px",
+      "paddingT": "10px"
+    },
+    "type": "container",
+    "class": "justify-content-around w-100",
+    "label": "圖片區塊",
+    "route": "Glitter",
+    "style": "\n",
+    "expandStyle": true,
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  },
+  {
+    "id": "s5s4s1sdsbses6s5-sbs8s8s0-4s9s9s7-sbsasesb-s3s7sbs1s8s6s4sfs4s8sasf",
+    "js": "$homee/official/official.js",
+    "data": {
+      "class": "d-flex align-items-center justify-content-center",
+      "style": "font-family: 'Noto Sans TC';\nfont-style: normal;\nfont-weight: 700;\nfont-size: 24px;\nline-height: 35px;\n/* identical to box height */\n\nfont-feature-settings: 'pnum' on, 'lnum' on;\n/* HOMEE black */\ncolor: #292929;",
+      "marginT": "32px",
+      "paddingB": "0px",
+      "paddingT": ""
+    },
+    "type": "label",
+    "label": "超萬項系列商品 週週上線",
+    "route": "Glitter",
+    "style": "",
+    "expandStyle": false,
+    "refreshAllParameter": {},
+    "refreshComponentParameter": {}
+  },
+  {
+    "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
+    "js": "$homee/official/official.js",
+    "data": {
+      "class": "m-0 p-0 flex-wrap justify-content-around",
+      "style": "gap:10px;",
+      "layout": "d-flex",
+      "marginB": "86px",
+      "marginL": "12px",
+      "marginR": "12px",
+      "setting": [
+        {
+          "id": "sbs7s7ses9sas3s8-s0s4s0s6-4scsbs8-sbs5s6s8-s7s0scs7s5s0s6s3s4s5sese",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 7932550,
+              "name": "XERACO 寵物沙發",
+              "price": 999,
+              "sale_price": 999,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/46084917.png?width=720"
+            },
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);\n\n",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "sesasbsfs5s1sbsc-s0s4s1s7-4s0s4se-sbs0sbs0-sfs9s6s6s2scsbs2s7s6s6s7",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 8830041,
+              "name": "FABERO 三抽一門邊櫃",
+              "price": 21050,
+              "sale_price": 21050,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/51202943.png?width=720"
+            },
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);\n\n",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "s7s4s1s1sfs4ses6-sdsas3se-4sds6sa-sas1sfse-s4s2sbs1sbscs4s4s8s4s4sb",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 8835119,
+              "name": "LAXE 三抽兩門邊櫃",
+              "price": 33250,
+              "sale_price": 33250,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/51308941.png?width=720"
+            },
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);\n\n",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "sdsbsesbscsasbs8-s3sas1sd-4sas0s7-s9sdscs1-s9sfscs3s2s6s1s7s3s5s6sf",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 8837303,
+              "name": "HOVE 雙人床架",
+              "price": 23580,
+              "sale_price": 23580,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/51305748.png?width=720"
+            },
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);\n\n",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "s7sasfs0s7s5s1sb-s8s8sbs2-4s4s6sc-s9sesase-s1ses1s3s9sescsesascsas6",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 5554580,
+              "name": "VILLA 原木碗兩入組 - 相思木",
+              "price": 980,
+              "sale_price": 980,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/31621770.png?width=720"
+            },
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);\n\n",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        },
+        {
+          "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
+          "js": "$homee/homee/homee_home.js",
+          "data": {
+            "data": {
+              "id": 5555761,
+              "name": "ZONA 調味罐組 - 相思木/玻璃",
+              "price": 1180,
+              "sale_price": 1180,
+              "preview_image": "https://cdn.store-assets.com/s/349867/i/31626541.png?width=720"
+            },
+            "style": "\n",
+            "paddingL": "",
+            "paddingR": "",
+            "clickEvent": {
+              "src": "$homee/homee/event.js",
+              "route": "toProductDetail"
+            }
+          },
+          "type": "productItem",
+          "label": "商品",
+          "route": "homee_home",
+          "style": "width:calc(50% - 8px);",
+          "expandStyle": false,
+          "refreshAllParameter": {},
+          "refreshComponentParameter": {}
+        }
+      ],
+      "paddingB": "16px",
+      "paddingL": "",
+      "paddingR": ""
+    },
+    "type": "container",
+    "class": " ",
+    "label": "元件容器",
+    "route": "Glitter",
+    "style": "",
+    "expandStyle": false,
     "refreshAllParameter": {},
     "refreshComponentParameter": {}
   }
