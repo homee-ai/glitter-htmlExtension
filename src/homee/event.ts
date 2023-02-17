@@ -62,8 +62,8 @@ ClickEvent.create(import.meta.url, {
                         gvc.notifyDataChange(id)
                     })
                     return `
-<h3 class="m-0 mb-2 mt-2" style="font-size: 16px;">選擇頁面</h3>
-${
+                    <h3 class="m-0 mb-2 mt-2" style="font-size: 16px;">選擇頁面</h3>
+                    ${
                         gvc.bindView(() => {
                             return {
                                 bind: id,
@@ -91,7 +91,7 @@ ${
                             }
                         })
                     }
-`
+                    `
                 },
                 event: () => {
                     appConfig().changePage(gvc,object.selectPage.tag!)

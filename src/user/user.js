@@ -3,6 +3,10 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Api } from "../homee/api/homee-api.js";
 import { SharedView } from "../homee/shareView.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
+import { appConfig } from "../config.js";
+import { Funnel } from "../homee/funnel.js";
+import { Dialog } from "../homee/legacy/widget/dialog.js";
+import { ViewModel } from "../homee/legacy/view/userProfile";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -43,7 +47,8 @@ Plugin.create(import.meta.url, (glitter) => {
                     title: "",
                     leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
                     leftPage: "",
-                    boxShadow: true
+                    boxShadow: true,
+                    background: "#FFFFFF"
                 },
             },
             render: (gvc, widget, setting, hoverID) => {
@@ -71,6 +76,8 @@ Plugin.create(import.meta.url, (glitter) => {
                             leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
                             })}">`,
                             rightIcon: ``,
+                            boxShadow: widget.data.nav.boxShadow,
+                            background: widget.data.nav.background,
                         });
                     },
                     editor: () => {
@@ -119,16 +126,16 @@ Plugin.create(import.meta.url, (glitter) => {
                             })}"></i>
                             </div>
                         `,
-                            glitter.htmlGenerate.editeInput({
-                                gvc: gvc,
-                                title: `返回的頁面`,
-                                default: widget.data.nav.leftPage,
-                                placeHolder: widget.data.nav.leftPage,
-                                callback: (text) => {
-                                    widget.data.nav.leftPage = text;
-                                    widget.refreshAll();
-                                }
-                            })
+                            `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景顏色</h3>
+                            <div class="my-3 border border-white"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input type="color" value="${widget.data.nav.background}" onchange="${gvc.event((e) => {
+                                widget.data.nav.background = e.value;
+                                widget.refreshAll();
+                            })}">
+                            </div>    
+                        `
                         ]);
                     }
                 };
@@ -939,6 +946,9 @@ Plugin.create(import.meta.url, (glitter) => {
                 })(voucherStatus || (voucherStatus = {}));
                 return {
                     view: () => {
+                        function useVoucher(id) {
+                            appConfig().changePage(gvc, "user_couponDetail");
+                        }
                         gvc.addStyle(`
                             .unusedDate{
                                 color : #FF0000;
@@ -985,11 +995,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     margin-top:12px;
                                 "
                                 onclick="${gvc.event(() => {
-                                ClickEvent.trigger({
-                                    gvc,
-                                    widget,
-                                    clickEvent: widget.data
-                                });
+                                useVoucher(coupon.id);
                             })}">
                             <div
                                 class="d-flex flex-column align-items-center"
@@ -1110,6 +1116,666 @@ Plugin.create(import.meta.url, (glitter) => {
                             option: [],
                             hover: true
                         });
+                    }
+                };
+            },
+        },
+        voucherDetail: {
+            defaultData: {
+                coupon: {
+                    id: "0",
+                    vendor_name: "供應商名稱",
+                    vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
+                    name: "優惠卷名稱",
+                    config: {},
+                    title: "現折 10,000 元",
+                    subTitle: "滿 30,000 元",
+                    startTime: "2022.03.31 00:00",
+                    endTime: "2025.03.31 23:59",
+                    formatEndTime: "有效期限：2025.03.31",
+                    isUse: false,
+                    status: 0,
+                    content: "遠傳心生活 iPhone + 購物方案，全館任選滿 30000 元，現折 10000 元。",
+                    product: "適用於所有商品",
+                    payway: "適用於所有付款方式",
+                    logistics: "適用於所有物流方式",
+                },
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                return {
+                    view: () => {
+                        gvc.addStyle(`
+                            .normalDate{
+                                color : #858585;
+                            }
+                            .useBTNtext{                            
+                                border-radius: 4px;                               
+                                font-family: 'Noto Sans TC';
+                                font-style: normal;
+                                font-weight: 400;
+                                font-size: 12px;
+                                line-height: 20px;
+                                margin-right: 10px;
+                                width:48px;
+                                text-align: center;
+                                height: 20px;
+                                
+                            }
+                            .useBTNtext.on{
+                                background: #FE5541;
+                                color: #FFFFFF;
+                            }
+                            
+                            .detailTitle{
+                                font-family: 'Noto Sans TC';
+                                font-style: normal;
+                                font-weight: 700;
+                                font-size: 15px;
+                                color: #292929;
+                                margin-top:16px;
+                            }
+                            .detailText{
+                                white-space: normal;
+                                word-wrap: break-word;
+                                word-break: break-all;
+                                font-family: 'Noto Sans TC';
+                                font-style: normal;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #292929;
+                            }
+                        `);
+                        let coupon = widget.data.coupon;
+                        return `
+                        <div class="w-100">                            
+                            <div
+                                class="d-flex align-items-center border w-100"
+                                style="
+                                    padding:13px 16px;
+                                    height: 104px;
+                                    background: #FBF9F6;
+                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
+                                    border-radius: 20px;
+                                    margin-top:12px;
+                                    margin-bottom:16px;
+                                "
+                                onclick="${gvc.event(() => {
+                        })}">
+                            <div
+                                class="d-flex flex-column align-items-center"
+                                style="width: 60px;overflow: hidden;"
+                            >
+                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
+                                <span
+                                    style="
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 10px;
+                                        width: 60px;
+                                        line-height: 12px;
+                                        margin-top: 4px;
+                                        word-break: break-all;
+                                        overflow: hidden; 
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 1;
+                                        -webkit-box-orient: vertical;  
+                                        overflow: hidden;
+                                        text-align: center;
+                                    "
+                                    >${coupon.vendor_name}</span
+                                >
+                            </div>
+                            <div
+                                style="
+                                    width: 1px;
+                                    height: 64px;
+                                    background: #D6D6D6;
+                                    margin-left: 24px;
+                                "
+                            ></div>
+                            <div
+                                class="d-flex flex-column justify-content-center"
+                                style="margin-left: 20px;width: calc(100% - 170px);">
+                                <span       
+                                    style="
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 18px;
+                                        line-height: 26px;
+                                        font-feature-settings: 'pnum' on, 'lnum' on;
+                                        color: #FD6A58;
+                                    " 
+                                    >${coupon.title}</span
+                                >
+                                <span
+                                    style="
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        line-height: 17px;
+                                    "
+                                    >${coupon.subTitle}</span
+                                >
+                                <span class="normalDate"
+                                    style="
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 10px;
+                                        line-height: 14px;
+                                    "
+                                    >${coupon.formatEndTime}</span
+                                >
+                            </div>
+                            <div class="flex-fill" style=""></div>
+                            <div class="useBTNtext on ">使用</div>                               
+                        </div>
+                            <div class="detailTitle">
+                                優惠內容
+                            </div>
+                            <div class="detailText">
+                                ${coupon.content}
+                            </div>
+                            <div class="detailTitle">
+                                有效期限
+                            </div>
+                            <div class="detailText">
+                                ${coupon.startTime}~${coupon.endTime}
+                            </div>
+                            <div class="detailTitle">
+                                商品
+                            </div>
+                            <div class="detailText">
+                                ${coupon.product}
+                            </div>
+                            <div class="detailTitle">
+                                付款
+                            </div>
+                            <div class="detailText">
+                                ${coupon.payway}
+                            </div>
+                            <div class="detailTitle">
+                                物流
+                            </div>
+                            <div class="detailText">
+                                ${coupon.logistics}
+                            </div>
+                            <div class="detailTitle">
+                                注意事項
+                            </div>
+                            <div class="detailText">
+                                ※ 此優惠不可與其他優惠同時使用<br>
+                                ※ 訂單金額無法累計折扣<br>
+                                ※ 消費折扣金額僅以商品金額為限，不含運費等額外服務之費用<br>
+                                ※ 若需退貨導致消費金額未達滿額折扣之標準，退款時將會扣除折扣金額以及 1% 回饋金<br>
+                                ※ HOMEE 保有修改活動及最終解釋之權利，請以網站公告為準<br>
+                            </div>
+                        </div>
+                        `;
+                    },
+                    editor: () => {
+                        return ClickEvent.editer(gvc, widget, widget.data, {
+                            option: [],
+                            hover: true
+                        });
+                    }
+                };
+            },
+        },
+        edit: {
+            defaultData: {
+                topInset: 10,
+                nav: {
+                    title: "",
+                    leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
+                    leftPage: "",
+                    boxShadow: true,
+                    background: "#FFFFFF"
+                },
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                return {
+                    view: () => {
+                        var _a;
+                        gvc.addStyle(`
+        @font-face {
+            font-family: 'Noto Sans TC';
+            src: url(assets/Font/NotoSansTC-Bold.otf);
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Noto Sans TC';
+            src: url(assets/Font/NotoSansTC-Regular.otf);
+            font-weight: normal;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+     
+        }
+
+        main {
+            padding: 24px 35px 44px;
+         
+            font-family: 'Noto Sans TC';
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .homeBlack {
+            color: #292929;
+        }
+
+        .mySpaceCount {
+            width: 18px;
+            height: 18px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 15px;
+            text-align: center;
+  
+            /* HOMEE white */
+
+            border: 1px solid #FFFFFF;
+            border-radius: 8px;
+            /* HOMEE white */
+
+            color: #FFFFFF;
+
+        }
+
+        .indexTitle {
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+
+            /* HOMEE white */
+            color: #292929;
+        }
+        
+        .save{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 17px;
+            line-height: 25px;
+            /* identical to box height */
+            
+            text-align: center;
+            
+            /* HOMEE red */
+            
+            color: #FD6A58;
+        }
+        .changePhoto{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 20px;
+            font-feature-settings: 'pnum' on, 'lnum' on;
+            
+            /* HOMEE red */
+            
+            color: #FD6A58;
+            
+            margin-top : 8px;
+        }
+        .acc-title{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 35px;
+            color: #292929;
+            margin-bottom : 18px;
+        }
+        `);
+                        gvc.addStyle(`
+        html{
+            overflow-y : auto;
+            box-sizing: border-box;
+        }
+        main{
+            width:100%;
+
+        }
+        .addr-add{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+     
+            
+            
+            /* HOMEE red */
+            
+            color: #FD6A58;
+        }
+        .addr-edit{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+            color: #FD6A58;
+            margin-right : 12px;
+        }
+        .addr-del{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+            color: #858585;
+           
+        }
+    `);
+                        const sharedView = new SharedView(gvc);
+                        let viewModel = new ViewModel(gvc);
+                        let dialog = new Dialog(gvc);
+                        let firstAddressData = {};
+                        let accountModel = [
+                            {
+                                left: "姓名",
+                                type: "name",
+                                name: "name",
+                                placehold: { last: glitter.share.userData.last_name, first: glitter.share.userData.first_name }
+                            },
+                            {
+                                left: "用戶名稱",
+                                type: "text",
+                                name: "userName",
+                                placehold: (_a = (glitter.share.userData.name)) !== null && _a !== void 0 ? _a : (glitter.share.userData.last_name + glitter.share.userData.first_name)
+                            },
+                            {
+                                left: "電子郵件",
+                                type: "email",
+                                name: "email",
+                                placehold: glitter.share.userData.email || ""
+                            },
+                            {
+                                left: "電話",
+                                type: "number",
+                                name: "phone",
+                                placehold: glitter.share.userData.phone || ""
+                            },
+                            {
+                                left: "密碼",
+                                type: "password",
+                                name: "password",
+                                check: false,
+                                placehold: ""
+                            },
+                            {
+                                visible: false,
+                                left: "新密碼",
+                                type: "password",
+                                name: "newPassword",
+                                placehold: ""
+                            },
+                            {
+                                visible: false,
+                                left: "再次輸入",
+                                type: "password",
+                                name: "confirmPassword",
+                                placehold: ""
+                            }
+                        ];
+                        let photoFile = undefined;
+                        let b64 = undefined;
+                        let resetPassword = false;
+                        let addressModel = [];
+                        function saveData() {
+                        }
+                        function dataURLtoFile(dataurl, filename) {
+                            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                            while (n--) {
+                                u8arr[n] = bstr.charCodeAt(n);
+                            }
+                            return new File([u8arr], filename, { type: mime });
+                        }
+                        function deleteFirstAddress() {
+                            if (confirm("確定刪除?")) {
+                                glitter.runJsInterFace("deleteAddress", {}, (response) => {
+                                    firstAddressData = {};
+                                    gvc.notifyDataChange('mainView');
+                                }, {
+                                    webFunction: () => {
+                                        return { result: "OK" };
+                                    }
+                                });
+                            }
+                        }
+                        return gvc.map([
+                            `
+                            ${sharedView.navigationBar({
+                                title: '我的帳號',
+                                leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                    if (glitter.getUrlParameter('navagation') == "true") {
+                                        glitter.runJsInterFace("dismiss", {}, () => { });
+                                    }
+                                    else {
+                                        glitter.goBack();
+                                    }
+                                })}">`,
+                                rightIcon: `<div class="save" onclick="${gvc.event(() => {
+                                    saveData();
+                                })}">儲存</div>`,
+                                boxShadow: widget.data.nav.boxShadow,
+                                background: widget.data.nav.background,
+                            })}
+                            `,
+                            `
+                            <main style="overflow-x: hidden;">                                   
+                                ${(() => {
+                                let funnel = new Funnel(gvc);
+                                return gvc.map([`
+                                        <input
+                                            type="file"
+                                            class="d-none"
+                                            id="${gvc.id("photo")}"
+                                            onchange="${gvc.event((e) => {
+                                        for (let i = 0; i < $(e).get(0).files.length; i++) {
+                                            let canvas = document.createElement('canvas');
+                                            let ctx = canvas.getContext('2d');
+                                            let file = $(e).get(0).files[i];
+                                            let img = new Image();
+                                            img.src = URL.createObjectURL(file);
+                                            img.onload = function () {
+                                                let width = img.width;
+                                                if (width > 200) {
+                                                    canvas.width = 200;
+                                                    canvas.height = img.height * 200 / img.width;
+                                                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                                    let f = $(e).get(0).files[i];
+                                                    let ran = funnel.randomString(3);
+                                                    const regex = new RegExp('[^.]+$');
+                                                    const extension = f.name.match(regex);
+                                                    let compressedImageURL = canvas.toDataURL(`image/${extension}`, 0.75);
+                                                    funnel.encodeFileBase64(f, (data) => {
+                                                        photoFile = {
+                                                            ran: ran,
+                                                            fullName: f.name,
+                                                            name: f.name.substring(0, extension.index - 1),
+                                                            ext: extension[0],
+                                                            data: dataURLtoFile(compressedImageURL, f.name),
+                                                        };
+                                                        b64 = compressedImageURL;
+                                                        $('#' + gvc.id('photoImage')).attr('src', b64);
+                                                    });
+                                                }
+                                            };
+                                        }
+                                    })}"
+                                        />`,
+                                    gvc.bindView({
+                                        bind: "photo",
+                                        view: () => {
+                                            return `
+                                                <div class="w-100 d-flex flex-column align-items-center">                            
+                                                    <img id="${gvc.id('photoImage')}" src="${(photoFile !== undefined) ? b64 : glitter.share.userData.photo}" style="width: 128px;height: 128px;border-radius: 50%"
+                                                    onclick="${gvc.event(() => {
+                                                $(`#${gvc.id("photo")}`).click();
+                                            })}">
+                                                    <div class="changePhoto" onclick="${gvc.event(() => {
+                                                $(`#${gvc.id("photo")}`).click();
+                                            })}">更換大頭貼</div>                                                      
+                                                </div>
+                                            `;
+                                        },
+                                        divCreate: {
+                                            class: `w-100 d-flex justify-content-center align-items-center`,
+                                            style: `margin-bottom : 40px;`
+                                        }
+                                    })]);
+                            })()}                        
+                                ${gvc.bindView({
+                                bind: "accountData",
+                                view: () => {
+                                    return `
+                                        <div class="w-100 d-flex flex-column">
+                                            <div class="acc-title">帳號資料</div>
+                                            ${gvc.map(accountModel.map((dd) => {
+                                        if (dd.name === 'password') {
+                                            return gvc.bindView({
+                                                bind: `${dd.name}-inputRow`,
+                                                view: () => {
+                                                    return `                            
+                                                            <div class="left" style="">${dd.left}</div>
+                                                            <div class="right" style="width: 78%;position: relative">
+                                                                <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e) => {
+                                                        dd.placehold = e.value;
+                                                    })}" value="${dd.placehold}">
+                                                                ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
+                                                        if (glitter.share.userData.pwd !== dd.placehold) {
+                                                            dialog.showInfo("密碼輸入錯誤!");
+                                                        }
+                                                        else {
+                                                            accountModel.map((d2) => {
+                                                                d2.visible = 'true';
+                                                            });
+                                                            dd.check = true;
+                                                            resetPassword = true;
+                                                            gvc.notifyDataChange('accountData');
+                                                        }
+                                                    })}">確認</div>    
+                                                            `}
+                                                                               
+                                            </div>                               
+                                            
+                                                            `;
+                                                },
+                                                divCreate: { style: ``, class: `d-flex align-items-center input-row` }
+                                            });
+                                        }
+                                        else {
+                                            if (dd.visible === false) {
+                                                return ``;
+                                            }
+                                            else {
+                                                return viewModel.inputRow(dd);
+                                            }
+                                        }
+                                    }))}
+                                        </div>`;
+                                },
+                                divCreate: {}
+                            })}
+                                ${gvc.bindView({
+                                bind: "firstAddress",
+                                view: () => {
+                                    if (firstAddressData === null || firstAddressData === void 0 ? void 0 : firstAddressData.address) {
+                                        let temp = firstAddressData.address;
+                                        let address = `${temp.city} ${temp.zipcode} ${temp.town} ${temp.address}`;
+                                        addressModel = [
+                                            {
+                                                left: "姓名",
+                                                type: "name",
+                                                name: "addressName",
+                                                placehold: {
+                                                    last: firstAddressData.last_name,
+                                                    first: firstAddressData.first_name
+                                                }
+                                            },
+                                            {
+                                                left: "電話",
+                                                type: "number",
+                                                name: "addressPhone",
+                                                placehold: firstAddressData.address_phone
+                                            },
+                                            {
+                                                left: "公司名稱",
+                                                type: "text",
+                                                name: "addressCompany",
+                                                placehold: firstAddressData.company
+                                            },
+                                            {
+                                                left: "地址",
+                                                type: "text",
+                                                name: "address",
+                                                placehold: address
+                                            }
+                                        ];
+                                    }
+                                    let returnData = ``;
+                                    addressModel.forEach((data) => {
+                                        returnData += viewModel.inputRow(data, "readonly");
+                                    });
+                                    let addBtn = ``;
+                                    if (!(firstAddressData === null || firstAddressData === void 0 ? void 0 : firstAddressData.address)) {
+                                        addBtn = `<div class="addr-add" onclick="${gvc.event(() => {
+                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {});
+                                        })}">新增</div>`;
+                                    }
+                                    else {
+                                        addBtn = `
+                                            <div class="d-flex">
+                                                <div class="addr-edit" onclick="${gvc.event(() => {
+                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, { address: firstAddressData });
+                                        })}">編輯</div>
+                                                <div class="addr-del" onclick="${gvc.event(() => {
+                                            deleteFirstAddress();
+                                        })}">刪除</div>
+                                            </div>`;
+                                    }
+                                    return `
+                                        <div class="w-100 d-flex flex-column d-none" style="margin-top:6px;">
+                                            <div class="w-100 acc-title d-flex justify-content-between align-items-center">
+                                                <div class="">首選地址</div>${addBtn}
+                                            </div>                                            
+                                            ${returnData}               
+                                        </div>`;
+                                }, divCreate: {}
+                            })}
+                            </main>
+                            `
+                        ]);
+                    },
+                    editor: () => {
+                        return ``;
                     }
                 };
             },

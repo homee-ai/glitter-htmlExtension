@@ -328,7 +328,6 @@ Plugin.create(import.meta.url, (glitter) => {
                     
                 `)
                 try {
-
                     if (!(window.parent as any).editerData) {
                         widget.data.voucherCardList = []
                         Checkout.getVoucher('Select', (data) => {
@@ -354,7 +353,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }
                             })
                             gvc.notifyDataChange('voucherCardList')
-                            console.log(JSON.stringify(data))
+
                         })
                     }
                 } catch (e) {
@@ -418,7 +417,24 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                 }
             },
-        }
+        },
+
+        empty: {
+            defaultData:{
+
+            },
+            render:(gvc, widget, setting, hoverID) => {
+                const data: { link: { img: string,code?:string }[] } = widget.data
+
+                return {
+                    view: ()=>{return ``},
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+
 
     }
 });

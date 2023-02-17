@@ -29,7 +29,7 @@ export class SharedView {
                         let shadow = (item.boxShadow) ? "box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.05);" : "";
                         return `
                     <nav class="bg-white w-100" style="position: fixed;z-index: 3;padding-top: ${topInset - 20}px;width: 100vw;">
-                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: #FFFFFF;${shadow} position:relative;">
+                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: ${item.background};${shadow} position:relative;">
                             <div class="me-auto p-0 d-flex align-items-center" style="">
                                 ${item.leftIcon}
                             </div>

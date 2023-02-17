@@ -347,7 +347,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 };
                             });
                             gvc.notifyDataChange('voucherCardList');
-                            console.log(JSON.stringify(data));
                         });
                     }
                 }
@@ -404,6 +403,18 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                 };
             },
-        }
+        },
+        empty: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                const data = widget.data;
+                return {
+                    view: () => { return ``; },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
     };
 });

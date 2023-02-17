@@ -1,7 +1,7 @@
 import {GVC} from "../glitterBundle/GVController";
 
 export class SharedView {
-    public navigationBar: (item: { title: string; leftIcon: string; rightIcon: string , boxShadow?:true}) => string;
+    public navigationBar: (item: { title: string; leftIcon: string; rightIcon: string , boxShadow?:true , background?:"#FFFFFF"}) => string;
     public biggerTitle: (item: { title: string; leftIcon: string; rightIcon: string }) => string;
 
     constructor(gvc: GVC) {
@@ -26,7 +26,7 @@ export class SharedView {
                 return {data: 20}
             }
         })
-        this.navigationBar = (item: { title: string, leftIcon: string, rightIcon: string , boxShadow?:true}) => {
+        this.navigationBar = (item: { title: string, leftIcon: string, rightIcon: string , boxShadow?:true ,background?:"#FFFFFF"}) => {
             return gvc.map([
                 gvc.bindView({
                     bind: `nav`,
@@ -34,7 +34,7 @@ export class SharedView {
                         let shadow = (item.boxShadow) ? "box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.05);" : ""
                         return `
                     <nav class="bg-white w-100" style="position: fixed;z-index: 3;padding-top: ${topInset - 20}px;width: 100vw;">
-                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: #FFFFFF;${shadow} position:relative;">
+                        <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: ${item.background};${shadow} position:relative;">
                             <div class="me-auto p-0 d-flex align-items-center" style="">
                                 ${item.leftIcon}
                             </div>

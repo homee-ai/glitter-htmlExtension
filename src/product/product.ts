@@ -72,7 +72,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 return {
                     view: ()=>{
                         return sharedView.navigationBar({
-                            title:"購物車",
+                            title:"",
                             leftIcon : `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
                             })}">`,
                             rightIcon : `<img class="" src="${widget.data.nav.rightIcon}" style="width: 24px;height: 24px" alt="" onclick="${gvc.event(() => {

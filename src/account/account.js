@@ -2,6 +2,7 @@
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Api } from "../homee/api/homee-api.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
+import { appConfig } from "../config.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -44,7 +45,9 @@ Plugin.create(import.meta.url, (glitter) => {
                     password: ''
                 },
                 event: {
-                    forgotPW: ""
+                    forgotPW: {},
+                    login: {},
+                    register: {}
                 },
                 background: new URL('../img/component/login/login_page.json', import.meta.url),
             },
@@ -208,7 +211,36 @@ Plugin.create(import.meta.url, (glitter) => {
                                 glitter.runJsInterFace("signInOrRegister", {
                                     account: widget.data.accountData.account,
                                     password: widget.data.accountData.password
-                                }, function (response) { });
+                                }, function (response) {
+                                    if (response.data) {
+                                        appConfig().changePage(gvc, "user_setting", widget.data.accountData);
+                                    }
+                                    else {
+                                        appConfig().changePage(gvc, "register", widget.data.accountData);
+                                    }
+                                }, {
+                                    webFunction: () => {
+                                        return { data: false };
+                                    }
+                                });
+                                glitter.runJsInterFace("signInOrRegister", {
+                                    account: widget.data.accountData.account,
+                                    password: widget.data.accountData.password
+                                }, function (response) {
+                                    if (response.accountData) {
+                                        ClickEvent.trigger({
+                                            gvc,
+                                            widget,
+                                            clickEvent: widget.data.event.login
+                                        });
+                                    }
+                                    else {
+                                    }
+                                }, {
+                                    webFunction: () => {
+                                        return { data: true };
+                                    }
+                                });
                             }
                         }
                         return gvc.bindView({
@@ -223,7 +255,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })}" style="width: 100%;height: 900px;position: absolute;transform: translateY(-350px);"  loop  autoplay></lottie-player>
                                 </div>
                                 <div class="loginBoard d-flex flex-column align-items-center">
-                                    <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="">
+                                    <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt=
+                                    "">
                                     <div class="loginInf d-flex flex-column align-items-center">
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -240,11 +273,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="loginRow w-100 d-flex" style="margin-top: 8px;padding-bottom: 0px;">
                     <!--                    todo sethome trans to changepage-->
                                             <div class="fogetPW ms-auto" onclick="${gvc.event(() => {
-                                    ClickEvent.trigger({
-                                        gvc,
-                                        widget,
-                                        clickEvent: widget.data.event.forgotPW
-                                    });
+                                    appConfig().changePage(gvc, "forgotPW");
                                 })}">忘記密碼？</div>
                                         </div>
                                         <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
@@ -296,7 +325,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
                                 });
                             })}"></i>
-                            </div>`
+                            </div>`,
+                            ClickEvent.editer(gvc, widget, widget.data.event.login)
                         ]);
                     }
                 };
@@ -471,23 +501,21 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                    `);
                 function checkRegister() {
-                    if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.account === '' || widget.data.name.account === '') {
-                        glitter.runJsInterFace("needWrite", {}, () => {
-                        });
+                    if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.name === '') {
+                        console.log("test");
                     }
                     else {
-                        glitter.runJsInterFace("register", widget.data.loginData, () => {
-                        });
+                        console.log(widget.data.loginData);
                     }
                 }
-                gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
-                    gvc.notifyDataChange('mainView');
-                }, () => {
-                });
                 const $ = gvc.glitter.$;
                 var exists = widget.data.loginData.account == "";
                 return {
                     view: () => {
+                        gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
+                            gvc.notifyDataChange('mainView');
+                        }, () => {
+                        });
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             widget.data.topInset = response.data;
                             gvc.notifyDataChange('mainView');
@@ -583,7 +611,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             glitter.$(e).val(response.data);
                                             widget.data.loginData.birthDay = response.data;
                                         });
-                                    })}"   readonly>
+                                    })}"   >
                                                         </div>
                                                     </div>     
                                                     <div class="d-flex w-100">
@@ -629,152 +657,152 @@ Plugin.create(import.meta.url, (glitter) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Bold.otf);
-            font-weight: bold;
-        }
-
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Regular.otf);
-            font-weight: normal;
-        }
-        main{
-            position: relative;
-            height: 100vh;
-        }
-        .showGIF{
-            background-image: url("img/sample/login/BG.gif") ;
-            background-position: center 60%;
-            background-size: 300%;
-            height: 50%;
-        }
-        .arrow{
-            width: 24px;
-            height: 24px;
-            position: absolute;
-
-        }
-
-        .loginBoard{
-            position: absolute;
-            width: 100%;
-
-            left: 0;
-            bottom: 0;
-            z-index: 3;
-            /* HOMEE white */
-
-            background: #FFFFFF;
-
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 56px 56px 0 0;
-            padding-top: 48px;
-            padding-bottom: 48px;
-
-        }
-        .loginInf{
-            margin-top: 76px;
-            padding-bottom: 25px;
-
-        }
-        .loginRow{
-            width: 320px;
-            height: 32px;
-            padding-bottom: 11px;
-            margin-right: 18px;
-
-            border-bottom: 1px solid #FD6A58;
-        }
-        .loginRow input{
-
-            /* Noto Sans TC - Regular - 14 */
-            font-family: 'Noto Sans TC',serif;
-            font-style: normal;
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 150%;
-            /* identical to box height, or 21px */
-            margin-left: 16px;
-
-            /* HOMEE grey */
-
-            color: #292929;
-
-        }
-        .hint{
-            width: 360px;
-            height: 46px;
-            font-family: 'Noto Sans TC',serif;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 23px;
-            font-feature-settings: 'pnum' on, 'lnum' on;
-
-            /* Homee-Black */
-            color: #292929;
-            margin-bottom: 67px;
-            white-space:normal;
-            word-wrap:break-word;            
-            word-break:break-all;
-
-        }
-        .authRow{
-            width: 160px;
-            height: 40px;
-            padding-bottom: 11px;
-            margin-right: 18px;
-            font-size: 14px;
-
-            border-bottom: 1px solid #FD6A58;
-            padding-top: 8px;
-        }
-
-        .authBtn{
-            width: 160px;
-            height: 40px;
-
-            font-size: 18px;
-
-            background: #D6D6D6;
-            border-radius: 20px;
-
-        }
-        .authBtnOK{
-            background:#FD6A58
-        }
-
-        .loginBTN{
-            /* HOMEE red */
-            width: 100%;
-            height: 64px;
-
-            background: #FD6A58;
-            border-radius: 32px;
-
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 18px;
-            line-height: 26px;
-
-            /* HOMEE white */
-            color: #FFFFFF;
-            margin-top: 80px;
-
-        }
-        .helpText{
-            width:338px;
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 12px;
-            color: #FD6A58;
-        }
-       `);
+                @font-face {
+                    font-family: 'Noto Sans TC';
+                    src: url(assets/Font/NotoSansTC-Bold.otf);
+                    font-weight: bold;
+                }
+        
+                @font-face {
+                    font-family: 'Noto Sans TC';
+                    src: url(assets/Font/NotoSansTC-Regular.otf);
+                    font-weight: normal;
+                }
+                main{
+                    position: relative;
+                    height: 100vh;
+                }
+                .showGIF{
+                    background-image: url("img/sample/login/BG.gif") ;
+                    background-position: center 60%;
+                    background-size: 300%;
+                    height: 50%;
+                }
+                .arrow{
+                    width: 24px;
+                    height: 24px;
+                    position: absolute;        
+                }
+        
+                .loginBoard{
+                    position: absolute;
+                    width: 100%;
+        
+                    left: 0;
+                    bottom: 0;
+                    z-index: 3;
+                    /* HOMEE white */
+        
+                    background: #FFFFFF;
+        
+                    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+                    border-radius: 56px 56px 0 0;
+                    padding-top: 48px;
+                    padding-bottom: 48px;
+        
+                }
+                .loginInf{
+                    margin-top: 76px;
+                    padding-bottom: 25px;
+        
+                }
+                .loginRow{
+                    width: 320px;
+                    height: 32px;
+                    padding-bottom: 11px;
+                    margin-right: 18px;
+        
+                    border-bottom: 1px solid #FD6A58;
+                }
+                .loginRow input{
+        
+                    /* Noto Sans TC - Regular - 14 */
+                    font-family: 'Noto Sans TC',serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 150%;
+                    /* identical to box height, or 21px */
+                    margin-left: 16px;
+        
+                    /* HOMEE grey */
+        
+                    color: #292929;
+        
+                }
+                .hint{
+                    width: 360px;
+                    height: 46px;
+                    font-family: 'Noto Sans TC',serif;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 23px;
+                    font-feature-settings: 'pnum' on, 'lnum' on;
+        
+                    /* Homee-Black */
+                    color: #292929;
+                    margin-bottom: 67px;
+                    white-space:normal;
+                    word-wrap:break-word;            
+                    word-break:break-all;
+        
+                }
+                .authRow{
+                    width: 160px;
+                    height: 40px;
+                    padding-bottom: 11px;
+                    margin-right: 18px;
+                    font-size: 14px;
+        
+                    border-bottom: 1px solid #FD6A58;
+                    padding-top: 8px;
+                }
+        
+                .authBtn{
+                    width: 160px;
+                    height: 40px;
+        
+                    font-size: 18px;
+        
+                    background: #D6D6D6;
+                    border-radius: 20px;
+        
+                }
+                .authBtnOK{
+                    background:#FD6A58
+                }
+        
+                .loginBTN{
+                    /* HOMEE red */
+                    width: 100%;
+                    height: 64px;
+        
+                    background: #FD6A58;
+                    border-radius: 32px;
+        
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 26px;
+        
+                    /* HOMEE white */
+                    color: #FFFFFF;
+                    margin-top: 80px;
+        
+                }
+                .helpText{
+                    width:338px;
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    color: #FD6A58;
+                }
+               `);
                 function checkRegister() {
+                    appConfig().changePage(gvc, "newPW");
                 }
                 glitter.runJsInterFace("getTopInset", {}, (response) => {
                     if (widget.data.topInset == response.data) {
@@ -839,6 +867,220 @@ Plugin.create(import.meta.url, (glitter) => {
                                         </div>
                                     </main>
                                     `;
+                                }
+                                else {
+                                    return ``;
+                                }
+                            },
+                            divCreate: { class: ``, style: `` }
+                        });
+                    },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
+        newPW: {
+            defaultData: {
+                topInset: undefined,
+                background: new URL('../img/component/login/login_page.json', import.meta.url),
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
+                    gvc.notifyDataChange('mainView');
+                }, () => {
+                });
+                gvc.addStyle(`
+                @font-face {
+                    font-family: 'Noto Sans TC';
+                    src: url(assets/Font/NotoSansTC-Bold.otf);
+                    font-weight: bold;
+                }
+        
+                @font-face {
+                    font-family: 'Noto Sans TC';
+                    src: url(assets/Font/NotoSansTC-Regular.otf);
+                    font-weight: normal;
+                }
+                main{
+                    position: relative;
+                    height: 100vh;
+                }
+                .showGIF{
+                    background-image: url("img/sample/login/BG.gif") ;
+                    background-position: center 60%;
+                    background-size: 300%;
+                    height: 50%;
+                }
+                .arrow{
+                    width: 24px;
+                    height: 24px;
+                    position: absolute;
+        
+                }
+        
+                .loginBoard{
+                    position: absolute;
+                    width: 100%;
+        
+                    left: 0;
+                    bottom: 0;
+                    z-index: 3;
+                    /* HOMEE white */
+        
+                    background: #FFFFFF;
+        
+                    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+                    border-radius: 56px 56px 0 0;
+                    padding-top: 48px;
+                    padding-bottom: 48px;
+        
+                }
+                .loginInf{
+                    margin-top: 76px;
+                    padding-bottom: 25px;
+        
+                }
+                .loginRow{
+                    width: 320px;
+                    height: 32px;
+                    padding-bottom: 11px;
+                    margin-right: 18px;
+        
+                    border-bottom: 1px solid #FD6A58;
+                }
+                .loginRow input{
+        
+                    /* Noto Sans TC - Regular - 14 */
+                    font-family: 'Noto Sans TC',serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 150%;
+                    /* identical to box height, or 21px */
+                    margin-left: 16px;
+        
+                    /* HOMEE grey */
+        
+                    color: #292929;
+        
+                }
+                .loginRow img{
+        
+                }
+                .hint{
+                    width: 360px;
+                    height: 46px;
+                    font-family: 'Noto Sans TC',serif;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 23px;
+                    font-feature-settings: 'pnum' on, 'lnum' on;
+        
+                    /* Homee-Black */
+                    color: #292929;
+                    margin-bottom: 67px;
+        
+                }
+                .authRow{
+                    width: 160px;
+                    height: 40px;
+                    padding-bottom: 11px;
+                    margin-right: 18px;
+                    font-size: 14px;
+        
+                    border-bottom: 1px solid #FD6A58;
+                    padding-top: 8px;
+                }
+        
+                .authBtn{
+                    width: 160px;
+                    height: 40px;
+        
+                    font-size: 18px;
+        
+                    background: #D6D6D6;
+                    border-radius: 20px;
+        
+                }
+                .authBtnOK{
+                    background:#FD6A58
+                }
+        
+                .loginBTN{
+                    /* HOMEE red */
+                    width: 100%;
+                    height: 64px;
+        
+                    background: #FD6A58;
+                    border-radius: 32px;
+        
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 26px;
+        
+                    /* HOMEE white */
+                    color: #FFFFFF;
+                    margin-top: 192px;
+        
+                }
+               `);
+                glitter.runJsInterFace("getTopInset", {}, (response) => {
+                    if (widget.data.topInset != response.data) {
+                        widget.data.topInset = response.data;
+                        gvc.notifyDataChange('mainView');
+                    }
+                }, {
+                    webFunction: () => {
+                        return { data: 10 };
+                    }
+                });
+                function resetPW() {
+                    appConfig().changePage(gvc, "forgotPW");
+                }
+                return {
+                    view: () => {
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                if (widget.data.topInset !== undefined) {
+                                    return `
+                                    <main>
+                                        <div class="w-100" style="position: absolute;">
+                                            <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
+                                        glitter.runJsInterFace("dismiss", {}, () => {
+                                        });
+                                    })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
+                                            <img class="arrow" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="top: ${widget.data.topInset}" alt="">
+                                        </div>
+                                        <div class="loginBoard d-flex flex-column align-items-center">
+                                            <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="LOGO">
+                                            <div class="loginInf d-flex flex-column align-items-center">
+                                                <div class="loginRow d-flex">
+                                                    <img src="${new URL('../img/component/login/password.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
+                                                    <input type="password" class="w-100 border-0" placeholder="新密碼">
+                                                </div>
+                    
+                                                <div class="loginRow d-flex" style="margin-top: 40px">
+                                                    <img src="${new URL('../img/component/login/password.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
+                                                    <input type="password" class="w-100 border-0" placeholder="重新輸入新密碼">
+                                                </div>
+                    
+                                            <!--todo click-->
+                                                <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
+                                        resetPW();
+                                    })}">
+                                                    確認
+                                                </div>
+                                            </div>
+                    
+                                        </div>
+                                    </main>
+                            `;
                                 }
                                 else {
                                     return ``;

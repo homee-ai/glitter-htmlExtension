@@ -292,7 +292,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="d-flex flex-column align-items-center" style="width: ${width}%;height: 56px; ${style}" onclick="${gvc.event(() => {
                                         item.click();
                                     })}">
-                                        <div style="position: relative;width: 26px;height: 24px;">
+                                        <div style="background: #f8f3ed position: relative;width: 26px;height: 24px;">
                                             ${(() => {
                                         if (item.count != 0) {
                                             return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`;
@@ -311,8 +311,8 @@ Plugin.create(import.meta.url, (glitter) => {
                    
                             `;
                                 }));
-                            }, divCreate: { class: `d-flex justify-content-between`,
-                                style: `padding: 0px 20px;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;` }
+                            }, divCreate: { class: `d-flex justify-content-between `,
+                                style: `padding: 28px 20px;border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;` }
                         });
                     },
                     editor: () => {
@@ -410,6 +410,18 @@ Plugin.create(import.meta.url, (glitter) => {
                         </footer>
                     `;
                     },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
+        empty: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                const data = widget.data;
+                return {
+                    view: () => { return ``; },
                     editor: () => {
                         return ``;
                     }
