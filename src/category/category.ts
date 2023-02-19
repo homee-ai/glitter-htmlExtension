@@ -2,42 +2,11 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {SharedView} from "../homee/shareView.js";
-import {Api} from "../homee/api/homee-api.js";
-import {LegacyPage} from "../homee/legacy/interface";
+import {appConfig} from "../config.js";
+import {Dialog} from "../homee/legacy/widget/dialog.js";
+import {Category, ProductData} from "../api/category.js";
 
 Plugin.create(import.meta.url,(glitter)=>{
-    const api={
-        upload:(photoFile:any,callback:(link:string)=>void)=>{
-            glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
-            $.ajax({
-                url: Api.serverURL+'/api/v1/scene/getSignedUrl',
-                type: 'post',
-                data: JSON.stringify({ file_name:`${new Date().getTime()}`}),
-                contentType: 'application/json; charset=utf-8',
-                headers: { Authorization: glitter.getCookieByName('token') },
-                success: (data1: { url: string; fullUrl: string }) => {
-                    $.ajax({
-                        url: data1.url,
-                        type: 'put',
-                        data: photoFile,
-                        processData: false,
-                        crossDomain: true,
-                        success: (data2: any) => {
-                            glitter.share.dialog.dataLoading({visible:false})
-                            glitter.share.dialog.successMessage({text:"上傳成功"})
-                            callback(data1.fullUrl)
-                        },
-                        error: (err: any) => {
-                            glitter.share.dialog.successMessage({text:"上傳失敗"})
-                        },
-                    });
-                },
-                error: (err: any) => {
-                    glitter.share.dialog.successMessage({text:"上傳失敗"})
-                },
-            });
-        }
-    }
     return {
         nav: {
             defaultData:{
@@ -326,7 +295,7 @@ color: #1E1E1E;">${data.title}</div>
                                     single:true,
                                     accept:'image/*',
                                     callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file,(link)=>{
+                                        appConfig().uploadImage(data[0].file,(link)=>{
                                             widget.data.dataList[index].img=link;
                                             widget.refreshAll()
                                         })
@@ -496,7 +465,277 @@ color: #1E1E1E;">${data.title}</div>
 
                 }
             }
+        },
+        subCategory:{
+            defaultData:{},
+            render:(gvc, widget, setting, hoverID)=>{
+                return {
+                    view:()=>{
+                        gvc.addStyle(`
+     
+        nav{
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        main {
+            padding: 24px 35px 44px;
+      
+            font-family: 'Noto Sans TC';
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .sortRawText{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 19px;
+            /* identical to box height */
+            
+            display: flex;
+            align-items: center;
+            text-align: center;
+            
+            /* HOMEE dark grey */
+            
+            color: #858585;
+
+        }
+        a{
+        
+        }
+
+        `)
+                        const gBundle=(gvc.parameter.pageConfig?.obj.data.object && gvc.parameter.pageConfig?.obj.data) ?? {"title":"本週新品","object":{"link":"https://mitblog.pixnet.net/blog/post/37708222","name":"本週新品","value":"gid://shopify/Collection/435249512748","clickEvent":{"src":"$homee/homee/event.js","route":"category"},"selectPage":{"tag":"product_show","name":"產品展示頁面","group":"產品頁"},"subCategory":[{"name":"銀標福利品","value":"gid://shopify/Collection/435260719404"},{"name":"布沙發 ( 更多商品即將更新 )","value":"gid://shopify/Collection/432946676012"}]},"category":"sub_category_id","index":0}
+                        const viewModel ={
+                            select:0,
+                            setSubCategoryRow:(category: string) => {
+                            gvc.addStyle(`
+                .subcateTitle{
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 20px;
+                    display: flex;
+                    align-items: center;
+                    text-align: center;
+                    /* HOMEE dark grey */
+                    margin-left: 16px;
+                    color: #858585;
+                }
+                .selectTitle{
+                    /* HOMEE black */
+                    color: #292929;
+                    font-weight: 700;
+                }
+            `)
+                             return  gvc.bindView({
+                                    bind: "subCategoryRow",
+                                    view: () => {
+                                        return gvc.map([{name:"全部",id:gBundle.object.id}].concat(gBundle.object.subCategory ?? []).map((data: any, index: number)=>{
+                                            return `
+                            <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle`:``}" style="" onclick="${gvc.event(() => {
+                                                gvc.notifyDataChange('cardGroup')
+                                                gvc.notifyDataChange('subCategoryRow')
+                                            })}">
+                                ${data["name"]}
+                                
+                            </div>
+                                `
+                                        }))
+                                    }, divCreate: {class: `d-flex`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;`}
+                                })
+
+                        },
+                            loading:true
+                        }
+
+                        let sortSelect = 0;
+                        //todo get title 父標題
+                        let title = gBundle.title ?? "分類頁";
+                        let sortPriceOrder = -1;
+                        let origData:ProductData[] = [];
+                        glitter.share.productData = {};
+                        let sortRow = [
+                            {
+                                text: '綜合', img: '', click: (e:HTMLElement) => {
+                                    //reset orderPrice
+                                    sortPriceOrder = -1;
+                                    sortRow[1].img = glitter.share.getLink('../img/sample/category/sort.svg');
+                                    sortSelect = 0;
+                                    if (origData.length != 0){
+                                        glitter.share.productData = origData;
+                                    }
+                                    gvc.notifyDataChange('sortBar');
+                                    gvc.notifyDataChange('cardGroup');
+                                }
+                            },
+                            // {
+                            //     text: '銷量', img: '', click: (e:HTMLElement) => {
+                            //         if (!origData){
+                            //             origData = glitter.share.productData;
+                            //         }
+                            //
+                            //         //reset orderPrice
+                            //         sortPriceOrder = -1;
+                            //         sortRow[2].img = 'img/sample/category/sort.svg';
+                            //
+                            //         sortSelect = 1;
+                            //         // todo sort by 銷量 目前沒有
+                            //         gvc.notifyDataChange('sortBar');
+                            //         gvc.notifyDataChange('cardGroup');
+                            //     }
+                            // },
+                            (()=>{
+                                const map={
+                                    text: '價格', img: new URL('../img/sample/category/sort.svg',import.meta.url).href, click: (e:HTMLElement) => {
+                                        if (!origData){
+                                            origData = glitter.share.productData;
+                                        }
+                                        //
+                                        sortSelect = 1;
+                                        sortPriceOrder *= -1;
+                                        if (sortPriceOrder==1){
+                                            map.img = new URL('../img/sample/category/sortSmaller.svg',import.meta.url).href ;
+                                        }else if (sortPriceOrder){
+                                            map.img = new URL('../img/sample/category/sortHigher.svg',import.meta.url).href ;
+                                        }
+                                        glitter.share.productData.sort((a:ProductData, b:ProductData)=>(a.sale_price - b.sale_price) * sortPriceOrder);
+                                        gvc.notifyDataChange('sortBar');
+                                        gvc.notifyDataChange('cardGroup');
+                                    }
+                                }
+                                return map
+                            })()
+                        ]
+                        return (()=>{
+                            let topInset: number = 0
+                            let bottomInset: number = 0
+                            glitter.runJsInterFace("getTopInset", {}, (response) => {
+                                topInset=response.data
+                                gvc.notifyDataChange(['nav','ddd'])
+                            }, {
+                                webFunction: () => {
+                                    return {data: 0}
+                                }
+                            })
+                            glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                                if (bottomInset != response.data){
+                                    bottomInset=response.data;
+                                    gvc.notifyDataChange("footer")
+                                }
+                            }, {
+                                webFunction: () => {
+                                    return {data: 20}
+                                }
+                            })
+
+                            return gvc.bindView({
+                                bind: `mainView`,
+                                view: () => {
+                                    if (topInset !== undefined && bottomInset !== undefined) {
+                                        return /* HTML */ `
+                        <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
+                            <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 16px; background: #FFFFFF;position:relative;">
+                                <div class="me-auto p-0 d-flex align-items-center" style="">
+                                    <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676803803897" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                            //todo 回哪裡
+                                            glitter.goBack()
+                                        })}">
+                                </div>
+                                <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="color: #292929;;position: absolute;top: 50%;   font-family: 'Noto Sans TC';font-style: normal;font-size: 16px;font-weight: 700;">
+                                    ${title}
+                                </div>
+                         
+                            </div>
+                            <banner style="">
+                               ${((gBundle.object.subCategory ?? []).length>0) ? viewModel.setSubCategoryRow(gBundle.parent_category_id):``}
+    <!--                            todo 之後如果有需要要加東西-->
+                                ${gvc.bindView({
+                                            bind: 'sortBar',
+                                            view: () => {
+                                                let returnHTML = ``;
+                                                sortRow.forEach((element, index: number) => {
+                                                    let style = (index == sortSelect) ? "color: #292929;font-weight: 500;" : ""
+                                                    returnHTML += `
+                                    <div class="sortRawText" style="padding: 0 24px;${style}" onclick="${gvc.event((e)=>{
+                                                        element.click(e);
+                                                    })}">
+                                        ${element.text}
+                                        ${gvc.bindView({
+                                                        bind: "",
+                                                        view: () => {
+                                                            if (element.img) {
+                                                                return `<img src="${element.img}" style="height: 16px;width: 16px;">`
+                                                            }
+                                                            return ``
+                                                        }
+                                                    })}
+                                    </div>
+                                    `
+                                                    //直槓
+                                                    if (index != sortRow.length - 1) {
+                                                        returnHTML += `
+                                                <div style="background: #858585; height: 5px;width: 1px;"></div>
+                                            `
+                                                    }
+                                                })
+                                                return returnHTML
+                                            },
+                                            divCreate: {style: `margin-top:${(((gBundle.object.subCategory ?? []).length>0) ? 24:0)}px;padding-bottom:9px;`, class: `d-flex align-items-center`}
+                                        })}
+                            </banner>       
+                        </nav>
+                        <main style="background: white;padding-top: ${topInset - 20 + 150}px;padding-left: 23px;padding-right: 23px;">
+                            ${gvc.bindView({
+                                            bind: "cardGroup",
+                                            view: () => {
+                                                if (viewModel.loading) {
+                                                    let returnHTML = ``;
+
+                                                    // glitter.share.productData.forEach((data: ProductData, index: number) => {
+                                                    //     returnHTML += viewModel.setProductCard(data, index);
+                                                    //
+                                                    // })
+                                                    return returnHTML
+                                                } else {
+                                                    return    `<div class="w-100">
+            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        </div>`
+                                                }
+
+                                            },
+                                            divCreate: {style: ``, class: `d-flex flex-wrap`}
+                                        })}
+                        </main>                         
+                        `
+                                    } else {
+                                        return `
+                            
+                        `
+                                    }
+
+                                }, divCreate: {class: ``, style: `min-height : 100vh;padding-bottom:100px;`},
+                                onCreate: () => {
+                                    // if (!glitter.share.subCategoryVM.productLoading){
+                                    //     categoryAPI.getCategoryData("sub_category_id" , glitter.share.subCategoryVM.parameter_value , (response)=>{
+                                    //         glitter.share.productData = response
+                                    //         glitter.share.subCategoryVM.productLoading = true;
+                                    //         alert(JSON.stringify(response))
+                                    //         gvc.notifyDataChange('cardGroup')
+                                    //     });
+                                    // }
+
+                                }
+                            })
+                        })()
+                    },
+                    editor:()=>{
+                        return ``
+                    }
+                }
+            }
         }
     }
 });
-

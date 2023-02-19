@@ -5,7 +5,7 @@ import {SharedView} from "../widget/sharedView.js"
 
 
 init((gvc, glitter, gBundle) => {
-    
+
     gvc.addStyle(`
         @font-face {
             font-family: 'Noto Sans TC';
@@ -291,7 +291,6 @@ init((gvc, glitter, gBundle) => {
                                     
                                     let serviceGroup = ``;
                                     serviceList.service.forEach((service)=>{
-                                        
                                         serviceGroup += viewModel.ourServiceRow(service.text , "" , service.onclick);
                                     })
                                     return `

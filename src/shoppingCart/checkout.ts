@@ -243,18 +243,19 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let subTotal = 0;
                 let total = 0;
 
-                let refreshTimer = 0
+                let refreshTimer :any= 0
 
                 function refreshCart() {
                     initial()
                     gvc.notifyDataChange(['cartIn', 'cartSubtotal', 'cartOut'])
-                    glitter.runJsInterFace("storeCartInfo", {
-                        data: JSON.stringify({cartData: cartData})
-                    }, () => {
+                    Checkout.setCart({
+                        cartData: cartData, callback: (response) => {
+
+                        }
                     })
                     cartSubTotalVM.loading = true
                     clearInterval(refreshTimer)
-                    setTimeout(() => {
+                    refreshTimer=setTimeout(() => {
                         let skuAmount: { sku_id: string, amount: number }[] = []
                         widget.data.cartItem.map((d3: any) => {
                             d3.item.map((dd: any) => {
@@ -277,7 +278,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     cartSubTotalVM.loading = false
                                     total = cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount
                                 }
-
                             }
                         })
 
@@ -296,17 +296,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let cartData: any = undefined
                 const dialog = new Dialog(gvc);
                 dialog.dataLoading(true)
-                glitter.runJsInterFace("getCartData", {}, (response) => {
-                    console.log(response)
-                    cartData = tryReturn(() => {
-                        return JSON.parse(response.cartData).cartData
-                    }, {})
+                Checkout.getCart((cdata) => {
+                    cartData = cdata
                     let needGetInfoSku: string[] = []
                     Object.keys(cartData).map((dd: any) => {
                         const obj: any = cartData[dd]
                         return {
-                            category: dd,
-                            category_id: dd,
                             item:
                                 Object.keys(obj).map((d4) => {
                                     if (needGetInfoSku.indexOf(d4) === -1) {
@@ -339,8 +334,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                     name: "error",
                                                     img: ``,
                                                     kind: "error",
-                                                    price: oc.price,
-                                                    subtotal: oc.price,
+                                                    price: oc.price ?? 0,
+                                                    subtotal: oc.price ?? 0,
                                                     deleteEvent: () => {
                                                         obj[d4] = undefined
                                                     },
@@ -392,40 +387,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             refreshCart()
                         }
                     })
-
-                }, {
-                    webFunction(data: any, callback: (data: any) => void): any {
-                        return {
-                            cartData: JSON.stringify(
-                                {
-                                    cartData: {
-                                        "product": {
-                                            "A010001-1-1-1": {
-                                                "isSelect": true,
-                                                "count": 1,
-                                                "price": 6900,
-                                                "sku": "A010001-1-1-1"
-                                            },
-                                            "A010085-1": {
-                                                "isSelect": false,
-                                                "count": 1,
-                                                "price": 7900,
-                                                "sku": "A010085-1"
-                                            }
-                                        },
-                                        "2023-02-10 08:05": {
-                                            "A010001-1-1-1": {
-                                                "isSelect": true,
-                                                "count": 3,
-                                                "price": 6900,
-                                                "sku": "A010001-1-1-1"
-                                            }
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
                 })
 
                 function initial() {
@@ -455,13 +416,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 //todo nextstep?
                 function checkOut() {
-                    refreshCart();
-                    dialog.dataLoading(true)
-                    glitter.runJsInterFace("toCheckOutPage", {}, () => {
-                        widget.data.cartItem = []
-                        dialog.dataLoading(false)
-                        widget.refreshComponent()
-                    })
+                    dialog.showInfo("金流開發中...")
+                    // refreshCart();
+                    // dialog.dataLoading(true)
+                    // glitter.runJsInterFace("toCheckOutPage", {}, () => {
+                    //     widget.data.cartItem = []
+                    //     dialog.dataLoading(false)
+                    //     widget.refreshComponent()
+                    // })
                 }
 
                 return {
@@ -738,10 +700,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                     code,
                                                     callback: (result: any) => {
                                                         dialog.dataLoading(false)
-                                                        if(!result){
+                                                        if (!result) {
                                                             dialog.showInfo("無法使用此優惠券!")
                                                         }
-                                                    refreshCart()
+                                                        refreshCart()
                                                     }
                                                 })
                                             }
@@ -752,6 +714,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         if (cartSubTotalVM.data) {
                                             return gvc.map(cartSubTotalVM.data.voucherArray.map((dd) => {
                                                 return `<div class="d-flex w-100 align-items-center" style="padding-left: 12px;padding-right: 12px;margin-top: 12px;margin-bottom: 12px;">
+                                      
                                         <span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 400;
@@ -761,7 +724,6 @@ text-align: left;
 word-break: break-all;
 white-space: normal;
 color: #1E1E1E;">${dd.name}</span>
-                                        <div class="flex-fill"></div>
                                         <span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
@@ -769,20 +731,34 @@ font-size: 15px;
 margin-left: 10px;
 line-height: 150%;
 color: #FE5541;
-" onclick="${gvc.event(()=>{
-    dialog.confirm("是否確認刪除優惠券?",(result)=>{
-        if(result){
-            dialog.dataLoading(true)
-            Checkout.deleteVoucher({
-                callback:(result)=>{
-                    dialog.dataLoading(false)
-                    widget.refreshComponent()
-                }
-            })
-        }
-    })
- 
+margin-right: 10px;
+" onclick="${gvc.event(() => {
+                                                    dialog.confirm("是否確認刪除優惠券?", (result) => {
+                                                        if (result) {
+                                                            dialog.dataLoading(true)
+                                                            Checkout.deleteVoucher({
+                                                                callback: (result) => {
+                                                                    dialog.dataLoading(false)
+                                                                    widget.refreshComponent()
+                                                                }
+                                                            })
+                                                        }
+                                                    })
+
                                                 })}">${(dd.code) ? "刪除" : ""}</span>
+<div class="flex-fill"></div>
+  <span class="" style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 150%;
+/* identical to box height, or 22px */
+
+text-align: right;
+
+/* HOMEE black */
+
+color: #1E1E1E;">${dd.discount}</span>
 </div>       `
                                             }))
                                         } else {
@@ -817,7 +793,6 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                     <div class="d-flex" style="position:fixed;left:0;bottom:106px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
                                         <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
-
                                         checkOut();
                                     })}">結帳</div>
                                     </div>

@@ -1,6 +1,7 @@
 'use strict';
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
+import {appConfig} from "../config.js";
 Plugin.create(import.meta.url,(glitter)=>{
     function escape (text: string){
         return text.replace(/&/g, '&').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, "'");
@@ -103,7 +104,7 @@ ${(() => {
                                 single:true,
                                 accept:'image/*',
                                 callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                    glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                    appConfig().uploadImage(data[0].file,(link:string)=>{
                                         widget.data.link=link;
                                         widget.refreshAll!()
                                     })

@@ -1,3 +1,4 @@
+import { Glitter } from '../Glitter.js';
 export class HtmlGenerate {
     constructor(setting, hover = []) {
         this.setting = setting;
@@ -19,8 +20,13 @@ export class HtmlGenerate {
                 dd.refreshAllParameter.view2();
             };
             dd.refreshComponent = () => {
-                dd.refreshComponentParameter.view1();
-                dd.refreshComponentParameter.view2();
+                try {
+                    dd.refreshComponentParameter.view1();
+                    dd.refreshComponentParameter.view2();
+                }
+                catch (e) {
+                    console.log(`${e.message}<br>${e.stack}<br>${e.line}`);
+                }
             };
             return dd;
         });
@@ -125,7 +131,8 @@ export class HtmlGenerate {
             refreshAll: () => {
             },
             setting: setting,
-            deleteEvent: () => { }
+            deleteEvent: () => {
+            }
         }) => {
             var loading = true;
             const oset = this.setting;
@@ -170,9 +177,15 @@ export class HtmlGenerate {
                             var _a, _b;
                             try {
                                 const component = gvc.glitter.getUUID();
-                                dd.refreshAllParameter = (_a = dd.refreshAllParameter) !== null && _a !== void 0 ? _a : { view1: () => { }, view2: () => { } };
+                                dd.refreshAllParameter = (_a = dd.refreshAllParameter) !== null && _a !== void 0 ? _a : {
+                                    view1: () => {
+                                    }, view2: () => {
+                                    }
+                                };
                                 dd.refreshComponentParameter = (_b = dd.refreshComponentParameter) !== null && _b !== void 0 ? _b : {
-                                    view1: () => { }, view2: () => { }
+                                    view1: () => {
+                                    }, view2: () => {
+                                    }
                                 };
                                 dd.refreshAllParameter.view2 = () => {
                                     gvc.notifyDataChange(editContainer);
@@ -263,7 +276,7 @@ ${gvc.bindView({
                                                         bind: uid,
                                                         view: () => {
                                                             var _a, _b;
-                                                            return `<div class="w-100  rounded p-2 " style="background-color: #0062c0;">
+                                                            return `<div class="w-100  rounded p-2 mb-2" style="background-color: #0062c0;">
 <div class="w-100 d-flex p-0 align-items-center" onclick="${toggleEvent}" style="cursor: pointer;"><h3 style="font-size: 16px;" class="m-0 p-0">容器版面設計</h3>
 <div class="flex-fill"></div>
 ${(dd.expandStyle ? `<div style="cursor: pointer;" >收合<i class="fa-solid fa-up ms-2 text-white"></i></div>` : `<div style="cursor: pointer;">展開<i class="fa-solid fa-down ms-2 text-white"></i></div>\``)}
@@ -379,7 +392,25 @@ ${e.line}
     }
     ;
 }
-HtmlGenerate.resourceHook = (src) => { return src; };
+HtmlGenerate.resourceHook = (src) => {
+    return src;
+};
 HtmlGenerate.saveEvent = () => {
     alert('save');
+};
+HtmlGenerate.setHome = (obj) => {
+    const glitter = Glitter.glitter;
+    glitter.setHome('glitterBundle/plugins/html-render.js', obj.tag, {
+        config: obj.config,
+        editMode: obj.editMode,
+        data: obj.data
+    });
+};
+HtmlGenerate.changePage = (obj) => {
+    const glitter = Glitter.glitter;
+    glitter.changePage('glitterBundle/plugins/html-render.js', obj.tag, obj.goBack, {
+        config: obj.config,
+        editMode: obj.editMode,
+        data: obj.data
+    });
 };

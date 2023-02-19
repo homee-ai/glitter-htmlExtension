@@ -397,24 +397,6 @@ ${lifeCycle.onCreateView()}
 
     (window as any).clickMap[gvc.parameter.pageConfig!.id] = gvc.parameter.clickMap;
     lifeCycle.onCreate();
-    gvc.parameter.pageConfig!.createResource = () => {
-        (window as any).clickMap[gvc.parameter.pageConfig!.id] = gvc.parameter.clickMap;
-        var copyStyleList: { id: string, style: string }[] = JSON.parse(JSON.stringify(gvc.parameter.styleList))
-        gvc.parameter.styleList = []
-        copyStyleList.map((data) => {
-            gvc.addStyle(data.style)
-        })
-        var copyStyleLink: { id: string, src: string }[] = JSON.parse(JSON.stringify(gvc.parameter.styleLinks))
-        gvc.parameter.styleLinks = []
-        copyStyleLink.map((data) => {
-            gvc.addStyleLink(data.src)
-        })
-        var copyJsList: { id: string, src: string }[] = JSON.parse(JSON.stringify(gvc.parameter.jsList))
-        gvc.addMtScript(copyJsList, () => {
-        }, () => {
-        })
-        lifeCycle.onResume()
-    }
     gvc.parameter.pageConfig!.deleteResource = () => {
         (window as any).clickMap[gvc.parameter.pageConfig!.id]=undefined
         lifeCycle.onPause()

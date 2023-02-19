@@ -2,26 +2,24 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
 import {SharedView} from "../homee/shareView.js";
-import {Voucher} from "../homee/legacy/api/voucher.js";
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
-import {Checkout} from "../api/checkout";
-import {LegacyPage} from "../homee/legacy/interface";
 import {appConfig} from "../config.js";
 import {Funnel} from "../homee/funnel.js";
 import {Dialog} from "../homee/legacy/widget/dialog.js";
-import {ViewModel} from "../homee/legacy/view/userProfile";
+import {ViewModel} from "../homee/legacy/view/userProfile.js";
+import {User} from "../api/user.js";
 
 
-Plugin.create(import.meta.url,(glitter)=>{
-    const api={
-        upload:(photoFile:any,callback:(link:string)=>void)=>{
-            glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
+Plugin.create(import.meta.url, (glitter) => {
+    const api = {
+        upload: (photoFile: any, callback: (link: string) => void) => {
+            glitter.share.dialog.dataLoading({text: '上傳中', visible: true})
             $.ajax({
-                url: Api.serverURL+'/api/v1/scene/getSignedUrl',
+                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
                 type: 'post',
-                data: JSON.stringify({ file_name:`${new Date().getTime()}`}),
+                data: JSON.stringify({file_name: `${new Date().getTime()}`}),
                 contentType: 'application/json; charset=utf-8',
-                headers: { Authorization: glitter.getCookieByName('token') },
+                headers: {Authorization: glitter.getCookieByName('token')},
                 success: (data1: { url: string; fullUrl: string }) => {
                     $.ajax({
                         url: data1.url,
@@ -30,34 +28,33 @@ Plugin.create(import.meta.url,(glitter)=>{
                         processData: false,
                         crossDomain: true,
                         success: (data2: any) => {
-                            glitter.share.dialog.dataLoading({visible:false})
-                            glitter.share.dialog.successMessage({text:"上傳成功"})
+                            glitter.share.dialog.dataLoading({visible: false})
+                            glitter.share.dialog.successMessage({text: "上傳成功"})
                             callback(data1.fullUrl)
                         },
                         error: (err: any) => {
-                            glitter.share.dialog.successMessage({text:"上傳失敗"})
+                            glitter.share.dialog.successMessage({text: "上傳失敗"})
                         },
                     });
                 },
                 error: (err: any) => {
-                    glitter.share.dialog.successMessage({text:"上傳失敗"})
+                    glitter.share.dialog.successMessage({text: "上傳失敗"})
                 },
             });
         }
     }
     return {
         nav: {
-            defaultData:{
-                nav:{
-                    title:"",
-                    leftIcon:new URL('../img/component/left-arrow.svg',import.meta.url),
-                    leftPage:"",
-                    boxShadow:true,
-                    background : "#FFFFFF"
+            defaultData: {
+                nav: {
+                    title: "",
+                    leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
+                    leftPage: "",
+                    boxShadow: true,
+                    background: "#FFFFFF"
                 },
-
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
                     html{
                         margin: 0;
@@ -74,60 +71,60 @@ Plugin.create(import.meta.url,(glitter)=>{
                     }
                     
                 `)
-                const sharedView=new SharedView(gvc);
+                const sharedView = new SharedView(gvc);
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         return sharedView.navigationBar({
-                            title:widget.data.nav.title,
-                            leftIcon : `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                            title: widget.data.nav.title,
+                            leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
                             })}">`,
-                            rightIcon : ``,
-                            boxShadow : widget.data.nav.boxShadow,
-                            background : widget.data.nav.background,
+                            rightIcon: ``,
+                            boxShadow: widget.data.nav.boxShadow,
+                            background: widget.data.nav.background,
                         })
 
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
-                        `
+                            `
                             <h3 style="font-size: 16px;">是否需要底線</h3>
-                            <select class="form-control" onchange="${gvc.event((e)=>{
-                                widget.data.nav.boxShadow = (e.value == 1);    
+                            <select class="form-control" onchange="${gvc.event((e) => {
+                                widget.data.nav.boxShadow = (e.value == 1);
                                 widget.refreshAll;
                             })}">         
                               <option value="1">要</option>                     
                               <option value="0">不用</option>                              
-                              ${(()=>{
-                                  let text = (widget.data.nav.boxShadow) ? "要" : "不用"                             
-                                  return `<option selected hidden>${text}</option>`
-                              })()}                              
+                              ${(() => {
+                                let text = (widget.data.nav.boxShadow) ? "要" : "不用"
+                                return `<option selected hidden>${text}</option>`
+                            })()}                              
                             </select>
                         `
-                        ,
-                        glitter.htmlGenerate.editeInput({
-                            gvc: gvc,
-                            title: `文字`,
-                            default: widget.data.nav.title,
-                            placeHolder: widget.data.nav.title,
-                            callback: (text: string) => {
-                                widget.data.nav.title = text
-                                widget.refreshAll!()
-                            }
-                        }),
-                        `
+                            ,
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `文字`,
+                                default: widget.data.nav.title,
+                                placeHolder: widget.data.nav.title,
+                                callback: (text: string) => {
+                                    widget.data.nav.title = text
+                                    widget.refreshAll!()
+                                }
+                            }),
+                            `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
                             <div class="my-3 border border-white"></div>
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.nav.leftIcon}">
                                 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
                                 glitter.ut.chooseMediaCallback({
-                                    single:true,
-                                    accept:'image/*',
-                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file,(link)=>{
-                                            widget.data.nav.leftIcon=link;
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.nav.leftIcon = link;
                                             widget.refreshAll();
                                         })
                                     }
@@ -135,14 +132,14 @@ Plugin.create(import.meta.url,(glitter)=>{
                             })}"></i>
                             </div>
                         `,
-                        `
+                            `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景顏色</h3>
                             <div class="my-3 border border-white"></div>
                             <div class="d-flex align-items-center mb-3">
-                                <input type="color" value="${widget.data.nav.background}" onchange="${gvc.event((e:HTMLInputElement)=>{                                     
-                                    widget.data.nav.background=e.value;   
-                                    widget.refreshAll();
-                                })}">
+                                <input type="color" value="${widget.data.nav.background}" onchange="${gvc.event((e: HTMLInputElement) => {
+                                widget.data.nav.background = e.value;
+                                widget.refreshAll();
+                            })}">
                             </div>    
                         `
                         ])
@@ -152,14 +149,14 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         banner: {
-            defaultData:{
-                img:new URL('../img/component/ourServiceBanner.png',import.meta.url),
-                text:"文字",
-                click:()=>{
+            defaultData: {
+                img: new URL('../img/component/ourServiceBanner.png', import.meta.url),
+                text: "文字",
+                click: () => {
 
                 }
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
                     .banner-text{
                         font-family: 'Noto Sans TC';
@@ -174,7 +171,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                     }
                 `)
                 return {
-                    view: ()=>{
+                    view: () => {
                         return `
                         <div style="padding:0 42px;">
                             <img class="w-100" src="${widget.data.img}">
@@ -183,7 +180,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         
                         `
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">返回icon</h3>
@@ -191,13 +188,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.img}">
                                 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
                                 glitter.ut.chooseMediaCallback({
-                                    single:true,
-                                    accept:'image/*',
-                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file,(link)=>{
-                                            widget.data.img=link;
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.img = link;
                                             widget.refreshAll()
                                         })
                                     }
@@ -222,20 +219,20 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         funRow: {
-            defaultData:{
+            defaultData: {
 
                 img: "../img/component/notification.svg",
                 text: "消息通知",
-                click: ()=>{
+                click: () => {
 
                 }
 
             },
-            render:(gvc, widget, setting, hoverID) => {
-                const data: { link: { img: string,code?:string }[] } = widget.data
+            render: (gvc, widget, setting, hoverID) => {
+                const data: { link: { img: string, code?: string }[] } = widget.data
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         gvc.addStyle(`
                             .rowText{
                                 font-family: 'Noto Sans TC';
@@ -256,7 +253,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         </div>
                         `
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
                             `
                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">左方icon</h3>
@@ -264,13 +261,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.img}">
                                 <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
                                 glitter.ut.chooseMediaCallback({
-                                    single:true,
-                                    accept:'image/*',
-                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file,(link)=>{
-                                            widget.data.img=link;
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
+                                        api.upload(data[0].file, (link) => {
+                                            widget.data.img = link;
                                             widget.refreshAll()
                                         })
                                     }
@@ -295,23 +292,23 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         button: {
-            defaultData:{
-                text:"文字",
-                click:()=>{
+            defaultData: {
+                text: "文字",
+                click: () => {
 
                 }
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         return `
-                        <buttom class="" onclick="${gvc.event(()=>{
-                            widget.data.click();    
+                        <buttom class="" onclick="${gvc.event(() => {
+                            widget.data.click();
                         })}">${widget.data.text}</buttom>
                         `
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
@@ -330,25 +327,25 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         text: {
-            defaultData:{
-                text:"文字",
-                click:{}
+            defaultData: {
+                text: "文字",
+                click: {}
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         return `
-                        <div class="" onclick="${gvc.event(()=>{
+                        <div class="" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc,
                                 widget,
-                                clickEvent:widget.data.click
+                                clickEvent: widget.data.click
                             })
                         })}">${widget.data.text}</div>
                         `
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
@@ -360,7 +357,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     widget.refreshAll!()
                                 }
                             }),
-                            ClickEvent.editer(gvc,widget,widget.data.click)
+                            ClickEvent.editer(gvc, widget, widget.data.click)
 
                         ])
                     }
@@ -368,52 +365,49 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         dividingLine: {
-            defaultData:{
-                style:"solid",
-                width:1,
-                color:"000"
+            defaultData: {
+                style: "solid",
+                width: 1,
+                color: "000"
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         return `
                         <div class="w-100" style="border-top: ${widget.data.width}px ${widget.data.style} #${widget.data.color};"></div>
                         
                         `
                     },
-                    editor: ()=>{
-                        return gvc.map([
-
-
-                        ])
+                    editor: () => {
+                        return gvc.map([])
                     }
                 }
             },
         },
         textArea: {
-            defaultData:{
-                text:"文字",
-                click:()=>{
+            defaultData: {
+                text: "文字",
+                click: () => {
 
                 }
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         return `
-                        <div class="" style="white-space:normal;word-wrap:break-word;word-break:break-all;" onclick="${gvc.event(()=>{
+                        <div class="" style="white-space:normal;word-wrap:break-word;word-break:break-all;" onclick="${gvc.event(() => {
                             widget.data.click();
                         })}">${widget.data.text}</div>
                         `
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return gvc.map([
-                           `<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">文字內容</h3>
-                            <textarea class="form-control p-0" placeholder="" style="height:auto"  onchange="${gvc.event((e)=>{
+                            `<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">文字內容</h3>
+                            <textarea class="form-control p-0" placeholder="" style="height:auto"  onchange="${gvc.event((e) => {
                                 let element = e as HTMLTextAreaElement;
-                                widget.data.text = e.value;    
+                                widget.data.text = e.value;
                                 widget.refreshAll!()
                                 element.style.height = "auto";
                                 element.style.height = (element.scrollHeight) + "px";
@@ -425,97 +419,97 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
         },
         ourService: {
-            defaultData:{
-                link:[],
-                section:[
+            defaultData: {
+                link: [],
+                section: [
                     {
-                        title:"產品相關",
-                        service:[
+                        title: "產品相關",
+                        service: [
                             {
-                                text:"免費線上規劃軟體",
-                                onclick:()=>{
+                                text: "免費線上規劃軟體",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"品質保證",
-                                onclick:()=>{
+                                text: "品質保證",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"國際認證",
-                                onclick:()=>{
+                                text: "國際認證",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"試睡保證",
-                                onclick:()=>{
+                                text: "試睡保證",
+                                onclick: () => {
 
                                 }
                             },
                         ]
                     },
                     {
-                        title:"購物相關",
-                        service:[
+                        title: "購物相關",
+                        service: [
                             {
-                                text:"HOMEE 分店",
-                                onclick:()=>{
+                                text: "HOMEE 分店",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"付款方式說明",
-                                onclick:()=>{
+                                text: "付款方式說明",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"隱私權保護及網站使用與購物政策   ",
-                                onclick:()=>{
+                                text: "隱私權保護及網站使用與購物政策   ",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"折讓單作業說明",
-                                onclick:()=>{
+                                text: "折讓單作業說明",
+                                onclick: () => {
 
                                 }
                             },
                         ]
                     },
                     {
-                        title:"服務相關",
-                        service:[
+                        title: "服務相關",
+                        service: [
                             {
-                                text:"運送服務",
-                                onclick:()=>{
+                                text: "運送服務",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"組裝服務",
-                                onclick:()=>{
+                                text: "組裝服務",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"舊家具搬運 / 舊床墊回收服務",
-                                onclick:()=>{
+                                text: "舊家具搬運 / 舊床墊回收服務",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"空間規劃 / 丈量服務",
-                                onclick:()=>{
+                                text: "空間規劃 / 丈量服務",
+                                onclick: () => {
 
                                 }
                             },
                             {
-                                text:"驗房服務",
-                                onclick:()=>{
+                                text: "驗房服務",
+                                onclick: () => {
 
                                 }
                             },
@@ -523,28 +517,29 @@ Plugin.create(import.meta.url,(glitter)=>{
                     }
 
                 ],
-                lastSection:{
-                    contactUs:{
-                        title:"聯絡我們",
-                        servicePhoneTitle:"客服專線",
-                        servicePhone:"8729-5939 （手機用戶請加02）",
-                        serviceTimeTitle:"服務時間",
-                        physicalStore : "分店：週一 ~ 週日 10:00-21:00",
-                        onlineStore : "線上購物：週一 ~ 週日 09:00-18:00",
-                        service1v1:{
-                            title:"線上專人服務",
-                            onclick:()=>{}
+                lastSection: {
+                    contactUs: {
+                        title: "聯絡我們",
+                        servicePhoneTitle: "客服專線",
+                        servicePhone: "8729-5939 （手機用戶請加02）",
+                        serviceTimeTitle: "服務時間",
+                        physicalStore: "分店：週一 ~ 週日 10:00-21:00",
+                        onlineStore: "線上購物：週一 ~ 週日 09:00-18:00",
+                        service1v1: {
+                            title: "線上專人服務",
+                            onclick: () => {
+                            }
                         }
                     },
-                    kanban:"img/kanban.png"
+                    kanban: "img/kanban.png"
 
                 }
             },
-            render:(gvc, widget, setting, hoverID) => {
-                const data: { link: { img: string,code?:string }[] } = widget.data
+            render: (gvc, widget, setting, hoverID) => {
+                const data: { link: { img: string, code?: string }[] } = widget.data
 
                 return {
-                    view: ()=>{
+                    view: () => {
                         gvc.addStyle(`
         @font-face {
             font-family: 'Noto Sans TC';
@@ -622,8 +617,8 @@ Plugin.create(import.meta.url,(glitter)=>{
     `)
                         return `
                         ${gvc.bindView({
-                            bind:"serviceListGroup",
-                            view:()=>{
+                            bind: "serviceListGroup",
+                            view: () => {
                                 gvc.addStyle(`
                                     .serviceCard{
                                         background: #FBF9F6;
@@ -651,12 +646,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     }
                                 `)
                                 let returnHTML = ``;
-                                widget.data.section.forEach((serviceList:any)=>{
+                                widget.data.section.forEach((serviceList: any) => {
                                     returnHTML += `                           
                                     ${gvc.bindView({
-                                      bind:"service",
-                                      view : ()=>{
-                                          gvc.addStyle(`
+                                        bind: "service",
+                                        view: () => {
+                                            gvc.addStyle(`
             .serviceRow{
                 padding-left : 32px;
                 padding-right : 24px;
@@ -694,42 +689,44 @@ Plugin.create(import.meta.url,(glitter)=>{
 
             }   
         `)
-                                          let serviceGroup = ``;
-                                          serviceGroup = gvc.map(serviceList.service.map((service:any)=>{
-                                              console.log(service)
-                                              return `
+                                            let serviceGroup = ``;
+                                            serviceGroup = gvc.map(serviceList.service.map((service: any) => {
+                                                console.log(service)
+                                                return `
                                                 <div class="d-flex align-items-center  w-100 serviceRow" onclick="${gvc.event(() => {
-                                                  service.onclick();
+                                                    ClickEvent.trigger({
+                                                        gvc, widget, clickEvent: service
+                                                    })
                                                 })}">
                                                     <div class="d-flex me-auto left" style="padding-left:2px;height: 29px;align-items: center;" >
                                                         ${service.text}
                                                     </div>
                                                     <div class="d-flex align-items-center ms-auto">                                                        
-                                                        <img class="ms-auto" src="${new URL!(`../img/component/angle-right.svg`,import.meta.url)}" alt="" style="width: 24px;height: 24px;">
+                                                        <img class="ms-auto" src="${new URL!(`../img/component/angle-right.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                     </div>
                                                 </div>
                                               
                                               `
-                                          }))
-       
-                                        return `
+                                            }))
+
+                                            return `
                                     <div class="d-flex align-items-center flex-column serviceCard">
                                         <div class="serviceTitle">${serviceList.title}</div>
                                         ${serviceGroup}
                                     </div>
                                 `
 
-                                    }
-                                })}
+                                        }
+                                    })}
                                 `
 
                                 })
                                 return returnHTML
-                            },divCreate:{style:`margin-top: 26px;` , class:``}
+                            }, divCreate: {style: `margin-top: 26px;`, class: ``}
                         })}
                         ${gvc.bindView({
-                            bind:"lastSection",
-                            view : ()=>{
+                            bind: "lastSection",
+                            view: () => {
                                 gvc.addStyle(`
                                 .lastSectionTitle{
                                     font-family: 'Noto Sans TC';
@@ -772,7 +769,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 }
                             `)
                                 let thisModel = widget.data.lastSection
-                                return`
+                                return `
                         
                                 <div class="lastSectionTitle d-flex justify-content-center align-items-center">${thisModel.contactUs.title}</div>
                                 <div class="servicePhoneBlock d-flex flex-column align-items-start justify-content-start" style="margin-bottom: 16px;">
@@ -784,80 +781,142 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     <div>${thisModel.contactUs.physicalStore}</div>
                                     <div>${thisModel.contactUs.onlineStore}</div>
                                 </div>
-                                <button class="w-100 serviceBTN border-0" onclick="${gvc.event(()=>{
+                                <button class="w-100 serviceBTN border-0" onclick="${gvc.event(() => {
                                     thisModel.contactUs.service1v1.onclick();
                                 })}">${thisModel.contactUs.service1v1.title}</button>
                                 
                                 ${gvc.bindView({
-                                    bind : "kanban",
-                                    view : ()=>{
+                                    bind: "kanban",
+                                    view: () => {
 
                                         return `
-                                            <div class="" style="padding-top: 57%;width : 100%;background:50% / cover url(${new URL!(`../img/component/kanban.png`,import.meta.url)})"></div>
+                                            <div class="" style="padding-top: 57%;width : 100%;background:50% / cover url(${new URL!(`../img/component/kanban.png`, import.meta.url)})"></div>
                                         `
                                     },
-                                    divCreate:{class:`` , style:`width : 100%;`}
+                                    divCreate: {class: ``, style: `width : 100%;`}
                                 })}     
                             `
-                            },divCreate:{class:`` , style:`background: #FBF9F6;border-radius: 24px;padding: 16px 32px 24px;`}
+                            },
+                            divCreate: {
+                                class: ``,
+                                style: `background: #FBF9F6;border-radius: 24px;padding: 16px 32px 24px;`
+                            }
                         })}
                         `
                     },
-                    editor: ()=>{
-                        return ``
+                    editor: () => {
+                        return gvc.map(widget.data.section.map((dd: any, index: number) => {
+                            return `<div class="alert alert-dark">
+<h3 style="color:white;font-size: 16px;" class="d-flex align-items-center"><i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                widget.data.section.splice(index, 1)
+                                widget.refreshAll()
+                            })}"></i>區塊.${index + 1}</h3>
+${glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "區塊名稱",
+                                default: dd.title,
+                                placeHolder: `請輸入區塊名稱`,
+                                callback: (text: string) => {
+                                    dd.title = text
+                                    widget.refreshAll()
+                                }
+                            })}
+<div class="mt-2"></div>
+${gvc.map(dd.service.map((d3: any, index: number) => {
+                                return `<div class="alert alert-warning">
+${
+                                    glitter.htmlGenerate.editeInput({
+                                        gvc: gvc,
+                                        title: `<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                            dd.service.splice(index, 1)
+                                            widget.refreshAll()
+                                        })}"></i>按鈕.` + (index + 1),
+                                        default: d3.text,
+                                        placeHolder: `請輸入按鈕名稱`,
+                                        callback: (text: string) => {
+                                            d3.text = text
+                                            widget.refreshAll()
+                                        }
+                                    }) + ClickEvent.editer(gvc, widget, d3)
+                                }
+</div>`
+                            }))}
+<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                                dd.service.push(
+                                    {
+                                        text: "標題",
+                                        onclick: () => {
+
+                                        }
+                                    }
+                                )
+                                widget.refreshAll()
+                            })}">添加按鈕</div>
+</div>
+<div class="w-100 bg-white my-2" style="height: 1px;"></div>
+`
+                        }).concat([
+                            `<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                                widget.data.section.push({
+                                    title: "新增區塊",
+                                    service: []
+                                })
+                                widget.refreshAll()
+                            })}">添加區塊</div>`
+                        ]))
                     }
                 }
             },
         },
         footer: {
-            defaultData:{
-                dataList:[
+            defaultData: {
+                dataList: [
                     {
-                        title : "首頁",
-                        icon : new URL('../img/component/footer/home.svg',import.meta.url).href,
-                        toPage:"",
-                        click : ()=>{
+                        title: "首頁",
+                        icon: new URL('../img/component/footer/home.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
 
                         }
                     },
                     {
-                        title : "靈感",
-                        icon : new URL('../img/component/footer/idea.svg',import.meta.url).href,
-                        toPage:"",
-                        click : ()=>{
+                        title: "靈感",
+                        icon: new URL('../img/component/footer/idea.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
 
                         }
                     },
                     {
-                        title : "我的空間",
-                        icon : new URL('../img/component/footer/myspace.svg',import.meta.url).href,
-                        toPage:"",
-                        click : ()=>{
+                        title: "我的空間",
+                        icon: new URL('../img/component/footer/myspace.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
 
                         }
                     },
                     {
-                        title : "購物車",
-                        icon : new URL('../img/component/footer/shoopingCart.svg',import.meta.url).href,
-                        toPage:"",
-                        click : ()=>{
+                        title: "購物車",
+                        icon: new URL('../img/component/footer/shoopingCart.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
 
                         }
                     },
                     {
-                        title : "會員",
-                        icon : new URL('../img/component/footer/user.svg',import.meta.url).href,
-                        toPage:"",
-                        click : ()=>{
+                        title: "會員",
+                        icon: new URL('../img/component/footer/user.svg', import.meta.url).href,
+                        toPage: "",
+                        click: () => {
 
                         }
                     },
 
                 ],
             },
-            render:(gvc, widget, setting, hoverID) => {
-                glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
-                    if (widget.data?.bottomInset != response.data){
+            render: (gvc, widget, setting, hoverID) => {
+                glitter.runJsInterFace("getBottomInset", {}, (response: any) => {
+                    if (widget.data?.bottomInset != response.data) {
                         widget.data.bottomInset = response.data;
                         widget.refreshAll!();
                     }
@@ -867,26 +926,29 @@ Plugin.create(import.meta.url,(glitter)=>{
                     }
                 })
                 return {
-                    view: ()=>{return ``},
-                    editor: ()=>{
+                    view: () => {
+                        return ``
+                    },
+                    editor: () => {
                         return ``
                     }
                 }
             },
         },
         pointsRewardBlock: {
-            defaultData:{
-                backPoint:600,
+            defaultData: {
+                backPoint: 600,
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
 
 
                 return {
-                    view: ()=>{return `
+                    view: () => {
+                        return `
                         ${gvc.bindView({
-                        bind: 'backPoint',
-                        view: () => {
-                            gvc.addStyle(`
+                            bind: 'backPoint',
+                            view: () => {
+                                gvc.addStyle(`
                                 .giveBack {
                                     font-weight: 500;
                                     font-size: 18px;
@@ -902,28 +964,29 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     color: #fd6a58;
                                 }
                             `);
-                            return /*html*/ `
+                                return /*html*/ `
                                 <div class="d-flex align-items-baseline justify-content-center">
                                     <div class="giveBack">點數回饋：</div>
                                     <div class="backPoint">${widget.data.backPoint}</div>
                                 </div>
                             `;
-                        },
-                        divCreate: {
-                            style: `height:96px;background: #FBF9F6;border-radius: 20px;margin-top:24px;`,
-                            class: `w-100 d-flex justify-content-center align-items-center `,
-                        },
-                    })}
-                    `},
-                    editor: ()=>{
+                            },
+                            divCreate: {
+                                style: `height:96px;background: #FBF9F6;border-radius: 20px;margin-top:24px;`,
+                                class: `w-100 d-flex justify-content-center align-items-center `,
+                            },
+                        })}
+                    `
+                    },
+                    editor: () => {
                         return ``
                     }
                 }
             },
         },
         voucher: {
-            defaultData:{
-                voucherList:[
+            defaultData: {
+                voucherList: [
                     {
                         id: "0",
                         vendor_name: "供應商名稱",
@@ -936,7 +999,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         endTime: "",
                         formatEndTime: "有效期限：2025.03.31",
                         isUse: false,
-                        status:0,
+                        status: 0,
                     },
                     {
                         id: "1",
@@ -950,7 +1013,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         endTime: "",
                         formatEndTime: "即將失效：剩下 8 小時",
                         isUse: false,
-                        status:1,
+                        status: 1,
                     },
                     {
                         id: "2",
@@ -964,7 +1027,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         endTime: "",
                         formatEndTime: "有效期限：2025.03.31",
                         isUse: false,
-                        status:2,
+                        status: 2,
                     },
                     {
                         id: "3",
@@ -978,20 +1041,20 @@ Plugin.create(import.meta.url,(glitter)=>{
                         endTime: "",
                         formatEndTime: "有效期限：2025.03.31",
                         isUse: false,
-                        status:3,
+                        status: 3,
                     }
 
                 ],
-                cEvent:{},
-                eventList:{
-                    status0:{},
-                    status1:{},
-                    status2:{}
+                cEvent: {},
+                eventList: {
+                    status0: {},
+                    status1: {},
+                    status2: {}
                 }
 
 
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
                 enum voucherStatus {
                     unused,
                     expire,
@@ -1000,11 +1063,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                 }
 
                 return {
-                    view: ()=>{
-                        function useVoucher(id:number){
+                    view: () => {
+                        function useVoucher(id: number) {
                             //todo 帶到優惠卷的詳細頁面
                             appConfig().changePage(gvc, "user_couponDetail");
                         }
+
                         gvc.addStyle(`
                             .unusedDate{
                                 color : #FF0000;
@@ -1038,7 +1102,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 color: #858585;
                             }
                         `)
-                        return gvc.map(widget.data.voucherList.map((coupon:any)=>{
+                        return gvc.map(widget.data.voucherList.map((coupon: any) => {
                             return `
                             <div
                                 class="d-flex align-items-center border"
@@ -1051,8 +1115,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     margin-top:12px;
                                 "
                                 onclick="${gvc.event(() => {
-                                    useVoucher(coupon.id);
-                                })}">
+                                useVoucher(coupon.id);
+                            })}">
                             <div
                                 class="d-flex flex-column align-items-center"
                                 style="width: 60px;overflow: hidden;"
@@ -1112,14 +1176,14 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     "
                                     >${coupon.subTitle}</span
                                 >
-                                <span class="${(()=>{
-                            if (coupon.status==voucherStatus.expire){
-                                
-                                return "unusedDate"
-                            }else{
-                                return "normalDate"
-                            }
-                        })()}"
+                                <span class="${(() => {
+                                if (coupon.status == voucherStatus.expire) {
+
+                                    return "unusedDate"
+                                } else {
+                                    return "normalDate"
+                                }
+                            })()}"
                                     style="
                                         font-family: 'Noto Sans TC';
                                         font-style: normal;
@@ -1131,33 +1195,33 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 >
                             </div>
                             <div class="flex-fill" style=""></div>
-                            <div class="useBTNtext ${(()=>{
-                                switch (coupon.status){
-                                    case voucherStatus.unused:{
+                            <div class="useBTNtext ${(() => {
+                                switch (coupon.status) {
+                                    case voucherStatus.unused: {
                                         return `on`;
                                     }
-                                    case voucherStatus.expire:{
+                                    case voucherStatus.expire: {
                                         return `on`;
                                     }
-                                    case voucherStatus.used:{
+                                    case voucherStatus.used: {
                                         return `off`;
                                     }
-                                    case voucherStatus.passed:{
+                                    case voucherStatus.passed: {
                                         return `passed`;
                                     }
                                 }
-                            })()}">${(()=>{
-                                switch (coupon.status){
-                                    case voucherStatus.unused:{
+                            })()}">${(() => {
+                                switch (coupon.status) {
+                                    case voucherStatus.unused: {
                                         return `使用`;
                                     }
-                                    case voucherStatus.expire:{
+                                    case voucherStatus.expire: {
                                         return `使用`;
                                     }
-                                    case voucherStatus.used:{
+                                    case voucherStatus.used: {
                                         return `已使用`;
                                     }
-                                    case voucherStatus.passed:{
+                                    case voucherStatus.passed: {
                                         return `已過期`;
                                     }
                                 }
@@ -1167,18 +1231,18 @@ Plugin.create(import.meta.url,(glitter)=>{
                         `
                         }))
                     },
-                    editor: ()=>{
-                        return ClickEvent.editer(gvc,widget,widget.data,{
-                            option:[],
-                            hover:true
+                    editor: () => {
+                        return ClickEvent.editer(gvc, widget, widget.data, {
+                            option: [],
+                            hover: true
                         });
                     }
                 }
             },
         },
         voucherDetail: {
-            defaultData:{
-                coupon :{
+            defaultData: {
+                coupon: {
                     id: "0",
                     vendor_name: "供應商名稱",
                     vendor_icon: "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg",
@@ -1190,17 +1254,17 @@ Plugin.create(import.meta.url,(glitter)=>{
                     endTime: "2025.03.31 23:59",
                     formatEndTime: "有效期限：2025.03.31",
                     isUse: false,
-                    status:0,
-                    content:"遠傳心生活 iPhone + 購物方案，全館任選滿 30000 元，現折 10000 元。",
-                    product:"適用於所有商品",
-                    payway:"適用於所有付款方式",
-                    logistics:"適用於所有物流方式",
+                    status: 0,
+                    content: "遠傳心生活 iPhone + 購物方案，全館任選滿 30000 元，現折 10000 元。",
+                    product: "適用於所有商品",
+                    payway: "適用於所有付款方式",
+                    logistics: "適用於所有物流方式",
                 },
 
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
                 return {
-                    view: ()=>{
+                    view: () => {
                         gvc.addStyle(`
                             .normalDate{
                                 color : #858585;
@@ -1257,7 +1321,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     margin-bottom:16px;
                                 "
                                 onclick="${gvc.event(() => {
-                                })}">
+                        })}">
                             <div
                                 class="d-flex flex-column align-items-center"
                                 style="width: 60px;overflow: hidden;"
@@ -1374,29 +1438,29 @@ Plugin.create(import.meta.url,(glitter)=>{
                         </div>
                         `
                     },
-                    editor: ()=>{
-                        return ClickEvent.editer(gvc,widget,widget.data,{
-                            option:[],
-                            hover:true
+                    editor: () => {
+                        return ClickEvent.editer(gvc, widget, widget.data, {
+                            option: [],
+                            hover: true
                         });
                     }
                 }
             },
         },
         edit: {
-            defaultData:{
-                topInset:10,
-                nav:{
-                    title:"",
-                    leftIcon:new URL('../img/component/left-arrow.svg',import.meta.url),
-                    leftPage:"",
-                    boxShadow:true,
-                    background : "#FFFFFF"
+            defaultData: {
+                topInset: 10,
+                nav: {
+                    title: "",
+                    leftIcon: new URL('../img/component/left-arrow.svg', import.meta.url),
+                    leftPage: "",
+                    boxShadow: true,
+                    background: "#FFFFFF"
                 },
             },
-            render:(gvc, widget, setting, hoverID) => {
+            render: (gvc, widget, setting, hoverID) => {
                 return {
-                    view: ()=>{
+                    view: () => {
                         gvc.addStyle(`
         @font-face {
             font-family: 'Noto Sans TC';
@@ -1549,78 +1613,130 @@ Plugin.create(import.meta.url,(glitter)=>{
            
         }
     `)
-                        const sharedView=new SharedView(gvc);
+                        const sharedView = new SharedView(gvc);
+                        //@ts-ignore
                         let viewModel = new ViewModel(gvc)
                         let dialog = new Dialog(gvc)
                         let firstAddressData: any = {};
-                        let accountModel: any = [
-                            {
-                                left: "姓名",
-                                type: "name",
-                                name: "name",
-                                placehold: {last: glitter.share.userData.last_name, first: glitter.share.userData.first_name}
-                            },
-                            {
-                                left: "用戶名稱",
-                                type: "text",
-                                name: "userName",
-                                placehold: (glitter.share.userData.name) ?? (glitter.share.userData.last_name + glitter.share.userData.first_name)
-                            },
-                            {
-                                left: "電子郵件",
-                                type: "email",
-                                name: "email",
-                                placehold: glitter.share.userData.email || ""
-                            },
-                            {
-                                left: "電話",
-                                type: "number",
-                                name: "phone",
-                                placehold: glitter.share.userData.phone || ""
-                            },
-                            {
-                                left: "密碼",
-                                type: "password",
-                                name: "password",
-                                check: false,
-                                placehold: ""
-                            },
-                            {
-                                visible: false,
-                                left: "新密碼",
-                                type: "password",
-                                name: "newPassword",
-                                placehold: ""
-                            },
-                            {
-                                visible: false,
-                                left: "再次輸入",
-                                type: "password",
-                                name: "confirmPassword",
-                                placehold: ""
+                        const vm: { loading: boolean, data: any, userData: any } = {
+                            loading: true,
+                            data: undefined,
+                            userData: undefined
+                        };
+                        appConfig().getUserData({
+                            callback: (response) => {
+                                vm.data = [
+                                    {
+                                        left: "姓名",
+                                        type: "name",
+                                        name: "name",
+                                        placehold: {
+                                            get last() {
+                                                return response.last_name
+                                            },
+                                            set last(value){
+                                                response.last_name=value
+                                            },
+                                            get first() {
+                                                return response.first_name
+                                            },
+                                            set first(value){
+                                                response.first_name=value
+                                            }
+                                        }
+                                    },
+                                    {
+                                        left: "用戶名稱",
+                                        type: "text",
+                                        name: "userName",
+                                        get placehold(){
+                                            return (response.name) ?? (response.last_name + response.first_name)
+                                        },
+                                        set placehold(value){
+                                            response.name=value
+                                        }
+                                    },
+                                    {
+                                        left: "電子郵件",
+                                        type: "email",
+                                        name: "email",
+                                        get placehold(){
+                                            return response.email || ""
+                                        },
+                                        set placehold(value){
+                                            response.email=value
+                                        }
+                                    },
+                                    {
+                                        left: "電話",
+                                        type: "number",
+                                        name: "phone",
+                                        get placehold(){
+                                            return response.phone
+                                        },
+                                        set placehold(value){
+                                            response.phone=value
+                                        }
+                                    },
+                                    {
+                                        left: "密碼",
+                                        type: "password",
+                                        name: "password",
+                                        check: false,
+                                        placehold:""
+                                    },
+                                    {
+                                        visible: false,
+                                        left: "新密碼",
+                                        type: "password",
+                                        name: "newPassword",
+                                        placehold: ""
+                                    },
+                                    {
+                                        visible: false,
+                                        left: "再次輸入",
+                                        type: "password",
+                                        name: "confirmPassword",
+                                        placehold: ""
+                                    }
+
+                                ]
+                                vm.userData = response
+                                vm.loading = false
                             }
-
-                        ];
-                        let photoFile:any = undefined
-                        let b64 :any= undefined
-                        let resetPassword=false
+                        })
+                        let photoFile: any = undefined
+                        let b64: any = undefined
+                        let resetPassword = false
                         let addressModel: any = []
-                        function saveData(){
 
+                        function saveData() {
+                           dialog.dataLoading(true)
+                            User.setUserData(vm.userData,(response)=>{
+                                dialog.dataLoading(false)
+                                dialog.showInfo("更改成功")
+                                appConfig().setUserData({
+                                    value:vm.userData,
+                                    callback:(response)=>{
+                                    }
+                                })
+                            })
                         }
-                        function dataURLtoFile(dataurl:any, filename:string) {
+
+                        function dataURLtoFile(dataurl: any, filename: string) {
                             let arr = dataurl.split(','),
                                 mime = arr[0].match(/:(.*?);/)[1],
                                 bstr = atob(arr[1]),
                                 n = bstr.length,
                                 u8arr = new Uint8Array(n);
 
-                            while(n--){
+                            while (n--) {
                                 u8arr[n] = bstr.charCodeAt(n);
                             }
 
-                            return new File([u8arr], filename, {type:mime});
+                            return new File([u8arr], filename, {type: mime});
                         }
+
                         function deleteFirstAddress() {
                             if (confirm("確定刪除?")) {
                                 glitter.runJsInterFace("deleteAddress", {}, (response) => {
@@ -1635,250 +1751,280 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 })
                             }
                         }
+
                         return gvc.map([
                             `
                             ${sharedView.navigationBar({
-                                title:'我的帳號',
-                                leftIcon : `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                    if(glitter.getUrlParameter('navagation')=="true"){
-                                        glitter.runJsInterFace("dismiss",{},()=>{})
-                                    }else{
+                                title: '我的帳號',
+                                leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                    if (glitter.getUrlParameter('navagation') == "true") {
+                                        glitter.runJsInterFace("dismiss", {}, () => {
+                                        })
+                                    } else {
                                         glitter.goBack()
                                     }
                                 })}">`,
-                                rightIcon : `<div class="save" onclick="${gvc.event(() => {
+                                rightIcon: `<div class="save" onclick="${gvc.event(() => {
                                     saveData();
                                 })}">儲存</div>`,
-                                boxShadow : widget.data.nav.boxShadow,
-                                background : widget.data.nav.background,
+                                boxShadow: widget.data.nav.boxShadow,
+                                background: widget.data.nav.background,
                             })}
                             `,
                             `
                             <main style="overflow-x: hidden;">                                   
                                 ${(() => {
-                                    let funnel = new Funnel(gvc)
-                                        return gvc.map([`
+                                let funnel = new Funnel(gvc)
+                                return gvc.map([`
                                         <input
                                             type="file"
                                             class="d-none"
                                             id="${gvc.id("photo")}"
                                             onchange="${gvc.event((e) => {
-                                                for (let i = 0; i < $(e).get(0).files.length; i++) {
-                                                    // 建立 canvas
-                                                    let canvas = document.createElement('canvas');
-                                                    let ctx = canvas.getContext('2d');
-                                                    let file = $(e).get(0).files[i];
-                                                    let img = new Image();
-                                                    img.src = URL.createObjectURL(file);
-                                                    // 等待圖片載入完成
-                                                    img.onload = function() {
-                                                        // 取得圖片的寬度
-                                                        let width = img.width;
-            
-                                                        if (width>200){
-                                                            // 設定 canvas 的寬度
-                                                            canvas.width = 200;
-                                                            // 計算 canvas 的高度
-                                                            canvas.height = img.height * 200 / img.width;
-                                                            // 取得壓縮後的圖片 URL
-                                                            ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-                                                            let f = $(e).get(0).files[i];
-                                                            let ran = funnel.randomString(3);
-                                                            const regex = new RegExp('[^.]+$');
-                                                            const extension = f.name.match(regex);
-                                                            let compressedImageURL = canvas.toDataURL(`image/${extension}`, 0.75);
-                                                            funnel.encodeFileBase64(f, (data) => {
-                                                                photoFile = {
-                                                                    ran: ran,
-                                                                    fullName: f.name,
-                                                                    name: f.name.substring(0, extension.index - 1),
-                                                                    ext: extension[0],
-                                                                    data: dataURLtoFile(compressedImageURL , f.name),
-                                                                };
-            
-                                                                b64=compressedImageURL
-            
-                                                                $('#'+gvc.id('photoImage')).attr('src',b64)
-                                                            });
-            
-                                                        }
-                                                    };
-                                                }
-                                            })}"
-                                        />`, 
-                                        gvc.bindView({
-                                            bind: "photo",
-                                            view: () => {
+                                    for (let i = 0; i < $(e).get(0).files.length; i++) {
+                                        // 建立 canvas
+                                        let canvas = document.createElement('canvas');
+                                        let ctx = canvas.getContext('2d');
+                                        let file = $(e).get(0).files[i];
+                                        let img = new Image();
+                                        img.src = URL.createObjectURL(file);
+                                        // 等待圖片載入完成
+                                        img.onload = function () {
+                                            // 取得圖片的寬度
+                                            let width = img.width;
+
+                                            if (width > 200) {
+                                                // 設定 canvas 的寬度
+                                                canvas.width = 200;
+                                                // 計算 canvas 的高度
+                                                canvas.height = img.height * 200 / img.width;
+                                                // 取得壓縮後的圖片 URL
+                                                ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                                                let f = $(e).get(0).files[i];
+                                                let ran = funnel.randomString(3);
+                                                const regex = new RegExp('[^.]+$');
+                                                const extension = f.name.match(regex);
+                                                let compressedImageURL = canvas.toDataURL(`image/${extension}`, 0.75);
+                                                photoFile = {
+                                                    ran: ran,
+                                                    fullName: f.name,
+                                                    name: f.name.substring(0, extension.index - 1),
+                                                    ext: extension[0],
+                                                    data: dataURLtoFile(compressedImageURL, f.name),
+                                                };
+                                                b64 = compressedImageURL
+                                            }else{
+                                                const regex = new RegExp('[^.]+$');
+                                                let f = $(e).get(0).files[i];
+                                                const extension = f.name.match(regex);
+                                                let ran = funnel.randomString(3);
+                                                photoFile = {
+                                                    ran: ran,
+                                                    fullName: f.name,
+                                                    name: f.name.substring(0, extension.index - 1),
+                                                    ext: extension[0],
+                                                    data: f,
+                                                };
+                                            }
+                                            appConfig().uploadImage(photoFile.data,(response)=>{
+                                                vm.userData.photo=response
+                                                $('#' + gvc.id('photoImage')).attr('src', response)
+                                            })
+                                        };
+                                    }
+                                })}"
+                                        />`,
+                                    gvc.bindView({
+                                        dataList: [
+                                            {
+                                                obj: vm,
+                                                key: 'loading'
+                                            }
+                                        ],
+                                        bind: "photo",
+                                        view: () => {
+                                            if (vm.loading) {
+                                                return ``
+                                            }
                                             return `
                                                 <div class="w-100 d-flex flex-column align-items-center">                            
-                                                    <img id="${gvc.id('photoImage')}" src="${(photoFile !== undefined) ? b64 : glitter.share.userData.photo}" style="width: 128px;height: 128px;border-radius: 50%"
-                                                    onclick="${gvc.event(()=>{
-                                                        $(`#${gvc.id("photo")}`).click()
-                                                    })}">
+                                                    <img id="${gvc.id('photoImage')}" src="${(photoFile !== undefined) ? b64 : vm.userData.photo}" style="width: 128px;height: 128px;border-radius: 50%"
+                                                    onclick="${gvc.event(() => {
+                                                $(`#${gvc.id("photo")}`).click()
+                                            })}">
                                                     <div class="changePhoto" onclick="${gvc.event(() => {
-                                                        $(`#${gvc.id("photo")}`).click()
-                                                    })}">更換大頭貼</div>                                                      
+                                                $(`#${gvc.id("photo")}`).click()
+                                            })}">更換大頭貼</div>                                                      
                                                 </div>
                                             `;
-                                            },
-                                            divCreate: {
-                                                class: `w-100 d-flex justify-content-center align-items-center`,
-                                                style: `margin-bottom : 40px;`
-                                            }
-                                        })])
-                                    })()}                        
+                                        },
+                                        divCreate: {
+                                            class: `w-100 d-flex justify-content-center align-items-center`,
+                                            style: `margin-bottom : 40px;`
+                                        }
+                                    })])
+                            })()}                        
                                 ${gvc.bindView({
-                                    bind: "accountData",
-                                    view: () => {
-                                        return `
+                                dataList: [
+                                    {
+                                        obj: vm,
+                                        key: 'loading'
+                                    }
+                                ],
+                                bind: "accountData",
+                                view: () => {
+                                    if (vm.loading) {
+                                        return ``
+                                    }
+                                    return `
                                         <div class="w-100 d-flex flex-column">
                                             <div class="acc-title">帳號資料</div>
-                                            ${gvc.map(accountModel.map((dd: any) => {
-                                                if (dd.name === 'password') {
-                                                    return gvc.bindView({
-                                                        bind: `${dd.name}-inputRow`,
-                                                        view: () => {
-                                                            return `                            
+                                            ${gvc.map(vm.data.map((dd: any) => {
+                                        if (dd.name === 'password') {
+                                            return gvc.bindView({
+                                                bind: `${dd.name}-inputRow`,
+                                                view: () => {
+                                                    return `                            
                                                             <div class="left" style="">${dd.left}</div>
                                                             <div class="right" style="width: 78%;position: relative">
                                                                 <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e) => {
-                                                                    dd.placehold = e.value
-                                                                })}" value="${dd.placehold}">
+                                                        dd.placehold = e.value
+                                                    })}" value="${dd.placehold}">
                                                                 ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
-                                                                    if (glitter.share.userData.pwd !== dd.placehold) {
-                                                                        dialog.showInfo("密碼輸入錯誤!")
-                                                                    } else {
-                                                                        accountModel.map((d2: any) => {
-                                                                            d2.visible = 'true'
-                                                                        })
-                                                                        dd.check = true
-                                                                        resetPassword=true
-                                                                        gvc.notifyDataChange('accountData')
-                                                                    }
-                                                                })}">確認</div>    
+                                                        if (vm.userData.pwd !== dd.placehold) {
+                                                            dialog.showInfo("密碼輸入錯誤!")
+                                                        } else {
+                                                            vm.data.map((d2: any) => {
+                                                                d2.visible = 'true'
+                                                            })
+                                                            dd.check = true
+                                                            resetPassword = true
+                                                            gvc.notifyDataChange('accountData')
+                                                        }
+                                                    })}">確認</div>    
                                                             `}
                                                                                
                                             </div>                               
                                             
                                                             `
-                                                            },
-                                                            divCreate: {style: ``, class: `d-flex align-items-center input-row`}
-                                                        })
-                                            } else {
-                                                if (dd.visible === false) {
-                                                    return ``
-                                                } else {
-                                                    return viewModel.inputRow(dd)
-                                                }
-                                            }
-                                        }))}
-                                        </div>`
-                                    },
-                                    divCreate: {}
-                                })}
-                                ${gvc.bindView({
-                                    bind: "firstAddress",
-                                    view: () => {
-                                        //vm.loading && 
-                                        if (firstAddressData?.address) {
-                                            let temp: any = firstAddressData.address
-    
-                                            let address = `${temp.city} ${temp.zipcode} ${temp.town} ${temp.address}`
-    
-                                            addressModel = [
-                                                {
-                                                    left: "姓名",
-                                                    type: "name",
-                                                    name: "addressName",
-                                                    placehold: {
-                                                        last: firstAddressData.last_name,
-                                                        first: firstAddressData.first_name
-                                                    }
                                                 },
-                                                {
-                                                    left: "電話",
-                                                    type: "number",
-                                                    name: "addressPhone",
-                                                    placehold: firstAddressData.address_phone
-                                                },
-                                                {
-                                                    left: "公司名稱",
-                                                    type: "text",
-                                                    name: "addressCompany",
-                                                    placehold: firstAddressData.company
-                                                },
-                                                {
-                                                    left: "地址",
-                                                    type: "text",
-                                                    name: "address",
-                                                    placehold: address
-                                                }
-                                            ];
-                                        }
-    
-                                        let returnData = ``;
-    
-                                        addressModel.forEach((data: any) => {
-                                            returnData += viewModel.inputRow(data, "readonly")
-                                        })
-    
-    
-                                        let addBtn = ``
-                                        //vm.loading && 
-                                        if (!firstAddressData?.address) {
-                                            addBtn = `<div class="addr-add" onclick="${gvc.event(() => {
-                                                glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {})
-                                            })}">新增</div>`
+                                                divCreate: {style: ``, class: `d-flex align-items-center input-row`}
+                                            })
                                         } else {
-                                            addBtn = `
+                                            if (dd.visible === false) {
+                                                return ``
+                                            } else {
+                                                return viewModel.inputRow(dd)
+                                            }
+                                        }
+                                    }))}
+                                        </div>`
+                                },
+                                divCreate: {}
+                            })}
+                                ${gvc.bindView({
+                                bind: "firstAddress",
+                                view: () => {
+                                    //vm.loading && 
+                                    if (firstAddressData?.address) {
+                                        let temp: any = firstAddressData.address
+
+                                        let address = `${temp.city} ${temp.zipcode} ${temp.town} ${temp.address}`
+
+                                        addressModel = [
+                                            {
+                                                left: "姓名",
+                                                type: "name",
+                                                name: "addressName",
+                                                placehold: {
+                                                    last: firstAddressData.last_name,
+                                                    first: firstAddressData.first_name
+                                                }
+                                            },
+                                            {
+                                                left: "電話",
+                                                type: "number",
+                                                name: "addressPhone",
+                                                placehold: firstAddressData.address_phone
+                                            },
+                                            {
+                                                left: "公司名稱",
+                                                type: "text",
+                                                name: "addressCompany",
+                                                placehold: firstAddressData.company
+                                            },
+                                            {
+                                                left: "地址",
+                                                type: "text",
+                                                name: "address",
+                                                placehold: address
+                                            }
+                                        ];
+                                    }
+
+                                    let returnData = ``;
+
+                                    addressModel.forEach((data: any) => {
+                                        returnData += viewModel.inputRow(data, "readonly")
+                                    })
+
+
+                                    let addBtn = ``
+                                    //vm.loading && 
+                                    if (!firstAddressData?.address) {
+                                        addBtn = `<div class="addr-add" onclick="${gvc.event(() => {
+                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {})
+                                        })}">新增</div>`
+                                    } else {
+                                        addBtn = `
                                             <div class="d-flex">
                                                 <div class="addr-edit" onclick="${gvc.event(() => {
-                                                    glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {address: firstAddressData})
-                                                })}">編輯</div>
+                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {address: firstAddressData})
+                                        })}">編輯</div>
                                                 <div class="addr-del" onclick="${gvc.event(() => {
-                                                    deleteFirstAddress()
-                                                })}">刪除</div>
+                                            deleteFirstAddress()
+                                        })}">刪除</div>
                                             </div>`
-                                        }
-    
-    
-                                        return `
+                                    }
+
+
+                                    return `
                                         <div class="w-100 d-flex flex-column d-none" style="margin-top:6px;">
                                             <div class="w-100 acc-title d-flex justify-content-between align-items-center">
                                                 <div class="">首選地址</div>${addBtn}
                                             </div>                                            
                                             ${returnData}               
                                         </div>`
-                                    },divCreate:{}
-                                })}
+                                }, divCreate: {}
+                            })}
                             </main>
                             `
 
                         ])
                     },
-                    editor: ()=>{
+                    editor: () => {
                         return ``
                     }
                 }
             },
         },
         empty: {
-            defaultData:{
-                link:[]
+            defaultData: {
+                link: []
             },
-            render:(gvc, widget, setting, hoverID) => {
-                const data: { link: { img: string,code?:string }[] } = widget.data
+            render: (gvc, widget, setting, hoverID) => {
+                const data: { link: { img: string, code?: string }[] } = widget.data
 
                 return {
-                    view: ()=>{return ``},
-                    editor: ()=>{
+                    view: () => {
+                        return ``
+                    },
+                    editor: () => {
                         return ``
                     }
                 }
             },
         },
-
-
     }
 });

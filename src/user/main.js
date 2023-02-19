@@ -1,39 +1,8 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
-import { Api } from "../homee/api/homee-api.js";
+import { appConfig } from "../config.js";
+import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 Plugin.create(import.meta.url, (glitter) => {
-    const api = {
-        upload: (photoFile, callback) => {
-            glitter.share.dialog.dataLoading({ text: '上傳中', visible: true });
-            $.ajax({
-                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
-                type: 'post',
-                data: JSON.stringify({ file_name: `${new Date().getTime()}` }),
-                contentType: 'application/json; charset=utf-8',
-                headers: { Authorization: glitter.getCookieByName('token') },
-                success: (data1) => {
-                    $.ajax({
-                        url: data1.url,
-                        type: 'put',
-                        data: photoFile,
-                        processData: false,
-                        crossDomain: true,
-                        success: (data2) => {
-                            glitter.share.dialog.dataLoading({ visible: false });
-                            glitter.share.dialog.successMessage({ text: "上傳成功" });
-                            callback(data1.fullUrl);
-                        },
-                        error: (err) => {
-                            glitter.share.dialog.successMessage({ text: "上傳失敗" });
-                        },
-                    });
-                },
-                error: (err) => {
-                    glitter.share.dialog.successMessage({ text: "上傳失敗" });
-                },
-            });
-        }
-    };
     return {
         nav: {
             defaultData: {
@@ -101,25 +70,39 @@ Plugin.create(import.meta.url, (glitter) => {
                 }
             },
             render: (gvc, widget, setting, hoverID) => {
+                const vm = {
+                    data: {},
+                    loading: true
+                };
+                appConfig().getUserData({
+                    callback: (response) => {
+                        vm.data = response;
+                        vm.loading = false;
+                    }
+                });
                 return {
                     view: () => {
                         return `
                         ${gvc.bindView({
+                            dataList: [{ obj: vm, key: 'loading' }],
                             bind: "baseUserInf",
                             view: () => {
+                                if (vm.loading) {
+                                    return ``;
+                                }
                                 return `
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex position-relative">
-                                        <img src="${widget.data.userData.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
+                                        <img src="${vm.data.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
                                         <img src="${new URL(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
                                 })}">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center align-baseline" style="margin-left: 32px;">
                                         <div class="d-flex">
-                                            <div class="last-name">${widget.data.userData.last_name}</div><div class="first-name">${widget.data.userData.first_name}</div>
+                                            <div class="last-name">${vm.data.last_name}</div><div class="first-name">${vm.data.first_name}</div>
                                         </div>
                                         <div class="name">
-                                            ${widget.data.userData.name}
+                                            ${vm.data.name}
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +170,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         `);
                         return `
                         <div class="d-flex align-items-center  w-100 serviceRow" onclick="${gvc.event(() => {
-                            widget.data.click();
+                            ClickEvent.trigger({
+                                gvc, widget, clickEvent: widget.data
+                            });
                         })}">
                             <div class="d-flex me-auto leftText" style="padding-left:2px;height: 29px;align-items: center;" >
                                 ${widget.data.left}
@@ -220,7 +205,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     widget.data.right = text;
                                     widget.refreshAll();
                                 }
-                            })
+                            }),
+                            ClickEvent.editer(gvc, widget, widget.data)
                         ]);
                     }
                 };
@@ -311,8 +297,10 @@ Plugin.create(import.meta.url, (glitter) => {
                    
                             `;
                                 }));
-                            }, divCreate: { class: `d-flex justify-content-between `,
-                                style: `padding: 28px 20px;border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;` }
+                            }, divCreate: {
+                                class: `d-flex justify-content-between `,
+                                style: `padding: 28px 20px;border-radius: 20px; gap: 8px; margin-top: 16px;margin-bottom: 12px;background : #FBF9F6;`
+                            }
                         });
                     },
                     editor: () => {
@@ -401,8 +389,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return `
                                 <div class="d-flex flex-column align-items-center" onclick="">
                                     <img src=${data.icon} style="width: 28px;height: 28px;">
-                                    <div class="footerTitle ${(() => { if (index == 4)
-                                    return "selected"; })()}">${data.title}</div>
+                                    <div class="footerTitle ${(() => {
+                                    if (index == 4)
+                                        return "selected";
+                                })()}">${data.title}</div>
                                 </div>
                                 `;
                             }));
@@ -421,7 +411,9 @@ Plugin.create(import.meta.url, (glitter) => {
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
                 return {
-                    view: () => { return ``; },
+                    view: () => {
+                        return ``;
+                    },
                     editor: () => {
                         return ``;
                     }

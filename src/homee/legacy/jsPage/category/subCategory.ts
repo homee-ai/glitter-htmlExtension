@@ -8,9 +8,6 @@ import {Category, ProductData} from "../../api/category.js";
 
 
 init((gvc, glitter, gBundle) => {
-
-
-
     gvc.addStyle(`
      
         nav{
@@ -50,7 +47,6 @@ init((gvc, glitter, gBundle) => {
     let shareView = new SharedView(gvc);
     const viewModel = new ViewModel(gvc)
     const categoryAPI = new Category(gvc.glitter);
-
     let sortSelect = 0;
     //todo get title 父標題
     let title = gBundle.title;
@@ -109,35 +105,13 @@ init((gvc, glitter, gBundle) => {
             return map
         })()
     ]
-
     glitter.share.selectSubCategory = gBundle?.index + 1 || 0;
-
-
     return {
         onCreateView: () => {
             let topInset: number = 0
             let bottomInset: number = 0
-
             topInset = glitter.share.topInset;
             bottomInset = glitter.share.bottomInset;
-            // glitter.runJsInterFace("getTopInset", {}, (response) => {
-            //
-            //     gvc.notifyDataChange('mainView')
-            // }, {
-            //     webFunction: () => {
-            //         return {data: 50}
-            //     }
-            // })
-            // glitter.runJsInterFace("getBottomInset", {}, (response) => {
-            //     bottomInset = (response.data)
-            //     gvc.notifyDataChange('mainView')
-            // }, {
-            //     webFunction: () => {
-            //         return {data: 50}
-            //     }
-            // })
-
-
             glitter.share.subCategoryVM = {
                 setSubCategoryRow: ``,
                 parameter: gBundle.category,

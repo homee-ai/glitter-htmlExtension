@@ -115,7 +115,7 @@ export class Glitter {
         { defineType?: any, webFunction: (data: any, callback: (data: any) => void) => any }
         = {
         webFunction: (data: any, callback: (data: any) => void) => {
-            Glitter.glitter.setCookie(data.name, data.data)
+            Glitter.glitter.setCookie(tag, data.data.data)
             callback({result: true})
         }
     }) {
@@ -129,8 +129,7 @@ export class Glitter {
     public getPro(tag: string, callBack: (data: {}) => void, option: { defineType?: any, webFunction: (data: any, callback: (data: any) => void) => any }
         = {
         webFunction: (data: any,callback: (data: any) => void) => {
-            Glitter.glitter.getCookieByName(data.name)
-            callback({result: true})
+            callback({result: true,data:Glitter.glitter.getCookieByName(tag)})
         }
     }) {
         this.runJsInterFace("getPro", {

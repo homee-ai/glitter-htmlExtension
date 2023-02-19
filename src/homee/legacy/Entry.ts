@@ -74,11 +74,11 @@ export class Entry {
         //取得ServerRout
         glitter.runJsInterFace("getServerRout", {}, (response) => {
             glitter.share.apiURL = response.url
-            User.getUserData(() => {
+            User.getUserData(()=>{
                 if (glitter.getUrlParameter('component')) {
                     $('.page-spinner').hide()
                     glitter.setHome(`component/${glitter.getUrlParameter('component')}.js`, glitter.getUrlParameter('component'), {},
-                        {backGroundColor:"transparent"})
+                        {backGroundColor: "transparent"})
                 } else {
                     pageConfig()
                 }

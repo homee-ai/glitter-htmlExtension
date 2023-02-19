@@ -3,11 +3,14 @@ import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
 import {SharedView} from "../homee/shareView.js";
 import {Voucher} from "../homee/legacy/api/voucher.js";
+import {Dialog} from "../dialog/dialog-mobile.js";
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {appConfig} from "../config.js";
+import {User} from "../api/user.js";
 
 
 Plugin.create(import.meta.url,(glitter)=>{
+
     const api={
         upload:(photoFile:any,callback:(link:string)=>void)=>{
             glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
@@ -210,59 +213,31 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
+                        const dialog = new Dialog(gvc)
                         function checkRegister() {
-                            //   todo 註冊判斷 是否存在帳號 是:登入 否:註冊
-                            let register = false
-                            let register2: { name?: string | number } = {}
-                            let array: { name?: string | number }[] = []
-                            //todo 帳號不得為空 然後註冊的判斷未填
+                            dialog.dataLoading(true)
+                            User.checkUserExists(widget.data.accountData.account,(response) => {
+                                if (response === undefined) {
+                                    dialog.dataLoading(false)
+                                    dialog.showInfo("連線逾時")
+                                } else if (response) {
+                                    User.login({
+                                        pwd: widget.data.accountData.password,
+                                        account: widget.data.accountData.account,
+                                        callback(data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean): void {
+                                            dialog.dataLoading(false)
+                                            if (!data) {
+                                                dialog.showInfo('密碼輸入錯誤')
+                                            } else {
+                                                dialog.showInfo('登入成功!')
+                                                appConfig().setHome(gvc,'user_setting',{})
+                                            }
+                                        },
+                                    })
+                                } else {
 
-                            if (widget.data.accountData.account !== '' && widget.data.accountData.password !== '') {
-
-                                glitter.runJsInterFace("signInOrRegister", {
-                                    account: widget.data.accountData.account,
-                                    password: widget.data.accountData.password
-
-                                }, function (response) {
-
-                                    if (response.data){
-                                        //切至登入頁面
-                                        appConfig().changePage(gvc, "user_setting", widget.data.accountData);
-
-                                    }else{
-                                        //切至註冊頁面
-                                        appConfig().changePage(gvc, "register", widget.data.accountData);
-                                    }
-                                },{
-                                    webFunction: () => {
-                                        //true 登入 , false註冊
-                                        return {data:false}
-                                    }
-                                })
-
-
-                                glitter.runJsInterFace("signInOrRegister", {
-                                    account: widget.data.accountData.account,
-                                    password: widget.data.accountData.password
-
-                                }, function (response) {
-                                    if (response.accountData){
-
-                                        ClickEvent.trigger({
-                                            gvc,
-                                            widget,
-                                            clickEvent:widget.data.event.login
-                                        })
-                                    }else{
-
-                                    }
-                                },{
-                                    webFunction: () => {
-                                        //true 登入 , false註冊
-                                        return {data:true}
-                                    }
-                                })
-                            }
+                                }
+                            })
                         }
                         return gvc.bindView({
                             bind: `mainView`,

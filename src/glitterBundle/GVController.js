@@ -376,24 +376,6 @@ ${lifeCycle.onCreateView()}
     }
     window.clickMap[gvc.parameter.pageConfig.id] = gvc.parameter.clickMap;
     lifeCycle.onCreate();
-    gvc.parameter.pageConfig.createResource = () => {
-        window.clickMap[gvc.parameter.pageConfig.id] = gvc.parameter.clickMap;
-        var copyStyleList = JSON.parse(JSON.stringify(gvc.parameter.styleList));
-        gvc.parameter.styleList = [];
-        copyStyleList.map((data) => {
-            gvc.addStyle(data.style);
-        });
-        var copyStyleLink = JSON.parse(JSON.stringify(gvc.parameter.styleLinks));
-        gvc.parameter.styleLinks = [];
-        copyStyleLink.map((data) => {
-            gvc.addStyleLink(data.src);
-        });
-        var copyJsList = JSON.parse(JSON.stringify(gvc.parameter.jsList));
-        gvc.addMtScript(copyJsList, () => {
-        }, () => {
-        });
-        lifeCycle.onResume();
-    };
     gvc.parameter.pageConfig.deleteResource = () => {
         window.clickMap[gvc.parameter.pageConfig.id] = undefined;
         lifeCycle.onPause();

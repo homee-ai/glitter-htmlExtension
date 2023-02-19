@@ -235,13 +235,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 function refreshCart() {
                     initial();
                     gvc.notifyDataChange(['cartIn', 'cartSubtotal', 'cartOut']);
-                    glitter.runJsInterFace("storeCartInfo", {
-                        data: JSON.stringify({ cartData: cartData })
-                    }, () => {
+                    Checkout.setCart({
+                        cartData: cartData, callback: (response) => {
+                        }
                     });
                     cartSubTotalVM.loading = true;
                     clearInterval(refreshTimer);
-                    setTimeout(() => {
+                    refreshTimer = setTimeout(() => {
                         let skuAmount = [];
                         widget.data.cartItem.map((d3) => {
                             d3.item.map((dd) => {
@@ -281,17 +281,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let cartData = undefined;
                 const dialog = new Dialog(gvc);
                 dialog.dataLoading(true);
-                glitter.runJsInterFace("getCartData", {}, (response) => {
-                    console.log(response);
-                    cartData = tryReturn(() => {
-                        return JSON.parse(response.cartData).cartData;
-                    }, {});
+                Checkout.getCart((cdata) => {
+                    cartData = cdata;
                     let needGetInfoSku = [];
                     Object.keys(cartData).map((dd) => {
                         const obj = cartData[dd];
                         return {
-                            category: dd,
-                            category_id: dd,
                             item: Object.keys(obj).map((d4) => {
                                 if (needGetInfoSku.indexOf(d4) === -1) {
                                     needGetInfoSku.push(d4);
@@ -316,6 +311,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         category: dd,
                                         category_id: dd,
                                         item: Object.keys(obj).map((d4) => {
+                                            var _a, _b;
                                             const oc = obj[d4];
                                             needGetInfoSku.push(d4);
                                             if (!skuDataInfo[d4]) {
@@ -324,8 +320,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                     name: "error",
                                                     img: ``,
                                                     kind: "error",
-                                                    price: oc.price,
-                                                    subtotal: oc.price,
+                                                    price: (_a = oc.price) !== null && _a !== void 0 ? _a : 0,
+                                                    subtotal: (_b = oc.price) !== null && _b !== void 0 ? _b : 0,
                                                     deleteEvent: () => {
                                                         obj[d4] = undefined;
                                                     },
@@ -378,37 +374,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             refreshCart();
                         }
                     });
-                }, {
-                    webFunction(data, callback) {
-                        return {
-                            cartData: JSON.stringify({
-                                cartData: {
-                                    "product": {
-                                        "A010001-1-1-1": {
-                                            "isSelect": true,
-                                            "count": 1,
-                                            "price": 6900,
-                                            "sku": "A010001-1-1-1"
-                                        },
-                                        "A010085-1": {
-                                            "isSelect": false,
-                                            "count": 1,
-                                            "price": 7900,
-                                            "sku": "A010085-1"
-                                        }
-                                    },
-                                    "2023-02-10 08:05": {
-                                        "A010001-1-1-1": {
-                                            "isSelect": true,
-                                            "count": 3,
-                                            "price": 6900,
-                                            "sku": "A010001-1-1-1"
-                                        }
-                                    }
-                                }
-                            })
-                        };
-                    }
                 });
                 function initial() {
                     cartIn = [];
@@ -434,13 +399,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     return (item.subtotal).toLocaleString();
                 }
                 function checkOut() {
-                    refreshCart();
-                    dialog.dataLoading(true);
-                    glitter.runJsInterFace("toCheckOutPage", {}, () => {
-                        widget.data.cartItem = [];
-                        dialog.dataLoading(false);
-                        widget.refreshComponent();
-                    });
+                    dialog.showInfo("金流開發中...");
                 }
                 return {
                     view: () => {
@@ -727,6 +686,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         if (cartSubTotalVM.data) {
                                             return gvc.map(cartSubTotalVM.data.voucherArray.map((dd) => {
                                                 return `<div class="d-flex w-100 align-items-center" style="padding-left: 12px;padding-right: 12px;margin-top: 12px;margin-bottom: 12px;">
+                                      
                                         <span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 400;
@@ -736,7 +696,6 @@ text-align: left;
 word-break: break-all;
 white-space: normal;
 color: #1E1E1E;">${dd.name}</span>
-                                        <div class="flex-fill"></div>
                                         <span style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
@@ -744,6 +703,7 @@ font-size: 15px;
 margin-left: 10px;
 line-height: 150%;
 color: #FE5541;
+margin-right: 10px;
 " onclick="${gvc.event(() => {
                                                     dialog.confirm("是否確認刪除優惠券?", (result) => {
                                                         if (result) {
@@ -757,6 +717,19 @@ color: #FE5541;
                                                         }
                                                     });
                                                 })}">${(dd.code) ? "刪除" : ""}</span>
+<div class="flex-fill"></div>
+  <span class="" style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 150%;
+/* identical to box height, or 22px */
+
+text-align: right;
+
+/* HOMEE black */
+
+color: #1E1E1E;">${dd.discount}</span>
 </div>       `;
                                             }));
                                         }

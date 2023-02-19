@@ -1,8 +1,10 @@
 'use strict';
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Api } from "../homee/api/homee-api.js";
+import { Dialog } from "../dialog/dialog-mobile.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { appConfig } from "../config.js";
+import { User } from "../api/user.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -203,45 +205,33 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return { data: 10 };
                             }
                         });
+                        const dialog = new Dialog(gvc);
                         function checkRegister() {
-                            let register = false;
-                            let register2 = {};
-                            let array = [];
-                            if (widget.data.accountData.account !== '' && widget.data.accountData.password !== '') {
-                                glitter.runJsInterFace("signInOrRegister", {
-                                    account: widget.data.accountData.account,
-                                    password: widget.data.accountData.password
-                                }, function (response) {
-                                    if (response.data) {
-                                        appConfig().changePage(gvc, "user_setting", widget.data.accountData);
-                                    }
-                                    else {
-                                        appConfig().changePage(gvc, "register", widget.data.accountData);
-                                    }
-                                }, {
-                                    webFunction: () => {
-                                        return { data: false };
-                                    }
-                                });
-                                glitter.runJsInterFace("signInOrRegister", {
-                                    account: widget.data.accountData.account,
-                                    password: widget.data.accountData.password
-                                }, function (response) {
-                                    if (response.accountData) {
-                                        ClickEvent.trigger({
-                                            gvc,
-                                            widget,
-                                            clickEvent: widget.data.event.login
-                                        });
-                                    }
-                                    else {
-                                    }
-                                }, {
-                                    webFunction: () => {
-                                        return { data: true };
-                                    }
-                                });
-                            }
+                            dialog.dataLoading(true);
+                            User.checkUserExists(widget.data.accountData.account, (response) => {
+                                if (response === undefined) {
+                                    dialog.dataLoading(false);
+                                    dialog.showInfo("連線逾時");
+                                }
+                                else if (response) {
+                                    User.login({
+                                        pwd: widget.data.accountData.password,
+                                        account: widget.data.accountData.account,
+                                        callback(data) {
+                                            dialog.dataLoading(false);
+                                            if (!data) {
+                                                dialog.showInfo('密碼輸入錯誤');
+                                            }
+                                            else {
+                                                dialog.showInfo('登入成功!');
+                                                appConfig().setHome(gvc, 'user_setting', {});
+                                            }
+                                        },
+                                    });
+                                }
+                                else {
+                                }
+                            });
                         }
                         return gvc.bindView({
                             bind: `mainView`,

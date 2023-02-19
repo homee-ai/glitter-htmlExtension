@@ -3,9 +3,8 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { SharedView } from './shareView.js';
 import { EditerApi } from "./api/editer-api.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
-import { LegacyPage } from "./legacy/interface.js";
 import { Api } from "./api/homee-api.js";
-import { DialogHelper } from "../dialog/dialog-helper.js";
+import { appConfig } from "../config.js";
 Plugin.create(import.meta.url, (glitter) => {
     const rootURL = new URL("../", import.meta.url).href;
     const api = {
@@ -404,28 +403,7 @@ src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/h
                             rightIcon: `
                        <div class="d-flex align-items-center" style="gap:15px;">
                        <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(() => {
-                                const api = new Api();
-                                DialogHelper.dataLoading({
-                                    text: "",
-                                    visible: true
-                                });
-                                api.homeeAJAX({
-                                    api: Api.serverURL,
-                                    route: '/api/v1/lowCode/pageConfig?query=config&tag=category',
-                                    method: 'get'
-                                }, (res) => {
-                                    Plugin.initial(gvc, res.result[0].config).then(() => {
-                                        LegacyPage.execute(gvc.glitter, () => {
-                                            DialogHelper.dataLoading({
-                                                text: "",
-                                                visible: false
-                                            });
-                                            gvc.glitter.changePage(new URL('../htmlGenerater.js', import.meta.url).href, 'category', true, {
-                                                config: res.result[0].config
-                                            });
-                                        });
-                                    });
-                                });
+                                appConfig().changePage(gvc, 'category');
                             })}">
                        <img src="${rootURL}/homee/src/bell.svg" onclick="${gvc.event(() => {
                                 glitter.runJsInterFace("noticeBell", {}, () => {
@@ -579,6 +557,7 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                         <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data, index) => {
+                                var _b;
                                 return `
                                 <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
                                     ClickEvent.trigger({
@@ -586,10 +565,7 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                     });
                                 })}">
                                     <img src=${data.icon} style="width: 28px;height: 28px;">
-                                    <div class="footerTitle ${(() => {
-                                    if (index == 0)
-                                        return "selected";
-                                })()}">${data.title}</div>
+                                    <div class="footerTitle" style="color:${(_b = data.color) !== null && _b !== void 0 ? _b : `black`};">${data.title}</div>
                                 </div>
                                 `;
                             }));
@@ -599,9 +575,17 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                     },
                     editor: () => {
                         return gvc.map(widget.data.dataList.map((dd, index) => {
-                            return glitter.htmlGenerate.editeInput({
+                            var _b;
+                            return `<div class="alert alert-dark mt-2">
+<h3 style="color: white;font-size: 17px;color: orangered;">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                widget.data.dataList.splice(index, 1);
+                                widget.refreshComponent();
+                            })}"></i>
+選項.${index + 1}</h3>
+${glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
-                                title: `footer icon ${index + 1}`,
+                                title: `名稱`,
                                 default: dd.title,
                                 placeHolder: dd.title,
                                 callback: (text) => {
@@ -610,7 +594,13 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                 }
                             }) +
                                 `
-                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">icon圖片${index + 1}</h3>
+ ${glitter.htmlGenerate.editeInput({
+                                    gvc, title: "字體顏色", default: (_b = dd.color) !== null && _b !== void 0 ? _b : "black", placeHolder: "請輸入字體顏色", callback: (text) => {
+                                        dd.color = text;
+                                        widget.refreshComponent();
+                                    }
+                                })}
+                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
                                     <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].icon}">
@@ -620,7 +610,7 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                         single: true,
                                         accept: 'image/*',
                                         callback(data) {
-                                            glitter.share.publicInterface["glitter"].upload(data[0].file, (link) => {
+                                            appConfig().uploadImage(data[0].file, (link) => {
                                                 widget.data.dataList[index].icon = link;
                                                 widget.refreshAll();
                                             });
@@ -629,8 +619,15 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                 })}"></i>
                                 </div>
                             `
-                                + ClickEvent.editer(gvc, widget, dd);
-                        }));
+                                + ClickEvent.editer(gvc, widget, dd)}
+</div>`;
+                        })) + `<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                            widget.data.dataList.push({
+                                title: "標題",
+                                icon: new URL('../img/component/footer/home.svg', import.meta.url).href
+                            });
+                            widget.refreshComponent();
+                        })}">添加按鈕</div>`;
                     }
                 };
             }
@@ -662,7 +659,11 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                     editor: () => {
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
-                                gvc, title: "標題", default: widget.data.title, placeHolder: "請輸入標題", callback: (text) => {
+                                gvc,
+                                title: "標題",
+                                default: widget.data.title,
+                                placeHolder: "請輸入標題",
+                                callback: (text) => {
                                     widget.data.title = text;
                                     widget.refreshComponent();
                                 }
