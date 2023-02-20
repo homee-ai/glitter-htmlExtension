@@ -103,6 +103,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="d-flex position-relative">
                                         <img src="${vm.data.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
                                         <img src="${new URL!(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
+                                            appConfig().changePage(gvc,"user_edit_Profile")
                                 })}">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center align-baseline" style="margin-left: 32px;">

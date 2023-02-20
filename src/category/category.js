@@ -3,6 +3,7 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { SharedView } from "../homee/shareView.js";
 import { appConfig } from "../config.js";
+import { Category } from "../api/category.js";
 Plugin.create(import.meta.url, (glitter) => {
     return {
         nav: {
@@ -505,6 +506,9 @@ color: #1E1E1E;">${data.title}</div>
                                         return gvc.map([{ name: "全部", id: gBundle.object.id }].concat((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((data, index) => {
                                             return `
                             <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle` : ``}" style="" onclick="${gvc.event(() => {
+                                                viewModel.loading = true;
+                                                viewModel.select = index;
+                                                gvc.notifyDataChange('mainView');
                                                 gvc.notifyDataChange('cardGroup');
                                                 gvc.notifyDataChange('subCategoryRow');
                                             })}">
@@ -516,7 +520,8 @@ color: #1E1E1E;">${data.title}</div>
                                     }, divCreate: { class: `d-flex`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;` }
                                 });
                             },
-                            loading: true
+                            loading: true,
+                            product: []
                         };
                         let sortSelect = 0;
                         let title = (_d = gBundle.title) !== null && _d !== void 0 ? _d : "分類頁";
@@ -582,7 +587,7 @@ color: #1E1E1E;">${data.title}</div>
                             return gvc.bindView({
                                 bind: `mainView`,
                                 view: () => {
-                                    var _a, _b;
+                                    var _a, _b, _c;
                                     if (topInset !== undefined && bottomInset !== undefined) {
                                         return `
                         <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
@@ -634,23 +639,74 @@ color: #1E1E1E;">${data.title}</div>
                                         })}
                             </banner>       
                         </nav>
-                        <main style="background: white;padding-top: ${topInset - 20 + 150}px;padding-left: 23px;padding-right: 23px;">
+                        <main style="background: white;padding-top:${topInset - 20 + ((((_c = gBundle.object.subCategory) !== null && _c !== void 0 ? _c : []).length > 0) ? 150 : 120)}px;padding-left: 23px;padding-right: 23px;">
                             ${gvc.bindView({
                                             bind: "cardGroup",
                                             view: () => {
                                                 if (viewModel.loading) {
-                                                    let returnHTML = ``;
-                                                    return returnHTML;
-                                                }
-                                                else {
-                                                    return `<div class="w-100">
+                                                    let returnHTML = `<div class="w-100">
             <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                 <div class="spinner-border" role="status"></div>
             </div>
         </div>`;
+                                                    return returnHTML;
+                                                }
+                                                else {
+                                                    return new glitter.htmlGenerate([
+                                                        {
+                                                            "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
+                                                            "js": "$homee/official/official.js",
+                                                            "data": {
+                                                                "class": "m-0 p-0 flex-wrap justify-content-around",
+                                                                "style": "gap:10px;",
+                                                                "layout": "d-flex",
+                                                                "marginB": "86px",
+                                                                "marginL": "0px",
+                                                                "marginR": "0px",
+                                                                "setting": viewModel.product.map((dd) => {
+                                                                    return {
+                                                                        "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
+                                                                        "js": "$homee/homee/homee_home.js",
+                                                                        "data": {
+                                                                            "data": {
+                                                                                "id": dd.id,
+                                                                                "name": dd.name,
+                                                                                "price": dd.price,
+                                                                                "quantity": dd.quantity,
+                                                                                "sale_price": dd.sale_price,
+                                                                                "preview_image": dd.preview_image
+                                                                            },
+                                                                            "style": "\n",
+                                                                            "paddingL": "",
+                                                                            "paddingR": "",
+                                                                            "clickEvent": {
+                                                                                "src": "$homee/homee/event.js",
+                                                                                "route": "toProductDetail"
+                                                                            }
+                                                                        },
+                                                                        "type": "productItem",
+                                                                        "label": "商品",
+                                                                        "route": "homee_home",
+                                                                        "style": "width:calc(50% - 8px);",
+                                                                        "expandStyle": false,
+                                                                        "refreshAllParameter": {},
+                                                                        "refreshComponentParameter": {}
+                                                                    };
+                                                                }),
+                                                                "paddingB": "16px",
+                                                                "paddingL": "",
+                                                                "paddingR": ""
+                                                            },
+                                                            "type": "container",
+                                                            "class": " ",
+                                                            "label": "元件容器",
+                                                            "route": "Glitter",
+                                                            "style": ""
+                                                        }
+                                                    ], []).render(gvc);
                                                 }
                                             },
-                                            divCreate: { style: ``, class: `d-flex flex-wrap` }
+                                            divCreate: { style: `padding-top:20px;`, class: `` }
                                         })}
                         </main>                         
                         `;
@@ -662,6 +718,17 @@ color: #1E1E1E;">${data.title}</div>
                                     }
                                 }, divCreate: { class: ``, style: `min-height : 100vh;padding-bottom:100px;` },
                                 onCreate: () => {
+                                    var _a;
+                                    if (viewModel.loading) {
+                                        const id = [{ name: "全部", id: gBundle.object.value }].concat(((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((dd) => {
+                                            return { name: dd.title, id: dd.value };
+                                        }))[viewModel.select].id;
+                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                            viewModel.product = response;
+                                            viewModel.loading = false;
+                                            gvc.notifyDataChange('cardGroup');
+                                        });
+                                    }
                                 }
                             });
                         })();
