@@ -35,7 +35,6 @@ export class Category {
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}`,
             type: 'get',
-            data: jsonData,
             contentType: 'application/json; charset=utf-8',
             success: (response) => {
                 callback(response["product_list"]);
