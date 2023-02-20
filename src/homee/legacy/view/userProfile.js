@@ -9,10 +9,10 @@ export class ViewModel {
                border: none;
                background-color: transparent;
                font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 23px;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 23px;
              }
             .input-row{
                 margin-bottom : 28px;
@@ -133,16 +133,19 @@ line-height: 23px;
                         bind: `${data.name}-inputRow`,
                         view: () => {
                             return `                            
-                                <div class="left" style="">${data.left}</div>
-                                <div class="right"  style="width: 78%;margin-right: 12px;">
-                                    <div id="zipcode">
-                                                                      
-                                    </div>   
-                                    <input class="w-100 border-0" name="address" style="margin-top: 27px;" ${readonly}>                             
-                                </div>
-                                
-                                   
-                            `;
+                        <div class="left" style="">${data.left}</div>
+                        <div class="right"  style="width: 78%;margin-right: 12px;">
+                            <div id="zipcode">
+                                                              
+                            </div>   
+                            <input class="w-100 border-0 areaData" name="address" style="margin-top: 27px;" ${readonly} onchange="${gvc.event((e) => {
+                                let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                data.placehold = `${county[0]} ${county[2]} ${county[1]} ${e.value}`;
+                            })}">                             
+                        </div>
+                            
+                               
+                        `;
                         },
                         divCreate: { style: ``, class: `w-100 d-flex align-items-center input-row` },
                         onCreate: () => {
@@ -151,13 +154,27 @@ line-height: 23px;
                                         src: 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js'
                                     }, { src: `https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js` }
                                 ], () => {
+                                    let dataArray = data.placehold.split(" ");
+                                    if (data.placehold) {
+                                        document.querySelector('.areaData').value = dataArray[3];
+                                    }
                                     $("#zipcode").twzipcode({
                                         zipcodeIntoDistrict: true,
                                         css: ["city ", "town"],
                                         countyName: "city",
                                         districtName: "town",
-                                        countySel: data.placehold.city,
-                                        districtSel: data.placehold.town
+                                        countySel: dataArray[0],
+                                        districtSel: dataArray[2],
+                                        onCountySelect: () => {
+                                            let areaData = document.querySelector(".areaData");
+                                            let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                            data.placehold = `${county[0]} ${county[2]} ${county[1]} ${areaData.value}`;
+                                        },
+                                        onDistrictSelect: () => {
+                                            let areaData = document.querySelector(".areaData");
+                                            let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                            data.placehold = `${county[0]} ${county[2]} ${county[1]} ${areaData.value}`;
+                                        }
                                     });
                                 }, () => {
                                 });
@@ -174,7 +191,7 @@ line-height: 23px;
                             <div class="left" style="">${data.left}</div>
                             <div class="right" style="width: 78%;">
                                 <input class="w-100 border-0" name="${data.name}" type="${data.type}" ${readonly} value="${data.placehold}"
-                                onblur="${gvc.event((e) => { data.placehold = e.value; })}">
+                                onchange="${gvc.event((e) => { data.placehold = e.value; })}">
                             </div>
                             
                         `;

@@ -54,11 +54,7 @@ export class User {
             },
         });
     }
-    public static login({
-                            account,
-                            pwd,
-                            callback
-                        }: { account: string, pwd: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean) => void }){
+    public static login({account,pwd,callback}: { account: string, pwd: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean) => void }){
         const glitter=Glitter.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
@@ -117,4 +113,5 @@ export class User {
             },
         });
     }
+
 }

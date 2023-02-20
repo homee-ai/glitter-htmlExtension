@@ -19,10 +19,10 @@ export class ViewModel{
                border: none;
                background-color: transparent;
                font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 23px;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 23px;
              }
             .input-row{
                 margin-bottom : 28px;
@@ -111,11 +111,11 @@ line-height: 23px;
                                 <div class="left" style="">${data.left}</div>
                                 <div class="right" style="width: calc(39% - 12px);margin-right: 12px;">
                                     <input class="w-100 border-0" name="lastName" type="text" value="${data.placehold.last}" ${readonly} 
-                                    onblur="${gvc.event((e)=>{ data.placehold.last = e.value;})}">                                                                        
+                                    onblur="${gvc.event((e:HTMLInputElement)=>{ data.placehold.last = e.value;})}">                                                                        
                                 </div>
                                 <div class="right" style="width: 39%">
                                     <input class="w-100 border-0" name="firstName" type="text" value="${data.placehold.first}" ${readonly}                                    
-                                    onblur="${gvc.event((e)=>{ data.placehold.first = e.value;})}">
+                                    onblur="${gvc.event((e:HTMLInputElement)=>{ data.placehold.first = e.value;})}">
                                 </div>
                                 
                             `
@@ -133,9 +133,9 @@ line-height: 23px;
                         return `                            
                                 <div class="left" style="">${data.left}</div>
                                 <div class="right" style="width: 78%;position: relative">
-                                    <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入新密碼" ${readonly} onchange="${gvc.event((e)=>{
-                            data.placehold=e.value      
-                        })}">                               
+                                    <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入新密碼" ${readonly} onchange="${gvc.event((e:HTMLInputElement)=>{
+                                        data.placehold=e.value      
+                                    })}">                               
                                 </div>                               
                                 
                             `
@@ -149,16 +149,20 @@ line-height: 23px;
                     bind : `${data.name}-inputRow`,
                     view : ()=>{
                         return `                            
-                                <div class="left" style="">${data.left}</div>
-                                <div class="right"  style="width: 78%;margin-right: 12px;">
-                                    <div id="zipcode">
-                                                                      
-                                    </div>   
-                                    <input class="w-100 border-0" name="address" style="margin-top: 27px;" ${readonly}>                             
-                                </div>
-                                
-                                   
-                            `
+                        <div class="left" style="">${data.left}</div>
+                        <div class="right"  style="width: 78%;margin-right: 12px;">
+                            <div id="zipcode">
+                                                              
+                            </div>   
+                            <input class="w-100 border-0 areaData" name="address" style="margin-top: 27px;" ${readonly} onchange="${gvc.event((e:HTMLInputElement)=>{
+                                // @ts-ignore
+                                let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                data.placehold = `${county[0]} ${county[2]} ${county[1]} ${e.value}`
+                            })}">                             
+                        </div>
+                            
+                               
+                        `
                     },
                     divCreate : {style : `` , class : `w-100 d-flex align-items-center input-row`},
                     onCreate : ()=>{
@@ -167,16 +171,35 @@ line-height: 23px;
                                 src: 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js'
                             } , {src:`https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js`}
                             ], () => {
-               
+                                let dataArray = data.placehold.split(" ");
+                                if(data.placehold){
+                                    (document.querySelector('.areaData') as HTMLInputElement).value = dataArray[3];    
+                                }
+                                
                                 // @ts-ignore
                                 $("#zipcode").twzipcode({
                                     zipcodeIntoDistrict: true,
                                     css: ["city ", "town"],
                                     countyName: "city", // 指定城市 select name
                                     districtName: "town", // 指定地區 select name
-                                    countySel: data.placehold.city,
-                                    districtSel : data.placehold.town
+                                    countySel: dataArray[0],
+                                    districtSel : dataArray[2],
+                                    onCountySelect:()=>{
+                                    //    避免先填下方資料 最後選區導致的資料抓取不完全
+                                        let areaData = document.querySelector(".areaData") as HTMLInputElement;
+                                        // @ts-ignore
+                                        let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                        data.placehold = `${county[0]} ${county[2]} ${county[1]} ${areaData.value}`
+                                    },
+                                    onDistrictSelect:()=>{
+                                    //    避免先填下方資料 最後選區導致的資料抓取不完全
+                                        let areaData = document.querySelector(".areaData") as HTMLInputElement;
+                                        // @ts-ignore
+                                        let county = $("#zipcode").twzipcode('get', 'county,district,zipcode');
+                                        data.placehold = `${county[0]} ${county[2]} ${county[1]} ${areaData.value}`
+                                    }
                                 });
+                                
                                 
                             }, () => {
                             })
@@ -187,6 +210,7 @@ line-height: 23px;
                 })}
                 
                 `
+
             default : return `
                 ${gvc.bindView({
                     bind : `${data.name}-inputRow`,
@@ -195,7 +219,7 @@ line-height: 23px;
                             <div class="left" style="">${data.left}</div>
                             <div class="right" style="width: 78%;">
                                 <input class="w-100 border-0" name="${data.name}" type="${data.type}" ${readonly} value="${data.placehold}"
-                                onblur="${gvc.event((e)=>{ data.placehold = e.value;})}">
+                                onchange="${gvc.event((e:HTMLInputElement)=>{ data.placehold = e.value;})}">
                             </div>
                             
                         `

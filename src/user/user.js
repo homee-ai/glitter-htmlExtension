@@ -1404,116 +1404,116 @@ ${glitter.htmlGenerate.editeInput({
                 return {
                     view: () => {
                         gvc.addStyle(`
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Bold.otf);
-            font-weight: bold;
-        }
-
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Regular.otf);
-            font-weight: normal;
-        }
-
-        html {
-            width: 100%;
-            height: 100%;
-
-        }
-
-        body {
-            width: 100%;
-            height: 100%;
-     
-        }
-
-        main {
-            padding: 24px 35px 44px;
-         
-            font-family: 'Noto Sans TC';
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        .homeBlack {
-            color: #292929;
-        }
-
-        .mySpaceCount {
-            width: 18px;
-            height: 18px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 12px;
-            line-height: 15px;
-            text-align: center;
-  
-            /* HOMEE white */
-
-            border: 1px solid #FFFFFF;
-            border-radius: 8px;
-            /* HOMEE white */
-
-            color: #FFFFFF;
-
-        }
-
-        .indexTitle {
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-
-            /* HOMEE white */
-            color: #292929;
-        }
-        
-        .save{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 500;
-            font-size: 17px;
-            line-height: 25px;
-            /* identical to box height */
-            
-            text-align: center;
-            
-            /* HOMEE red */
-            
-            color: #FD6A58;
-        }
-        .changePhoto{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 20px;
-            font-feature-settings: 'pnum' on, 'lnum' on;
-            
-            /* HOMEE red */
-            
-            color: #FD6A58;
-            
-            margin-top : 8px;
-        }
-        .acc-title{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 700;
-            font-size: 24px;
-            line-height: 35px;
-            color: #292929;
-            margin-bottom : 18px;
-        }
-        `);
+                        @font-face {
+                            font-family: 'Noto Sans TC';
+                            src: url(assets/Font/NotoSansTC-Bold.otf);
+                            font-weight: bold;
+                        }
+                
+                        @font-face {
+                            font-family: 'Noto Sans TC';
+                            src: url(assets/Font/NotoSansTC-Regular.otf);
+                            font-weight: normal;
+                        }
+                
+                        html {
+                            width: 100%;
+                            height: 100%;
+                
+                        }
+                
+                        body {
+                            width: 100%;
+                            height: 100%;
+                     
+                        }
+                
+                        main {
+                            padding: 24px 35px 44px;
+                         
+                            font-family: 'Noto Sans TC';
+                            margin: 0;
+                            box-sizing: border-box;
+                        }
+                
+                        .homeBlack {
+                            color: #292929;
+                        }
+                
+                        .mySpaceCount {
+                            width: 18px;
+                            height: 18px;
+                
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 12px;
+                            line-height: 15px;
+                            text-align: center;
+                  
+                            /* HOMEE white */
+                
+                            border: 1px solid #FFFFFF;
+                            border-radius: 8px;
+                            /* HOMEE white */
+                
+                            color: #FFFFFF;
+                
+                        }
+                
+                        .indexTitle {
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 15px;
+                            line-height: 150%;
+                
+                            /* HOMEE white */
+                            color: #292929;
+                        }
+                        
+                        .save{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 17px;
+                            line-height: 25px;
+                            /* identical to box height */
+                            
+                            text-align: center;
+                            
+                            /* HOMEE red */
+                            
+                            color: #FD6A58;
+                        }
+                        .changePhoto{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 14px;
+                            line-height: 20px;
+                            font-feature-settings: 'pnum' on, 'lnum' on;
+                            
+                            /* HOMEE red */
+                            
+                            color: #FD6A58;
+                            
+                            margin-top : 8px;
+                        }
+                        .acc-title{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 24px;
+                            line-height: 35px;
+                            color: #292929;
+                            margin-bottom : 18px;
+                        }
+                        `);
                         gvc.addStyle(`
         html{
             overflow-y : auto;
@@ -1559,13 +1559,16 @@ ${glitter.htmlGenerate.editeInput({
                         let viewModel = new ViewModel(gvc);
                         let dialog = new Dialog(gvc);
                         let firstAddressData = {};
+                        console.log();
                         const vm = {
                             loading: true,
                             data: undefined,
-                            userData: undefined
+                            userData: undefined,
+                            addressModel: []
                         };
                         appConfig().getUserData({
                             callback: (response) => {
+                                var _a, _b, _c;
                                 vm.data = [
                                     {
                                         left: "姓名",
@@ -1573,13 +1576,13 @@ ${glitter.htmlGenerate.editeInput({
                                         name: "name",
                                         placehold: {
                                             get last() {
-                                                return response.last_name;
+                                                return (response === null || response === void 0 ? void 0 : response.last_name) || "";
                                             },
                                             set last(value) {
                                                 response.last_name = value;
                                             },
                                             get first() {
-                                                return response.first_name;
+                                                return (response === null || response === void 0 ? void 0 : response.first_name) || "";
                                             },
                                             set first(value) {
                                                 response.first_name = value;
@@ -1592,7 +1595,7 @@ ${glitter.htmlGenerate.editeInput({
                                         name: "userName",
                                         get placehold() {
                                             var _a;
-                                            return (_a = (response.name)) !== null && _a !== void 0 ? _a : (response.last_name + response.first_name);
+                                            return (_a = (response.name)) !== null && _a !== void 0 ? _a : ((vm.data.first_name + vm.data.last_name) || "");
                                         },
                                         set placehold(value) {
                                             response.name = value;
@@ -1642,6 +1645,40 @@ ${glitter.htmlGenerate.editeInput({
                                         placehold: ""
                                     }
                                 ];
+                                if (response.addressModel) {
+                                    vm.addressModel = [
+                                        {
+                                            left: "姓名",
+                                            type: "name",
+                                            name: "addressName",
+                                            placehold: {
+                                                last: response.addressModel.last_name,
+                                                first: response.addressModel.first_name
+                                            }
+                                        },
+                                        {
+                                            left: "電話",
+                                            type: "number",
+                                            name: "addressPhone",
+                                            placehold: response.addressModel.address_phone
+                                        },
+                                        {
+                                            left: "公司名稱",
+                                            type: "text",
+                                            name: "addressCompany",
+                                            placehold: response.addressModel.company
+                                        },
+                                        {
+                                            left: "地址",
+                                            type: "text",
+                                            name: "address",
+                                            placehold: response.addressModel.address
+                                        }
+                                    ];
+                                }
+                                else {
+                                    vm.addressModel = (_c = (_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.addressModel) !== null && _c !== void 0 ? _c : [];
+                                }
                                 vm.userData = response;
                                 vm.loading = false;
                             }
@@ -1672,8 +1709,8 @@ ${glitter.htmlGenerate.editeInput({
                         function deleteFirstAddress() {
                             if (confirm("確定刪除?")) {
                                 glitter.runJsInterFace("deleteAddress", {}, (response) => {
-                                    firstAddressData = {};
-                                    gvc.notifyDataChange('mainView');
+                                    vm.addressModel = [];
+                                    gvc.notifyDataChange('firstAddress');
                                 }, {
                                     webFunction: () => {
                                         return { result: "OK" };
@@ -1706,11 +1743,11 @@ ${glitter.htmlGenerate.editeInput({
                                 ${(() => {
                                 let funnel = new Funnel(gvc);
                                 return gvc.map([`
-                                        <input
-                                            type="file"
-                                            class="d-none"
-                                            id="${gvc.id("photo")}"
-                                            onchange="${gvc.event((e) => {
+                                    <input
+                                    type="file"
+                                    class="d-none"
+                                    id="${gvc.id("photo")}"
+                                    onchange="${gvc.event((e) => {
                                         for (let i = 0; i < $(e).get(0).files.length; i++) {
                                             let canvas = document.createElement('canvas');
                                             let ctx = canvas.getContext('2d');
@@ -1757,7 +1794,7 @@ ${glitter.htmlGenerate.editeInput({
                                             };
                                         }
                                     })}"
-                                        />`,
+                                    />`,
                                     gvc.bindView({
                                         dataList: [
                                             {
@@ -1787,7 +1824,8 @@ ${glitter.htmlGenerate.editeInput({
                                             style: `margin-bottom : 40px;`
                                         }
                                     })]);
-                            })()}                        
+                            })()}    
+<!--                                                    上排資料-->
                                 ${gvc.bindView({
                                 dataList: [
                                     {
@@ -1809,12 +1847,12 @@ ${glitter.htmlGenerate.editeInput({
                                                 bind: `${dd.name}-inputRow`,
                                                 view: () => {
                                                     return `                            
-                                                            <div class="left" style="">${dd.left}</div>
-                                                            <div class="right" style="width: 78%;position: relative">
+                                                                <div class="left" style="">${dd.left}</div>
+                                                                <div class="right" style="width: 78%;position: relative">
                                                                 <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e) => {
                                                         dd.placehold = e.value;
                                                     })}" value="${dd.placehold}">
-                                                                ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
+                                                                    ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
                                                         if (vm.userData.pwd !== dd.placehold) {
                                                             dialog.showInfo("密碼輸入錯誤!");
                                                         }
@@ -1827,11 +1865,11 @@ ${glitter.htmlGenerate.editeInput({
                                                             gvc.notifyDataChange('accountData');
                                                         }
                                                     })}">確認</div>    
-                                                            `}
-                                                                               
-                                            </div>                               
-                                            
-                                                            `;
+                                                                `}
+                                                                                   
+                                                </div>                               
+                                                
+                                                                `;
                                                 },
                                                 divCreate: { style: ``, class: `d-flex align-items-center input-row` }
                                             });
@@ -1852,54 +1890,22 @@ ${glitter.htmlGenerate.editeInput({
                                 ${gvc.bindView({
                                 bind: "firstAddress",
                                 view: () => {
-                                    if (firstAddressData === null || firstAddressData === void 0 ? void 0 : firstAddressData.address) {
-                                        let temp = firstAddressData.address;
-                                        let address = `${temp.city} ${temp.zipcode} ${temp.town} ${temp.address}`;
-                                        addressModel = [
-                                            {
-                                                left: "姓名",
-                                                type: "name",
-                                                name: "addressName",
-                                                placehold: {
-                                                    last: firstAddressData.last_name,
-                                                    first: firstAddressData.first_name
-                                                }
-                                            },
-                                            {
-                                                left: "電話",
-                                                type: "number",
-                                                name: "addressPhone",
-                                                placehold: firstAddressData.address_phone
-                                            },
-                                            {
-                                                left: "公司名稱",
-                                                type: "text",
-                                                name: "addressCompany",
-                                                placehold: firstAddressData.company
-                                            },
-                                            {
-                                                left: "地址",
-                                                type: "text",
-                                                name: "address",
-                                                placehold: address
-                                            }
-                                        ];
-                                    }
                                     let returnData = ``;
-                                    addressModel.forEach((data) => {
+                                    vm.addressModel.forEach((data) => {
                                         returnData += viewModel.inputRow(data, "readonly");
                                     });
                                     let addBtn = ``;
-                                    if (!(firstAddressData === null || firstAddressData === void 0 ? void 0 : firstAddressData.address)) {
+                                    if (vm.addressModel.length == 0) {
                                         addBtn = `<div class="addr-add" onclick="${gvc.event(() => {
-                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, {});
+                                            appConfig().changePage(gvc, "editFirstAddress");
                                         })}">新增</div>`;
                                     }
                                     else {
                                         addBtn = `
                                             <div class="d-flex">
                                                 <div class="addr-edit" onclick="${gvc.event(() => {
-                                            glitter.changePage('jsPage/user/editFirstAddress.js', "editFirstAddress", true, { address: firstAddressData });
+                                            vm.addressModel[3].type = "address";
+                                            appConfig().changePage(gvc, "editFirstAddress", { addressModel: vm.addressModel });
                                         })}">編輯</div>
                                                 <div class="addr-del" onclick="${gvc.event(() => {
                                             deleteFirstAddress();
@@ -1907,17 +1913,300 @@ ${glitter.htmlGenerate.editeInput({
                                             </div>`;
                                     }
                                     return `
-                                        <div class="w-100 d-flex flex-column d-none" style="margin-top:6px;">
-                                            <div class="w-100 acc-title d-flex justify-content-between align-items-center">
-                                                <div class="">首選地址</div>${addBtn}
-                                            </div>                                            
-                                            ${returnData}               
-                                        </div>`;
+                                            <div class="w-100 d-flex flex-column d-none" style="margin-top:6px;">
+                                                <div class="w-100 acc-title d-flex justify-content-between align-items-center">
+                                                    <div class="">首選地址</div>${addBtn}
+                                                </div>                                            
+                                                ${returnData}               
+                                            </div>`;
                                 }, divCreate: {}
                             })}
+                                
                             </main>
                             `
                         ]);
+                    },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
+        edit_firstAddress: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                return {
+                    view: () => {
+                        gvc.addStyle(`
+                        @font-face {
+                            font-family: 'Noto Sans TC';
+                            src: url(assets/Font/NotoSansTC-Bold.otf);
+                            font-weight: bold;
+                        }
+                
+                        @font-face {
+                            font-family: 'Noto Sans TC';
+                            src: url(assets/Font/NotoSansTC-Regular.otf);
+                            font-weight: normal;
+                        }
+                
+                        html {
+                            width: 100%;
+                            height: 100%;
+                
+                        }
+                
+                        body {
+                            width: 100%;
+                            height: 100%;
+                     
+                        }
+                
+                        main {
+                            padding: 24px 35px 44px;
+                         
+                            font-family: 'Noto Sans TC';
+                            margin: 0;
+                            box-sizing: border-box;
+                        }
+                
+                        .homeBlack {
+                            color: #292929;
+                        }
+                
+                        .mySpaceCount {
+                            width: 18px;
+                            height: 18px;
+                
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 12px;
+                            line-height: 15px;
+                            text-align: center;
+                  
+                            /* HOMEE white */
+                
+                            border: 1px solid #FFFFFF;
+                            border-radius: 8px;
+                            /* HOMEE white */
+                
+                            color: #FFFFFF;
+                
+                        }
+                
+                        .indexTitle {
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 15px;
+                            line-height: 150%;
+                
+                            /* HOMEE white */
+                            color: #292929;
+                        }
+                        
+                        .save{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 17px;
+                            line-height: 25px;
+                            /* identical to box height */
+                            
+                            text-align: center;
+                            
+                            /* HOMEE red */
+                            
+                            color: #FD6A58;
+                        }
+                        .changePhoto{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 14px;
+                            line-height: 20px;
+                            font-feature-settings: 'pnum' on, 'lnum' on;
+                            
+                            /* HOMEE red */
+                            
+                            color: #FD6A58;
+                            
+                            margin-top : 8px;
+                        }
+                        .acc-title{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 700;
+                            font-size: 24px;
+                            line-height: 35px;
+                            color: #292929;
+                            margin-bottom : 18px;
+                        }
+                        `);
+                        gvc.addStyle(`
+        html{
+            overflow-y : auto;
+        }
+        main{
+            width:100%;
+            padding-left:19px;
+            padding-right:19px;
+        }
+        .addr-add{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+      
+            
+            
+            /* HOMEE red */
+            
+            color: #FD6A58;
+        }
+        .addr-edit{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+            color: #FD6A58;
+            margin-right : 12px;
+        }
+        .addr-del{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 150%;
+            color: #858585;
+           
+        }
+    `);
+                        let viewModel = new ViewModel(gvc);
+                        let shareView = new SharedView(gvc);
+                        let vm = {
+                            empty: true
+                        };
+                        let model = undefined;
+                        function initModel() {
+                            appConfig().getUserData({
+                                callback: (response) => {
+                                    var _a, _b, _c, _d, _e, _f, _g;
+                                    vm.empty = !!(response === null || response === void 0 ? void 0 : response.addressModel);
+                                    let address = (response === null || response === void 0 ? void 0 : response.addressModel) ? response === null || response === void 0 ? void 0 : response.addressModel[3].placehold : "";
+                                    model = (_c = (_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.addressModel) !== null && _c !== void 0 ? _c : [
+                                        {
+                                            left: "姓名",
+                                            type: "name",
+                                            name: "address-name",
+                                            placehold: { last: ((_d = response === null || response === void 0 ? void 0 : response.addressModel) === null || _d === void 0 ? void 0 : _d.last_name) || "姓氏", first: ((_e = response === null || response === void 0 ? void 0 : response.addressModel) === null || _e === void 0 ? void 0 : _e.first_name) || "名稱" }
+                                        },
+                                        {
+                                            left: "電話",
+                                            type: "number",
+                                            name: "address-phone",
+                                            placehold: ((_f = response === null || response === void 0 ? void 0 : response.addressModel) === null || _f === void 0 ? void 0 : _f.address_phone) || ""
+                                        },
+                                        {
+                                            left: "公司名稱",
+                                            type: "text",
+                                            name: "company",
+                                            placehold: ((_g = response === null || response === void 0 ? void 0 : response.addressModel) === null || _g === void 0 ? void 0 : _g.company) || ""
+                                        },
+                                        {
+                                            left: "地址",
+                                            type: "address",
+                                            name: "address",
+                                            placehold: address
+                                        }
+                                    ];
+                                }
+                            });
+                        }
+                        initModel();
+                        return `
+                        <!--            輸入列-->
+                        ${gvc.bindView({
+                            bind: "firstAddress",
+                            view: () => {
+                                let returnData = ``;
+                                model.forEach((data) => {
+                                    returnData += viewModel.inputRow(data);
+                                });
+                                return `
+                                <div class="w-100 d-flex flex-column" style="margin-top:6px;">
+                                    <div class="w-100 acc-title d-flex justify-content-between align-items-center">
+                                        <div class="">首選地址</div>
+                                    </div>                                            
+                                    ${returnData}                                     
+                                </div>`;
+                            }, onCreate: () => {
+                            }
+                        })}
+                        <!--            按鍵描繪-->
+                        ${gvc.bindView({
+                            bind: "btnGroup",
+                            view: () => {
+                                gvc.addStyle(`
+                                   .OKBtn{
+                                    height: 48px;
+                                    left: 0px;
+                                    top: 0px;
+                                    background: #FD6A58;
+                                    border-radius: 28px;
+                                    color: #FFFFFF;
+                                   }
+                                   .delete-btn{
+                                    font-family: 'Noto Sans TC';
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    font-size: 15px;
+                                    line-height: 150%;
+                                    /* identical to box height, or 22px */
+                                    
+                                    text-align: center;
+                                    
+                                    /* HOMEE black */
+                                    
+                                    color: #292929;
+                                    
+                                    margin-top:8px;
+                                   }
+                               `);
+                                if (vm.empty) {
+                                    return `
+                                    <bottom class="OKBtn w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
+                                        glitter.share.addressModel = model;
+                                        appConfig().changePage(gvc, "user_edit_Profile");
+                                    })}">更新地址</bottom>
+                                    <div class="delete-btn" onclick="${gvc.event(() => {
+                                        glitter.share.addressModel = undefined;
+                                        appConfig().changePage(gvc, "user_edit_Profile");
+                                    })}">刪除地址</div>
+                                    `;
+                                }
+                                else {
+                                    return `
+                                    <bottom class="OKBtn w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
+                                        model[3].type = "text";
+                                        appConfig().changePage(gvc, "user_edit_Profile", {
+                                            addressModel: model,
+                                        });
+                                    })}">
+                                       儲存
+                                    </bottom>
+                                    `;
+                                }
+                            }, divCreate: { style: `padding: 0 59px;margin-top:40px;`, class: `d-flex flex-column justify-content-center align-items-center` }
+                        })}
+                        `;
                     },
                     editor: () => {
                         return ``;
