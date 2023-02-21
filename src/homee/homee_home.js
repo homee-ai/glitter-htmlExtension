@@ -595,7 +595,11 @@ ${glitter.htmlGenerate.editeInput({
                             }) +
                                 `
  ${glitter.htmlGenerate.editeInput({
-                                    gvc, title: "字體顏色", default: (_b = dd.color) !== null && _b !== void 0 ? _b : "black", placeHolder: "請輸入字體顏色", callback: (text) => {
+                                    gvc,
+                                    title: "字體顏色",
+                                    default: (_b = dd.color) !== null && _b !== void 0 ? _b : "black",
+                                    placeHolder: "請輸入字體顏色",
+                                    callback: (text) => {
                                         dd.color = text;
                                         widget.refreshComponent();
                                     }
@@ -650,13 +654,94 @@ ${glitter.htmlGenerate.editeInput({
                                 })}">`;
                             }).join('<div class="mx-2"></div>'),
                             rightIcon: widget.data.right.map((dd) => {
-                                return `<img class="" src="${dd.img}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                                    ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
-                                })}">`;
+                                var _b, _c, _d, _e;
+                                dd.type = (_b = dd.type) !== null && _b !== void 0 ? _b : 'image';
+                                if (dd.type === 'image') {
+                                    return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                    })}">`);
+                                }
+                                else {
+                                    return `<span class="${(_c = dd.class) !== null && _c !== void 0 ? _c : ""}" style="${(_d = dd.style) !== null && _d !== void 0 ? _d : ""}" onclick="${gvc.event(() => {
+                                        ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                    })}">${(_e = dd.title) !== null && _e !== void 0 ? _e : ""}</span>`;
+                                }
                             }).join('<div class="mx-2"></div>')
                         });
                     },
                     editor: () => {
+                        function navItemAction(data) {
+                            return data.map((dd, index) => {
+                                var _b, _c;
+                                dd.type = (_b = dd.type) !== null && _b !== void 0 ? _b : 'image';
+                                dd.clickEvent = (_c = dd.clickEvent) !== null && _c !== void 0 ? _c : {};
+                                return `
+<div class="alert alert-dark">
+${(() => {
+                                    var _b, _c, _d, _e;
+                                    return `
+<h3 class="text-white" style="font-size: 16px;">類型</h3>
+<select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
+                                        dd.type = e.value;
+                                        widget.refreshComponent();
+                                    })}">
+<option value="image" ${dd.type === 'image' && 'selected'}>圖片</option>
+<option ${dd.type === 'title' && 'selected'} value="title">文字</option>
+</select>
+${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                        widget.data.right.splice(index, 1);
+                                        widget.refreshComponent();
+                                    })}"></i>
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${(_b = dd.img) !== null && _b !== void 0 ? _b : ""}">
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                        glitter.ut.chooseMediaCallback({
+                                            single: true,
+                                            accept: 'image/*',
+                                            callback(data) {
+                                                api.upload(data[0].file, (link) => {
+                                                    dd.img = link;
+                                                    widget.refreshComponent();
+                                                });
+                                            }
+                                        });
+                                    })}"></i>
+</div>` : gvc.map([glitter.htmlGenerate.editeInput({
+                                            gvc: gvc,
+                                            title: '按鈕文字',
+                                            default: (_c = dd.title) !== null && _c !== void 0 ? _c : '',
+                                            placeHolder: `請輸入按鈕文字`,
+                                            callback: (text) => {
+                                                dd.title = text;
+                                                widget.refreshComponent();
+                                            }
+                                        }), glitter.htmlGenerate.editeText({
+                                            gvc: gvc,
+                                            title: 'Style',
+                                            default: (_d = dd.style) !== null && _d !== void 0 ? _d : '',
+                                            placeHolder: ``,
+                                            callback: (text) => {
+                                                dd.style = text;
+                                                widget.refreshComponent();
+                                            }
+                                        }), glitter.htmlGenerate.editeText({
+                                            gvc: gvc,
+                                            title: 'Class',
+                                            default: (_e = dd.class) !== null && _e !== void 0 ? _e : '',
+                                            placeHolder: ``,
+                                            callback: (text) => {
+                                                dd.class = text;
+                                                widget.refreshComponent();
+                                            }
+                                        })])}
+`;
+                                })()}
+${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+</div>
+`;
+                            }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`);
+                        }
                         return gvc.map([
                             glitter.htmlGenerate.editeInput({
                                 gvc,
@@ -670,74 +755,14 @@ ${glitter.htmlGenerate.editeInput({
                             }),
                             `<div class="w-100 alert-dark alert my-2" >
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">左側按鈕</h3>
-${widget.data.left.map((dd, index) => {
-                                var _b;
-                                dd.clickEvent = (_b = dd.clickEvent) !== null && _b !== void 0 ? _b : {};
-                                return `
-<div class="alert alert-dark">
-<div class="d-flex align-items-center mb-3 mt-1 ">
-<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
-                                    widget.data.left.splice(index, 1);
-                                    widget.refreshComponent();
-                                })}"></i>
-<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
-
-<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
-                                    glitter.ut.chooseMediaCallback({
-                                        single: true,
-                                        accept: 'image/*',
-                                        callback(data) {
-                                            api.upload(data[0].file, (link) => {
-                                                dd.img = link;
-                                                widget.refreshComponent();
-                                            });
-                                        }
-                                    });
-                                })}"></i>
-</div>
-${ClickEvent.editer(gvc, widget, dd.clickEvent)}
-</div>
-
-`;
-                            }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
+${navItemAction(widget.data.left)}
 <div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
                                 widget.data.left.push({});
                                 widget.refreshComponent();
                             })}">添加按鈕</div>
 </div>`, `<div class="w-100 alert-dark alert my-2" >
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">右側按鈕</h3>
-${widget.data.right.map((dd, index) => {
-                                var _b;
-                                dd.clickEvent = (_b = dd.clickEvent) !== null && _b !== void 0 ? _b : {};
-                                return `
-<div class="alert alert-dark">
-<div class="d-flex align-items-center mb-3 mt-1 ">
-<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
-                                    widget.data.right.splice(index, 1);
-                                    widget.refreshComponent();
-                                })}"></i>
-<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img}">
-
-<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
-                                    glitter.ut.chooseMediaCallback({
-                                        single: true,
-                                        accept: 'image/*',
-                                        callback(data) {
-                                            api.upload(data[0].file, (link) => {
-                                                dd.img = link;
-                                                widget.refreshComponent();
-                                            });
-                                        }
-                                    });
-                                })}"></i>
-</div>
-${ClickEvent.editer(gvc, widget, dd.clickEvent)}
-</div>
-
-`;
-                            }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
+${navItemAction(widget.data.right)}
 <div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
                                 widget.data.right.push({});
                                 widget.refreshComponent();

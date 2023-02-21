@@ -390,5 +390,18 @@ ${gvc.bindView(() => {
                 }
             };
         }
+    },
+    openMyspace: {
+        title: '我的空間',
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``;
+                },
+                event: () => {
+                    gvc.glitter.runJsInterFace("openMyspace", {}, () => { });
+                }
+            };
+        }
     }
 });
