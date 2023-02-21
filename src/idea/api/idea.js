@@ -223,27 +223,27 @@ export class Idea {
             },
         });
     }
-    searchData(seachWord, callback) {
+    searchData(userData, searchWord, callback) {
         const glitter = this.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/search`,
             type: 'get',
             data: {
-                keyword: seachWord
+                keyword: searchWord
             },
             contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
+            headers: { Authorization: userData.token },
             success: (resposnse) => {
                 callback(resposnse);
             },
             error: (e) => {
                 setTimeout(() => {
-                    this.searchData(seachWord, callback);
+                    this.searchData(userData, searchWord, callback);
                 }, 1000);
             },
         });
     }
-    searchUser(seachWord, callback) {
+    searchUser(userData, seachWord, callback) {
         const glitter = this.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/searchUser`,
@@ -252,13 +252,13 @@ export class Idea {
                 keyword: seachWord
             },
             contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
+            headers: { Authorization: userData.token },
             success: (resposnse) => {
                 callback(resposnse);
             },
             error: (e) => {
                 setTimeout(() => {
-                    this.searchUser(seachWord, callback);
+                    this.searchUser(userData, seachWord, callback);
                 }, 1000);
             },
         });

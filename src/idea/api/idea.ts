@@ -316,30 +316,29 @@ export class Idea {
     }
 
     //搜尋文章 para1:搜尋字串 para2:callback
-    public searchData(seachWord: string, callback: (data: IdeaData[]) => void) {
+    public searchData(userData:any ,searchWord: string, callback: (data: IdeaData[]) => void) {
         const glitter = this.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/search`,
             type: 'get',
             data: {
-                keyword: seachWord
+                keyword: searchWord
             },
             contentType: 'application/json; charset=utf-8',
-            headers: {Authorization: glitter.share.userData.AUTH},
+            headers: {Authorization: userData.token},
             success: (resposnse: any) => {
-
                 callback(resposnse)
             },
             error: (e) => {
                 setTimeout(() => {
-                    this.searchData(seachWord,callback)
+                    this.searchData(userData ,searchWord,callback)
                 }, 1000)
             },
         });
     }
 
     //搜尋文章 para1:搜尋字串 para2:callback
-    public searchUser(seachWord: string, callback: (data: UserData[]) => void) {
+    public searchUser(userData:any,seachWord: string, callback: (data: UserData[]) => void) {
         const glitter = this.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/searchUser`,
@@ -348,13 +347,13 @@ export class Idea {
                 keyword: seachWord
             },
             contentType: 'application/json; charset=utf-8',
-            headers: {Authorization: glitter.share.userData.AUTH},
+            headers: {Authorization: userData.token},
             success: (resposnse: any) => {
                 callback(resposnse)
             },
             error: (e) => {
                 setTimeout(() => {
-                    this.searchUser(seachWord,callback)
+                    this.searchUser(userData , seachWord , callback , )
                 }, 1000)
             },
         });
