@@ -131,6 +131,11 @@ export class ViewModel {
         function changeToBoard(postData: any) {
             // glitter.share.postData = postData
             // glitter.changePage('jsPage/idea/idea_board.js', 'idea_board', true, {data: postData})
+            appConfig().changePage(gvc, "idea_board", {
+                postData: postData
+            }, {
+
+            })
         }
 
         gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`)

@@ -56,7 +56,6 @@ Plugin.create(import.meta.url, (glitter) => {
                 let viewLoading = false;
                 let userData;
                 initGetData();
-                getCharNumber();
                 function initGetData() {
                     vm.loading = true;
                     appConfig().getUserData({
@@ -99,9 +98,9 @@ Plugin.create(import.meta.url, (glitter) => {
                     glitter.runJsInterFace("getCharNumber", {}, function (response) {
                         if (response.charNumber) {
                             charCount = `
-                <div class="chatCount d-flex justify-content-center align-items-center" style="width: 16px;height: 16px;background: #FD6A58;position: absolute;right:-6px;top: -6px;z-index: 2;border-radius: 50%">
-                     ${response.charNumber}
-                </div>`;
+                        <div class="chatCount d-flex justify-content-center align-items-center" style="width: 16px;height: 16px;background: #FD6A58;position: absolute;right:-6px;top: -6px;z-index: 2;border-radius: 50%">
+                             ${response.charNumber}
+                        </div>`;
                         }
                         gvc.notifyDataChange('nav');
                     }, {
@@ -227,7 +226,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         triggerElement: `.trigger`,
                                                         onRefresh() {
                                                             iCount++;
-                                                            console.log(iCount);
                                                             initGetData();
                                                         }
                                                     });
@@ -261,7 +259,7 @@ Plugin.create(import.meta.url, (glitter) => {
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        var _a;
+                        var _a, _b;
                         gvc.addStyle(`          
                         main{
                             padding-bottom:70px;
@@ -385,7 +383,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         }
                 
                        `);
-                        let data = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj;
+                        console.log("here");
+                        console.log((_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.postData);
+                        let data = (_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data.postData;
                         let vm = {
                             id: glitter.getUUID(),
                             loading: true,
@@ -395,6 +395,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         const ideaApi = new Idea(glitter);
                         const viewModel = new ViewModel(gvc);
                         let shareView = new SharedView(gvc);
+                        let topInset = 0;
+                        let bottomInset = 0;
+                        let userData;
                         function getData() {
                             vm.loading = true;
                             gvc.notifyDataChange('mainView');
@@ -412,29 +415,168 @@ Plugin.create(import.meta.url, (glitter) => {
                                 });
                             });
                         }
+                        function getDateDiff(dateTimeStamp) {
+                            let minute = 1000 * 60;
+                            let hour = minute * 60;
+                            let day = hour * 24;
+                            let halfamonth = day * 15;
+                            let month = day * 30;
+                            let now = new Date().getTime();
+                            let timestamp = new Date((new Date(dateTimeStamp)).getTime() + 8 * 60 * 60 * 1000).getTime();
+                            let diffValue = now - timestamp;
+                            if (diffValue < 0) {
+                                return "";
+                            }
+                            let monthC = diffValue / month;
+                            let weekC = diffValue / (7 * day);
+                            let dayC = diffValue / day;
+                            let hourC = diffValue / hour;
+                            let minC = diffValue / minute;
+                            let result = undefined;
+                            if (monthC >= 1) {
+                                result = `${parseInt(monthC.toString())}月前`;
+                            }
+                            else if (weekC >= 1) {
+                                result = `${parseInt(weekC.toString())}周前`;
+                            }
+                            else if (dayC >= 1) {
+                                result = `${parseInt(dayC.toString())}天前`;
+                            }
+                            else if (hourC >= 1) {
+                                result = `${parseInt(hourC.toString())}小時前`;
+                            }
+                            else if (minC >= 1) {
+                                result = `${parseInt(minC.toString())}分鐘前`;
+                            }
+                            else
+                                result = "剛剛";
+                            return result;
+                        }
+                        function leaveEvent() {
+                            let leaveBTN = document.querySelector('.leaveBTN');
+                            let input = document.querySelector('.leaveInput');
+                            if (input.value == "") {
+                                if (leaveBTN === null || leaveBTN === void 0 ? void 0 : leaveBTN.classList.contains('leaveEvent')) {
+                                    leaveBTN.classList.remove('leaveEvent');
+                                }
+                            }
+                            else {
+                                if (!(leaveBTN === null || leaveBTN === void 0 ? void 0 : leaveBTN.classList.contains('leaveEvent'))) {
+                                    leaveBTN === null || leaveBTN === void 0 ? void 0 : leaveBTN.classList.add('leaveEvent');
+                                }
+                            }
+                        }
+                        function detectIMG(content) {
+                            if (content["appendix"]) {
+                                return `
+                                <div class="" style="max-width: 320px; background: #292929;border-radius: 20px;background:50% / cover url(${content["appendix"]});width: 100%;
+                                padding-bottom: 60%;margin-top: 10px;" onclick="${gvc.event(() => {
+                                    const dd = {
+                                        config: JSON.stringify(content.config),
+                                        scene: content.scene,
+                                        userName: data.poster
+                                    };
+                                    glitter.runJsInterFace("leaveModelToBoard", dd, function (response) {
+                                        let jsonData = {
+                                            idea_id: data["idea_id"],
+                                            messager: glitter.share.userData.user_id,
+                                            content: {
+                                                appendix: `${response["preview_image"]}`,
+                                                scene: response["scene"],
+                                                config: JSON.parse(response["config"]),
+                                            }
+                                        };
+                                        dialog.dataLoading(true);
+                                        $.ajax({
+                                            url: `${glitter.share.apiURL}/api/v1/idea/board`,
+                                            type: 'POST',
+                                            data: JSON.stringify(jsonData),
+                                            contentType: 'application/json; charset=utf-8',
+                                            headers: { Authorization: glitter.share.userData.AUTH },
+                                            success: (resposnse) => {
+                                                dialog.dataLoading(false);
+                                                getData();
+                                            },
+                                            error: () => {
+                                            },
+                                        });
+                                    }, {
+                                        webFunction(data) {
+                                            return {
+                                                preview_image: "img/sample/idea/postimg.png",
+                                                scene: "https://prd-homee-api-public.s3.amazonaws.com/scene/12729479/hhh.usdz",
+                                                config: JSON.parse(JSON.stringify({
+                                                    "id": "E9ED7F76-116D-42A3-B616-C83684F36F01",
+                                                    "key": "hhh",
+                                                    "data": [{
+                                                            "x": -1.5339330434799194,
+                                                            "y": -1.2596129179000854,
+                                                            "z": -0.35074079036712646,
+                                                            "prodult": {
+                                                                "id": 7324687,
+                                                                "sku": "F010060-1-1",
+                                                                "name": "MARSILLY 餐椅",
+                                                                "spec": "",
+                                                                "price": 4890,
+                                                                "multiple": false,
+                                                                "is_select": false,
+                                                                "model_url": "https://machi-app.com/api/v1/assets/sku/20221027T020021-F010060-1-1.usdz",
+                                                                "select_count": 1,
+                                                                "preview_image": "https://cdn.store-assets.com/s/349867/i/41820128.png?width=720"
+                                                            },
+                                                            "rotation": 0
+                                                        }],
+                                                    "rout": "Documents/MySpace/1668048250482.usdz",
+                                                    "time": 689741055.022742,
+                                                    "store_time": "2022-11-10 10:44:15",
+                                                    "server_rout": "https://prd-homee-api-public.s3.amazonaws.com/scene/12729479/hhh.usdz"
+                                                }))
+                                            };
+                                        }
+                                    });
+                                })}">
+                                </div>
+                            `;
+                            }
+                            else {
+                                return content["text"];
+                            }
+                        }
                         getData();
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
-                                let topInset = 0;
-                                let bottomInset = 0;
+                                var _a;
+                                if (!userData) {
+                                    appConfig().getUserData({
+                                        callback: (response) => {
+                                            userData = response;
+                                            gvc.notifyDataChange('mainView');
+                                        }
+                                    });
+                                }
                                 glitter.runJsInterFace("getTopInset", {}, (response) => {
-                                    topInset = (response.data);
-                                    gvc.notifyDataChange('mainView');
+                                    if (topInset != response.data) {
+                                        topInset = (response.data);
+                                        gvc.notifyDataChange('mainView');
+                                    }
                                 }, {
                                     webFunction: () => {
-                                        return { data: 50 };
+                                        return { data: 10 };
                                     }
                                 });
                                 glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                                    bottomInset = (response.data);
-                                    gvc.notifyDataChange('mainView');
+                                    if (bottomInset != response.data) {
+                                        bottomInset = (response.data);
+                                        gvc.notifyDataChange('mainView');
+                                    }
                                 }, {
                                     webFunction: () => {
-                                        return { data: 50 };
+                                        return { data: 10 };
                                     }
                                 });
                                 if (topInset !== undefined && bottomInset !== undefined) {
+                                    console.log("OKK");
                                     return `
 
                                     ${shareView.navigationBar({
@@ -447,21 +589,19 @@ Plugin.create(import.meta.url, (glitter) => {
                                         `
                                     })}
                                     <main class="d-flex flex-column" style="">
-                                            <div class="intro d-flex" style="border-bottom: 1px solid #D6D6D6;">
-                                                <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;background: 50% / cover url('${data['posterPhoto']}') no-repeat;" onclick="${gvc.event(() => {
-                                        glitter.changePage("jsPage/idea/idea_profile.js", "idea_profile", true, {
-                                            poster_id: data['poster_id']
-                                        });
+                                        <div class="intro d-flex" style="border-bottom: 1px solid #D6D6D6;">
+                                            <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;background: 50% / cover url('${data['posterPhoto']}') no-repeat;" onclick="${gvc.event(() => {
                                     })}"></div>
-                                                <div class="introBlock">
-                                                    <div class="intro-text">
-                                                        <span class="poster">${data['poster']}</span>
-                                                        ${data['content']['intro']}
-                                                    </div>
-                                                    <div class="intro-date">${getDateDiff(data['datetime'])}</div>
+                                            <div class="introBlock">
+                                                <div class="intro-text">
+                                                    <span class="poster">${data['poster']}</span>
+                                                    ${(_a = data === null || data === void 0 ? void 0 : data['content']) === null || _a === void 0 ? void 0 : _a['intro']}
                                                 </div>
+                                                <div class="intro-date">${getDateDiff(data === null || data === void 0 ? void 0 : data['datetime'])}</div>
                                             </div>
-                                            <div class="w-100" style="margin-bottom:${bottomInset + 100}px;">  ${(() => {
+                                        </div>
+                                        <div class="w-100" style="margin-bottom:${bottomInset + 100}px;">  
+                                            ${(() => {
                                         if (vm.loading) {
                                             return viewModel.loadingView();
                                         }
@@ -471,7 +611,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                             messageArray.forEach((item) => {
                                                 var _a;
                                                 item.photo = (_a = item.photo) !== null && _a !== void 0 ? _a : `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${data['last_name']}&txtfont=Helvetica&txtalign=middle,center"`;
-                                                console.log(item.photo);
                                                 returnHTML += `
                                                         <div class="intro d-flex" style="">
                                                             <div class="posterPhoto rounded-circle" style="width: 36px;height: 36px;background: 50% / cover url('${item.photo}') no-repeat;" onclick="${gvc.event(() => {
@@ -491,12 +630,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                             });
                                             return returnHTML;
                                         }
-                                    })()}</div>
+                                    })()}
+                                        </div>
                                          <!--發布-->
-                                         ${gvc.bindView(() => {
-                                        var message = {
+                                        ${gvc.bindView(() => {
+                                        let message = {
                                             idea_id: data.idea_id,
-                                            messager: glitter.share.userData.user_id,
+                                            messager: userData.user_id,
                                             content: {
                                                 appendix: '',
                                                 text: ''
@@ -508,15 +648,15 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 var sendView = glitter.getUUID();
                                                 return `
                                                     <div id="${sendView}" class="d-flex leaveRow" style="position: fixed;bottom: ${bottomInset + 48}px;">
-                                                     <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;margin-right: 8px;background: 50% / cover url('${glitter.share.userData['photo']}') no-repeat;"></div>
-                                            <div class="flex-fill leaveInput d-flex align-items-center" >
-                        <!--                    發佈欄-->
-                                               <div class="w-100 my-auto d-flex align-items-center HOMEE-grey" contenteditable="true" style="line-height: 34px;border: none;background: transparent;margin-right: 50px;word-break: break-word;white-space: normal" onblur="${gvc.event((e) => {
+                                                        <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;margin-right: 8px;background: 50% / cover url('${userData['photo']}') no-repeat;"></div>
+                                                        <div class="flex-fill leaveInput d-flex align-items-center" >
+                                                        <!--發佈欄-->
+                                                            <div class="w-100 my-auto d-flex align-items-center HOMEE-grey" contenteditable="true" style="line-height: 34px;border: none;background: transparent;margin-right: 50px;word-break: break-word;white-space: normal" onblur="${gvc.event((e) => {
                                                     $(`#${sendView}`).css('bottom', `${bottomInset + 48}px`);
                                                     message.content.text = e.innerHTML;
                                                     if (message.content.text === '') {
                                                         $(e).parent().children('.leaveBTN').removeClass('leaveEvent');
-                                                        e.innerHTML = `以${glitter.share.userData.name}新增留言`;
+                                                        e.innerHTML = `以${userData.name}新增留言`;
                                                         e.classList.add("HOMEE-grey");
                                                     }
                                                     else {
@@ -525,7 +665,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 })}" onfocus="${gvc.event((e) => {
                                                     $(`#${sendView}`).css('bottom', `${0}px`);
                                                     let text = e.innerHTML;
-                                                    if (text == `<span>以${glitter.share.userData.name}新增留言</span>`) {
+                                                    if (text == `<span>以${userData.name}新增留言</span>`) {
                                                         e.classList.remove("HOMEE-grey");
                                                     }
                                                     $(e).parent().children('.leaveBTN').addClass('leaveEvent');
@@ -535,9 +675,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 })}" onclick="${gvc.event((e) => {
                                                     e.innerHTML = ``;
                                                     e.classList.remove("HOMEE-grey");
-                                                })}" style="margin-right: 40px;"><span>以${glitter.share.userData.name}新增留言</span></div>
-                        <!--                       發佈按鍵-->
-                                            <div class="leaveBTN ${(message.content.text === '') ? "" : "leaveEvent"}" style="" onclick="${gvc.event((e, event) => {
+                                                })}" style="margin-right: 40px;"><span>以${userData.name}新增留言</span></div>
+                                    <!--                       發佈按鍵-->
+                                                            <div class="leaveBTN ${(message.content.text === '') ? "" : "leaveEvent"}" style="" onclick="${gvc.event((e, event) => {
                                                     var _a;
                                                     if (message.content.text !== '') {
                                                         ideaApi.leaveMessage(message, (response) => {
@@ -548,8 +688,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         getData();
                                                     }
                                                 })}">發佈</div>
-                                          </div>
-                                        </div>
+                                                      </div>
+                                                    </div>
                                                     `;
                                             },
                                             divCreate: {}
@@ -557,22 +697,22 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })}
                         
                         
-                                        </main>
+                                    </main>
                                 `;
                                 }
                                 else {
                                     return `
-                         ${shareView.navigationBar({
+                                    ${shareView.navigationBar({
                                         title: "留言",
                                         leftIcon: `<img class="" src="img/sample/idea/left-arrow.svg" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                             glitter.goBack("idea");
                                         })}">`,
                                         rightIcon: `
-                        <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
-                    `
+                                            <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
+                                        `
                                     })}
-                         ${viewModel.loadingView()}
-                        `;
+                                    ${viewModel.loadingView()}
+                                `;
                                 }
                             },
                             divCreate: { class: ``, style: `` }

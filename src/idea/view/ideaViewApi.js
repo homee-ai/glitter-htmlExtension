@@ -3,6 +3,7 @@ import { GVC } from '../../glitterBundle/GVController.js';
 import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js';
 import { Idea } from "../api/idea.js";
 import { Dialog } from "../../homee/legacy/widget/dialog.js";
+import { appConfig } from "../../config.js";
 export class ViewModel {
     constructor(gvc) {
         this.gvc = new GVC();
@@ -158,6 +159,9 @@ export class ViewModel {
             });
         }
         function changeToBoard(postData) {
+            appConfig().changePage(gvc, "idea_board", {
+                postData: postData
+            }, {});
         }
         gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
         this.postView = (ideaPostData, userData) => {

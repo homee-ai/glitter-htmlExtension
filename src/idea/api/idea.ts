@@ -67,7 +67,6 @@ export class Idea {
         // })
         appConfig().getUserData({
             callback: (response: any) => {
-                console.log(response)
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/idea`,
                     type: 'get',
@@ -186,7 +185,6 @@ export class Idea {
                     contentType: 'application/json; charset=utf-8',
                     headers: {Authorization: response.token},
                     success: (likeCount: any) => {
-                        console.log(likeCount)
                         callback(likeCount[0]?.["COUNT(*)"] || 0)
                     },
                     error: () => {
