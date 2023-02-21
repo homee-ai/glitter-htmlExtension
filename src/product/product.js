@@ -189,14 +189,14 @@ Plugin.create(import.meta.url, (glitter) => {
                             bind: "qtyNumber",
                             view: () => {
                                 return `
-                                        <input class="border-0" style="width: 15px"  value="${widget.data.qty}" onchange="${gvc.event((e) => {
+                                        <input class="border-0 text-center" style="width: 25px;"  value="${widget.data.qty}" onchange="${gvc.event((e) => {
                                     widget.data.qty = e.value;
                                     if (widget.data.qty < 0) {
                                         widget.data.qty = 0;
                                         gvc.notifyDataChange("qtyNumber");
                                     }
                                 })}">`;
-                            }, divCreate: { class: `qtyNumber`, style: `` }
+                            }, divCreate: { class: `qtyNumber d-flex align-items-center justify-content-center`, style: `` }
                         })}
                                 <img src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                             qtyChange();

@@ -59,13 +59,14 @@ export class User {
                             account,
                             pwd,
                             inviteCode,
-                            callback
-                        }: { account: string, pwd: string,inviteCode?:string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
+                            callback,
+                            third
+                        }: { third?:any,account: string, pwd: string,inviteCode?:string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
         const glitter=Glitter.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
             type: 'post',
-            data: JSON.stringify({email: account, pwd: pwd,inviteCode:inviteCode}),
+            data: JSON.stringify({email: account, pwd: pwd,inviteCode:inviteCode,third:third}),
             contentType: 'application/json; charset=utf-8',
             success: (suss: any) => {
                 if(suss){
@@ -87,11 +88,11 @@ export class User {
             },
         });
     }
-    public static loginFB(email:string,token:string,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
+    public static loginFB(email:string,token:string,third:any,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,
             type: 'post',
-            data: JSON.stringify({email: email, token: token}),
+            data: JSON.stringify({email: email, token: token,third:third}),
             contentType: 'application/json; charset=utf-8',
             success: (suss: any) => {
                 if(suss){
@@ -112,7 +113,57 @@ export class User {
             },
         });
     }
-    public static register(obj: { first: string, inviteCode:string,last: string, email: string, pwd: string, gender: string, birth: string, userName: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
+    public static loginApple(token:string,bundle:string,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithApple`,
+            type: 'post',
+            data: JSON.stringify({token: token,bundle:bundle}),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss: any) => {
+                if(suss){
+                    appConfig().setUserData({
+                        value:suss,callback:(response)=>{
+                            Plugin.setAppConfig('HOMEEAppConfig',{
+                                token:suss.token,
+                                serverURL:appConfig().serverURL
+                            })
+                        }
+                    })
+                }
+                callback(suss,200)
+            },
+            error: (err: any) => {
+                const resp= JSON.parse(err.responseText).message
+                callback(false,resp)
+            },
+        });
+    }
+    public static loginFet(token:string,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithFet`,
+            type: 'post',
+            data: JSON.stringify({token: token}),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss: any) => {
+                if(suss){
+                    appConfig().setUserData({
+                        value:suss,callback:(response)=>{
+                            Plugin.setAppConfig('HOMEEAppConfig',{
+                                token:suss.token,
+                                serverURL:appConfig().serverURL
+                            })
+                        }
+                    })
+                }
+                callback(suss,200)
+            },
+            error: (err: any) => {
+                const resp= JSON.parse(err.responseText).message
+                callback(false,resp)
+            },
+        });
+    }
+    public static register(obj: { third?:any,first: string, inviteCode:string,last: string, email: string, pwd: string, gender: string, birth: string, userName: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
         const glitter=Glitter.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user`,

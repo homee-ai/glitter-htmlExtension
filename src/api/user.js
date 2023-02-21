@@ -53,12 +53,12 @@ export class User {
             },
         });
     }
-    static login({ account, pwd, inviteCode, callback }) {
+    static login({ account, pwd, inviteCode, callback, third }) {
         const glitter = Glitter.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
             type: 'post',
-            data: JSON.stringify({ email: account, pwd: pwd, inviteCode: inviteCode }),
+            data: JSON.stringify({ email: account, pwd: pwd, inviteCode: inviteCode, third: third }),
             contentType: 'application/json; charset=utf-8',
             success: (suss) => {
                 if (suss) {
@@ -80,11 +80,61 @@ export class User {
             },
         });
     }
-    static loginFB(email, token, callback) {
+    static loginFB(email, token, third, callback) {
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,
             type: 'post',
-            data: JSON.stringify({ email: email, token: token }),
+            data: JSON.stringify({ email: email, token: token, third: third }),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss) => {
+                if (suss) {
+                    appConfig().setUserData({
+                        value: suss, callback: (response) => {
+                            Plugin.setAppConfig('HOMEEAppConfig', {
+                                token: suss.token,
+                                serverURL: appConfig().serverURL
+                            });
+                        }
+                    });
+                }
+                callback(suss, 200);
+            },
+            error: (err) => {
+                const resp = JSON.parse(err.responseText).message;
+                callback(false, resp);
+            },
+        });
+    }
+    static loginApple(token, bundle, callback) {
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithApple`,
+            type: 'post',
+            data: JSON.stringify({ token: token, bundle: bundle }),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss) => {
+                if (suss) {
+                    appConfig().setUserData({
+                        value: suss, callback: (response) => {
+                            Plugin.setAppConfig('HOMEEAppConfig', {
+                                token: suss.token,
+                                serverURL: appConfig().serverURL
+                            });
+                        }
+                    });
+                }
+                callback(suss, 200);
+            },
+            error: (err) => {
+                const resp = JSON.parse(err.responseText).message;
+                callback(false, resp);
+            },
+        });
+    }
+    static loginFet(token, callback) {
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithFet`,
+            type: 'post',
+            data: JSON.stringify({ token: token }),
             contentType: 'application/json; charset=utf-8',
             success: (suss) => {
                 if (suss) {

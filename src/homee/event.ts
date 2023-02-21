@@ -1,8 +1,6 @@
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
 import {Api} from './api/homee-api.js';
-import {LegacyPage} from "./legacy/interface.js";
 import {Funnel} from "./funnel.js";
-import {DialogHelper} from "../dialog/dialog-helper.js";
 import {appConfig} from "../config.js";
 import {User} from "../api/user.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
@@ -393,6 +391,19 @@ ${
                 },
                 event: () => {
                     gvc.glitter.goBack()
+                }
+            }
+        }
+    },
+    engineer: {
+        title: "開發中",
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``
+                },
+                event: () => {
+                    new Dialog(gvc).showInfo("開發中...2/22完成!")
                 }
             }
         }

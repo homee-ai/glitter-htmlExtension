@@ -144,12 +144,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         color: #292929;
                     }
                 `)
-
                 function addThousandSeparator(numStr: string): string {
                     const num = Number(numStr);
                     return num.toLocaleString();
                 }
-
                 function qtyChange(action: boolean = true) {
                     widget.data.qty += (action) ? 1 : -1;
 
@@ -196,7 +194,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             bind: "qtyNumber",
                             view: () => {
                                 return `
-                                        <input class="border-0" style="width: 15px"  value="${widget.data.qty}" onchange="${gvc.event((e: HTMLInputElement) => {
+                                        <input class="border-0 text-center" style="width: 25px;"  value="${widget.data.qty}" onchange="${gvc.event((e: HTMLInputElement) => {
 
                                     widget.data.qty = e.value
                                     if (widget.data.qty < 0) {
@@ -205,7 +203,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
 
                                 })}">`
-                            }, divCreate: {class: `qtyNumber`, style: ``}
+                            }, divCreate: {class: `qtyNumber d-flex align-items-center justify-content-center`, style: ``}
                         })}
                                 <img src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                             qtyChange();

@@ -1,9 +1,8 @@
 import {Plugin} from "./glitterBundle/plugins/plugin-creater.js";
 import {Api} from "./homee/api/homee-api.js";
 import {DialogHelper} from "./dialog/dialog-helper.js";
-import {LegacyPage} from "./homee/legacy/interface.js";
 import {GVC} from "./glitterBundle/GVController.js";
-
+import {Dialog} from "./dialog/dialog-mobile.js";
 export function appConfig(): {
     //HOMEE API backend route
     serverURL: string,
@@ -62,19 +61,14 @@ export function appConfig(): {
         changePage: (gvc: GVC, tag: string, obj?: any,option?:any) => {
             gvc.glitter.defaultSetting.pageAnimation = appConfig().translation
             const api = new Api()
-            DialogHelper.dataLoading({
-                text: "",
-                visible: true
-            })
+            const dialog=new Dialog(gvc)
+            dialog.dataLoading(true)
             api.homeeAJAX({
                 api: Api.serverURL,
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
-                DialogHelper.dataLoading({
-                    text: "",
-                    visible: false
-                })
+                dialog.dataLoading(false)
                 gvc.glitter.htmlGenerate.changePage(
                     {
                         config: res.result[0].config,
@@ -94,15 +88,13 @@ export function appConfig(): {
         },
         setHome: (gvc: GVC, tag: string, obj?: any,option?:any) => {
             const api = new Api()
+            const dialog=new Dialog(gvc)
+            dialog.dataLoading(true)
             api.homeeAJAX({
                 api: Api.serverURL,
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
-                DialogHelper.dataLoading({
-                    text: "",
-                    visible: false
-                })
                 gvc.glitter.htmlGenerate.setHome(
                     {
                         config: res.result[0].config,
@@ -111,6 +103,10 @@ export function appConfig(): {
                         option:option
                     }
                 )
+                setTimeout(()=>{
+                    dialog.dataLoading(false)
+                },2000)
+
             })
         },
         translation: (() => {

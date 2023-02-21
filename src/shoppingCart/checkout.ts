@@ -416,7 +416,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 //todo nextstep?
                 function checkOut() {
-                    dialog.showInfo("金流開發中...")
+                    dialog.showInfo("金流開發中，請先驗證結帳金額是否正確．")
                     // refreshCart();
                     // dialog.dataLoading(true)
                     // glitter.runJsInterFace("toCheckOutPage", {}, () => {

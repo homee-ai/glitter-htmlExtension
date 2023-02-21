@@ -10,7 +10,7 @@ export class Dialog {
                             } });
                     }
                     else {
-                        setTimeout(() => { glitter.closeDiaLog('dataLoading'); }, 500);
+                        glitter.closeDiaLog('dataLoading');
                     }
                     break;
                 default:

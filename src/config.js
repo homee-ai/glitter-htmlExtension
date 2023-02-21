@@ -1,6 +1,7 @@
 import { Plugin } from "./glitterBundle/plugins/plugin-creater.js";
 import { Api } from "./homee/api/homee-api.js";
 import { DialogHelper } from "./dialog/dialog-helper.js";
+import { Dialog } from "./dialog/dialog-mobile.js";
 export function appConfig() {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
@@ -41,19 +42,14 @@ export function appConfig() {
         changePage: (gvc, tag, obj, option) => {
             gvc.glitter.defaultSetting.pageAnimation = appConfig().translation;
             const api = new Api();
-            DialogHelper.dataLoading({
-                text: "",
-                visible: true
-            });
+            const dialog = new Dialog(gvc);
+            dialog.dataLoading(true);
             api.homeeAJAX({
                 api: Api.serverURL,
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
-                DialogHelper.dataLoading({
-                    text: "",
-                    visible: false
-                });
+                dialog.dataLoading(false);
                 gvc.glitter.htmlGenerate.changePage({
                     config: res.result[0].config,
                     data: obj,
@@ -71,21 +67,22 @@ export function appConfig() {
         },
         setHome: (gvc, tag, obj, option) => {
             const api = new Api();
+            const dialog = new Dialog(gvc);
+            dialog.dataLoading(true);
             api.homeeAJAX({
                 api: Api.serverURL,
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
-                DialogHelper.dataLoading({
-                    text: "",
-                    visible: false
-                });
                 gvc.glitter.htmlGenerate.setHome({
                     config: res.result[0].config,
                     data: obj,
                     tag: tag,
                     option: option
                 });
+                setTimeout(() => {
+                    dialog.dataLoading(false);
+                }, 2000);
             });
         },
         translation: (() => {

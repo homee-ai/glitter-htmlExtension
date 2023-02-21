@@ -377,5 +377,18 @@ ${gvc.bindView(() => {
                 }
             };
         }
+    },
+    engineer: {
+        title: "開發中",
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``;
+                },
+                event: () => {
+                    new Dialog(gvc).showInfo("開發中...2/22完成!");
+                }
+            };
+        }
     }
 });

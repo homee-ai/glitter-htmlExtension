@@ -228,7 +228,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     {
                         title: "我的靈感",
                         icon: new URL(`../img/component/footer/idea.svg`, import.meta.url),
-                        count: 3,
+                        count: 0,
                         click: () => {
                         }
                     },
@@ -242,6 +242,8 @@ Plugin.create(import.meta.url, (glitter) => {
                 ]
             },
             render: (gvc, widget, setting, hoverID) => {
+                var _a;
+                widget.data.model = (_a = widget.data.model) !== null && _a !== void 0 ? _a : [];
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -281,7 +283,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="d-flex flex-column align-items-center" style="width: ${width}%;height: 56px; ${style}" onclick="${gvc.event(() => {
                                         item.click();
                                     })}">
-                                        <div style="background: #f8f3ed position: relative;width: 26px;height: 24px;">
+                                        <div style="position: relative;width: 30px;height: 30px;">
                                             ${(() => {
                                         if (item.count != 0) {
                                             return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`;
@@ -292,7 +294,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
-                                        <div class="indexTitle" style="margin-top: 5px">
+                                        <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 23px;
+color: #1E1E1E;
+">
                                             ${item.title}
                                         </div>
                                         
@@ -307,7 +315,42 @@ Plugin.create(import.meta.url, (glitter) => {
                         });
                     },
                     editor: () => {
-                        return ``;
+                        return gvc.map(widget.data.model.map((dd, index) => {
+                            return `<div class="alert alert-dark">
+<h3 class="text-white" style="font-size: 16px;">項目.${index + 1}</h3>
+${glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: '標題',
+                                default: dd.title,
+                                placeHolder: '請輸入標題',
+                                callback: (text) => {
+                                    dd.title = text;
+                                    widget.refreshComponent();
+                                }
+                            })}
+${`<div class="d-flex align-items-center  mt-3">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                widget.data.left.splice(index, 1);
+                                widget.refreshComponent();
+                            })}"></i>
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.icon}">
+
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                glitter.ut.chooseMediaCallback({
+                                    single: true,
+                                    accept: 'image/*',
+                                    callback(data) {
+                                        appConfig().uploadImage(data[0].file, (link) => {
+                                            dd.icon = link;
+                                            widget.refreshComponent();
+                                        });
+                                    }
+                                });
+                            })}"></i>
+</div>`}
+</div>`;
+                        }));
                     }
                 };
             },
