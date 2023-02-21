@@ -118,7 +118,7 @@ export class ViewModel {
                     headers: { Authorization: glitter.share.userData.AUTH },
                     success: (resposnse) => {
                         dialog.dataLoading(false);
-                        glitter.changePage('jsPage/idea/idea_board.js', 'idea_board', true, { data: postData });
+                        appConfig().changePage(gvc, 'idea_board', { data: postData }, {});
                     },
                     error: () => {
                     },
@@ -332,14 +332,10 @@ export class ViewModel {
                         view: () => {
                             return ` <img src="${postData['posterPhoto']}" class="rounded-circle" style="width: 32px;height: 32px;margin-right: 8px;" alt=""
                             onclick="${gvc.event(() => {
-                                glitter.changePage('jsPage/idea/idea_profile.js', 'idea_profile', true, {
-                                    poster_id: postData['poster_id']
-                                });
+                                appConfig().changePage(gvc, 'idea_profile', { poster_id: postData['poster_id'] });
                             })}">
                             <div class="titleFont" onclick="${gvc.event(() => {
-                                glitter.changePage('jsPage/idea/idea_profile.js', 'idea_profile', true, {
-                                    poster_id: postData['poster_id']
-                                });
+                                appConfig().changePage(gvc, 'idea_profile', { poster_id: postData['poster_id'] });
                             })}">${postData['poster']}</div>
                             <div class="flex-fill"></div>
                             

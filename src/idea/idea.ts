@@ -86,9 +86,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                         //             idea_id:gBundle.idea_id
                         //         }
                         // }
-                        //todo 這裡要改回 userData.user_id 這邊先抓測試端的資料
+                        //測試端的資料
+                        //12052350
                         return {
-                            poster_id:"12052350",
+                            poster_id:userData.user_id,
                             idea_id:""
                         }
                     })(),(response) => {
@@ -143,17 +144,17 @@ Plugin.create(import.meta.url,(glitter)=>{
                 }
                 function changeSearch() {
                     //todo  帶歷史資料
-                    glitter.changePage("jsPage/idea/idea_search.js", "idea_search", true, {})
+                    appConfig().changePage(gvc, "idea_search", {})
                     // glitter.setHome('jsPage/idea/idea_search.js','idea_search',{})
                 }
                 function createIdea() {
-                    glitter.openDiaLog('component/idea/ideaAdd.js','ideaAdd',{},{animation:glitter.animation.topToBottom})
+                    //todo openDialog?
+                    glitter.openDiaLog(`${new URL!(`../component/idea/ideaAdd.js`, import.meta.url)}`,'ideaAdd',{},{animation:glitter.animation.topToBottom})
                 }
 
 
                 return {
                     view: ()=>{
-
                         gvc.addStyle(`
                         html{
                             margin: 0;
@@ -249,8 +250,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                 view: () => {
                                                     
                                                     if (widget.data.ideaPostData) {
-                                                        
-                                                        
                                                         return viewModel.postView(widget.data.ideaPostData , userData);
                                                     } else {
                                                         return ``
@@ -651,10 +650,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     <main class="d-flex flex-column" style="">
                                         <div class="intro d-flex" style="border-bottom: 1px solid #D6D6D6;">
                                             <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;background: 50% / cover url('${data['posterPhoto']}') no-repeat;" onclick="${gvc.event(()=>{
-                                                //todo
-                                                // glitter.changePage("jsPage/idea/idea_profile.js", "idea_profile", true, {
-                                                //     poster_id : data['poster_id']
-                                                // })
+                                               
+                                                appConfig().changePage(gvc, "idea_profile", {poster_id : data['poster_id']} )
                                             })}"></div>
                                             <div class="introBlock">
                                                 <div class="intro-text">
@@ -677,10 +674,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                         returnHTML += `
                                                         <div class="intro d-flex" style="">
                                                             <div class="posterPhoto rounded-circle" style="width: 36px;height: 36px;background: 50% / cover url('${item.photo}') no-repeat;" onclick="${gvc.event(()=>{
-                                                                //todo
-                                                                glitter.changePage("jsPage/idea/idea_profile.js", "idea_profile", true, {
-                                                                    poster_id:item.messager_id
-                                                                })
+                                                            
+                                                                appConfig().changePage(gvc, "idea_profile", {poster_id : item.messager_id} )
+                                                                
                                                             })}"></div>
                                                             <div class="introBlock" style="width: calc(100% - 50px);">
                                                                 <div class="intro-text w-100 d-flex " style="word-break: break-all;white-space: normal;overflow-x: hidden;">
@@ -989,10 +985,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                     userData.photo = userData?.photo || `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${userData.last_name}&txtfont=Helvetica&txtalign=middle,center`
                                                     searchUserHTML += `
                                                     <div class="d-flex align-items-center" onclick="${gvc.event(()=>{
-                                                        //todo
-                                                        glitter.changePage('jsPage/idea/idea_profile.js', 'idea_profile', true, {
-                                                            poster_id: userData.userID
-                                                        })
+                                                        appConfig().changePage(gvc, 'idea_profile', {poster_id: userData.userID})
                                                     })}">
                                                         <img src="${userData.photo}" style="width: 50px;height: 50px;margin-right: 8px;">
                                                         <div class="" style="font-size: 16px;color: #292929">
@@ -1102,7 +1095,6 @@ Plugin.create(import.meta.url,(glitter)=>{
         },
         profile: {
             defaultData:{
-                link:[]
             },
             render:(gvc, widget, setting, hoverID) => {
                 let vm = {
@@ -1194,7 +1186,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         let ideaDataArray : IdeaData[];
                         let userInf:any; //這邊跟上面不一樣 Inf跟上面data一樣 這裡的data則是那個人的貼文相關資料
                         let userData:UserData;
-                        let posterID = "12052350";
+                        let posterID = gvc.parameter.pageConfig?.obj.data.poster_id;
                         if (!userInf){
                             appConfig().getUserData({
                                 callback: (response: any) => {
@@ -1203,8 +1195,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     gvc.notifyDataChange('mainView')
                                 }})
                         }
-
-
 
                         function initGetData(){
                             //拿個人資料
@@ -1349,11 +1339,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return `
                                     ${shareView.navigationBar({
                                         title: "",
-                                        leftIcon:`<img class="" src="img/sample/idea/left-arrow.svg" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                        leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                             glitter.goBack()
                                         })}">`,
                                         rightIcon:`
-                                        <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
+                                        <img src="${new URL!(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                         `
                                     })}
                                 <div class="" style="padding-top: 100px;"> ${viewModel.loadingView()}</div>
@@ -1378,7 +1368,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 let interact: any = null
                 gvc.addMtScript([{src: 'https://unpkg.com/interactjs/dist/interact.min.js'}], () => {
                     interact = ((window as any).interact)
-                    console.log("OKK")
+
                     gvc.notifyDataChange('mainView')
                 }, () => {
 
@@ -1477,6 +1467,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         let shareView = new SharedView(gvc)
                         let imgArray: string[] = gvc.parameter.pageConfig?.obj?.preview_image ?? ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg" , "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg" , "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
                         let deleteIMGArray: number[] = [];
+                        let userData:any;
                         function appendBorder(element :HTMLElement){
                             deleteIMGArray=deleteIMGArray.filter((dd)=>{
                                 return dd!==Number(element?.getAttribute("index"))
@@ -1512,6 +1503,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                         function editImg(index:number , event:any){
                             event.stopImmediatePropagation();
                         }
+                        if (!userData){
+                            appConfig().getUserData({
+                                callback: (response: any) => {
+                                    userData = response;
+                                    gvc.notifyDataChange('mainView')
+                                }})
+                        }
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
@@ -1525,8 +1523,14 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         viewModel.checkDismiss()
                                     })}">`,
                                     rightIcon: `<div class="nextStep"  onclick="${gvc.event(() => {
-                                        //todo what?
-                                        // glitter.changePage('jsPage/idea/idea_post.js', "idea_post", true, gBundle)
+                                        //todo bring what data?
+                                        // let jsonData = {
+                                        //     poster:userData.user_id,
+                                        //     scene:passData?.scene,
+                                        //     config:passData.config,
+                                        //     preview_image:imgArray
+                                        // }
+                                        appConfig().changePage(gvc, "idea_post", {})
                                     })}">
                                     下一步
                                 </div>`
