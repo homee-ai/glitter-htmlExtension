@@ -41,7 +41,7 @@ export class Idea {
             }
         });
     }
-    getPersonalData(poster_id = this.glitter.getUrlParameter("poster_id"), callback) {
+    getPersonalData(userData, poster_id = this.glitter.getUrlParameter("poster_id"), callback) {
         const glitter = this.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/searchPersonalPost`,
@@ -50,7 +50,7 @@ export class Idea {
                 poster_id: poster_id
             },
             contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
+            headers: { Authorization: userData.token },
             success: (resposnse) => {
                 callback(resposnse);
             },
@@ -173,7 +173,7 @@ export class Idea {
             }
         });
     }
-    getUserInfo(userID, callback) {
+    getUserInfo(userData, userID, callback) {
         const glitter = this.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/searchProfile`,
@@ -181,7 +181,7 @@ export class Idea {
             data: {
                 poster_id: userID
             },
-            headers: { Authorization: glitter.share.userData.AUTH },
+            headers: { Authorization: userData.token },
             contentType: 'application/json; charset=utf-8',
             success: (response) => {
                 response = response[0];

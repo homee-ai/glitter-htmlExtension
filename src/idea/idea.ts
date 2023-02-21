@@ -521,7 +521,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             }
                         }
                         //轉換內容至圖片
-                        function detectIMG(content: any): string {
+                        function detectIMG(content: any , userData:any): string {
                             if (content["appendix"]) {
                                 return `
                                 <div class="" style="max-width: 320px; background: #292929;border-radius: 20px;background:50% / cover url(${content["appendix"]});width: 100%;
@@ -534,7 +534,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     glitter.runJsInterFace("leaveModelToBoard", dd, function (response) {
                                         let jsonData = {
                                             idea_id: data["idea_id"],
-                                            messager: glitter.share.userData.user_id,
+                                            messager: userData.user_id,
                                             content: {
                                                 appendix: `${response["preview_image"]}`,
                                                 scene: response["scene"],
@@ -543,11 +543,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         }
                                         dialog.dataLoading(true)
                                         $.ajax({
-                                            url: `${glitter.share.apiURL}/api/v1/idea/board`,
+                                            url: `${appConfig().serverURL}/api/v1/idea/board`,
                                             type: 'POST',
                                             data: JSON.stringify(jsonData),
                                             contentType: 'application/json; charset=utf-8',
-                                            headers: {Authorization: glitter.share.userData.AUTH},
+                                            headers: {Authorization: userData.token},
                                             success: (resposnse: any) => {
                                                 dialog.dataLoading(false)
                                                 getData()
@@ -634,7 +634,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     }
                                 })
                                 if (topInset !== undefined  && bottomInset !== undefined) {
-                                    console.log("OKK")
+
                                     return `
 
                                     ${shareView.navigationBar({
@@ -649,6 +649,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     <main class="d-flex flex-column" style="">
                                         <div class="intro d-flex" style="border-bottom: 1px solid #D6D6D6;">
                                             <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;background: 50% / cover url('${data['posterPhoto']}') no-repeat;" onclick="${gvc.event(()=>{
+                                                //todo
                                                 // glitter.changePage("jsPage/idea/idea_profile.js", "idea_profile", true, {
                                                 //     poster_id : data['poster_id']
                                                 // })
@@ -674,6 +675,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                         returnHTML += `
                                                         <div class="intro d-flex" style="">
                                                             <div class="posterPhoto rounded-circle" style="width: 36px;height: 36px;background: 50% / cover url('${item.photo}') no-repeat;" onclick="${gvc.event(()=>{
+                                                                //todo
                                                                 glitter.changePage("jsPage/idea/idea_profile.js", "idea_profile", true, {
                                                                     poster_id:item.messager_id
                                                                 })
@@ -681,7 +683,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                             <div class="introBlock" style="width: calc(100% - 50px);">
                                                                 <div class="intro-text w-100 d-flex " style="word-break: break-all;white-space: normal;overflow-x: hidden;">
                                                                     <span class="poster" style="margin-right: 8px;white-space: nowrap;">${item['last_name'] + item['first_name']}</span>
-                                                                    ${detectIMG(item['content'])} 
+                                                                    ${detectIMG(item['content'] , userData)} 
                                                                 </div>
                                                                 <div class="intro-date d-flex align-items-end">${getDateDiff(item['time'])}</div>
                                                             </div>
@@ -1085,6 +1087,276 @@ Plugin.create(import.meta.url,(glitter)=>{
                 </main>    `
                                 } else {
                                     return ``
+                                }
+                            },
+                            divCreate: {class: ``, style: ``}
+                        })
+                    },
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+        profile: {
+            defaultData:{
+                link:[]
+            },
+            render:(gvc, widget, setting, hoverID) => {
+                let vm = {
+                    id: glitter.getUUID(),
+                    loading: true,
+                    dataList: <any>[],
+                    model:{
+                        followText:"追蹤",
+                        followFUN:"POST",
+                        //追隨他的人
+                        Fans:["1"],
+                        //他追隨的人
+                        Following:["1"]
+                    }
+                };
+
+                return {
+                    view: ()=>{
+                        gvc.addStyle(`
+        html{
+            margin: 0;
+            box-sizing: border-box;
+        }
+        nav{
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        body{
+            padding:0;
+            margin:0;
+            font-family: 'Noto Sans TC';
+        }
+        .panel{
+            padding: 16px 24px 32px;
+            width:100%;
+
+        }
+        .posterPhoto{
+            width: 104px;
+            height: 104px;
+
+        }
+        .infCARD{
+            width: 56px;
+            height: 42px;
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            color:#292929;
+            font-size: 15px;
+        }
+        .name{
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 26px;
+            margin-top: 8px;
+            color: #292929;
+        }
+        .follow{            
+            height: 32px;
+            
+            /* HOMEE red */
+            margin-right: 8px;
+            background: #FD6A58;
+            border-radius: 8px;
+            
+            color: #FFFFFF;
+        }
+        .message{
+
+            height: 32px;
+            
+            /* HOMEE light grey */
+            
+            background: #E0E0E0;
+            border-radius: 8px;
+        }
+        .imgBlock{
+            border-width: 0px 1px 1px 0px;
+            border-style: solid;
+            border-color: #FFFFFF;
+        }
+        
+       `)
+                        let topInset: number = 0
+                        const ideaApi = new Idea(glitter);
+                        const viewModel=new ViewModel(gvc);
+                        let shareView = new SharedView(gvc);
+                        let ideaDataArray : IdeaData[];
+                        let userInf:any; //這邊跟上面不一樣 Inf跟上面data一樣 這裡的data則是那個人的貼文相關資料
+                        let userData:UserData;
+                        let posterID = "12052350";
+                        if (!userInf){
+                            appConfig().getUserData({
+                                callback: (response: any) => {
+                                    userInf = response;
+                                    initGetData();
+                                    gvc.notifyDataChange('mainView')
+                                }})
+                        }
+
+
+
+                        function initGetData(){
+                            //拿個人資料
+                            ideaApi.getUserInfo(userInf,posterID,(response)=>{
+                                userData=response
+                                vm.model.Fans=(response?.fans ?? "").split(",") || [];
+                                vm.model.Following=(response?.following ?? "").split(",") || [];
+                                //拿貼文資料
+                                ideaApi.getPersonalData(userInf,posterID,((response)=>{
+                                    vm.loading = false;
+                                    //
+                                    // console.log(vm.model.Fans.find(x => x ==userInf.user_id))
+                                    vm.model.Fans.forEach((x)=>{
+
+                                    })
+                                    if (userInf.user_id != posterID && vm.model.Fans.find(x => x == userInf.user_id)){
+                                        //    todo 追蹤判別
+                                        vm.model.followFUN = "DELETE";
+                                        vm.model.followText = "取消追蹤";
+                                    }
+                                    ideaDataArray = response;
+                                    gvc.notifyDataChange('mainView')
+                                }));
+                            })
+                        }
+
+                        function follow(){
+                            let jsonData = {
+                                target_id: posterID,
+                                follower_id:userInf.user_id
+                            }
+                            $.ajax({
+                                url: `${appConfig().serverURL}/api/v1/idea/follow`,
+                                type: vm.model.followFUN,
+                                data: JSON.stringify(jsonData) ,
+                                contentType: 'application/json; charset=utf-8',
+                                headers: {Authorization: userInf.token},
+                                success: (resposnse: any) => {
+                                    //todo alert行為結果 追蹤成功or失敗
+                                    console.log(resposnse)
+                                    gvc.notifyDataChange('mainView')
+
+                                },
+                                error: (e) => {
+
+                                },
+                            });
+                        }
+
+                        glitter.runJsInterFace("getTopInset", {}, (response) => {
+                            if (topInset != response.data){
+                                topInset = (response.data)
+                                gvc.notifyDataChange('mainView')
+                            }
+                        }, {
+                            webFunction: () => {
+                                return {data: 50}
+                            }
+                        })
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                if (topInset !== undefined && !vm.loading) {
+                                    return `
+                                    ${shareView.navigationBar({
+                                        title: userData.name,
+                                        leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                            glitter.goBack()
+                                        })}">`,
+                                        rightIcon:`
+                                            <img src="${new URL!(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
+                                        `
+                                    })}
+                                    <main class="d-flex flex-column" style="padding-bottom: 100px;">                    
+                                        ${(()=>{
+                                            return gvc.bindView({
+                                                bind:`inf`,
+                                                view:()=>{
+                                                    return `
+                                                <div class="w-100 d-flex align-items-center ">
+                                                    <div class="posterPhoto rounded-circle" style="background: 50% / cover url('${userData.photo}') no-repeat;"></div>
+                                                    <div class="d-flex">
+                                                        <div class="d-flex flex-column align-items-center" style="margin-left: 38px">
+                                                            <div style="font-weight: 700;">0</div>
+                                                            <div style="font-weight: 400;">貼文</div>
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-center" style="margin-left: 38px">
+                                                            <div style="font-weight: 700;">${vm.model.Fans.length}</div>
+                                                            <div style="font-weight: 400;">粉絲</div>
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-center" style="margin-left: 38px">
+                                                            <div style="font-weight: 700;">${vm.model.Following.length}</div>
+                                                            <div style="font-weight: 400;">追蹤中</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="name">${userData.name}</div>
+                                                    ${(()=>{
+                                                        if(userInf.user_id === posterID){
+                                                            return  ``
+                                                        }else{
+                                                            return `  <div class="w-100 d-flex" style="margin-top: 16px">
+                                                                <div class="follow w-50 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
+                                                                    follow();
+                                                                })}">${vm.model.followText}</div>
+                                                                <div class="message w-50 d-flex align-items-center justify-content-center" >發訊息</div>
+                                                            </div>`
+                                                        }
+                                                    })()}
+                                                    `
+                                                },
+                                                divCreate:{class:`panel d-flex flex-column`, style:`` },
+                                                onCreate: () => {}
+                                            })
+                                        })()}
+                                        <div class="w-100" style="background-color: lightgrey;height: 1px;"></div>
+                                        ${(()=>{
+                                            let returnHtml = ``
+    
+                                            ideaDataArray.forEach((ideaAData)=>{
+                                                returnHtml += `
+                                                <div class="w-50 imgBlock" style="padding-bottom:33%; background:50% / cover url(${ideaAData.preview_image[0]})" onclick="${gvc.event(()=>{
+                                                    glitter.changePage("jsPage/idea/idea.js", "idea", true, {
+                                                        viewType:'user',
+                                                        data:userData,
+                                                        idea_id:ideaAData.idea_id
+                                                    })
+                                                })}"></div>
+                                            `
+                                            })
+                                            return gvc.bindView({
+                                                bind:`ImgCardGroup`,
+                                                view:()=>{return returnHtml},
+                                                divCreate:{class:`d-flex flex-wrap` , style:``},
+                                                onCreate:()=>{}
+                                            })
+                                        })()}
+                                    </main>
+                                    `
+                                } else {
+
+                                return `
+                                    ${shareView.navigationBar({
+                                        title: "",
+                                        leftIcon:`<img class="" src="img/sample/idea/left-arrow.svg" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                            glitter.goBack()
+                                        })}">`,
+                                        rightIcon:`
+                                        <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
+                                        `
+                                    })}
+                                <div class="" style="padding-top: 100px;"> ${viewModel.loadingView()}</div>
+                              
+                                `
                                 }
                             },
                             divCreate: {class: ``, style: ``}

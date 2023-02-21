@@ -87,7 +87,7 @@ export class Idea {
 
     }
     //取得個人的文章列表
-    public getPersonalData(poster_id: string = this.glitter.getUrlParameter("poster_id"), callback: (data: IdeaData[]) => void) {
+    public getPersonalData(userData:any,poster_id: string = this.glitter.getUrlParameter("poster_id"), callback: (data: IdeaData[]) => void) {
         const glitter = this.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/idea/searchPersonalPost`,
@@ -96,9 +96,8 @@ export class Idea {
                 poster_id: poster_id
             },
             contentType: 'application/json; charset=utf-8',
-            headers: {Authorization: glitter.share.userData.AUTH},
+            headers: {Authorization: userData.token},
             success: (resposnse: any) => {
-
                 callback(resposnse)
             },
             error: (e) => {
@@ -252,7 +251,7 @@ export class Idea {
     }
 
     //取得用戶資料
-    public getUserInfo(userID: string, callback: (data: UserData) => void) {
+    public getUserInfo(userData:any, userID: string, callback: (data: UserData) => void) {
         const glitter = this.glitter
 
         $.ajax({
@@ -261,7 +260,7 @@ export class Idea {
             data: {
                 poster_id: userID
             },
-            headers: {Authorization: glitter.share.userData.AUTH},
+            headers: {Authorization: userData.token},
             contentType: 'application/json; charset=utf-8',
             success: (response: any) => {
                 response=response[0]
