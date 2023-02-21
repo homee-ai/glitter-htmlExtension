@@ -1,3 +1,4 @@
+import { appConfig } from "../../config.js";
 export class UserData {
     constructor(userId, first_name, last_name, photo, fans, following) {
         this.userID = userId;
@@ -23,26 +24,28 @@ export class Idea {
             poster_id: data.poster_id,
             idea_id: data.idea_id
         };
-        $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea`,
-            type: 'get',
-            data: jsonData,
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                callback(resposnse);
-            },
-            error: (e) => {
-                setTimeout(() => {
-                    this.getData(data, callback);
-                }, 1000);
-            },
+        appConfig().getUserData({
+            callback: (response) => {
+                console.log(response);
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea`,
+                    type: 'get',
+                    data: jsonData,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (resposnse) => {
+                        callback(resposnse);
+                    },
+                    error: (e) => {
+                    },
+                });
+            }
         });
     }
     getPersonalData(poster_id = this.glitter.getUrlParameter("poster_id"), callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/searchPersonalPost`,
+            url: `${appConfig().serverURL}/api/v1/idea/searchPersonalPost`,
             type: 'get',
             data: {
                 poster_id: poster_id
@@ -63,7 +66,7 @@ export class Idea {
         const that = this;
         glitter.share.poster_id = glitter.getUrlParameter("poster_id");
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/searchPersonalPost`,
+            url: `${appConfig().serverURL}/api/v1/idea/searchPersonalPost`,
             type: 'get',
             data: {
                 poster_id: glitter.share.poster_id
@@ -81,23 +84,27 @@ export class Idea {
     }
     getMessage(jsonData, callback) {
         const glitter = this.glitter;
-        $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/board`,
-            type: 'GET',
-            data: jsonData,
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                var _a, _b;
-                if (jsonData.count) {
-                }
-                callback({ messageCount: (_b = (_a = resposnse === null || resposnse === void 0 ? void 0 : resposnse[0]) === null || _a === void 0 ? void 0 : _a["count(1)"]) !== null && _b !== void 0 ? _b : resposnse === null || resposnse === void 0 ? void 0 : resposnse.length, message: resposnse });
-            },
-            error: () => {
-                setTimeout(() => {
-                    this.getMessage(jsonData, callback);
-                }, 1000);
-            },
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea/board`,
+                    type: 'GET',
+                    data: jsonData,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (resposnse) => {
+                        var _a, _b;
+                        if (jsonData.count) {
+                        }
+                        callback({ messageCount: (_b = (_a = resposnse === null || resposnse === void 0 ? void 0 : resposnse[0]) === null || _a === void 0 ? void 0 : _a["count(1)"]) !== null && _b !== void 0 ? _b : resposnse === null || resposnse === void 0 ? void 0 : resposnse.length, message: resposnse });
+                    },
+                    error: () => {
+                        setTimeout(() => {
+                            this.getMessage(jsonData, callback);
+                        }, 1000);
+                    },
+                });
+            }
         });
     }
     getLikeCount(idea_id, callback) {
@@ -105,31 +112,36 @@ export class Idea {
         let jsonData = {
             idea_id: idea_id
         };
-        $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/likeCount`,
-            type: 'GET',
-            data: jsonData,
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                var _a;
-                callback(((_a = resposnse[0]) === null || _a === void 0 ? void 0 : _a["COUNT(*)"]) || 0);
-            },
-            error: () => {
-                setTimeout(() => {
-                    this.getLikeCount(idea_id, callback);
-                }, 1000);
-            },
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea/likeCount`,
+                    type: 'GET',
+                    data: jsonData,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (likeCount) => {
+                        var _a;
+                        console.log(likeCount);
+                        callback(((_a = likeCount[0]) === null || _a === void 0 ? void 0 : _a["COUNT(*)"]) || 0);
+                    },
+                    error: () => {
+                        setTimeout(() => {
+                            this.getLikeCount(idea_id, callback);
+                        }, 1000);
+                    },
+                });
+            }
         });
     }
-    liked(jsonData, toggle, callback) {
+    liked(jsonData, AUTH, toggle, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/like`,
+            url: `${appConfig().serverURL}/api/v1/idea/like`,
             type: (toggle) ? 'POST' : 'DELETE',
             data: JSON.stringify(jsonData),
             contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
+            headers: { Authorization: AUTH },
             success: (resposnse) => {
                 callback(true);
             },
@@ -140,29 +152,33 @@ export class Idea {
     }
     detectLike(idea_id, callback) {
         const glitter = this.glitter;
-        let user_id = glitter.share.userData.user_id;
-        let jsonData = {
-            user_id: user_id,
-            idea_id: idea_id
-        };
-        $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/like`,
-            type: 'GET',
-            data: jsonData,
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                callback(!!resposnse.length);
-            },
-            error: () => {
-                callback(false);
-            },
+        appConfig().getUserData({
+            callback: (response) => {
+                let user_id = response.user_id;
+                let jsonData = {
+                    user_id: user_id,
+                    idea_id: idea_id
+                };
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea/like`,
+                    type: 'GET',
+                    data: jsonData,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (resposnse) => {
+                        callback(!!resposnse.length);
+                    },
+                    error: () => {
+                        callback(false);
+                    },
+                });
+            }
         });
     }
     getUserInfo(userID, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/searchProfile`,
+            url: `${appConfig().serverURL}/api/v1/idea/searchProfile`,
             type: 'GET',
             data: {
                 poster_id: userID
@@ -181,7 +197,7 @@ export class Idea {
     leaveMessage(data, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/board`,
+            url: `${appConfig().serverURL}/api/v1/idea/board`,
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
@@ -197,7 +213,7 @@ export class Idea {
     uploadArticle(jsonData, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea`,
+            url: `${appConfig().serverURL}/api/v1/idea`,
             type: 'POST',
             data: JSON.stringify(jsonData),
             contentType: 'application/json; charset=utf-8',
@@ -212,7 +228,7 @@ export class Idea {
     searchData(seachWord, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/search`,
+            url: `${appConfig().serverURL}/api/v1/idea/search`,
             type: 'get',
             data: {
                 keyword: seachWord
@@ -232,7 +248,7 @@ export class Idea {
     searchUser(seachWord, callback) {
         const glitter = this.glitter;
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/searchUser`,
+            url: `${appConfig().serverURL}/api/v1/idea/searchUser`,
             type: 'get',
             data: {
                 keyword: seachWord
@@ -256,7 +272,7 @@ export class Idea {
             follower_id: follower_id
         };
         $.ajax({
-            url: `${glitter.share.apiURL}/api/v1/idea/follow`,
+            url: `${appConfig().serverURL}/api/v1/idea/follow`,
             type: action,
             data: JSON.stringify(jsonData),
             contentType: 'application/json; charset=utf-8',
