@@ -91,7 +91,7 @@ export class ViewModel {
             }
             return result;
         }
-        function leaveModel(postData) {
+        function leaveModel(postData, userData) {
             glitter.share.postData = postData;
             const data = {
                 config: JSON.stringify(postData.config),
@@ -101,7 +101,7 @@ export class ViewModel {
             glitter.runJsInterFace("leaveModelToBoard", data, function (response) {
                 let jsonData = {
                     idea_id: postData["idea_id"],
-                    messager: glitter.share.userData.user_id,
+                    messager: userData.user_id,
                     content: {
                         appendix: `${response["preview_image"]}`,
                         scene: response["scene"],
@@ -381,7 +381,7 @@ export class ViewModel {
                         <img src="${new URL('../../img/sample/idea/send.svg', import.meta.url)}" style="width: 23px; height: 23px;;" onclick="">
                     </div>
                     ${(postData['scene'] === 'noImage') ? `` : ` <img class="ms-auto" src="${new URL('../../img/sample/idea/edit.svg', import.meta.url)}" style="width: 23px; height: 23px;" onclick="${gvc.event(() => {
-                                    leaveModel(postData);
+                                    leaveModel(postData, userData);
                                 })}">`}
                    `;
                             },
