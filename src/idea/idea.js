@@ -6,6 +6,7 @@ import { Idea } from "./api/idea.js";
 import { Dialog } from "../homee/legacy/widget/dialog.js";
 import { SharedView } from "../homee/shareView.js";
 import { appConfig } from "../config.js";
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js';
 function getDateDiff(a) { return ``; }
 function detectIMG(a) { return ``; }
 Plugin.create(import.meta.url, (glitter) => {
@@ -1261,6 +1262,414 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }
                             },
                             divCreate: { class: ``, style: `` }
+                        });
+                    },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
+        selectPostImg: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                let interact = null;
+                gvc.addMtScript([{ src: 'https://unpkg.com/interactjs/dist/interact.min.js' }], () => {
+                    interact = (window.interact);
+                    console.log("OKK");
+                    gvc.notifyDataChange('mainView');
+                }, () => {
+                });
+                return {
+                    view: () => {
+                        var _a, _b, _c;
+                        gvc.addStyle(`       
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Bold.otf);
+                                font-weight: bold;
+                            }
+                    
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Regular.otf);
+                                font-weight: normal;
+                            }
+                    
+                            html{
+                                margin: 0;
+                                box-sizing: border-box;
+                            }
+                    
+                            body {
+                                width: 100%;
+                                height: 100%;
+                    
+                            }
+                            
+                            .nextStep{
+                                font-family: 'Noto Sans TC';
+                                font-style: normal;
+                                font-weight: 500;
+                                font-size: 17px;
+                                line-height: 63px;
+                                /* identical to box height */
+                                
+                                text-align: center;
+                                
+                                /* HOMEE red */
+                                
+                                color: #FD6A58;
+                            }
+                    
+                            main {
+                                height : calc(100vh - 63px);
+                                font-family: 'Noto Sans TC';
+                    
+                            }
+                            .imgBlock{
+                                overflow: scroll;
+                                flex-direction: row;
+                                justify-content: flex-start;
+                            }
+                            .imgBlock::-webkit-scrollbar{
+                                display:none;
+                            }
+                            .selectImg{
+                                position:relative;       
+                            }
+                            
+                            .selectImgLong{
+                                touch-action: none;            
+                            }
+                            .edit-btn{
+                                width:40px;
+                                height:40px;
+                                background:white;
+                                position:absolute;
+                                right : 11px;
+                                bottom : 11px;
+                                z-index : 3;
+                            }
+                            
+                            .deleteImg{
+                                width : 48px;
+                                height : 48px;
+                                position : fixed;
+                                left : calc(50% - 24px);
+                                bottom : 114px;
+                    
+                            }
+                            .drop-active{
+                                transform: scale(1.25);
+                            }
+                            .selectedBorder{
+                                border: 5px solid green;
+                            }                    
+                        `);
+                        let viewModel = new ViewModel(gvc);
+                        let dialog = new Dialog(gvc);
+                        let shareView = new SharedView(gvc);
+                        let imgArray = (_c = (_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj) === null || _b === void 0 ? void 0 : _b.preview_image) !== null && _c !== void 0 ? _c : ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
+                        let deleteIMGArray = [];
+                        function appendBorder(element) {
+                            deleteIMGArray = deleteIMGArray.filter((dd) => {
+                                return dd !== Number(element === null || element === void 0 ? void 0 : element.getAttribute("index"));
+                            });
+                            if (element.classList.contains("selectedBorder")) {
+                                element.classList.remove("selectedBorder");
+                            }
+                            else {
+                                element.classList.add("selectedBorder");
+                                deleteIMGArray.push(Number(element === null || element === void 0 ? void 0 : element.getAttribute("index")));
+                            }
+                            if (deleteIMGArray.length > 0) {
+                                $('.deleteImg').show();
+                            }
+                            else {
+                                $('.deleteImg').hide();
+                            }
+                        }
+                        function deleteIMG() {
+                            dialog.confirm(`確認刪除${deleteIMGArray.length}張圖片?`, (response) => {
+                                if (response) {
+                                    if (imgArray.length > 1) {
+                                        deleteIMGArray.forEach((v) => {
+                                            imgArray.splice(v, 1);
+                                        });
+                                        gvc.notifyDataChange('slideImg');
+                                    }
+                                    else {
+                                        alert("請至少留一張");
+                                    }
+                                }
+                            });
+                        }
+                        function editImg(index, event) {
+                            event.stopImmediatePropagation();
+                        }
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                if (interact == null) {
+                                    return ``;
+                                }
+                                return `
+                                ${shareView.navigationBar({
+                                    title: "新貼文",
+                                    leftIcon: `  <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        viewModel.checkDismiss();
+                                    })}">`,
+                                    rightIcon: `<div class="nextStep"  onclick="${gvc.event(() => {
+                                    })}">
+                                    下一步
+                                </div>`
+                                })}
+                                <main class="d-flex align-items-center w-100" style="">                    
+                                ${(() => {
+                                    return gvc.bindView({
+                                        bind: `slideImg`,
+                                        view: () => {
+                                            let returnHtml = ``;
+                                            imgArray.forEach((img, index) => {
+                                                returnHtml += `
+                                                <div class="selectImg flex-shrink-0" index=${index} onclick="${gvc.event((e) => { appendBorder(e); })}" style="width: 92%; height: 220px;margin-right: 3%;background: 50% / cover url(${img})">
+                                                    <div class="edit-btn rounded" style="background: 50% / cover url('${new URL(`../img/sample/idea/pen.svg`, import.meta.url)}')" index=${index} onclick="${gvc.event((html, event) => { editImg(index, event); })}"></div>
+                                                </div>
+                                            `;
+                                            });
+                                            return returnHtml;
+                                        },
+                                        divCreate: { class: `d-flex imgBlock w-100 h-100 align-items-center`, style: `` },
+                                        onCreate: () => {
+                                        }
+                                    });
+                                })()}
+                                ${(() => {
+                                    return `<img class="deleteImg" alt="trash" src="${new URL(`../img/sample/idea/delete.svg`, import.meta.url)}" style="display: none;" onclick="${gvc.event(() => { deleteIMG(); })}"></img>`;
+                                })()}
+                   
+                                </main>
+                            `;
+                            },
+                            divCreate: { class: ``, style: `` },
+                            onCreate: () => {
+                                let deleteable = true;
+                            }
+                        });
+                    },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
+        post: {
+            defaultData: {},
+            render: (gvc, widget, setting, hoverID) => {
+                var _a, _b;
+                gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
+                gvc.addStyle(`
+                    @font-face {
+                        font-family: 'Noto Sans TC';
+                        src: url(assets/Font/NotoSansTC-Bold.otf);
+                        font-weight: bold;
+                    }
+                
+                    @font-face {
+                        font-family: 'Noto Sans TC';
+                        src: url(assets/Font/NotoSansTC-Regular.otf);
+                        font-weight: normal;
+                    }
+                    html{
+                        margin: 0;
+                        box-sizing: border-box;
+                    }
+                  
+                    .confirm{
+                        height: 24px;
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 17px;
+                        line-height: 24px;
+                        /* HOMEE red */
+                        color: #FD6A58;
+                    }
+                    main{
+                        height:100vh;
+                        padding:16px
+                    }
+                    .chooseImg{
+                        border
+                    }
+                    .swiper-slide{
+                        width: 100%;
+                        background-repeat: no-repeat;
+                    }
+                    .userPhoto{
+                        width: 48px;
+                        height: 48px;
+                        margin-right: 16px;
+                        border: 0.6px solid #DDDDDD;      
+                    }
+                    .input{
+                        height:48px;
+                        min-width : 200px;
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 16px;
+                        line-height: 48px;
+                        /* HOMEE black */
+                        color: #292929;
+                
+                    }
+                    .grey{
+                        /* HOMEE dark grey */
+                
+                        color: #858585;
+                    }
+                    .input:focus{
+                        outline: none;
+                        
+                    }    
+                `);
+                const viewModel = new ViewModel(gvc);
+                const ideaAPI = new Idea(glitter);
+                const shareView = new SharedView(gvc);
+                const dialog = new Dialog(gvc);
+                let passData = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj;
+                let imgArray = (_b = passData === null || passData === void 0 ? void 0 : passData.preview_image) !== null && _b !== void 0 ? _b : ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
+                let userData;
+                let topInset = 0;
+                appConfig().getUserData({
+                    callback: (response) => {
+                        userData = response;
+                        gvc.notifyDataChange('mainView');
+                    }
+                });
+                function upload() {
+                    let content = document.querySelector('.input');
+                    if ((content === null || content === void 0 ? void 0 : content.innerHTML) == "撰寫貼文內容......") { }
+                    else {
+                        let jsonData = {
+                            poster: userData.user_id,
+                            content: {
+                                intro: content === null || content === void 0 ? void 0 : content.innerHTML,
+                            },
+                            scene: passData === null || passData === void 0 ? void 0 : passData.scene,
+                            config: passData.config,
+                            preview_image: imgArray
+                        };
+                        dialog.dataLoading(true);
+                        ideaAPI.uploadArticle(jsonData, (response) => {
+                            dialog.dataLoading(false);
+                            if (passData.firstPageIsIdea) {
+                                glitter.goMenu();
+                            }
+                            else {
+                                viewModel.checkDismiss();
+                            }
+                        });
+                    }
+                }
+                function changeInput() {
+                    let inputElement = document.querySelector('.input');
+                    if (inputElement === null || inputElement === void 0 ? void 0 : inputElement.classList.contains("grey")) {
+                        inputElement === null || inputElement === void 0 ? void 0 : inputElement.classList.remove("grey");
+                        inputElement.innerHTML = ``;
+                        inputElement.dispatchEvent(new Event('click'));
+                    }
+                }
+                function fillInput() {
+                    let inputElement = document.querySelector('.input');
+                    if ((inputElement === null || inputElement === void 0 ? void 0 : inputElement.innerHTML) == "") {
+                        inputElement.classList.add("grey");
+                        inputElement.innerHTML = `撰寫貼文內容......`;
+                    }
+                }
+                return {
+                    view: () => {
+                        glitter.runJsInterFace("getTopInset", {}, (response) => {
+                            if (topInset != response.data) {
+                                topInset = response.data;
+                                gvc.notifyDataChange('mainView');
+                            }
+                        }, {
+                            webFunction: () => {
+                                return { data: 10 };
+                            }
+                        });
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                if (topInset !== undefined) {
+                                    return `
+                                    ${shareView.navigationBar({
+                                        title: "新貼文",
+                                        leftIcon: `  <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 27px" alt="" onclick="${gvc.event(() => {
+                                            viewModel.checkDismiss();
+                                        })}">`,
+                                        rightIcon: `<div class="nextStep confirm"  onclick="${gvc.event(() => {
+                                            upload();
+                                        })}">
+                                            確定
+                                        </div>`
+                                    })}
+                                    <div class="w-100" style="padding-top: ${topInset}px;">
+                                        <banner class="w-100" >
+                                            ${(() => {
+                                        let slidePage = ``;
+                                        imgArray.forEach((img) => {
+                                            slidePage += `
+                                                    <div class="swiper-slide" style="height:276px;background:50% / cover url(${img})"></div>
+                                                    `;
+                                        });
+                                        return gvc.bindView({
+                                            bind: `slide`,
+                                            view: () => {
+                                                return `
+                                                        <div class="swiper-wrapper">
+                                                            ${slidePage}
+                                                        </div>
+                                                        <div class="swiper-pagination"></div>
+                                                        `;
+                                            },
+                                            divCreate: { class: `w-100 swiper`, style: `height:276px` },
+                                            onCreate: () => {
+                                                const swiper = new Swiper(`.swiper`, {
+                                                    direction: 'horizontal',
+                                                    loop: true,
+                                                    pagination: {
+                                                        el: `.swiper-pagination`,
+                                                    },
+                                                });
+                                            }
+                                        });
+                                    })()}
+                                        </banner>
+                                    </div>
+               
+                                    <main class="" >                    
+                                        <div class="w-100 h-100" style="min-height: 24px;white-space: normal;word-break: break-all;overflow-x: hidden;display: inline-block;">
+                                            <img class="userPhoto rounded-circle" src="${userData.photo}">
+                                            <span class="input grey " contenteditable="true" style="" onblur="${gvc.event(() => {
+                                        fillInput();
+                                    })}" onclick="${gvc.event(() => {
+                                        changeInput();
+                                    })}">撰寫貼文內容......</span>                        
+                                        </div>
+                                    </main>
+                                    `;
+                                }
+                                else {
+                                    return ``;
+                                }
+                            },
+                            divCreate: { class: ``, style: `width:100%;` },
+                            onCreate: () => {
+                            }
                         });
                     },
                     editor: () => {
