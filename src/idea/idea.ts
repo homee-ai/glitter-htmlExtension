@@ -6,7 +6,8 @@ import {Idea, IdeaData} from "./api/idea.js";
 import {Dialog} from "../homee/legacy/widget/dialog.js";
 import {SharedView} from "../homee/shareView.js";
 import {appConfig} from "../config.js";
-
+function getDateDiff(a:any){return ``}
+function detectIMG(a:any){return ``}
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
         upload:(photoFile:any,callback:(link:string)=>void)=>{
