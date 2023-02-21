@@ -22,10 +22,12 @@ export class Dialog {
             glitter.runJsInterFace("confirm", {
                 title: title
             }, (response) => {
-                callback(response);
+                callback(response.result);
             }, {
                 webFunction(data, callback) {
-                    return confirm(title);
+                    return {
+                        result: confirm(title)
+                    };
                 }
             });
         };

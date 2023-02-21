@@ -2,6 +2,7 @@
 import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {appConfig} from "../config.js";
 import {ClickEvent} from "../glitterBundle/plugins/click-event.js";
+import {Dialog} from "../dialog/dialog-mobile.js";
 
 Plugin.create(import.meta.url, (glitter) => {
 
@@ -49,7 +50,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             }
                         })}
                                 <img  src = "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676918883480" alt="" style="margin-left: 20px;width: 28px;height: 28px;" onclick="${gvc.event(() => {
-                            appConfig().changePage(gvc,"system_setting",{})
+                            appConfig().changePage(gvc, "system_setting", {})
                         })}">
                             </div>
                         `
@@ -81,16 +82,16 @@ Plugin.create(import.meta.url, (glitter) => {
                     loading: true
                 }
                 appConfig().getUserData({
-                    callback:(response)=>{
-                        vm.data=response
-                        vm.loading=false
+                    callback: (response) => {
+                        vm.data = response
+                        vm.loading = false
                     }
                 })
                 return {
                     view: () => {
                         return `
                         ${gvc.bindView({
-                            dataList:[{obj:vm,key:'loading'}],
+                            dataList: [{obj: vm, key: 'loading'}],
                             bind: "baseUserInf",
                             view: () => {
                                 if (vm.loading) {
@@ -99,9 +100,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return `
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex position-relative">
-                                        <img src="${vm.data.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
+                                        <img src="${vm.data.photo ?? `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${vm.data.last_name}&txtfont=Helvetica&txtalign=middle,center`}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
                                         <img src="${new URL!(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
-                                            appConfig().changePage(gvc,"user_edit_Profile")
+                                    appConfig().changePage(gvc, "user_edit_Profile")
                                 })}">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center align-baseline" style="margin-left: 32px;">
@@ -180,7 +181,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         return `
                         <div class="d-flex align-items-center  w-100 serviceRow" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
-                                gvc,widget,clickEvent:widget.data
+                                gvc, widget, clickEvent: widget.data
                             })
                         })}">
                             <div class="d-flex me-auto leftText" style="padding-left:2px;height: 29px;align-items: center;" >
@@ -216,7 +217,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     widget.refreshAll()
                                 }
                             }),
-                            ClickEvent.editer(gvc,widget,widget.data)
+                            ClickEvent.editer(gvc, widget, widget.data)
                         ])
                     }
                 }
@@ -444,7 +445,7 @@ Plugin.create(import.meta.url, (glitter) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data: { link: { img: string, code?: string }[] } = widget.data
-
+                const dialog=new Dialog(gvc)
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -501,7 +502,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         let vm = {
                             model: [
                                 {
-                                    img: new URL("../img/notify.svg",import.meta.url),
+                                    img: new URL("../img/notify.svg", import.meta.url),
                                     text: "消息通知",
                                     click: () => {
                                         glitter.runJsInterFace("onClickNoti", {}, () => {
@@ -509,7 +510,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
                                 },
                                 {
-                                    img: new URL("../img/information.svg",import.meta.url),
+                                    img: new URL("../img/information.svg", import.meta.url),
                                     text: "關於",
                                     click: () => {
                                         glitter.runJsInterFace("about", {}, () => {
@@ -517,7 +518,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
                                 },
                                 {
-                                    img: new URL("../img/shield.svg",import.meta.url),
+                                    img: new URL("../img/shield.svg", import.meta.url),
                                     text: "隱私",
                                     click: () => {
                                         glitter.runJsInterFace("privacy", {}, () => {
@@ -526,12 +527,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                 },
                             ],
                             logout: () => {
-                                //    todo
-                                glitter.runJsInterFace("logout", {}, (response) => {
-
-                                }, {
-                                    webFunction: () => {
-                                        return {}
+                                dialog.confirm("是否確認登出帳號?",(result)=>{
+                                    if(result){
+                                        appConfig().setUserData({
+                                            value: {}, callback: (resonse) => {
+                                                appConfig().setHome(gvc, 'home')
+                                            }
+                                        })
                                     }
                                 })
                             },
@@ -545,8 +547,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })
                             }
                         }
-
-
                         let model: any = undefined;
 
                         return gvc.bindView({
@@ -578,7 +578,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             })}">
  <img src="${rowData.img}" alt="${rowData.text}" style="width: 35px;height: 32px;margin-right: 16px;">
                                                     <div class="rowText">${rowData.text}</div>
-                                                    <img class="ms-auto" src="${new URL("../img/angle-right.svg",import.meta.url)}" alt="右箭頭" style="height: 24px;width: 24px;" >
+                                                    <img class="ms-auto" src="${new URL("../img/angle-right.svg", import.meta.url)}" alt="右箭頭" style="height: 24px;width: 24px;" >
 </div>`
                                         }))
                                     }, divCreate: {style: `margin-bottom:24px;`, class: ``}

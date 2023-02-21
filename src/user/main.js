@@ -2,6 +2,7 @@
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { appConfig } from "../config.js";
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
+import { Dialog } from "../dialog/dialog-mobile.js";
 Plugin.create(import.meta.url, (glitter) => {
     return {
         nav: {
@@ -87,13 +88,14 @@ Plugin.create(import.meta.url, (glitter) => {
                             dataList: [{ obj: vm, key: 'loading' }],
                             bind: "baseUserInf",
                             view: () => {
+                                var _a;
                                 if (vm.loading) {
                                     return ``;
                                 }
                                 return `
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex position-relative">
-                                        <img src="${vm.data.photo}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
+                                        <img src="${(_a = vm.data.photo) !== null && _a !== void 0 ? _a : `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${vm.data.last_name}&txtfont=Helvetica&txtalign=middle,center`}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
                                         <img src="${new URL(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
                                     appConfig().changePage(gvc, "user_edit_Profile");
                                 })}">
@@ -427,6 +429,7 @@ Plugin.create(import.meta.url, (glitter) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
+                const dialog = new Dialog(gvc);
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -508,10 +511,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                 },
                             ],
                             logout: () => {
-                                glitter.runJsInterFace("logout", {}, (response) => {
-                                }, {
-                                    webFunction: () => {
-                                        return {};
+                                dialog.confirm("是否確認登出帳號?", (result) => {
+                                    if (result) {
+                                        appConfig().setUserData({
+                                            value: {}, callback: (resonse) => {
+                                                appConfig().setHome(gvc, 'home');
+                                            }
+                                        });
                                     }
                                 });
                             },
