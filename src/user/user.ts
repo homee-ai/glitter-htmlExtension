@@ -1618,8 +1618,6 @@ ${
                         let viewModel = new ViewModel(gvc)
                         let dialog = new Dialog(gvc)
                         let firstAddressData: any = {};
-                        console.log()
-
                         const vm: { loading: boolean, data: any, userData: any ,addressModel:any} = {
                             loading: true,
                             data: undefined,
@@ -1794,7 +1792,7 @@ ${
                             `
                             ${sharedView.navigationBar({
                                 title: '我的帳號',
-                                leftIcon: `<img class="" src="${widget.data.nav.leftIcon}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     if (glitter.getUrlParameter('navagation') == "true") {
                                         glitter.runJsInterFace("dismiss", {}, () => {
                                         })
@@ -1872,7 +1870,7 @@ ${
                                             };
                                         }
                                     })}"
-                                    />`,
+                                    ></input>`,
                                     gvc.bindView({
                                         dataList: [
                                             {
@@ -1880,14 +1878,14 @@ ${
                                                 key: 'loading'
                                             }
                                         ],
-                                        bind: "photo",
+                                        bind: gvc.glitter.getUUID(),
                                         view: () => {
                                             if (vm.loading) {
                                                 return ``
                                             }
                                             return `
                                                 <div class="w-100 d-flex flex-column align-items-center">                            
-                                                    <img id="${gvc.id('photoImage')}" src="${(photoFile !== undefined) ? b64 : vm.userData.photo}" style="width: 128px;height: 128px;border-radius: 50%"
+                                                    <img id="${gvc.id('photoImage')}" src="${(photoFile !== undefined) ? b64 : vm.userData.photo ?? `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${vm.data.last_name}&txtfont=Helvetica&txtalign=middle,center`}" style="width: 128px;height: 128px;border-radius: 50%"
                                                     onclick="${gvc.event(() => {
                                                 $(`#${gvc.id("photo")}`).click()
                                             })}">
