@@ -9,11 +9,9 @@ Plugin.create(import.meta.url, (glitter) => {
         nav: {
             defaultData: {
                 topInset: 10,
-
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data: { link: { img: string, code?: string }[] } = widget.data
-
                 return {
                     view: () => {
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
@@ -50,8 +48,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }
                             }
                         })}
-                                <img  src = "${new URL!(`../img/component/setting.svg`, import.meta.url)}" alt="" style="margin-left: 20px" onclick="${gvc.event(() => {
-                            glitter.changePage('', "", true, {})
+                                <img  src = "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676918883480" alt="" style="margin-left: 20px;width: 28px;height: 28px;" onclick="${gvc.event(() => {
+                            appConfig().changePage(gvc,"system_setting",{})
                         })}">
                             </div>
                         `
@@ -433,6 +431,170 @@ Plugin.create(import.meta.url, (glitter) => {
                 return {
                     view: () => {
                         return ``
+                    },
+                    editor: () => {
+                        return ``
+                    }
+                }
+            },
+        },
+        systemSetting: {
+            defaultData: {
+                link: []
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                const data: { link: { img: string, code?: string }[] } = widget.data
+
+                return {
+                    view: () => {
+                        gvc.addStyle(`
+        @font-face {
+            font-family: 'Noto Sans TC';
+            src: url(assets/Font/NotoSansTC-Bold.otf);
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Noto Sans TC';
+            src: url(assets/Font/NotoSansTC-Regular.otf);
+            font-weight: normal;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+     
+        }
+
+        main {
+            padding: 24px 35px 44px;
+         
+            font-family: 'Noto Sans TC';
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .logout{
+            width: 296px;
+            height: 48px;
+            background: #FD6A58;
+            border-radius: 28px;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 26px;
+            letter-spacing: 0.15em;
+            color: #FFFFFF;
+        }
+        .deleteAccount{
+            font-weight: 400;
+            font-size: 15px;
+            color: #292929;
+            margin-top:8px;
+        }
+
+        `)
+                        let vm = {
+                            model: [
+                                {
+                                    img: new URL("../img/notify.svg",import.meta.url),
+                                    text: "消息通知",
+                                    click: () => {
+                                        glitter.runJsInterFace("onClickNoti", {}, () => {
+                                        })
+                                    }
+                                },
+                                {
+                                    img: new URL("../img/information.svg",import.meta.url),
+                                    text: "關於",
+                                    click: () => {
+                                        glitter.runJsInterFace("about", {}, () => {
+                                        })
+                                    }
+                                },
+                                {
+                                    img: new URL("../img/shield.svg",import.meta.url),
+                                    text: "隱私",
+                                    click: () => {
+                                        glitter.runJsInterFace("privacy", {}, () => {
+                                        })
+                                    }
+                                },
+                            ],
+                            logout: () => {
+                                //    todo
+                                glitter.runJsInterFace("logout", {}, (response) => {
+
+                                }, {
+                                    webFunction: () => {
+                                        return {}
+                                    }
+                                })
+                            },
+                            deleteAccount: () => {
+                                glitter.runJsInterFace("deleteAccount", {}, (response) => {
+
+                                }, {
+                                    webFunction: () => {
+                                        return {}
+                                    }
+                                })
+                            }
+                        }
+
+
+                        let model: any = undefined;
+
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                return `
+                    <main style="padding-left: 27px;padding-right: 27px;padding-top: 0px;">
+                        ${gvc.bindView({
+                                    bind: "",
+                                    view: () => {
+                                        gvc.addStyle(`
+                                    .rowText{
+                                        font-weight: 500;
+                                        font-size: 20px;
+                                        line-height: 29px;
+                                        color: #292929;                                    
+                                    }
+                                    .rowBorder{
+                                        border-bottom: 1px solid #E0E0E0;
+                                    }
+                                `)
+                                        return gvc.map(vm.model.map((rowData, index) => {
+                                            let border = "";
+                                            if (index != vm.model.length - 1) {
+                                                border = "rowBorder";
+                                            }
+                                            return `<div class="d-flex align-items-center ${border} " style="padding:35.5px 0;" onclick="${gvc.event(() => {
+                                                rowData.click();
+                                            })}">
+ <img src="${rowData.img}" alt="${rowData.text}" style="width: 35px;height: 32px;margin-right: 16px;">
+                                                    <div class="rowText">${rowData.text}</div>
+                                                    <img class="ms-auto" src="${new URL("../img/angle-right.svg",import.meta.url)}" alt="右箭頭" style="height: 24px;width: 24px;" >
+</div>`
+                                        }))
+                                    }, divCreate: {style: `margin-bottom:24px;`, class: ``}
+                                })}
+                        <div class="d-flex align-items-center justify-content-center" style=""><button class="logout border-0" onclick="${gvc.event(() => {
+                                    vm.logout()
+                                })}">登出</button></div>
+                        <div class="deleteAccount d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
+                                    vm.deleteAccount()
+                                })}">刪除帳號</div>
+                    </main>
+                    
+                    `
+                            },
+                            divCreate: {class: ``, style: ``}
+                        })
                     },
                     editor: () => {
                         return ``

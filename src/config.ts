@@ -12,9 +12,9 @@ export function appConfig(): {
     //Upload image
     uploadImage: (photoFile: any, callback: (result: string) => void) => void,
     //Change to other page
-    changePage: (gvc: GVC, tag: string, obj?: any) => void
+    changePage: (gvc: GVC, tag: string, obj?: any,option?:any) => void
     //setHome
-    setHome: (gvc: GVC, tag: string, obj?: any) => void
+    setHome: (gvc: GVC, tag: string, obj?: any,option?:any) => void
     //translation
     translation: any
     //Get user data
@@ -59,7 +59,7 @@ export function appConfig(): {
                 },
             });
         },
-        changePage: (gvc: GVC, tag: string, obj?: any) => {
+        changePage: (gvc: GVC, tag: string, obj?: any,option?:any) => {
             gvc.glitter.defaultSetting.pageAnimation = appConfig().translation
             const api = new Api()
             DialogHelper.dataLoading({
@@ -80,7 +80,8 @@ export function appConfig(): {
                         config: res.result[0].config,
                         data: obj,
                         tag: tag,
-                        goBack: true
+                        goBack: true,
+                        option:option
                     }
                 )
                 setTimeout(() => {
@@ -91,7 +92,7 @@ export function appConfig(): {
                 })
             })
         },
-        setHome: (gvc: GVC, tag: string, obj?: any) => {
+        setHome: (gvc: GVC, tag: string, obj?: any,option?:any) => {
             const api = new Api()
             api.homeeAJAX({
                 api: Api.serverURL,
@@ -106,7 +107,8 @@ export function appConfig(): {
                     {
                         config: res.result[0].config,
                         data: obj,
-                        tag: tag
+                        tag: tag,
+                        option:option
                     }
                 )
             })

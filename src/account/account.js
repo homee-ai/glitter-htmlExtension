@@ -230,6 +230,15 @@ Plugin.create(import.meta.url, (glitter) => {
                                     });
                                 }
                                 else {
+                                    setTimeout(() => {
+                                        dialog.dataLoading(false);
+                                        appConfig().changePage(gvc, "register", {
+                                            pwd: widget.data.accountData.password,
+                                            account: widget.data.accountData.account,
+                                        }, {
+                                            animation: glitter.animation.fade
+                                        });
+                                    }, 500);
                                 }
                             });
                         }
@@ -275,6 +284,27 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="funGroup d-flex justify-content-between">
                                             <img src="${new URL('../img/component/login/FB.png', import.meta.url)}" style="height: 50px;width:50px;" alt="" onclick="${gvc.event(() => {
                                     glitter.runJsInterFace("loginWithFB", {}, (response) => {
+                                        if (response.email && response.token) {
+                                            dialog.dataLoading(true);
+                                            User.loginFB(response.email, response.token, (data, code) => {
+                                                dialog.dataLoading(false);
+                                                if (!data) {
+                                                    dialog.showInfo('登入失敗');
+                                                }
+                                                else if (data.type == 'signup') {
+                                                    appConfig().changePage(gvc, "register", {
+                                                        pwd: gvc.glitter.getUUID(),
+                                                        account: response.email,
+                                                    }, {
+                                                        animation: glitter.animation.fade
+                                                    });
+                                                }
+                                                else {
+                                                    dialog.showInfo('登入成功!');
+                                                    appConfig().setHome(gvc, 'user_setting', {});
+                                                }
+                                            });
+                                        }
                                     });
                                 })}">
                                             <img src="${new URL('../img/component/login/apple.png', import.meta.url)}" style="height: 55px;width:55px;margin-left: 16px;margin-right: 16px;" onclick="${gvc.event(() => {
@@ -491,11 +521,38 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                    `);
                 function checkRegister() {
+                    var _a, _b;
+                    const dialog = new Dialog(gvc);
                     if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.name === '') {
-                        console.log("test");
+                        dialog.showInfo("請填寫完整資料!");
                     }
                     else {
-                        console.log(widget.data.loginData);
+                        dialog.dataLoading(true);
+                        User.register({
+                            first: widget.data.loginData.firstName,
+                            last: widget.data.loginData.lastName,
+                            inviteCode: (widget.data.loginData.inviteCode) || undefined,
+                            email: (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.account,
+                            pwd: (_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data.pwd,
+                            gender: widget.data.loginData.gender,
+                            birth: widget.data.loginData.birthDay,
+                            userName: widget.data.loginData.name,
+                            callback: (response, code) => {
+                                dialog.dataLoading(false);
+                                if (response) {
+                                    dialog.showInfo('登入成功!');
+                                    appConfig().setHome(gvc, 'user_setting', {});
+                                }
+                                else {
+                                    if (code === 'errorCode') {
+                                        dialog.showInfo('邀請碼輸入錯誤');
+                                    }
+                                    else {
+                                        dialog.showInfo('此信箱已經註冊．');
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
                 const $ = gvc.glitter.$;
@@ -514,15 +571,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return { data: 10 };
                             }
                         });
-                        glitter.runJsInterFace("getAccount", {}, (response) => {
-                            widget.data.loginData.account = response.data;
-                            exists = widget.data.loginData.account == "";
-                            gvc.notifyDataChange('mainView');
-                        }, {
-                            webFunction: () => {
-                                return { data: 10 };
-                            }
-                        });
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
@@ -530,9 +578,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     return `
                                         <main style="overflow-x: hidden;">
                                             <div class="w-100" style="position: absolute;">
-                                                <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                        glitter.runJsInterFace("dismiss", {}, () => {
-                                        });
+                                                <lottie-player src="${new URL('../img/component/login/login_page.json', import.meta.url)}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
+                                        glitter.goBack();
                                     })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                             </div>
                                             <div class="loginBoard d-flex flex-column align-items-center">
@@ -572,8 +619,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })}">
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex w-100">
-                                                        <div class="registerElement d-flex elementMargin">                                                           
+                                                    <div class="d-flex w-100 w-100 me-0">
+                                                        <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                             <img src="${new URL('../img/component/login/addUser.svg', import.meta.url)}">
                                                             <input class="" placeholder="用戶名稱" name="name" onchange="${gvc.event((e) => {
                                         widget.data.loginData.name = e.value;
@@ -587,13 +634,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                         widget.data.loginData.gender = e.value;
                                     })}">
                                                                 <option selected value="-1" hidden>性別</option>
-                                                                <option value="男性" value="1">男性</option>
-                                                                <option value="女性" value="0">女性</option>
+                                                                <option  value="1">男性</option>
+                                                                <option  value="0">女性</option>
                                                             </select>                       
                                                         </div>
                                                         <div class="registerElement d-flex me-0 elementMargin ">
                                                             <img src="${new URL('../img/component/login/calender.svg', import.meta.url)}">
-                                                            <input class="" type="text" style="background: none;color: black;"  name="birth" onchange="${gvc.event((e) => {
+                                                            <input class="w-100" type="date" style="background: none;color: black;"  name="birth" onchange="${gvc.event((e) => {
                                         widget.data.loginData.birthDay = e.value;
                                     })}" placeholder="出生日期" placeholder="MM/DD/YYYY"
                                                             onclick="${gvc.event((e) => {
@@ -605,9 +652,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         </div>
                                                     </div>     
                                                     <div class="d-flex w-100">
-                                                        <div class="registerElement d-flex elementMargin">                                                           
+                                                        <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                             <img src="${new URL('../img/component/login/TicketStar.svg', import.meta.url)}">
-                                                            <input class="" placeholder="用戶邀請碼" name="inviteCode" onchange="${gvc.event((e) => {
+                                                            <input class="w-100 me-0" placeholder="用戶邀請碼" name="inviteCode" onchange="${gvc.event((e) => {
                                         widget.data.loginData.inviteCode = e.value;
                                     })}">                                                           
                                                         </div>                       
@@ -840,7 +887,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         <input class="w-100 border-0" placeholder="驗證碼" style="margin-left: 16px;">
                                                     </div>
                             <!--                    todo 黑轉色 時間count-->
-                                                    <div class="authBtn d-flex justify-content-center align-items-center" onclick="${gvc.event(() => { })}">
+                                                    <div class="authBtn d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
+                                    })}">
                                                         獲取驗證碼
                                                     </div>
                                                 </div>
@@ -849,7 +897,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 </div>
                         
                                             <!--todo click-->
-                                                <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => { checkRegister(); })}">
+                                                <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
+                                        checkRegister();
+                                    })}">
                                                     下一步
                                                 </div>
                                             </div>
@@ -1090,7 +1140,9 @@ Plugin.create(import.meta.url, (glitter) => {
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
                 return {
-                    view: () => { return ``; },
+                    view: () => {
+                        return ``;
+                    },
                     editor: () => {
                         return ``;
                     }

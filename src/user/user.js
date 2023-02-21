@@ -2229,6 +2229,6 @@ ${glitter.htmlGenerate.editeInput({
                     }
                 };
             },
-        },
+        }
     };
 });

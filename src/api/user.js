@@ -53,12 +53,12 @@ export class User {
             },
         });
     }
-    static login({ account, pwd, callback }) {
+    static login({ account, pwd, inviteCode, callback }) {
         const glitter = Glitter.glitter;
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
             type: 'post',
-            data: JSON.stringify({ email: account, pwd: pwd }),
+            data: JSON.stringify({ email: account, pwd: pwd, inviteCode: inviteCode }),
             contentType: 'application/json; charset=utf-8',
             success: (suss) => {
                 if (suss) {
@@ -72,19 +72,59 @@ export class User {
                         }
                     });
                 }
-                callback(suss);
+                callback(suss, 200);
             },
             error: (err) => {
-                callback(false);
+                const resp = JSON.parse(err.responseText).message;
+                callback(false, resp);
+            },
+        });
+    }
+    static loginFB(email, token, callback) {
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,
+            type: 'post',
+            data: JSON.stringify({ email: email, token: token }),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss) => {
+                if (suss) {
+                    appConfig().setUserData({
+                        value: suss, callback: (response) => {
+                            Plugin.setAppConfig('HOMEEAppConfig', {
+                                token: suss.token,
+                                serverURL: appConfig().serverURL
+                            });
+                        }
+                    });
+                }
+                callback(suss, 200);
+            },
+            error: (err) => {
+                const resp = JSON.parse(err.responseText).message;
+                callback(false, resp);
+            },
+        });
+    }
+    static register(obj) {
+        const glitter = Glitter.glitter;
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user`,
+            type: 'post',
+            data: JSON.stringify(obj),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss) => {
+                User.login({ account: obj.email, pwd: obj.pwd, inviteCode: obj.inviteCode, callback: obj.callback });
+            },
+            error: (err) => {
+                User.login({ account: obj.email, pwd: obj.pwd, inviteCode: obj.inviteCode, callback: obj.callback });
             },
         });
     }
     static checkUserExists(account, callback) {
         const glitter = Glitter.glitter;
         $.ajax({
-            url: `${appConfig().serverURL}/api/v1/user/checkUserExist`,
+            url: `${appConfig().serverURL}/api/v1/user/checkUserExist?email=${account}`,
             type: 'get',
-            data: JSON.stringify({ email: account, pwd: `sam12345` }),
             contentType: 'application/json; charset=utf-8',
             success: (suss) => {
                 callback(suss.exists);

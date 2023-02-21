@@ -31,26 +31,26 @@ export class HtmlGenerate {
     };
     public static setHome = (obj: {
         config: any, editMode?: any, data: any
-        tag: string
+        tag: string,option?:any
     }) => {
         const glitter = Glitter.glitter;
         glitter.setHome('glitterBundle/plugins/html-render.js', obj.tag, {
             config: obj.config,
             editMode: obj.editMode,
             data:obj.data
-        })
+        },obj.option ?? {})
     }
     public static changePage=(obj: {
         config: any, editMode?: any, data: any
         tag: string,
-        goBack: boolean
+        goBack: boolean,option?:any
     }) => {
         const glitter = Glitter.glitter;
         glitter.changePage('glitterBundle/plugins/html-render.js', obj.tag, obj.goBack, {
             config: obj.config,
             editMode: obj.editMode,
             data:obj.data
-        })
+        },obj.option ?? {})
     }
     public static editeInput(obj: {
         gvc: GVC, title: string, default: string, placeHolder: string, callback: (text: string) => void
@@ -327,7 +327,12 @@ ${
                                                 return ``;
                                             }
                                             try {
-                                                return gvc.map([
+                                                return gvc.map([ `<div class="alert-dark alert">
+<h3 class="text-white  m-1" style="font-size: 16px;">模塊路徑</h3>
+<h3 class="text-warning alert-primary  m-1" style="font-size: 14px;">${dd.js}</h3>
+<h3 class="text-white  m-1 mt-2" style="font-size: 16px;">函式路徑</h3>
+<h3 class="text-warning alert-primary m-1" style="font-size: 14px;">${dd.type}</h3>
+</div>`,
                                                     HtmlGenerate.editeInput({
                                                         gvc: gvc,
                                                         title: "模塊名稱",

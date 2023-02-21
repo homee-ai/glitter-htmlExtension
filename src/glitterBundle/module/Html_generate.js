@@ -254,7 +254,12 @@ ${gvc.bindView({
                                             return ``;
                                         }
                                         try {
-                                            return gvc.map([
+                                            return gvc.map([`<div class="alert-dark alert">
+<h3 class="text-white  m-1" style="font-size: 16px;">模塊路徑</h3>
+<h3 class="text-warning alert-primary  m-1" style="font-size: 14px;">${dd.js}</h3>
+<h3 class="text-white  m-1 mt-2" style="font-size: 16px;">函式路徑</h3>
+<h3 class="text-warning alert-primary m-1" style="font-size: 14px;">${dd.type}</h3>
+</div>`,
                                                 HtmlGenerate.editeInput({
                                                     gvc: gvc,
                                                     title: "模塊名稱",
@@ -333,8 +338,7 @@ ${HtmlGenerate.editeText({
                                                     };
                                                 }),
                                                 ,
-                                                gvc.glitter.share.htmlExtension[gvc.glitter.htmlGenerate.resourceHook(dd.js)][dd.type].render(gvc, dd, setting, hover).editor()
-                                            ]);
+                                                gvc.glitter.share.htmlExtension[gvc.glitter.htmlGenerate.resourceHook(dd.js)][dd.type].render(gvc, dd, setting, hover).editor()]);
                                         }
                                         catch (e) {
                                             return `<div class="alert alert-danger mt-2" role="alert" style="word-break: break-word;white-space: normal;">
@@ -399,18 +403,20 @@ HtmlGenerate.saveEvent = () => {
     alert('save');
 };
 HtmlGenerate.setHome = (obj) => {
+    var _a;
     const glitter = Glitter.glitter;
     glitter.setHome('glitterBundle/plugins/html-render.js', obj.tag, {
         config: obj.config,
         editMode: obj.editMode,
         data: obj.data
-    });
+    }, (_a = obj.option) !== null && _a !== void 0 ? _a : {});
 };
 HtmlGenerate.changePage = (obj) => {
+    var _a;
     const glitter = Glitter.glitter;
     glitter.changePage('glitterBundle/plugins/html-render.js', obj.tag, obj.goBack, {
         config: obj.config,
         editMode: obj.editMode,
         data: obj.data
-    });
+    }, (_a = obj.option) !== null && _a !== void 0 ? _a : {});
 };

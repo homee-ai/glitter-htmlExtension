@@ -12,6 +12,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 setting:[]
             },
             render:(gvc, widget, setting, hoverID) => {
+
                 widget.data.setting = widget.data.setting ?? []
                 const htmlGenerate = new glitter.htmlGenerate(widget.data.setting,hoverID);
                 return {

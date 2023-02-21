@@ -39,6 +39,7 @@ export class User {
         })
     }
 
+
     public static setUserData(userData:any,next: (response:any) => void){
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user`,
@@ -54,12 +55,17 @@ export class User {
             },
         });
     }
-    public static login({account,pwd,callback}: { account: string, pwd: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean) => void }){
+    public static login({
+                            account,
+                            pwd,
+                            inviteCode,
+                            callback
+                        }: { account: string, pwd: string,inviteCode?:string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
         const glitter=Glitter.glitter
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
             type: 'post',
-            data: JSON.stringify({email: account, pwd: pwd}),
+            data: JSON.stringify({email: account, pwd: pwd,inviteCode:inviteCode}),
             contentType: 'application/json; charset=utf-8',
             success: (suss: any) => {
                 if(suss){
@@ -73,10 +79,51 @@ export class User {
                         }
                     })
                 }
-                callback(suss)
+                callback(suss,200)
             },
             error: (err: any) => {
-                callback(false)
+                const resp= JSON.parse(err.responseText).message
+                callback(false,resp)
+            },
+        });
+    }
+    public static loginFB(email:string,token:string,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,
+            type: 'post',
+            data: JSON.stringify({email: email, token: token}),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss: any) => {
+                if(suss){
+                    appConfig().setUserData({
+                        value:suss,callback:(response)=>{
+                            Plugin.setAppConfig('HOMEEAppConfig',{
+                                token:suss.token,
+                                serverURL:appConfig().serverURL
+                            })
+                        }
+                    })
+                }
+                callback(suss,200)
+            },
+            error: (err: any) => {
+                const resp= JSON.parse(err.responseText).message
+                callback(false,resp)
+            },
+        });
+    }
+    public static register(obj: { first: string, inviteCode:string,last: string, email: string, pwd: string, gender: string, birth: string, userName: string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
+        const glitter=Glitter.glitter
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user`,
+            type: 'post',
+            data: JSON.stringify(obj),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss: any) => {
+                User.login({account:obj.email,pwd:obj.pwd,inviteCode:obj.inviteCode,callback:obj.callback})
+            },
+            error: (err: any) => {
+                User.login({account:obj.email,pwd:obj.pwd,inviteCode:obj.inviteCode,callback:obj.callback})
             },
         });
     }
@@ -84,9 +131,8 @@ export class User {
     public static checkUserExists(account:string,callback:(result:boolean|undefined)=>void){
         const glitter=Glitter.glitter
         $.ajax({
-            url: `${appConfig().serverURL}/api/v1/user/checkUserExist`,
+            url: `${appConfig().serverURL}/api/v1/user/checkUserExist?email=${account}`,
             type: 'get',
-            data: JSON.stringify({email: account, pwd: `sam12345`}),
             contentType: 'application/json; charset=utf-8',
             success: (suss: any) => {
                 callback(suss.exists)

@@ -38,7 +38,7 @@ export function appConfig() {
                 },
             });
         },
-        changePage: (gvc, tag, obj) => {
+        changePage: (gvc, tag, obj, option) => {
             gvc.glitter.defaultSetting.pageAnimation = appConfig().translation;
             const api = new Api();
             DialogHelper.dataLoading({
@@ -58,7 +58,8 @@ export function appConfig() {
                     config: res.result[0].config,
                     data: obj,
                     tag: tag,
-                    goBack: true
+                    goBack: true,
+                    option: option
                 });
                 setTimeout(() => {
                     DialogHelper.dataLoading({
@@ -68,7 +69,7 @@ export function appConfig() {
                 });
             });
         },
-        setHome: (gvc, tag, obj) => {
+        setHome: (gvc, tag, obj, option) => {
             const api = new Api();
             api.homeeAJAX({
                 api: Api.serverURL,
@@ -82,7 +83,8 @@ export function appConfig() {
                 gvc.glitter.htmlGenerate.setHome({
                     config: res.result[0].config,
                     data: obj,
-                    tag: tag
+                    tag: tag,
+                    option: option
                 });
             });
         },

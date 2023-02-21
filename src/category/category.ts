@@ -621,20 +621,10 @@ color: #1E1E1E;">${data.title}</div>
                             let bottomInset: number = 0
                             glitter.runJsInterFace("getTopInset", {}, (response) => {
                                 topInset=response.data
-                                gvc.notifyDataChange(['nav','ddd'])
+                                gvc.notifyDataChange(['mainView'])
                             }, {
                                 webFunction: () => {
                                     return {data: 0}
-                                }
-                            })
-                            glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                                if (bottomInset != response.data){
-                                    bottomInset=response.data;
-                                    gvc.notifyDataChange("footer")
-                                }
-                            }, {
-                                webFunction: () => {
-                                    return {data: 20}
                                 }
                             })
 
