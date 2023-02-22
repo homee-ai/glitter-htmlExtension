@@ -1,6 +1,6 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
-import { Dialog } from "../../widget/dialog.js";
+import { Dialog } from "../../dialog/dialog-mobile.js";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);

@@ -1,5 +1,4 @@
 import {init} from '../../glitterBundle/GVController.js';
-import {Lan} from '../../api/language.js'
 import {SharedView} from "../../widget/sharedView.js"
 
 init((gvc, glitter, gBundle) => {
