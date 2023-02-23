@@ -3,7 +3,9 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { SharedView } from "../homee/shareView.js";
 import { appConfig } from "../config.js";
+import { Dialog } from "../homee/legacy/widget/dialog.js";
 import { Category } from "../api/category.js";
+import { ViewModel } from "./view/categoryViewApi.js";
 Plugin.create(import.meta.url, (glitter) => {
     return {
         nav: {
@@ -728,6 +730,150 @@ color: #1E1E1E;">${data.title}</div>
                     }
                 };
             }
-        }
+        },
+        index: {
+            defaultData: {
+                loading: false,
+                selectIndex: 0,
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                let topInset = 0;
+                let bottomInset = 0;
+                const dialog = new Dialog(gvc);
+                let shareView = new SharedView(gvc);
+                const viewModel = new ViewModel(gvc);
+                const categoryAPI = new Category(gvc.glitter);
+                let categoryList = [];
+                return {
+                    view: () => {
+                        gvc.addStyle(`
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Bold.otf);
+                                font-weight: bold;
+                            }
+                    
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Regular.otf);
+                                font-weight: normal;
+                            }
+                    
+                            html {
+                                width: 100%;
+                                height: 100%;
+                                background: #F8F3ED;
+                                overflow-y: auto;
+                                background : white;
+                            }
+                    
+                            body {
+                                width: 100%;
+                                height: 100%;
+                                background : white;
+                                
+                            }
+                    
+                            main {
+                                padding: 24px 35px 44px;
+                           
+                                font-family: 'Noto Sans TC';
+                                margin: 0;
+                                box-sizing: border-box;
+                                height:100vh;
+                            }
+                            
+                            `);
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                return `
+                                ${shareView.navigationBar({
+                                    title: "分類",
+                                    leftIcon: `<img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                        glitter.goBack("main");
+                                    })}">`,
+                                    rightIcon: `
+                        
+                                    `
+                                })}
+                                ${gvc.bindView({
+                                    bind: 'mainDom',
+                                    view: () => {
+                                        if (widget.data.loading) {
+                                            return `              
+                                            <div style="padding-left: 15px;"></div>                     
+                                            ${gvc.bindView({
+                                                bind: "leftMain",
+                                                view: () => {
+                                                    return viewModel.setCategoryLeft(categoryList, widget.data);
+                                                },
+                                                divCreate: { style: `width:30%;border-right: 0.5px solid #E0E0E0;position:fixed;overflow-y: scroll;padding-left: 15px;padding-right: 15px;`, class: `h-100` }
+                                            })}
+                                            ${gvc.bindView({
+                                                bind: "rightMain",
+                                                view: () => {
+                                                    let returnHtml = ``;
+                                                    categoryList.forEach((data) => {
+                                                        returnHtml += viewModel.setCategoryRight(data);
+                                                    });
+                                                    returnHtml += `
+                                                    <div class="w-100" style="height: 30vh"></div>
+                                                `;
+                                                    return returnHtml;
+                                                },
+                                                divCreate: { style: `width:70%;overflow-y:scroll;position:fixed;margin-left:26%`, class: `h-100` },
+                                                onCreate: () => {
+                                                    let div = document.getElementById(`${gvc.id('rightMain')}`);
+                                                    div === null || div === void 0 ? void 0 : div.addEventListener("scroll", (e) => {
+                                                        let distance = div.scrollTop;
+                                                        let elementNodes = [];
+                                                        for (let i = 0; i < div.childNodes.length; i++) {
+                                                            if (div.childNodes[i].nodeType === 1) {
+                                                                elementNodes.push(div.childNodes[i]);
+                                                            }
+                                                        }
+                                                        for (let i = 0; i < elementNodes.length; i++) {
+                                                            let e = elementNodes[i];
+                                                            if (distance < e.offsetTop - 50) {
+                                                                if (widget.data.selectIndex != i - 1) {
+                                                                    widget.data.selectIndex = i - 1;
+                                                                    gvc.notifyDataChange('leftMain');
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            })}                             
+                                        `;
+                                        }
+                                        else {
+                                            return viewModel.loadingView();
+                                        }
+                                    },
+                                    divCreate: { style: `min-height:100vh;`, class: `d-flex w-100` }
+                                })}     
+                        `;
+                            },
+                            divCreate: { class: `d-flex w-100 flex-column`, style: `` },
+                            onCreate: () => {
+                                if (!widget.data.loading) {
+                                    categoryAPI.getCategoryAllList((data) => {
+                                        categoryList = data;
+                                        widget.data.loading = true;
+                                        console.log("test");
+                                        gvc.notifyDataChange('mainDom');
+                                    });
+                                }
+                            }
+                        });
+                    },
+                    editor: () => {
+                        return ``;
+                    }
+                };
+            },
+        },
     };
 });

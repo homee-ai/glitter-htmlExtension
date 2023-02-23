@@ -213,7 +213,26 @@ Plugin.create(import.meta.url,(glitter)=>{
             `
                     },
                     editor: ()=>{
-                        return ``
+                        return gvc.map([ `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景圖片</h3>
+                            <div class="mt-2"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.model.background}">
+                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                                    glitter.ut.chooseMediaCallback({
+                                        single:true,
+                                        accept:'image/*',
+                                        callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                            glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                                widget.data.model.background=link;
+                                                widget.refreshAll!()
+                                            })
+                                        }
+                                    })
+                                })}"></i>
+                            </div>
+                        `])
                     }
                 }
             },
