@@ -166,6 +166,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
+                        console.log(JSON.stringify(selectSku));
                         return `       
        ${gvc.bindView({
                             bind: 'productTitle',
@@ -189,7 +190,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             bind: "qtyNumber",
                             view: () => {
                                 return `
-                                        <input class="border-0 text-center" style="width: 25px;"  value="${widget.data.qty}" onchange="${gvc.event((e) => {
+                                        <input class="border-0 text-center" style="width: 45px;"  value="${widget.data.qty}" onchange="${gvc.event((e) => {
                                     widget.data.qty = e.value;
                                     if (widget.data.qty < 0) {
                                         widget.data.qty = 0;
@@ -356,8 +357,31 @@ Plugin.create(import.meta.url, (glitter) => {
                                         </div>
                                         
                                     </div>
-                                    <div class="footerBTN ms-auto d-flex ">
-                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center">加入至空間</div>
+                                    
+                                    <div class="footerBTN ${selectSku.t3dModel ? `d-none` : ``} d-flex flex-fill align-items-center justify-content-center text-white" style="background: #FFDC6A;
+                                        padding:14px 29px;
+                                        border-radius: 24px;
+                                        background: #FE5541;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 14px;
+                                        margin-left: 20px;" onclick="${gvc.event((e) => {
+                                    const dialog = new Dialog(gvc);
+                                    Checkout.addToCart({
+                                        category: "購物車",
+                                        skuID: selectSku.sku_id,
+                                        amount: 1,
+                                        callback: (response) => {
+                                            dialog.showInfo('已加入購物車');
+                                        }
+                                    });
+                                })}">加入購物車
+                                    </div>
+                                    <div class="footerBTN ms-auto d-flex  ${selectSku.t3dModel ? `` : `d-none`}">
+                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
+                                    glitter.runJsInterFace("addToSpace", selectSku, () => { });
+                                })}">加入至空間</div>
                                         <div class="footerBTNRight d-flex align-items-center justify-content-center" onclick="${gvc.event((e) => {
                                     const dialog = new Dialog(gvc);
                                     Checkout.addToCart({

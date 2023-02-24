@@ -144,7 +144,67 @@ ${ClickEvent.editer(gvc,widget,widget.data.clickEvent)}
                     }
                 }
             }
-        }
+        },
+        containerV2: {
+            defaultData:{
+                setting:[]
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+                widget.data.setting = widget.data.setting ?? []
+                const htmlGenerate = new glitter.htmlGenerate(widget.data.setting,hoverID);
+                return {
+                    view: ()=>{
+                        return htmlGenerate.render(gvc, {class:`m-0 ${widget.data.layout} ${widget.data.class}`,style:`${widget.data.style}`})
+                    },
+                    editor: (() => {
+                        return gvc.map([
+                            `<div class="my-2"></div>
+<span class="w-100 mb-2 fw-500 mt-2 " style="color: orange;">排版方式</span>
+<select class="form-select mt-2" onchange="${gvc.event((e:any) => {
+                                widget.data.layout=e.value
+                                widget.refreshAll!()
+                            })}" >
+${(() => {
+                                const data = [
+                                    {tit: "d-block", value: `d-block`},
+                                    {tit: "d-inline-block", value: `d-inline-block`},
+                                    {tit: "d-inline-flex", value: `d-inline-flex`},
+                                    {tit: "d-flex", value: `d-flex`},
+                                    {tit: "row", value: `row`},
+                                ]
+
+                                return gvc.map(data.map((it) => {
+                                    return `<option value="${it.value}" ${(widget.data.layout === it.value) ? `selected`:``} >${it.tit}</option>`
+                                }))
+                            })()}
+</select>
+<span class=" w-100 mb-2 fw-500 mt-2" style="color: orange;">Class</span>
+<input class="form-control" value="${widget.data.class ?? ""}" onchange="${gvc.event((e:any)=>{
+                                widget.data.class=e.value
+                                widget.refreshAll!()
+                            })}">
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Style</span>
+<input class="form-control" value="${widget.data.style ?? ""}" onchange="${gvc.event((e:any)=>{
+                                widget.data.style=e.value
+                                widget.refreshAll!()
+                            })}">
+`, (() => {
+                                if (widget.data.setting.length > 0) {
+                                    return htmlGenerate.editor(gvc, {
+                                        return_: true,
+                                        refreshAll: widget.refreshAll!
+                                    })
+                                } else {
+                                    return ``
+                                }
+                            })()
+                        ])
+
+                    })
+                }
+            }
+        },
     }
 });
 

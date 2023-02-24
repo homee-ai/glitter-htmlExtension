@@ -13,7 +13,11 @@ export interface HtmlJson {
     data: any,
     js: string,
     refreshAll: () => void,
-    refreshComponent: () => void
+    refreshComponent: () => void,
+    styleManager: {
+        get: (obj:{title: string, tag: string ,def:string}) => string
+        editor: (gvc: GVC, array: { [name:string]:{title: string, tag: string ,def:string}},title?:string) => string
+    }
 }
 
 export class Plugin {

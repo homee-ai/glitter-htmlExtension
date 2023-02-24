@@ -390,7 +390,11 @@ ${
                     return ``
                 },
                 event: () => {
-                    gvc.glitter.goBack()
+                    if( gvc.glitter.pageConfig.length <= 1){
+                        appConfig().setHome(gvc, "home", {})
+                    }else{
+                        gvc.glitter.goBack()
+                    }
                 }
             }
         }

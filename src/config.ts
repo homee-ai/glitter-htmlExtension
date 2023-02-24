@@ -19,7 +19,11 @@ export function appConfig(): {
     //Get user data
     getUserData: ({callback}: { callback: (result: any) => void }) => void
     //Set user data
-    setUserData: ({value, callback}: { value: any, callback: (result: any) => void }) => void
+    setUserData: ({value, callback}: { value: any, callback: (result: any) => void }) => void,
+    //getTopInset
+    getTopInset:(callback:(inset:number)=>void)=>void
+    //getBottomInset
+    getBottomInset:(callback:(inset:number)=>void)=>void
 } {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
@@ -130,6 +134,27 @@ export function appConfig(): {
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response: any) => {
                 callback(response)
             })
+        },
+        getTopInset:(callback:(inset:number)=>void)=>{
+            const glitter = (window as any).glitter
+            glitter.runJsInterFace("getTopInset", {}, (response:any) => {
+               callback(response.data)
+            }, {
+                webFunction: () => {
+                    return {data: 0}
+                }
+            })
+        },
+        getBottomInset:(callback:(inset:number)=>void)=>{
+            const glitter = (window as any).glitter
+            glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
+                callback(response.data)
+            }, {
+                webFunction: () => {
+                    return {data: 0}
+                }
+            })
         }
+
     })
 }

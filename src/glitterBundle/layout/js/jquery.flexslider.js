@@ -237,27 +237,27 @@
             for (var i = 0; i < slider.pagingCount; i++) {
               slide = slider.slides.eq(i);
 
-              if ( undefined === slide.attr( 'data-thumb-alt' ) ) { 
-                slide.attr( 'data-thumb-alt', '' ); 
+              if ( undefined === slide.attr( 'data-thumb-alt' ) ) {
+                slide.attr( 'data-thumb-alt', '' );
               }
-              
+
               item = $( '<a></a>' ).attr( 'href', '#' ).text( j );
               if ( slider.vars.controlNav === "thumbnails" ) {
                 item = $( '<img/>' ).attr( 'src', slide.attr( 'data-thumb' ) );
               }
-              
+
               if ( '' !== slide.attr( 'data-thumb-alt' ) ) {
                 item.attr( 'alt', slide.attr( 'data-thumb-alt' ) );
               }
 
               if ( 'thumbnails' === slider.vars.controlNav && true === slider.vars.thumbCaptions ) {
                 var captn = slide.attr( 'data-thumbcaption' );
-                if ( '' !== captn && undefined !== captn ) { 
+                if ( '' !== captn && undefined !== captn ) {
                   var caption = $('<span></span>' ).addClass( namespace + 'caption' ).text( captn );
                   item.append( caption );
                 }
               }
-              
+
               var liElement = $( '<li>' );
               item.appendTo( liElement );
               liElement.append( '</li>' );
@@ -980,7 +980,7 @@
             } else {
               slider.newSlides.css({"width": slider.computedW, "marginRight" : slider.computedM, "float": "left", "display": "block"});
             }
-              
+
            }
             else{
               slider.newSlides.css({"width": slider.computedW, "marginRight" : slider.computedM, "float": "left", "display": "block"});
@@ -1183,7 +1183,7 @@
 
     // Secondary Navigation
     keyboard: true,                 //Boolean: Allow slider navigating via keyboard left/right keys
-    multipleKeyboard: false,        //{NEW} Boolean: Allow keyboard navigation to affect multiple sliders. Default behavior cuts out keyboard navigation with more than one slider present.
+    multipleKeyboard: false,        //{NEW} Boolean: Allow keyboard navigation to affect multiple sliders. Default behavior cuts out keyboard navigation with more.svg than one slider present.
     mousewheel: false,              //{UPDATED} Boolean: Requires jquery.mousewheel.js (https://github.com/brandonaaron/jquery-mousewheel) - Allows slider navigating via mousewheel
     pausePlay: false,               //Boolean: Create pause/play dynamic element
     pauseText: "Pause",             //String: Set the text for the "pause" pausePlay item

@@ -13,7 +13,7 @@ File: Icons Css File
   font-weight: normal;
   font-style: normal;
 }
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Chrome hack: SVG is rendered more.svg smooth in Windozze. 100% magic, uncomment if you need it. */
 /* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
@@ -36,7 +36,7 @@ File: Icons Css File
   text-transform: none;
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
-  /* you can be more comfortable with increased icons size */
+  /* you can be more.svg comfortable with increased icons size */
   /* font-size: 120%; */
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;

@@ -106,6 +106,26 @@ export function appConfig() {
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response) => {
                 callback(response);
             });
+        },
+        getTopInset: (callback) => {
+            const glitter = window.glitter;
+            glitter.runJsInterFace("getTopInset", {}, (response) => {
+                callback(response.data);
+            }, {
+                webFunction: () => {
+                    return { data: 0 };
+                }
+            });
+        },
+        getBottomInset: (callback) => {
+            const glitter = window.glitter;
+            glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                callback(response.data);
+            }, {
+                webFunction: () => {
+                    return { data: 0 };
+                }
+            });
         }
     });
 }
