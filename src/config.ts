@@ -3,6 +3,7 @@ import {Api} from "./homee/api/homee-api.js";
 import {DialogHelper} from "./dialog/dialog-helper.js";
 import {GVC} from "./glitterBundle/GVController.js";
 import {Dialog} from "./dialog/dialog-mobile.js";
+
 export function appConfig(): {
     //HOMEE API backend route
     serverURL: string,
@@ -11,9 +12,9 @@ export function appConfig(): {
     //Upload image
     uploadImage: (photoFile: any, callback: (result: string) => void) => void,
     //Change to other page
-    changePage: (gvc: GVC, tag: string, obj?: any,option?:any) => void
+    changePage: (gvc: GVC, tag: string, obj?: any, option?: any) => void
     //setHome
-    setHome: (gvc: GVC, tag: string, obj?: any,option?:any) => void
+    setHome: (gvc: GVC, tag: string, obj?: any, option?: any) => void
     //translation
     translation: any
     //Get user data
@@ -21,9 +22,9 @@ export function appConfig(): {
     //Set user data
     setUserData: ({value, callback}: { value: any, callback: (result: any) => void }) => void,
     //getTopInset
-    getTopInset:(callback:(inset:number)=>void)=>void
+    getTopInset: (callback: (inset: number) => void) => void
     //getBottomInset
-    getBottomInset:(callback:(inset:number)=>void)=>void
+    getBottomInset: (callback: (inset: number) => void) => void
 } {
     return Plugin.getAppConfig("HOMEEAppConfig", {
         serverURL: "http://127.0.0.1:3080",
@@ -62,10 +63,10 @@ export function appConfig(): {
                 },
             });
         },
-        changePage: (gvc: GVC, tag: string, obj?: any,option?:any) => {
+        changePage: (gvc: GVC, tag: string, obj?: any, option?: any) => {
             gvc.glitter.defaultSetting.pageAnimation = appConfig().translation
             const api = new Api()
-            const dialog=new Dialog(gvc)
+            const dialog = new Dialog(gvc)
             dialog.dataLoading(true)
             api.homeeAJAX({
                 api: Api.serverURL,
@@ -79,7 +80,7 @@ export function appConfig(): {
                         data: obj,
                         tag: tag,
                         goBack: true,
-                        option:option
+                        option: option
                     }
                 )
                 setTimeout(() => {
@@ -90,9 +91,9 @@ export function appConfig(): {
                 })
             })
         },
-        setHome: (gvc: GVC, tag: string, obj?: any,option?:any) => {
+        setHome: (gvc: GVC, tag: string, obj?: any, option?: any) => {
             const api = new Api()
-            const dialog=new Dialog(gvc)
+            const dialog = new Dialog(gvc)
             dialog.dataLoading(true)
             api.homeeAJAX({
                 api: Api.serverURL,
@@ -104,12 +105,12 @@ export function appConfig(): {
                         config: res.result[0].config,
                         data: obj,
                         tag: tag,
-                        option:option
+                        option: option
                     }
                 )
-                setTimeout(()=>{
+                setTimeout(() => {
                     dialog.dataLoading(false)
-                },2000)
+                }, 2000)
 
             })
         },
@@ -121,9 +122,9 @@ export function appConfig(): {
             const glitter = (window as any).glitter
             glitter.getPro("daiqdmoiwme21", (response: any) => {
                 try {
-                    const userData:any = JSON.parse(response.data)
+                    const userData: any = JSON.parse(response.data)
                     callback(userData)
-                }catch (e){
+                } catch (e) {
                     callback({})
                 }
 
@@ -134,20 +135,21 @@ export function appConfig(): {
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response: any) => {
                 callback(response)
             })
+            glitter.runJsInterFace("storeUserData",value,(response:any)=>{})
         },
-        getTopInset:(callback:(inset:number)=>void)=>{
+        getTopInset: (callback: (inset: number) => void) => {
             const glitter = (window as any).glitter
-            glitter.runJsInterFace("getTopInset", {}, (response:any) => {
-               callback(response.data)
+            glitter.runJsInterFace("getTopInset", {}, (response: any) => {
+                callback(response.data)
             }, {
                 webFunction: () => {
                     return {data: 0}
                 }
             })
         },
-        getBottomInset:(callback:(inset:number)=>void)=>{
+        getBottomInset: (callback: (inset: number) => void) => {
             const glitter = (window as any).glitter
-            glitter.runJsInterFace("getBottomInset", {}, (response:any) => {
+            glitter.runJsInterFace("getBottomInset", {}, (response: any) => {
                 callback(response.data)
             }, {
                 webFunction: () => {

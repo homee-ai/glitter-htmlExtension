@@ -1,4 +1,4 @@
-import {GVC} from "../glitterBundle/GVController";
+import {GVC} from "../glitterBundle/GVController.js";
 
 export class SharedView {
     public navigationBar: (item: { title: string; leftIcon: string; rightIcon: string }) => string;

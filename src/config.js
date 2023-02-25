@@ -106,6 +106,7 @@ export function appConfig() {
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response) => {
                 callback(response);
             });
+            glitter.runJsInterFace("storeUserData", value, (response) => { });
         },
         getTopInset: (callback) => {
             const glitter = window.glitter;

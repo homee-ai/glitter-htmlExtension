@@ -80,7 +80,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
    *     render: function() { ... }
    *   });
    *
-   * A more.svg formal specification of how these methods are used:
+   * A more formal specification of how these methods are used:
    *
    *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
    *   decl := ReactPropTypes.{type}(.isRequired)?
@@ -181,7 +181,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
           var err = new Error(
             'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
             'Use `PropTypes.checkPropTypes()` to call them. ' +
-            'Read more.svg at http://fb.me/use-check-prop-types'
+            'Read more at http://fb.me/use-check-prop-types'
           );
           err.name = 'Invariant Violation';
           throw err;
@@ -230,7 +230,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       var propType = getPropType(propValue);
       if (propType !== expectedType) {
         // `propValue` being instance of, say, date/regexp, pass the 'object'
-        // check, but we can offer a more.svg precise error message here rather than
+        // check, but we can offer a more precise error message here rather than
         // 'of type `object`'.
         var preciseType = getPreciseType(propValue);
 
@@ -541,7 +541,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     return propType;
   }
 
-  // This handles more.svg types than `getPropType`. Only used for error messages.
+  // This handles more types than `getPropType`. Only used for error messages.
   // See `createPrimitiveTypeChecker`.
   function getPreciseType(propValue) {
     if (typeof propValue === 'undefined' || propValue === null) {

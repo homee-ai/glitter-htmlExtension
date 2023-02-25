@@ -1751,10 +1751,13 @@ ${
                             dialog.dataLoading(true)
                             User.setUserData(vm.userData,(response)=>{
                                 dialog.dataLoading(false)
-                                dialog.showInfo("更改成功")
                                 appConfig().setUserData({
                                     value:vm.userData,
                                     callback:(response)=>{
+                                        appConfig().setHome(gvc,'user_setting')
+                                        setTimeout(()=>{
+                                            dialog.showInfo("更改成功")
+                                        },1000)
                                     }
                                 })
                             })

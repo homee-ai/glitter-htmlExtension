@@ -254,6 +254,7 @@ export class PageManager {
 
     public static changePage(url: string, tag: string, goBack: boolean, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string } = {}) {
         const glitter = Glitter.glitter;
+
         if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {
                 glitter.changePage(url, tag, goBack, obj, option);

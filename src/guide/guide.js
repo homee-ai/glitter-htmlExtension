@@ -164,7 +164,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data) {
                                 bottomInset = (response.data);
-                                gvc.notifyDataChange('mainView');
+                                gvc.notifyDataChange('laravel');
                             }
                         }, {
                             webFunction: () => {
@@ -175,11 +175,11 @@ Plugin.create(import.meta.url, (glitter) => {
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                             <div class="w-100" style="">
                                 <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                            glitter.runJsInterFace("dismissController", {}, () => { });
+                            appConfig().setHome(gvc, "myspace", {});
                         })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%">
-                                <source src="${widget.data.model.background}" type="video/mp4">
+                                <source src="${new URL(`video/homee 操作教學(步驟一).mp4`, import.meta.url)}" type="video/mp4">
                             </video>
                             
                         </div>
@@ -302,7 +302,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data) {
                                 bottomInset = (response.data);
-                                gvc.notifyDataChange('mainView');
+                                gvc.notifyDataChange('laravel');
                             }
                         }, {
                             webFunction: () => {
@@ -312,12 +312,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
                             <div class="w-100" style="">
-                                <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                            glitter.goBack("guide1");
-                        })}">
+                              
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
-                                <source src="${widget.data.model.background}" type="video/mp4">
+                                <source src="${new URL(`video/homee 操作教學(步驟二).mp4`, import.meta.url)}" type="video/mp4">
                             </video>
                             
                         </div>
@@ -426,7 +424,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data) {
                                 bottomInset = (response.data);
-                                gvc.notifyDataChange('mainView');
+                                gvc.notifyDataChange('laravel');
                             }
                         }, {
                             webFunction: () => {
@@ -436,12 +434,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
                             <div class="w-100" style="">
-                                <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                            glitter.goBack("guide1");
-                        })}">
+                               
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
-                                <source src="${widget.data.model.background}" type="video/mp4">
+                                <source src="${new URL(`video/homee 操作教學(步驟三).mp4`, import.meta.url)}" type="video/mp4">
                             </video>
                             
                         </div>
@@ -550,7 +546,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data) {
                                 bottomInset = (response.data);
-                                gvc.notifyDataChange('mainView');
+                                gvc.notifyDataChange('laravel');
                             }
                         }, {
                             webFunction: () => {
@@ -559,13 +555,9 @@ Plugin.create(import.meta.url, (glitter) => {
                         });
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
-                            <div class="w-100" style="">
-                                <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                            glitter.goBack("guide1");
-                        })}">
-                            </div>
+                           
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
-                                <source src="${widget.data.model.background}" type="video/mp4">
+                                <source src="${new URL(`video/homee 操作教學(步驟四).mp4`, import.meta.url)}" type="video/mp4">
                             </video>
                             
                         </div>
@@ -585,7 +577,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     glitter.goBack();
                                 })}">
                                     <button class="border-0 nextBTN" onclick="${gvc.event(() => {
-                                    appConfig().changePage(gvc, widget.data.model.nextPage);
+                                    appConfig().setHome(gvc, 'myspace', {});
+                                    gvc.glitter.runJsInterFace("startScan", {}, (response) => { });
                                 })}">${widget.data.model.BTN}</button>
                                 </div>
                                 

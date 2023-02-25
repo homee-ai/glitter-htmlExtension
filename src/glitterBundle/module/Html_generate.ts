@@ -31,26 +31,30 @@ export class HtmlGenerate {
     };
     public static setHome = (obj: {
         config: any, editMode?: any, data: any
-        tag: string,option?:any
+        tag: string,
+        option:any
     }) => {
         const glitter = Glitter.glitter;
         glitter.setHome('glitterBundle/plugins/html-render.js', obj.tag, {
             config: obj.config,
             editMode: obj.editMode,
-            data:obj.data
-        },obj.option ?? {})
+            data:obj.data,
+            option:obj.option
+        })
     }
     public static changePage=(obj: {
         config: any, editMode?: any, data: any
         tag: string,
-        goBack: boolean,option?:any
+        goBack: boolean,
+        option:any
     }) => {
         const glitter = Glitter.glitter;
         glitter.changePage('glitterBundle/plugins/html-render.js', obj.tag, obj.goBack, {
             config: obj.config,
             editMode: obj.editMode,
-            data:obj.data
-        },obj.option ?? {})
+            data:obj.data,
+            option:obj.option
+        })
     }
     public static editeInput(obj: {
         gvc: GVC, title: string, default: string, placeHolder: string, callback: (text: string) => void
@@ -74,6 +78,7 @@ export class HtmlGenerate {
 
     constructor(setting: HtmlJson[], hover: string[] = []) {
         this.setting = setting;
+
         const editContainer = (window as any).glitter.getUUID();
         setting.map((dd) => {
             dd.refreshAllParameter = dd.refreshAllParameter ?? {
@@ -327,12 +332,7 @@ ${
                                                 return ``;
                                             }
                                             try {
-                                                return gvc.map([ `<div class="alert-dark alert">
-<h3 class="text-white  m-1" style="font-size: 16px;">模塊路徑</h3>
-<h3 class="text-warning alert-primary  m-1" style="font-size: 14px;">${dd.js}</h3>
-<h3 class="text-white  m-1 mt-2" style="font-size: 16px;">函式路徑</h3>
-<h3 class="text-warning alert-primary m-1" style="font-size: 14px;">${dd.type}</h3>
-</div>`,
+                                                return gvc.map([
                                                     HtmlGenerate.editeInput({
                                                         gvc: gvc,
                                                         title: "模塊名稱",
@@ -353,7 +353,7 @@ ${
                                                         return {
                                                             bind: uid,
                                                             view: () => {
-                                                                return `<div class="w-100  rounded p-2 mb-2" style="background-color: #0062c0;">
+                                                                return `<div class="w-100  rounded p-2 " style="background-color: #0062c0;">
 <div class="w-100 d-flex p-0 align-items-center" onclick="${toggleEvent}" style="cursor: pointer;"><h3 style="font-size: 16px;" class="m-0 p-0">容器版面設計</h3>
 <div class="flex-fill"></div>
 ${(dd.expandStyle ? `<div style="cursor: pointer;" >收合<i class="fa-solid fa-up ms-2 text-white"></i></div>` : `<div style="cursor: pointer;">展開<i class="fa-solid fa-down ms-2 text-white"></i></div>\``)}
