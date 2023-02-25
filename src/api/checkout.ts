@@ -46,15 +46,32 @@ export class Checkout {
         }
     }) => void) {
         const glitter = (window as any).glitter;
-        glitter.getPro(Checkout.cartTag, (response: any) => {
-            callback((() => {
-                try {
-                    return JSON.parse(response.data)
-                } catch (e) {
-                    return {}
+
+        glitter.runJsInterFace("getSpaceCartData",{},(response2:any)=>{
+
+            glitter.getPro(Checkout.cartTag, (response: any) => {
+                callback((() => {
+                    try {
+                        const data1=JSON.parse(response2.data)
+                       let data=JSON.parse(response.data)
+                        Object.keys(data1).map((dd)=>{
+                            data[dd]=data1[dd]
+                        })
+                        // alert(JSON.stringify(data))
+                        return data
+                    } catch (e) {
+                        return {}
+                    }
+                })())
+            })
+        },{
+            webFunction: () => {
+                return {
+                    data:JSON.stringify({})
                 }
-            })())
+            }
         })
+
     }
 
     public static getCartSkuInfo({skuID, next}: { skuID: string[], next: (response: any) => void }) {

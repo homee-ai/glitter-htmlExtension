@@ -24,15 +24,28 @@ export class Checkout {
     }
     static getCart(callback) {
         const glitter = window.glitter;
-        glitter.getPro(Checkout.cartTag, (response) => {
-            callback((() => {
-                try {
-                    return JSON.parse(response.data);
-                }
-                catch (e) {
-                    return {};
-                }
-            })());
+        glitter.runJsInterFace("getSpaceCartData", {}, (response2) => {
+            glitter.getPro(Checkout.cartTag, (response) => {
+                callback((() => {
+                    try {
+                        const data1 = JSON.parse(response2.data);
+                        let data = JSON.parse(response.data);
+                        Object.keys(data1).map((dd) => {
+                            data[dd] = data1[dd];
+                        });
+                        return data;
+                    }
+                    catch (e) {
+                        return {};
+                    }
+                })());
+            });
+        }, {
+            webFunction: () => {
+                return {
+                    data: JSON.stringify({})
+                };
+            }
         });
     }
     static getCartSkuInfo({ skuID, next }) {

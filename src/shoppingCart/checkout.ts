@@ -955,7 +955,6 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                                             style: `margin-bottom:16px;`
                                                         }
                                                     })
-
                                                 }))
                                             })()}                                                                                
                                             </div>
