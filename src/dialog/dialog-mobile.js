@@ -1,9 +1,17 @@
 export class Dialog {
     constructor(gvc) {
-        const glitter = gvc.glitter;
+        const glitter = window.glitter;
         this.dataLoading = (show, text) => {
             switch (glitter.deviceType) {
                 case glitter.deviceTypeEnum.Web:
+                    if (show) {
+                        glitter.openDiaLog(new URL('./dialog.js', import.meta.url).href, 'dataLoading', { type: 'dataLoading', obj: {
+                                text: text
+                            } });
+                    }
+                    else {
+                        glitter.closeDiaLog('dataLoading');
+                    }
                     break;
                 default:
                     glitter.runJsInterFace("dataLoading", { show: show, text: text }, (response) => { });

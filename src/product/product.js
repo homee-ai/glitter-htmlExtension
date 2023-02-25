@@ -3,7 +3,7 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Product } from "../api/product.js";
 import { Checkout } from "../api/checkout.js";
 import { Dialog } from "../dialog/dialog-mobile.js";
-Plugin.create(import.meta.url, (glitter) => {
+Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         allPage: {
             defaultData: {
@@ -157,6 +157,13 @@ Plugin.create(import.meta.url, (glitter) => {
                 return {
                     view: () => {
                         var _a;
+                        if (widget.data.loading) {
+                            return `<div class="w-100">
+            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        </div>`;
+                        }
                         let sku_list = (_a = (widget.data.productData && widget.data.productData.sku_list)) !== null && _a !== void 0 ? _a : {};
                         let key = [];
                         widget.data.attribute_list.map((dd) => {
@@ -411,7 +418,7 @@ Plugin.create(import.meta.url, (glitter) => {
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        var _a, _b, _c;
+                        var _a, _b;
                         const config = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.config;
                         const data = (_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data;
                         console.log("data::::" + JSON.stringify(data));
@@ -421,39 +428,54 @@ Plugin.create(import.meta.url, (glitter) => {
                         nav && (nav.data.title = data.name);
                         const dialog = new Dialog(gvc);
                         dialog.dataLoading(true);
-                        Product.productDetail((_c = data.id) !== null && _c !== void 0 ? _c : "8129130922284", (result) => {
-                            console.log(JSON.stringify(result));
-                            dialog.dataLoading(false);
-                            if (!result) {
-                                dialog.showInfo('加載失敗');
-                                setTimeout(() => {
-                                    gvc.glitter.goBack();
-                                }, 500);
-                            }
-                            else {
-                                const banner = config.find((dd) => {
-                                    return dd.type === 'banner';
-                                });
-                                nav && (nav.data.title = result.product_detail.name);
-                                banner && (banner.data.link = result.product_detail.images.map((dd) => {
-                                    return {
-                                        "img": dd
-                                    };
-                                }));
-                                banner.refreshComponent();
-                                const allPage = config.find((dd) => {
-                                    return dd.type === 'allPage';
-                                });
-                                allPage.data.attribute_list = result.attribute_list.map((dd) => {
-                                    dd.attribute_values[0].selected = true;
-                                    return dd;
-                                });
-                                allPage && (allPage.data.name = result.product_detail.name);
-                                allPage && (allPage.data.intro[0].text = result.product_detail.bodyHtml);
-                                allPage.data.productData = result;
-                                allPage.refreshComponent();
-                            }
-                        });
+                        if (!editMode) {
+                            const banner = config.find((dd) => {
+                                return dd.type === 'banner';
+                            });
+                            banner && (banner.data.link = ['https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg']);
+                            banner.refreshComponent();
+                            const allPage = config.find((dd) => {
+                                return dd.type === 'allPage';
+                            });
+                            allPage.data.loading = true;
+                            allPage.refreshComponent();
+                        }
+                        if (data.id) {
+                            Product.productDetail(data.id, (result) => {
+                                console.log(JSON.stringify(result));
+                                dialog.dataLoading(false);
+                                if (!result) {
+                                    dialog.showInfo('加載失敗');
+                                    setTimeout(() => {
+                                        gvc.glitter.goBack();
+                                    }, 500);
+                                }
+                                else {
+                                    const banner = config.find((dd) => {
+                                        return dd.type === 'banner';
+                                    });
+                                    nav && (nav.data.title = result.product_detail.name);
+                                    banner && (banner.data.link = result.product_detail.images.map((dd) => {
+                                        return {
+                                            "img": dd
+                                        };
+                                    }));
+                                    banner.refreshComponent();
+                                    const allPage = config.find((dd) => {
+                                        return dd.type === 'allPage';
+                                    });
+                                    allPage.data.attribute_list = result.attribute_list.map((dd) => {
+                                        dd.attribute_values[0].selected = true;
+                                        return dd;
+                                    });
+                                    allPage.data.loading = false;
+                                    allPage && (allPage.data.name = result.product_detail.name);
+                                    allPage && (allPage.data.intro[0].text = result.product_detail.bodyHtml);
+                                    allPage.data.productData = result;
+                                    allPage.refreshComponent();
+                                }
+                            });
+                        }
                         return ``;
                     },
                     editor: () => {

@@ -4,22 +4,23 @@ export class Dialog{
     public dataLoading: (show: Boolean,text?:String) => void;
     public confirm: (title:string,callback: (result: Boolean) => void) => void;
     public showInfo: (title: string) => void;
-    constructor(gvc:GVC) {
-        const glitter=gvc.glitter
+    constructor(gvc?:GVC) {
+        const glitter=(window as any).glitter
         //loading view
         this.dataLoading=(show:Boolean,text?:String)=>{
             switch (glitter.deviceType){
                 case glitter.deviceTypeEnum.Web:
-                    // if(show){
-                    //     glitter.openDiaLog(new URL('./dialog.js',import.meta.url).href, 'dataLoading', {type:'dataLoading',obj: {
-                    //         text:text
-                    //         }})
-                    // }else{
-                    //         glitter.closeDiaLog('dataLoading')
-                    // }
+                    if(show){
+                        glitter.openDiaLog(new URL('./dialog.js',import.meta.url).href, 'dataLoading', {type:'dataLoading',obj: {
+                            text:text
+                            }})
+                    }else{
+                        glitter.closeDiaLog('dataLoading')
+
+                    }
                     break
                 default:
-                    glitter.runJsInterFace("dataLoading",{show:show,text:text},(response)=>{})
+                    glitter.runJsInterFace("dataLoading",{show:show,text:text},(response:any)=>{})
                     break
             }
         }
@@ -27,7 +28,7 @@ export class Dialog{
         this.confirm=(title:string,callback:(result:Boolean)=>void)=>{
             glitter.runJsInterFace("confirm",{
                 title:title
-            },(response)=>{
+            },(response:any)=>{
                callback(response.result)
             },{
                 webFunction(data: {}, callback: (data: any) => void): any {
@@ -41,7 +42,7 @@ export class Dialog{
         this.showInfo=(title:string)=>{
             glitter.runJsInterFace("showInfo",{
                 title:title
-            },(response)=>{
+            },(response:any)=>{
             },{
                 webFunction(data: {}, callback: (data: any) => void): any {
                     return confirm(title)

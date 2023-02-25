@@ -31,9 +31,9 @@ export function appConfig(): {
         token: "",
         uploadImage: (photoFile: any, callback: (result: string) => void) => {
             const glitter = (window as any).glitter
-
+            const dialog=new Dialog()
             console.log(photoFile)
-            glitter.share.dialog.dataLoading({text: '上傳中', visible: true})
+            dialog.dataLoading(true)
             $.ajax({
                 url: Api.serverURL + '/api/v1/scene/getSignedUrl',
                 type: 'post',
@@ -48,18 +48,18 @@ export function appConfig(): {
                         processData: false,
                         crossDomain: true,
                         success: (data2: any) => {
-                            glitter.share.dialog.dataLoading({visible: false})
-                            glitter.share.dialog.successMessage({text: "上傳成功"})
+                            dialog.dataLoading(false)
+                            dialog.showInfo("上傳成功")
                             callback(data1.fullUrl)
                         },
                         error: (err: any) => {
-                            glitter.share.dialog.successMessage({text: "上傳失敗"})
+                            dialog.showInfo("上傳失敗")
                         },
                     });
                 },
                 error: (err: any) => {
-                    glitter.share.dialog.dataLoading({visible: false})
-                    glitter.share.dialog.successMessage({text: "上傳失敗"})
+                    dialog.dataLoading(false)
+                    dialog.showInfo("上傳失敗")
                 },
             });
         },
@@ -83,12 +83,6 @@ export function appConfig(): {
                         option: option
                     }
                 )
-                setTimeout(() => {
-                    DialogHelper.dataLoading({
-                        text: "",
-                        visible: false,
-                    })
-                })
             })
         },
         setHome: (gvc: GVC, tag: string, obj?: any, option?: any) => {
@@ -100,6 +94,8 @@ export function appConfig(): {
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
+                dialog.dataLoading(false)
+
                 gvc.glitter.htmlGenerate.setHome(
                     {
                         config: res.result[0].config,
@@ -108,9 +104,7 @@ export function appConfig(): {
                         option: option
                     }
                 )
-                setTimeout(() => {
-                    dialog.dataLoading(false)
-                }, 2000)
+
 
             })
         },

@@ -11,38 +11,6 @@ import {User} from "../api/user.js";
 
 
 Plugin.create(import.meta.url, (glitter) => {
-    const api = {
-        upload: (photoFile: any, callback: (link: string) => void) => {
-            glitter.share.dialog.dataLoading({text: '上傳中', visible: true})
-            $.ajax({
-                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
-                type: 'post',
-                data: JSON.stringify({file_name: `${new Date().getTime()}`}),
-                contentType: 'application/json; charset=utf-8',
-                headers: {Authorization: glitter.getCookieByName('token')},
-                success: (data1: { url: string; fullUrl: string }) => {
-                    $.ajax({
-                        url: data1.url,
-                        type: 'put',
-                        data: photoFile,
-                        processData: false,
-                        crossDomain: true,
-                        success: (data2: any) => {
-                            glitter.share.dialog.dataLoading({visible: false})
-                            glitter.share.dialog.successMessage({text: "上傳成功"})
-                            callback(data1.fullUrl)
-                        },
-                        error: (err: any) => {
-                            glitter.share.dialog.successMessage({text: "上傳失敗"})
-                        },
-                    });
-                },
-                error: (err: any) => {
-                    glitter.share.dialog.successMessage({text: "上傳失敗"})
-                },
-            });
-        }
-    }
     return {
         nav: {
             defaultData: {
@@ -123,7 +91,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     single: true,
                                     accept: 'image/*',
                                     callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file, (link) => {
+                                        appConfig().uploadImage(data[0].file, (link) => {
                                             widget.data.nav.leftIcon = link;
                                             widget.refreshAll();
                                         })
@@ -193,7 +161,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     single: true,
                                     accept: 'image/*',
                                     callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file, (link) => {
+                                          appConfig().uploadImage(data[0].file, (link) => {
                                             widget.data.img = link;
                                             widget.refreshAll()
                                         })
@@ -266,7 +234,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     single: true,
                                     accept: 'image/*',
                                     callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
-                                        api.upload(data[0].file, (link) => {
+                                          appConfig().uploadImage(data[0].file, (link) => {
                                             widget.data.img = link;
                                             widget.refreshAll()
                                         })

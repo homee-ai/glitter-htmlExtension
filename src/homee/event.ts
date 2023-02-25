@@ -424,6 +424,19 @@ ${
                 }
             }
         }
+    },
+    testMode:{
+        title:'測試空間',
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``
+                },
+                event: () => {
+                    gvc.glitter.runJsInterFace("testMyspace",{},()=>{})
+                }
+            }
+        }
     }
 })
 

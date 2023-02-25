@@ -4,7 +4,7 @@ import {Product} from "../api/product.js";
 import {Checkout} from "../api/checkout.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
 
-Plugin.create(import.meta.url, (glitter) => {
+Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         allPage: {
             defaultData: {
@@ -161,7 +161,13 @@ Plugin.create(import.meta.url, (glitter) => {
 
                 return {
                     view: () => {
-
+                        if(widget.data.loading){
+                            return  `<div class="w-100">
+            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        </div>`
+                        }
                         let sku_list = (widget.data.productData && widget.data.productData.sku_list) ?? {}
                         let key: string[] = []
                         widget.data.attribute_list.map((dd: any) => {
@@ -437,40 +443,55 @@ Plugin.create(import.meta.url, (glitter) => {
 
                         const dialog = new Dialog(gvc)
                         dialog.dataLoading(true)
-                        Product.productDetail(data.id ?? "8129130922284", (result) => {
-                            console.log(JSON.stringify(result))
-                            dialog.dataLoading(false)
-                            if (!result) {
-                                dialog.showInfo('加載失敗')
-                                setTimeout(()=>{
-                                    gvc.glitter.goBack()
-                                },500)
-                            } else {
-                                const banner = config.find((dd: any) => {
-                                    return dd.type === 'banner'
-                                })
+                        if(!editMode){
+                            const banner = config.find((dd: any) => {
+                                return dd.type === 'banner'
+                            })
+                            banner && (banner.data.link = ['https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg'])
+                            banner.refreshComponent()
+                            const allPage = config.find((dd: any) => {
+                                return dd.type === 'allPage'
+                            })
+                            allPage.data.loading=true
+                            allPage.refreshComponent()
+                        }
+                        if(data.id){
+                            Product.productDetail(data.id, (result) => {
+                                console.log(JSON.stringify(result))
+                                dialog.dataLoading(false)
+                                if (!result) {
+                                    dialog.showInfo('加載失敗')
+                                    setTimeout(()=>{
+                                        gvc.glitter.goBack()
+                                    },500)
+                                } else {
+                                    const banner = config.find((dd: any) => {
+                                        return dd.type === 'banner'
+                                    })
 
-                                nav && (nav.data.title = result.product_detail.name)
-                                banner && (banner.data.link = result.product_detail.images.map((dd: any) => {
-                                    return {
-                                        "img": dd
-                                    }
-                                }))
-                                banner.refreshComponent()
-                                const allPage = config.find((dd: any) => {
-                                    return dd.type === 'allPage'
-                                })
-                                allPage.data.attribute_list = result.attribute_list.map((dd: any) => {
-                                    dd.attribute_values[0].selected = true
-                                    return dd
-                                })
-                                allPage && (allPage.data.name = result.product_detail.name);
-                                allPage && (allPage.data.intro[0].text = result.product_detail.bodyHtml)
-                                allPage.data.productData = result
-                                allPage.refreshComponent()
+                                    nav && (nav.data.title = result.product_detail.name)
+                                    banner && (banner.data.link = result.product_detail.images.map((dd: any) => {
+                                        return {
+                                            "img": dd
+                                        }
+                                    }))
+                                    banner.refreshComponent()
+                                    const allPage = config.find((dd: any) => {
+                                        return dd.type === 'allPage'
+                                    })
+                                    allPage.data.attribute_list = result.attribute_list.map((dd: any) => {
+                                        dd.attribute_values[0].selected = true
+                                        return dd
+                                    })
+                                    allPage.data.loading=false
+                                    allPage && (allPage.data.name = result.product_detail.name);
+                                    allPage && (allPage.data.intro[0].text = result.product_detail.bodyHtml)
+                                    allPage.data.productData = result
+                                    allPage.refreshComponent()
 
-                            }
-                        })
+                                }
+                            })
+                        }
                         return ``
                     },
                     editor: () => {

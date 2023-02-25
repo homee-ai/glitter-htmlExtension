@@ -529,7 +529,7 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                     }
                 }, {
                     webFunction: () => {
-                        return { data: 10 };
+                        return { data: 20 };
                     }
                 });
                 gvc.addStyle(`
@@ -554,12 +554,12 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                 return {
                     view: () => {
                         return `
-                        <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset}px;position: fixed;bottom: 0px;left: 0px;">
+                        <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset - 10}px;position: fixed;bottom: 0px;left: 0px;">
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data, index) => {
                                 var _b;
                                 return `
-                                <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
+                                <div class="d-flex flex-column align-items-center" style="" onclick="${gvc.event((e) => {
                                     ClickEvent.trigger({
                                         gvc, widget, clickEvent: data
                                     });
@@ -574,7 +574,8 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                     `;
                     },
                     editor: () => {
-                        return gvc.map(widget.data.dataList.map((dd, index) => {
+                        return `
+` + gvc.map(widget.data.dataList.map((dd, index) => {
                             var _b;
                             return `<div class="alert alert-dark mt-2">
 <h3 style="color: white;font-size: 17px;color: orangered;">
@@ -649,9 +650,18 @@ ${glitter.htmlGenerate.editeInput({
                         return sharedView.navigationBar({
                             title: (_b = widget.data.title) !== null && _b !== void 0 ? _b : "標題",
                             leftIcon: widget.data.left.map((dd) => {
-                                return `<img class="" src="${dd.img}" style="width: 24px;height: 24px;" alt="" onclick="${gvc.event(() => {
-                                    ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
-                                })}">`;
+                                var _b, _c, _d, _e;
+                                dd.type = (_b = dd.type) !== null && _b !== void 0 ? _b : 'image';
+                                if (dd.type === 'image') {
+                                    return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                    })}">`);
+                                }
+                                else {
+                                    return `<span class="${(_c = dd.class) !== null && _c !== void 0 ? _c : ""}" style="${(_d = dd.style) !== null && _d !== void 0 ? _d : ""}" onclick="${gvc.event(() => {
+                                        ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
+                                    })}">${(_e = dd.title) !== null && _e !== void 0 ? _e : ""}</span>`;
+                                }
                             }).join('<div class="mx-2"></div>'),
                             rightIcon: widget.data.right.map((dd) => {
                                 var _b, _c, _d, _e;

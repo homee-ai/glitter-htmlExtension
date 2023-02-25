@@ -1,6 +1,5 @@
 import { Plugin } from "./glitterBundle/plugins/plugin-creater.js";
 import { Api } from "./homee/api/homee-api.js";
-import { DialogHelper } from "./dialog/dialog-helper.js";
 import { Dialog } from "./dialog/dialog-mobile.js";
 export function appConfig() {
     return Plugin.getAppConfig("HOMEEAppConfig", {
@@ -8,8 +7,9 @@ export function appConfig() {
         token: "",
         uploadImage: (photoFile, callback) => {
             const glitter = window.glitter;
+            const dialog = new Dialog();
             console.log(photoFile);
-            glitter.share.dialog.dataLoading({ text: '上傳中', visible: true });
+            dialog.dataLoading(true);
             $.ajax({
                 url: Api.serverURL + '/api/v1/scene/getSignedUrl',
                 type: 'post',
@@ -24,18 +24,18 @@ export function appConfig() {
                         processData: false,
                         crossDomain: true,
                         success: (data2) => {
-                            glitter.share.dialog.dataLoading({ visible: false });
-                            glitter.share.dialog.successMessage({ text: "上傳成功" });
+                            dialog.dataLoading(false);
+                            dialog.showInfo("上傳成功");
                             callback(data1.fullUrl);
                         },
                         error: (err) => {
-                            glitter.share.dialog.successMessage({ text: "上傳失敗" });
+                            dialog.showInfo("上傳失敗");
                         },
                     });
                 },
                 error: (err) => {
-                    glitter.share.dialog.dataLoading({ visible: false });
-                    glitter.share.dialog.successMessage({ text: "上傳失敗" });
+                    dialog.dataLoading(false);
+                    dialog.showInfo("上傳失敗");
                 },
             });
         },
@@ -57,12 +57,6 @@ export function appConfig() {
                     goBack: true,
                     option: option
                 });
-                setTimeout(() => {
-                    DialogHelper.dataLoading({
-                        text: "",
-                        visible: false,
-                    });
-                });
             });
         },
         setHome: (gvc, tag, obj, option) => {
@@ -74,15 +68,13 @@ export function appConfig() {
                 route: '/api/v1/lowCode/pageConfig?query=config&tag=' + tag,
                 method: 'get'
             }, (res) => {
+                dialog.dataLoading(false);
                 gvc.glitter.htmlGenerate.setHome({
                     config: res.result[0].config,
                     data: obj,
                     tag: tag,
                     option: option
                 });
-                setTimeout(() => {
-                    dialog.dataLoading(false);
-                }, 2000);
             });
         },
         translation: (() => {
