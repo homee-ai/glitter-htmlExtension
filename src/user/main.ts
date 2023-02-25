@@ -18,7 +18,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             if (widget.data.topInset != response.data) {
                                 widget.data.topInset = response.data;
-                                gvc.notifyDataChange('mainView')
+                             widget.refreshComponent()
                             }
                         }, {
                             webFunction: () => {
@@ -291,7 +291,8 @@ Plugin.create(import.meta.url, (glitter) => {
 
                                     return `
                                     <div class="d-flex flex-column align-items-center" style="width: ${width}%;height: 56px; ${style}" onclick="${gvc.event(() => {
-                                        item.click()
+                                        ClickEvent.trigger({gvc,widget,clickEvent:item
+                                        })
                                     })}">
                                         <div style="position: relative;width: 30px;height: 30px;">
                                             ${(() => {
@@ -361,6 +362,7 @@ ${
                                 })}"></i>
 </div>`
                             }
+${ClickEvent.editer(gvc,widget,dd)}
 </div>`
                         }))
                     }

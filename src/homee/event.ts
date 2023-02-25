@@ -407,7 +407,7 @@ ${
                     return ``
                 },
                 event: () => {
-                    new Dialog(gvc).showInfo("開發中...2/22完成!")
+                    new Dialog(gvc).showInfo("開發中...2/26完成!")
                 }
             }
         }

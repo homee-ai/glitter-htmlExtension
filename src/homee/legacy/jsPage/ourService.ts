@@ -166,9 +166,7 @@ init((gvc, glitter, gBundle) => {
 
 
     gvc.addStyle(`
-        html{
-            overflow-y : auto;
-        }
+      
         main{
             width:100%;
             padding-left:19px;

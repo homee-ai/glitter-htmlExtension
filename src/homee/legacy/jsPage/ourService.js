@@ -144,9 +144,7 @@ init((gvc, glitter, gBundle) => {
     };
     let model = undefined;
     gvc.addStyle(`
-        html{
-            overflow-y : auto;
-        }
+      
         main{
             width:100%;
             padding-left:19px;
