@@ -1,9 +1,9 @@
-dd.refreshAllParameter.view2 is not a function
-TypeError: dd.refreshAllParameter.view2 is not a function at dd.refreshAll
-(http: //127.0.0.1:3080/BackManager/glitterBundle/module/Html_generate.js:23:40)
-at glitter.runJsInterFace.webFunction.data (http://127.0.0.1:3090/test/homee/homee_home.js:528:32)
-at Glitter.runJsInterFace (http://127.0.0.1:3080/BackManager/glitterBundle/Glitter.js:452:25)
-at Object.render (http://127.0.0.1:3090/test/homee/homee_home.js:524:25) at http://127.0.0.1:3080/BackManager/glitterBundle/module/Html_generate.js:139:139
-at Object.view (http://127.0.0.1:3080/BackManager/glitterBundle/module/Html_generate.js:144:39) at GVC.bindView (http://127.0.0.1:3080/BackManager/glitterBundle/GVController.js:195:8)
-at http://127.0.0.1:3080/BackManager/glitterBundle/module/Html_generate.js:134:40 at Array.map () at Object.view (http://127.0.0.1:3080/BackManager/glitterBundle/module/Html_generate.js:125:48)
-undefined
+{
+  "HASH_IV": "PR2OsEORBYThOPsC",
+  "HASH_KEY": "tYv2d0404KNWRuDBU71B1LDwJqWa0Eur",
+  "ActionURL": "https://core.newebpay.com/MPG/mpg_gateway",
+  "NotifyURL": "https://homeestaging.com/api/bm/checkout/notify",
+  "ReturnURL": "https://homee-5134.myshopify.com/",
+  "MERCHANT_ID": "MS3370421534"
+}
+
