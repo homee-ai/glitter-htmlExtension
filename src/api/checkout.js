@@ -259,5 +259,28 @@ export class Checkout {
         }, () => {
         });
     }
+    static checkOut(obj) {
+        obj.data.mainURL = appConfig().serverURL;
+        appConfig().getUserData({
+            callback: (response) => {
+                obj.data.customerInfo = {
+                    "email": response.email
+                };
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/bm/checkout`,
+                    type: 'post',
+                    headers: { Authorization: response.token },
+                    data: JSON.stringify(obj.data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response) => {
+                        obj.callback(response);
+                    },
+                    error: (err) => {
+                        obj.callback(false);
+                    },
+                });
+            }
+        });
+    }
 }
 Checkout.cartTag = "njasndjnui32hi2";

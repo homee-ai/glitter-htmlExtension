@@ -399,7 +399,33 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     return (item.subtotal).toLocaleString();
                 }
                 function checkOut() {
-                    dialog.showInfo("金流開發中，請先驗證結帳金額是否正確．");
+                    let skuAmount = [];
+                    widget.data.cartItem.map((d3) => {
+                        d3.item.map((dd) => {
+                            if (dd.select) {
+                                const it = skuAmount.find((d2) => {
+                                    return dd.item_id === d2.sku_id;
+                                });
+                                if (!it) {
+                                    skuAmount.push({ sku_id: dd.item_id, amount: dd.qty });
+                                }
+                                else {
+                                    it.amount += dd.qty;
+                                }
+                            }
+                        });
+                    })(cartSubTotalVM.data).voucherArray;
+                    alert(JSON.stringify(skuAmount));
+                    Checkout.checkOut({
+                        data: {
+                            cartInfo: skuAmount.map((dd) => {
+                                return { sku: dd.sku_id, quantity: dd.amount };
+                            }),
+                            voucherArray: []
+                        },
+                        callback: (response) => {
+                        }
+                    });
                 }
                 return {
                     view: () => {
@@ -585,6 +611,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     }],
                                 bind: "cartSubtotal",
                                 view: () => {
+                                    var _a;
                                     gvc.addStyle(`
                                     .subTotal{
                                         font-family: 'Noto Sans TC';
@@ -761,8 +788,7 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                                         </div>
                                         
                                     </div>
-
-                                    <div class="d-flex" style="position:fixed;left:0;bottom:106px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
+                                    <div class="d-flex" style="position:fixed;left:0;bottom:${(_a = widget.data.buttonPadding) !== null && _a !== void 0 ? _a : 106}px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
                                         <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data.total_amount + cartSubTotalVM.data.discount).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
                                         checkOut();
@@ -943,7 +969,13 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                         `;
                     },
                     editor: () => {
-                        return ``;
+                        var _a;
+                        return glitter.htmlGenerate.editeInput({
+                            gvc, title: "按鈕下方間距", default: (_a = widget.data.buttonPadding) !== null && _a !== void 0 ? _a : "106", placeHolder: "", callback: (text) => {
+                                widget.data.buttonPadding = text;
+                                widget.refreshComponent();
+                            }
+                        });
                     }
                 };
             },

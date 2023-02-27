@@ -243,7 +243,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let subTotal = 0;
                 let total = 0;
 
-                let refreshTimer :any= 0
+                let refreshTimer: any = 0
 
                 function refreshCart() {
                     initial()
@@ -255,7 +255,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     })
                     cartSubTotalVM.loading = true
                     clearInterval(refreshTimer)
-                    refreshTimer=setTimeout(() => {
+                    refreshTimer = setTimeout(() => {
                         let skuAmount: { sku_id: string, amount: number }[] = []
                         widget.data.cartItem.map((d3: any) => {
                             d3.item.map((dd: any) => {
@@ -416,14 +416,35 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 //todo nextstep?
                 function checkOut() {
-                    dialog.showInfo("金流開發中，請先驗證結帳金額是否正確．")
-                    // refreshCart();
+                    let skuAmount: { sku_id: string, amount: number }[] = []
+                    widget.data.cartItem.map((d3: any) => {
+                        d3.item.map((dd: any) => {
+                            if (dd.select) {
+                                const it = skuAmount.find((d2) => {
+                                    return dd.item_id === d2.sku_id
+                                })
+                                if (!it) {
+                                    skuAmount.push({sku_id: dd.item_id, amount: dd.qty})
+                                } else {
+                                    it!.amount += dd.qty
+                                }
+                            }
+                        })
+                    })
+                    (cartSubTotalVM.data as any).voucherArray
+                    alert(JSON.stringify(skuAmount))
                     // dialog.dataLoading(true)
-                    // glitter.runJsInterFace("toCheckOutPage", {}, () => {
-                    //     widget.data.cartItem = []
-                    //     dialog.dataLoading(false)
-                    //     widget.refreshComponent()
-                    // })
+                    Checkout.checkOut({
+                        data: {
+                            cartInfo: skuAmount.map((dd) => {
+                                return {sku: dd.sku_id, quantity: dd.amount}
+                            }),
+                            voucherArray: []
+                        },
+                        callback: (response) => {
+
+                        }
+                    })
                 }
 
                 return {
@@ -789,8 +810,7 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                         </div>
                                         
                                     </div>
-
-                                    <div class="d-flex" style="position:fixed;left:0;bottom:106px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
+                                    <div class="d-flex" style="position:fixed;left:0;bottom:${widget.data.buttonPadding ?? 106}px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
                                         <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
                                         checkOut();
@@ -975,7 +995,12 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                         `
                     },
                     editor: () => {
-                        return ``
+                        return glitter.htmlGenerate.editeInput({
+                            gvc, title: "按鈕下方間距", default: widget.data.buttonPadding ?? "106", placeHolder: "", callback: (text) => {
+                                widget.data.buttonPadding=text
+                                widget.refreshComponent()
+                            }
+                        })
                     }
                 }
             },

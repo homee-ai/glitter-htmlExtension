@@ -427,8 +427,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         });
                         nav && (nav.data.title = data.name);
                         const dialog = new Dialog(gvc);
-                        dialog.dataLoading(true);
                         if (!editMode) {
+                            dialog.dataLoading(true);
                             const banner = config.find((dd) => {
                                 return dd.type === 'banner';
                             });

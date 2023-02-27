@@ -163,7 +163,6 @@ export class Checkout {
                 });
             }
         })
-
     }
 
     public static getVoucher(view: string, callback: (data: VoucherModel[] | boolean) => void) {
@@ -304,5 +303,48 @@ export class Checkout {
             () => {
             }
         );
+    }
+
+    public static checkOut(obj:{
+        data:{
+            "cartInfo": {
+                "sku": string,
+                "quantity": number
+            }[],
+            "customerInfo"?: {
+                "email": string
+            },
+            "mainURL"?: string,
+            "voucherArray": string[]
+        }
+        callback:(response:boolean|{
+            "result": boolean,
+            "message": string,
+            "create_time": string,
+            "redirect": string
+        })=>void
+    }){
+        obj.data.mainURL=appConfig().serverURL
+
+        appConfig().getUserData({
+            callback: (response: any) => {
+                obj.data.customerInfo={
+                    "email": response.email
+                }
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/bm/checkout`,
+                    type: 'post',
+                    headers: {Authorization: response.token},
+                    data: JSON.stringify(obj.data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response: any) => {
+                        obj.callback(response)
+                    },
+                    error: (err: any) => {
+                        obj.callback(false)
+                    },
+                });
+            }
+        })
     }
 }

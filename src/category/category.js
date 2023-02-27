@@ -13,8 +13,6 @@ Plugin.create(import.meta.url, (glitter) => {
                 searchDefault: "大家都在搜尋:沙發"
             },
             render: (gvc, widget, setting, hoverID) => {
-                gvc.addStyle(`                    
-                    `);
                 glitter.runJsInterFace("getTopInset", {}, (response) => {
                     var _a;
                     if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.topInset) != response.data) {
