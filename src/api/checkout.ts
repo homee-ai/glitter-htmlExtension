@@ -31,9 +31,20 @@ export class Checkout {
 
     public static setCart({cartData, callback}: { cartData: any, callback: (response: boolean) => void }){
         const glitter = (window as any).glitter
-        glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
-            callback(true)
+        glitter.runJsInterFace("setSpaceCartData",{
+            data:JSON.stringify({cartData:cartData})
+        },(response2:any)=>{
+            glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
+                callback(true)
+            })
+        },{
+            webFunction: () => {
+                return {
+                    data:JSON.stringify({})
+                }
+            }
         })
+
     }
 
     public static getCart(callback: (response: {
@@ -51,11 +62,11 @@ export class Checkout {
                 callback((() => {
                     try {
                         const data1=JSON.parse(response2.data)
+                        console.log(`getSpaceCartData:${JSON.stringify(data1)}`)
                         let data=JSON.parse(response.data)
                         Object.keys(data1).map((dd)=>{
-                            data[dd]=data1[dd]
+                            data[dd]=data[dd] ?? data1[dd];
                         })
-                        // alert(JSON.stringify(data))
                         return data
                     } catch (e) {
                         return {}
@@ -73,9 +84,20 @@ export class Checkout {
 
     public static deleteCart(callback:()=>void){
         const glitter = (window as any).glitter;
-        glitter.setPro(Checkout.cartTag,'', (response: any) => {
-            callback()
+        glitter.runJsInterFace("setSpaceCartData",{
+            data:''
+        },(response2:any)=>{
+            glitter.setPro(Checkout.cartTag,'', (response: any) => {
+                callback()
+            })
+        },{
+            webFunction: () => {
+                return {
+                    data:JSON.stringify({})
+                }
+            }
         })
+
     }
 
     public static getCartSkuInfo({skuID, next}: { skuID: string[], next: (response: any) => void }) {

@@ -18,8 +18,18 @@ export class Checkout {
     }
     static setCart({ cartData, callback }) {
         const glitter = window.glitter;
-        glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response) => {
-            callback(true);
+        glitter.runJsInterFace("setSpaceCartData", {
+            data: JSON.stringify({ cartData: cartData })
+        }, (response2) => {
+            glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response) => {
+                callback(true);
+            });
+        }, {
+            webFunction: () => {
+                return {
+                    data: JSON.stringify({})
+                };
+            }
         });
     }
     static getCart(callback) {
@@ -29,9 +39,11 @@ export class Checkout {
                 callback((() => {
                     try {
                         const data1 = JSON.parse(response2.data);
+                        console.log(`getSpaceCartData:${JSON.stringify(data1)}`);
                         let data = JSON.parse(response.data);
                         Object.keys(data1).map((dd) => {
-                            data[dd] = data1[dd];
+                            var _a;
+                            data[dd] = (_a = data[dd]) !== null && _a !== void 0 ? _a : data1[dd];
                         });
                         return data;
                     }
@@ -50,8 +62,18 @@ export class Checkout {
     }
     static deleteCart(callback) {
         const glitter = window.glitter;
-        glitter.setPro(Checkout.cartTag, '', (response) => {
-            callback();
+        glitter.runJsInterFace("setSpaceCartData", {
+            data: ''
+        }, (response2) => {
+            glitter.setPro(Checkout.cartTag, '', (response) => {
+                callback();
+            });
+        }, {
+            webFunction: () => {
+                return {
+                    data: JSON.stringify({})
+                };
+            }
         });
     }
     static getCartSkuInfo({ skuID, next }) {
