@@ -41,9 +41,9 @@ export class Checkout {
                         const data1 = JSON.parse(response2.data);
                         console.log(`getSpaceCartData:${JSON.stringify(data1)}`);
                         let data = JSON.parse(response.data);
+                        console.log('parse' + JSON.stringify(data));
                         Object.keys(data1).map((dd) => {
-                            var _a;
-                            data[dd] = (_a = data[dd]) !== null && _a !== void 0 ? _a : data1[dd];
+                            data[dd] = data1[dd];
                         });
                         return data;
                     }

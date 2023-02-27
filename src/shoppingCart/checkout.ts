@@ -254,6 +254,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                         }
                     })
+                    console.log('cartData---'+JSON.stringify(cartData))
                     cartSubTotalVM.loading = true
                     clearInterval(refreshTimer)
                     refreshTimer = setTimeout(() => {

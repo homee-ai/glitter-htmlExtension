@@ -239,6 +239,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         cartData: cartData, callback: (response) => {
                         }
                     });
+                    console.log('cartData---' + JSON.stringify(cartData));
                     cartSubTotalVM.loading = true;
                     clearInterval(refreshTimer);
                     refreshTimer = setTimeout(() => {
