@@ -46,14 +46,12 @@ export class Checkout {
         }
     }) => void) {
         const glitter = (window as any).glitter;
-
         glitter.runJsInterFace("getSpaceCartData",{},(response2:any)=>{
-
             glitter.getPro(Checkout.cartTag, (response: any) => {
                 callback((() => {
                     try {
                         const data1=JSON.parse(response2.data)
-                       let data=JSON.parse(response.data)
+                        let data=JSON.parse(response.data)
                         Object.keys(data1).map((dd)=>{
                             data[dd]=data1[dd]
                         })
@@ -71,7 +69,13 @@ export class Checkout {
                 }
             }
         })
+    }
 
+    public static deleteCart(callback:()=>void){
+        const glitter = (window as any).glitter;
+        glitter.setPro(Checkout.cartTag,'', (response: any) => {
+            callback()
+        })
     }
 
     public static getCartSkuInfo({skuID, next}: { skuID: string[], next: (response: any) => void }) {

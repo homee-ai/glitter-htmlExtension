@@ -228,7 +228,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const cartSubTotalVM: {
                     loading: boolean,
                     result: boolean,
-                    data?: CheckOutData
+                    data?: CheckOutData,
+                    skuData?: any
                 } = {
                     loading: true,
                     result: false
@@ -271,6 +272,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 }
                             })
                         })
+                        cartSubTotalVM.skuData = skuAmount
                         Checkout.setCheckOut({
                             data: skuAmount, callback: (data) => {
                                 if (data) {
@@ -296,99 +298,101 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let cartData: any = undefined
                 const dialog = new Dialog(gvc);
                 dialog.dataLoading(true)
-                Checkout.getCart((cdata) => {
-                    cartData = cdata
-                    let needGetInfoSku: string[] = []
-                    Object.keys(cartData).map((dd: any) => {
-                        const obj: any = cartData[dd]
-                        return {
-                            item:
-                                Object.keys(obj).map((d4) => {
-                                    if (needGetInfoSku.indexOf(d4) === -1) {
-                                        needGetInfoSku.push(d4)
-                                    }
-                                })
-                        }
-                    })
-                    Checkout.getCartSkuInfo({
-                        skuID: needGetInfoSku, next: (response) => {
-                            dialog.dataLoading(false)
-                            if (!response) {
-                                widget.data.cartItem = []
-                                dialog.showInfo("取得資料異常．")
-                            } else {
-                                response.map((dd: any) => {
-                                    skuDataInfo[dd.sku_id] = dd;
-                                })
-                                widget.data.cartItem = Object.keys(cartData).map((dd: any) => {
-                                    const obj: any = cartData[dd]
-                                    return {
-                                        category: dd,
-                                        category_id: dd,
-                                        item: Object.keys(obj).map((d4) => {
-                                            const oc = obj[d4]
+                function getCartProData(){
+                    Checkout.getCart((cdata) => {
+                        cartData = cdata
+                        let needGetInfoSku: string[] = []
+                        Object.keys(cartData).map((dd: any) => {
+                            const obj: any = cartData[dd]
+                            return {
+                                item:
+                                    Object.keys(obj).map((d4) => {
+                                        if (needGetInfoSku.indexOf(d4) === -1) {
                                             needGetInfoSku.push(d4)
-                                            if (!skuDataInfo[d4]) {
-                                                return {
-                                                    item_id: d4,//variant
-                                                    name: "error",
-                                                    img: ``,
-                                                    kind: "error",
-                                                    price: oc.price ?? 0,
-                                                    subtotal: oc.price ?? 0,
-                                                    deleteEvent: () => {
-                                                        obj[d4] = undefined
-                                                    },
-                                                    get qty() {
-                                                        return oc.count
-                                                    },
-                                                    set qty(newValue) {
-                                                        oc.count = parseInt(newValue, 10)
-                                                    },
-                                                    get select() {
-                                                        return oc.isSelect
-                                                    },
-                                                    set select(newValue) {
-                                                        oc.isSelect = newValue;
-                                                    }
-                                                }
-                                            } else {
-                                                return {
-                                                    item_id: d4,//variant
-                                                    name: skuDataInfo[d4].name,
-                                                    img: skuDataInfo[d4].preview_image,
-                                                    kind: skuDataInfo[d4].attribute_value,
-                                                    price: skuDataInfo[d4].price,
-                                                    subtotal: skuDataInfo[d4].price,
-                                                    deleteEvent: () => {
-                                                        obj[d4] = undefined
-                                                    },
-                                                    get qty() {
-                                                        return oc.count
-                                                    },
-                                                    set qty(newValue) {
-                                                        oc.count = parseInt(newValue, 10)
-                                                    },
-                                                    get select() {
-                                                        return oc.isSelect
-                                                    },
-                                                    set select(newValue) {
-                                                        oc.isSelect = newValue;
-                                                    }
-                                                }
-                                            }
-                                        })
-                                    }
-                                })
-                                widget.data.cartItem = widget.data.cartItem.filter((d4: any) => {
-                                    return d4.item.length > 0
-                                })
+                                        }
+                                    })
                             }
-                            refreshCart()
-                        }
+                        })
+                        Checkout.getCartSkuInfo({
+                            skuID: needGetInfoSku, next: (response) => {
+                                dialog.dataLoading(false)
+                                if (!response) {
+                                    widget.data.cartItem = []
+                                    dialog.showInfo("取得資料異常．")
+                                } else {
+                                    response.map((dd: any) => {
+                                        skuDataInfo[dd.sku_id] = dd;
+                                    })
+                                    widget.data.cartItem = Object.keys(cartData).map((dd: any) => {
+                                        const obj: any = cartData[dd]
+                                        return {
+                                            category: dd,
+                                            category_id: dd,
+                                            item: Object.keys(obj).map((d4) => {
+                                                const oc = obj[d4]
+                                                needGetInfoSku.push(d4)
+                                                if (!skuDataInfo[d4]) {
+                                                    return {
+                                                        item_id: d4,//variant
+                                                        name: "error",
+                                                        img: ``,
+                                                        kind: "error",
+                                                        price: oc.price ?? 0,
+                                                        subtotal: oc.price ?? 0,
+                                                        deleteEvent: () => {
+                                                            obj[d4] = undefined
+                                                        },
+                                                        get qty() {
+                                                            return oc.count
+                                                        },
+                                                        set qty(newValue) {
+                                                            oc.count = parseInt(newValue, 10)
+                                                        },
+                                                        get select() {
+                                                            return oc.isSelect
+                                                        },
+                                                        set select(newValue) {
+                                                            oc.isSelect = newValue;
+                                                        }
+                                                    }
+                                                } else {
+                                                    return {
+                                                        item_id: d4,//variant
+                                                        name: skuDataInfo[d4].name,
+                                                        img: skuDataInfo[d4].preview_image,
+                                                        kind: skuDataInfo[d4].attribute_value,
+                                                        price: skuDataInfo[d4].price,
+                                                        subtotal: skuDataInfo[d4].price,
+                                                        deleteEvent: () => {
+                                                            obj[d4] = undefined
+                                                        },
+                                                        get qty() {
+                                                            return oc.count
+                                                        },
+                                                        set qty(newValue) {
+                                                            oc.count = parseInt(newValue, 10)
+                                                        },
+                                                        get select() {
+                                                            return oc.isSelect
+                                                        },
+                                                        set select(newValue) {
+                                                            oc.isSelect = newValue;
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    })
+                                    widget.data.cartItem = widget.data.cartItem.filter((d4: any) => {
+                                        return d4.item.length > 0
+                                    })
+                                }
+                                refreshCart()
+                            }
+                        })
                     })
-                })
-
+                }
+                getCartProData()
                 function initial() {
                     cartIn = []
                     cartOut = []
@@ -416,33 +420,32 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 //todo nextstep?
                 function checkOut() {
-                    let skuAmount: { sku_id: string, amount: number }[] = []
-                    widget.data.cartItem.map((d3: any) => {
-                        d3.item.map((dd: any) => {
-                            if (dd.select) {
-                                const it = skuAmount.find((d2) => {
-                                    return dd.item_id === d2.sku_id
-                                })
-                                if (!it) {
-                                    skuAmount.push({sku_id: dd.item_id, amount: dd.qty})
-                                } else {
-                                    it!.amount += dd.qty
-                                }
-                            }
-                        })
-                    })
-                    (cartSubTotalVM.data as any).voucherArray
-                    alert(JSON.stringify(skuAmount))
+                    if (cartSubTotalVM.loading) {
+                        dialog.showInfo('請先等待金額計算完畢!')
+                        return;
+                    }
+                    let skuAmount: { sku_id: string, amount: number }[] = cartSubTotalVM.skuData;
                     // dialog.dataLoading(true)
                     Checkout.checkOut({
                         data: {
                             cartInfo: skuAmount.map((dd) => {
                                 return {sku: dd.sku_id, quantity: dd.amount}
                             }),
-                            voucherArray: []
+                            voucherArray: (((cartSubTotalVM.data as any).voucherArray) as any).filter((d2: any) => {
+                                return d2.code
+                            }).map((dd: any) => {
+                                return dd.code
+                            })
                         },
                         callback: (response) => {
-
+                            if (response) {
+                                Checkout.deleteCart(()=>{
+                                    getCartProData();
+                                    glitter.openNewTab((response as any).redirect);
+                                })
+                            } else {
+                                dialog.showInfo('訂單新增異常!');
+                            }
                         }
                     })
                 }
@@ -996,8 +999,12 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                     },
                     editor: () => {
                         return glitter.htmlGenerate.editeInput({
-                            gvc, title: "按鈕下方間距", default: widget.data.buttonPadding ?? "106", placeHolder: "", callback: (text) => {
-                                widget.data.buttonPadding=text
+                            gvc,
+                            title: "按鈕下方間距",
+                            default: widget.data.buttonPadding ?? "106",
+                            placeHolder: "",
+                            callback: (text) => {
+                                widget.data.buttonPadding = text
                                 widget.refreshComponent()
                             }
                         })
@@ -1007,4 +1014,3 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
         },
     }
 });
-

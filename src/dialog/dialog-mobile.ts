@@ -15,7 +15,7 @@ export class Dialog{
                             text:text
                             }})
                     }else{
-                        glitter.closeDiaLog('dataLoading')
+                        glitter.closeDiaLog()
 
                     }
                     break

@@ -276,7 +276,7 @@ ${gvc.bindView({
                                                         bind: uid,
                                                         view: () => {
                                                             var _a, _b;
-                                                            return `<div class="w-100  rounded p-2 " style="background-color: #0062c0;">
+                                                            return `<div class="w-100  rounded p-2 mb-2" style="background-color: #0062c0;">
 <div class="w-100 d-flex p-0 align-items-center" onclick="${toggleEvent}" style="cursor: pointer;"><h3 style="font-size: 16px;" class="m-0 p-0">容器版面設計</h3>
 <div class="flex-fill"></div>
 ${(dd.expandStyle ? `<div style="cursor: pointer;" >收合<i class="fa-solid fa-up ms-2 text-white"></i></div>` : `<div style="cursor: pointer;">展開<i class="fa-solid fa-down ms-2 text-white"></i></div>\``)}
@@ -399,20 +399,20 @@ HtmlGenerate.saveEvent = () => {
     alert('save');
 };
 HtmlGenerate.setHome = (obj) => {
+    var _a;
     const glitter = Glitter.glitter;
     glitter.setHome('glitterBundle/plugins/html-render.js', obj.tag, {
         config: obj.config,
         editMode: obj.editMode,
-        data: obj.data,
-        option: obj.option
-    });
+        data: obj.data
+    }, (_a = obj.option) !== null && _a !== void 0 ? _a : {});
 };
 HtmlGenerate.changePage = (obj) => {
+    var _a;
     const glitter = Glitter.glitter;
     glitter.changePage('glitterBundle/plugins/html-render.js', obj.tag, obj.goBack, {
         config: obj.config,
         editMode: obj.editMode,
-        data: obj.data,
-        option: obj.option
-    });
+        data: obj.data
+    }, (_a = obj.option) !== null && _a !== void 0 ? _a : {});
 };

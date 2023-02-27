@@ -541,7 +541,11 @@ ${gvc.map([EditerApi.upload("Logo", widget.data.logo.src ?? "", gvc, (text) => {
                     var _a;
                     if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
                         widget.data.bottomInset = response.data;
-                        widget.refreshAll();
+                        try{
+                            widget.refreshAll();
+                        }catch (e) {
+
+                        }
                     }
                 }, {
                     webFunction: () => {

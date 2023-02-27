@@ -48,6 +48,12 @@ export class Checkout {
             }
         });
     }
+    static deleteCart(callback) {
+        const glitter = window.glitter;
+        glitter.setPro(Checkout.cartTag, '', (response) => {
+            callback();
+        });
+    }
     static getCartSkuInfo({ skuID, next }) {
         appConfig().getUserData({
             callback: (response) => {

@@ -10,7 +10,7 @@ export class Dialog {
                             } });
                     }
                     else {
-                        glitter.closeDiaLog('dataLoading');
+                        glitter.closeDiaLog();
                     }
                     break;
                 default:

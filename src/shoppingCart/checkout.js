@@ -258,6 +258,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 }
                             });
                         });
+                        cartSubTotalVM.skuData = skuAmount;
                         Checkout.setCheckOut({
                             data: skuAmount, callback: (data) => {
                                 if (data) {
@@ -281,100 +282,103 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let cartData = undefined;
                 const dialog = new Dialog(gvc);
                 dialog.dataLoading(true);
-                Checkout.getCart((cdata) => {
-                    cartData = cdata;
-                    let needGetInfoSku = [];
-                    Object.keys(cartData).map((dd) => {
-                        const obj = cartData[dd];
-                        return {
-                            item: Object.keys(obj).map((d4) => {
-                                if (needGetInfoSku.indexOf(d4) === -1) {
-                                    needGetInfoSku.push(d4);
+                function getCartProData() {
+                    Checkout.getCart((cdata) => {
+                        cartData = cdata;
+                        let needGetInfoSku = [];
+                        Object.keys(cartData).map((dd) => {
+                            const obj = cartData[dd];
+                            return {
+                                item: Object.keys(obj).map((d4) => {
+                                    if (needGetInfoSku.indexOf(d4) === -1) {
+                                        needGetInfoSku.push(d4);
+                                    }
+                                })
+                            };
+                        });
+                        Checkout.getCartSkuInfo({
+                            skuID: needGetInfoSku, next: (response) => {
+                                dialog.dataLoading(false);
+                                if (!response) {
+                                    widget.data.cartItem = [];
+                                    dialog.showInfo("取得資料異常．");
                                 }
-                            })
-                        };
-                    });
-                    Checkout.getCartSkuInfo({
-                        skuID: needGetInfoSku, next: (response) => {
-                            dialog.dataLoading(false);
-                            if (!response) {
-                                widget.data.cartItem = [];
-                                dialog.showInfo("取得資料異常．");
+                                else {
+                                    response.map((dd) => {
+                                        skuDataInfo[dd.sku_id] = dd;
+                                    });
+                                    widget.data.cartItem = Object.keys(cartData).map((dd) => {
+                                        const obj = cartData[dd];
+                                        return {
+                                            category: dd,
+                                            category_id: dd,
+                                            item: Object.keys(obj).map((d4) => {
+                                                var _a, _b;
+                                                const oc = obj[d4];
+                                                needGetInfoSku.push(d4);
+                                                if (!skuDataInfo[d4]) {
+                                                    return {
+                                                        item_id: d4,
+                                                        name: "error",
+                                                        img: ``,
+                                                        kind: "error",
+                                                        price: (_a = oc.price) !== null && _a !== void 0 ? _a : 0,
+                                                        subtotal: (_b = oc.price) !== null && _b !== void 0 ? _b : 0,
+                                                        deleteEvent: () => {
+                                                            obj[d4] = undefined;
+                                                        },
+                                                        get qty() {
+                                                            return oc.count;
+                                                        },
+                                                        set qty(newValue) {
+                                                            oc.count = parseInt(newValue, 10);
+                                                        },
+                                                        get select() {
+                                                            return oc.isSelect;
+                                                        },
+                                                        set select(newValue) {
+                                                            oc.isSelect = newValue;
+                                                        }
+                                                    };
+                                                }
+                                                else {
+                                                    return {
+                                                        item_id: d4,
+                                                        name: skuDataInfo[d4].name,
+                                                        img: skuDataInfo[d4].preview_image,
+                                                        kind: skuDataInfo[d4].attribute_value,
+                                                        price: skuDataInfo[d4].price,
+                                                        subtotal: skuDataInfo[d4].price,
+                                                        deleteEvent: () => {
+                                                            obj[d4] = undefined;
+                                                        },
+                                                        get qty() {
+                                                            return oc.count;
+                                                        },
+                                                        set qty(newValue) {
+                                                            oc.count = parseInt(newValue, 10);
+                                                        },
+                                                        get select() {
+                                                            return oc.isSelect;
+                                                        },
+                                                        set select(newValue) {
+                                                            oc.isSelect = newValue;
+                                                        }
+                                                    };
+                                                }
+                                            })
+                                        };
+                                    });
+                                    widget.data.cartItem = widget.data.cartItem.filter((d4) => {
+                                        return d4.item.length > 0;
+                                    });
+                                }
+                                refreshCart();
                             }
-                            else {
-                                response.map((dd) => {
-                                    skuDataInfo[dd.sku_id] = dd;
-                                });
-                                widget.data.cartItem = Object.keys(cartData).map((dd) => {
-                                    const obj = cartData[dd];
-                                    return {
-                                        category: dd,
-                                        category_id: dd,
-                                        item: Object.keys(obj).map((d4) => {
-                                            var _a, _b;
-                                            const oc = obj[d4];
-                                            needGetInfoSku.push(d4);
-                                            if (!skuDataInfo[d4]) {
-                                                return {
-                                                    item_id: d4,
-                                                    name: "error",
-                                                    img: ``,
-                                                    kind: "error",
-                                                    price: (_a = oc.price) !== null && _a !== void 0 ? _a : 0,
-                                                    subtotal: (_b = oc.price) !== null && _b !== void 0 ? _b : 0,
-                                                    deleteEvent: () => {
-                                                        obj[d4] = undefined;
-                                                    },
-                                                    get qty() {
-                                                        return oc.count;
-                                                    },
-                                                    set qty(newValue) {
-                                                        oc.count = parseInt(newValue, 10);
-                                                    },
-                                                    get select() {
-                                                        return oc.isSelect;
-                                                    },
-                                                    set select(newValue) {
-                                                        oc.isSelect = newValue;
-                                                    }
-                                                };
-                                            }
-                                            else {
-                                                return {
-                                                    item_id: d4,
-                                                    name: skuDataInfo[d4].name,
-                                                    img: skuDataInfo[d4].preview_image,
-                                                    kind: skuDataInfo[d4].attribute_value,
-                                                    price: skuDataInfo[d4].price,
-                                                    subtotal: skuDataInfo[d4].price,
-                                                    deleteEvent: () => {
-                                                        obj[d4] = undefined;
-                                                    },
-                                                    get qty() {
-                                                        return oc.count;
-                                                    },
-                                                    set qty(newValue) {
-                                                        oc.count = parseInt(newValue, 10);
-                                                    },
-                                                    get select() {
-                                                        return oc.isSelect;
-                                                    },
-                                                    set select(newValue) {
-                                                        oc.isSelect = newValue;
-                                                    }
-                                                };
-                                            }
-                                        })
-                                    };
-                                });
-                                widget.data.cartItem = widget.data.cartItem.filter((d4) => {
-                                    return d4.item.length > 0;
-                                });
-                            }
-                            refreshCart();
-                        }
+                        });
                     });
-                });
+                }
+                getCartProData();
                 function initial() {
                     cartIn = [];
                     cartOut = [];
@@ -399,31 +403,32 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     return (item.subtotal).toLocaleString();
                 }
                 function checkOut() {
-                    let skuAmount = [];
-                    widget.data.cartItem.map((d3) => {
-                        d3.item.map((dd) => {
-                            if (dd.select) {
-                                const it = skuAmount.find((d2) => {
-                                    return dd.item_id === d2.sku_id;
-                                });
-                                if (!it) {
-                                    skuAmount.push({ sku_id: dd.item_id, amount: dd.qty });
-                                }
-                                else {
-                                    it.amount += dd.qty;
-                                }
-                            }
-                        });
-                    })(cartSubTotalVM.data).voucherArray;
-                    alert(JSON.stringify(skuAmount));
+                    if (cartSubTotalVM.loading) {
+                        dialog.showInfo('請先等待金額計算完畢!');
+                        return;
+                    }
+                    let skuAmount = cartSubTotalVM.skuData;
                     Checkout.checkOut({
                         data: {
                             cartInfo: skuAmount.map((dd) => {
                                 return { sku: dd.sku_id, quantity: dd.amount };
                             }),
-                            voucherArray: []
+                            voucherArray: (cartSubTotalVM.data.voucherArray).filter((d2) => {
+                                return d2.code;
+                            }).map((dd) => {
+                                return dd.code;
+                            })
                         },
                         callback: (response) => {
+                            if (response) {
+                                Checkout.deleteCart(() => {
+                                    getCartProData();
+                                    glitter.openNewTab(response.redirect);
+                                });
+                            }
+                            else {
+                                dialog.showInfo('訂單新增異常!');
+                            }
                         }
                     });
                 }
@@ -971,7 +976,11 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                     editor: () => {
                         var _a;
                         return glitter.htmlGenerate.editeInput({
-                            gvc, title: "按鈕下方間距", default: (_a = widget.data.buttonPadding) !== null && _a !== void 0 ? _a : "106", placeHolder: "", callback: (text) => {
+                            gvc,
+                            title: "按鈕下方間距",
+                            default: (_a = widget.data.buttonPadding) !== null && _a !== void 0 ? _a : "106",
+                            placeHolder: "",
+                            callback: (text) => {
                                 widget.data.buttonPadding = text;
                                 widget.refreshComponent();
                             }

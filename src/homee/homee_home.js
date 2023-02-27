@@ -521,20 +521,21 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                 ],
             },
             render: (gvc, widget, setting, hoverID) => {
-                try {
-                    glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                        var _a;
-                        if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
-                            widget.data.bottomInset = response.data;
-                            widget.refreshComponent();
+                glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                    var _a;
+                    if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
+                        widget.data.bottomInset = response.data;
+                        try {
+                            widget.refreshAll();
                         }
-                    }, {
-                        webFunction: () => {
-                            return { data: 20 };
+                        catch (e) {
                         }
-                    });
-                }catch (e){}
-
+                    }
+                }, {
+                    webFunction: () => {
+                        return { data: 20 };
+                    }
+                });
                 gvc.addStyle(`
                         footer{
                             background:white;
