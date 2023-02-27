@@ -36,31 +36,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             box-sizing: border-box;
 
         }
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(${new URL('../assets/Font/NotoSansTC-Black.otf', import.meta.url)});
-            font-weight: 900;
-        }
-         @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(${new URL('../assets/Font/NotoSansTC-Bold.otf', import.meta.url)});
-            font-weight: 700;
-        }
-         @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(${new URL('../assets/Font/NotoSansTC-Medium.otf', import.meta.url)});
-            font-weight: 500;
-        }
-         @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(${new URL('../assets/Font/Regular.otf', import.meta.url)});
-            font-weight: 400;
-        }
-            @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(${new URL('../assets/Font/NotoSansTC-Light.otf', import.meta.url)});
-            font-weight: 300;
-        }
          .dot{
             width: 16px;
             height: 16px;
