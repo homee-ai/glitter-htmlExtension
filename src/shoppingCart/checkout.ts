@@ -298,7 +298,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let cartData: any = undefined
                 const dialog = new Dialog(gvc);
                 dialog.dataLoading(true)
-                function getCartProData(){
+
+                function getCartProData() {
                     Checkout.getCart((cdata) => {
                         cartData = cdata
                         let needGetInfoSku: string[] = []
@@ -392,7 +393,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                     })
                 }
+
                 getCartProData()
+
                 function initial() {
                     cartIn = []
                     cartOut = []
@@ -439,7 +442,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         },
                         callback: (response) => {
                             if (response) {
-                                Checkout.deleteCart(()=>{
+                                Checkout.deleteCart(() => {
                                     getCartProData();
                                     glitter.openNewTab((response as any).redirect);
                                 })
@@ -532,19 +535,15 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     chooseEvent = () => {
                                                                         dialog.confirm("確定要刪除嘛?", (result) => {
                                                                             if (result) {
-                                                                                if (item.select) {
-                                                                                    category.item.splice(itemIndex, 1);
-                                                                                    refreshCart();
-                                                                                }
-                                                                                category.item.splice(itemIndex, 1);
                                                                                 item.deleteEvent()
+                                                                                category.item.splice(itemIndex, 1);
+                                                                              
                                                                                 if (category.item.length == 0) {
                                                                                     let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
                                                                                     widget.data.cartItem.splice(indexToRemove, 1);
                                                                                     refreshCart();
                                                                                 } else {
-                                                                                    gvc.notifyDataChange(category.category_id);
-                                                                                    gvc.notifyDataChange('cartSubtotal');
+                                                                                    refreshCart();
                                                                                 }
 
                                                                             }
@@ -908,13 +907,13 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                                                         if (check) {
                                                                             item.deleteEvent()
                                                                             category.item.splice(itemIndex, 1);
+
                                                                             if (category.item.length == 0) {
                                                                                 let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
                                                                                 widget.data.cartItem.splice(indexToRemove, 1);
-
                                                                                 refreshCart();
                                                                             } else {
-                                                                                gvc.notifyDataChange(category.category_id);
+                                                                                refreshCart();
                                                                             }
 
                                                                         }

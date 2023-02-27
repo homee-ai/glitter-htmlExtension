@@ -512,20 +512,15 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     chooseEvent = () => {
                                                                         dialog.confirm("確定要刪除嘛?", (result) => {
                                                                             if (result) {
-                                                                                if (item.select) {
-                                                                                    category.item.splice(itemIndex, 1);
-                                                                                    refreshCart();
-                                                                                }
-                                                                                category.item.splice(itemIndex, 1);
                                                                                 item.deleteEvent();
+                                                                                category.item.splice(itemIndex, 1);
                                                                                 if (category.item.length == 0) {
                                                                                     let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
                                                                                     widget.data.cartItem.splice(indexToRemove, 1);
                                                                                     refreshCart();
                                                                                 }
                                                                                 else {
-                                                                                    gvc.notifyDataChange(category.category_id);
-                                                                                    gvc.notifyDataChange('cartSubtotal');
+                                                                                    refreshCart();
                                                                                 }
                                                                             }
                                                                         });
@@ -893,7 +888,7 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                                                                                 refreshCart();
                                                                             }
                                                                             else {
-                                                                                gvc.notifyDataChange(category.category_id);
+                                                                                refreshCart();
                                                                             }
                                                                         }
                                                                     });

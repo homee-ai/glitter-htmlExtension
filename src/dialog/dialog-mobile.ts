@@ -10,14 +10,14 @@ export class Dialog{
         this.dataLoading=(show:Boolean,text?:String)=>{
             switch (glitter.deviceType){
                 case glitter.deviceTypeEnum.Web:
-                    if(show){
-                        glitter.openDiaLog(new URL('./dialog.js',import.meta.url).href, 'dataLoading', {type:'dataLoading',obj: {
-                            text:text
-                            }})
-                    }else{
-                        glitter.closeDiaLog()
-
-                    }
+                    // if(show){
+                    //     glitter.openDiaLog(new URL('./dialog.js',import.meta.url).href, 'dataLoading', {type:'dataLoading',obj: {
+                    //         text:text
+                    //         }})
+                    // }else{
+                    //     glitter.closeDiaLog()
+                    //
+                    // }
                     break
                 default:
                     glitter.runJsInterFace("dataLoading",{show:show,text:text},(response:any)=>{})
