@@ -203,6 +203,44 @@ export class ViewModel {
             `;
             }
         };
+        this.inviteFriendText = (paragraph) => {
+            const gvc = this.gvc;
+            const glitter = this.gvc.glitter;
+            gvc.addStyle(`
+            .commonText{
+                word-break: break-all;
+                white-space: normal;
+                width:100%;
+                display:flex;
+            }
+        `);
+            return `${gvc.bindView({
+                bind: paragraph.name,
+                view: () => {
+                    switch (paragraph.type) {
+                        case "title": {
+                            return `
+                        <div class="commonText"  style="height: 38px; font-weight: 700;font-size: 24px;line-height: 38px;margin-top: 68px;">
+                            ${paragraph.text}
+                        </div>`;
+                        }
+                        case "subtitle": {
+                            return `
+                        <div class="commonText" style="font-weight: 700;font-size: 18px;margin-top: 30px;">
+                            ${paragraph.text}
+                        </div>`;
+                        }
+                        case "text": {
+                            return `
+                        <div class="commonText" style="font-weight: 500;font-size: 16px;">
+                            ${paragraph.text}
+                        </div>`;
+                        }
+                    }
+                    return ``;
+                }
+            })}`;
+        };
         this.gvc = gvc;
     }
 }

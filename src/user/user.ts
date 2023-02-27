@@ -2284,6 +2284,168 @@ ${
                 }
             },
         },
+        invite_Friend: {
+            defaultData: {
+
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                return {
+                    view: () => {
+
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                return `
+                                <main class="" style=padding:24px 35px 44px;font-family: 'Noto Sans TC';font-style: normal;margin: 0;box-sizing: border-box;"">
+                                    ${gvc.bindView({
+                                        bind:"icon",
+                                        view:()=>{
+                                            return `
+                                        <img src="${new URL('../img/inviteLOGO.svg', import.meta.url)}" alt="LOGO" style="width: 190px;height: 133px;">
+                                    `
+                                        },divCreate:{class:`d-flex flex-column align-items-center` , style : `padding-top:60px;`}
+                                    })}
+                                </main>
+
+                                                          
+                            `
+
+                            },
+
+                        })
+                    },
+                    editor: () => {
+                        return `
+                        <!--
+                        ${gvc.bindView({
+                            bind: "footer",
+                            view : ()=>{
+                                let classStyle={
+                                    footerBTN:`
+                                                border-radius : 8px;
+                                                border:1px solid rgb(210,66,123);
+                                                font-size : 14px;
+                                                font-weight : 700;
+                                                padding:15px;
+                                                `,
+                                    shareBTN :`
+                                                height: 48px;
+                                                background: #FD6A58;
+                                                border-radius: 24px;
+                                                color : white;
+                                            `,
+                                    QRBTN : `
+                                                background-color : white;
+                                                color : rgb(210,66,123);
+                                                margin-top : 18px;
+                                            `
+                                }
+                                let inviteCode = ""
+                                appConfig().getUserData({
+                                    callback: (response) => {
+                                        console.log(response)
+                                    }
+                                });
+
+                                return `
+                                            <bottom style="margin-bottom: 60px;${classStyle.footerBTN}${classStyle.shareBTN} " class="w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
+                                    glitter.runJsInterFace("shareText",{
+                                        text:`趕快下載HOMEE APP:https://apps.apple.com/tw/app/homee-marketplace/id6444941721，註冊並輸入我的邀請碼:${inviteCode}，立刻獲得200折 $ 100 優惠券`
+                                    },()=>{
+
+                                    })
+                                })}">分享優惠連結給朋友</bottom>                                
+                                        `
+                            },divCreate : {class:`d-flex flex-column w-100` , style : `padding:12px 20px ${12+widget.data.bottomInset}px;margin-top:auto;position: absolute;bottom:0;left: 0;background: #FFFFFF;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);`}
+                        })}              
+                        -->
+                        `
+                    }
+                }
+            },
+        },
+        invite_BTN: {
+            defaultData: {
+                botInset:0,
+                inviteCode:""
+            },
+            render: (gvc, widget, setting, hoverID) => {
+
+                return {
+                    view: () => {
+
+                        glitter.runJsInterFace("getBotInset", {}, (response) => {
+                            if (widget.data.botInset != response.data){
+                                widget.data.botInset = response.data
+                                gvc.notifyDataChange('mainView')
+                            }
+
+                        }, {
+                            webFunction: () => {
+                                return {data: 10}
+                            }
+                        })
+                        appConfig().getUserData({
+                            callback: (response: any) => {
+                                console.log()
+                                widget.data.inviteCode = response.invite_code;
+                                gvc.notifyDataChange('footer');
+                            }
+                        })
+                        return gvc.bindView({
+                            bind: "footer",
+                            view : ()=>{
+
+                                let classAdd={
+                                    footerBTN:`
+                                        border-radius : 8px;
+                                        border:1px solid rgb(210,66,123);
+                                        font-size : 14px;
+                                        font-weight : 700;
+                                        padding:15px;
+                                    `,
+                                    shareBTN:`
+                                        height: 48px;
+                                        background: #FD6A58;
+                                        border-radius: 24px;
+                                        color : white;
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 700;
+                                        font-size: 18px;
+                                        line-height: 26px;
+                                        
+                                        text-align: center;
+                                        letter-spacing: 0.15em;
+                                        color: #FFFFFF;
+                                    `,
+                                    QRBTN:`
+                                        background-color : white;
+                                        color : rgb(210,66,123);
+                                        margin-top : 18px;
+                                    `
+
+                                }
+                                return `
+                                <bottom style="margin-bottom: 30px;${classAdd.footerBTN}${classAdd.shareBTN}" class="w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
+                                    // todo
+                                    glitter.runJsInterFace("shareText",{
+                                        text:`趕快下載HOMEE APP:https://apps.apple.com/tw/app/homee-marketplace/id6444941721，註冊並輸入我的邀請碼:${widget.data.inviteCode}，立刻獲得200折 $ 100 優惠券`
+                                    },()=>{
+
+                                    })
+                                })}">分享優惠連結給朋友</bottom>
+                                
+                            `
+                            },divCreate : {class:`d-flex flex-column w-100` , style : `padding:12px 20px ${12+widget.data.botInset}px;margin-top:auto;position: absolute;bottom:0;left: 0;background: #FFFFFF;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);`}
+                        })
+                    },
+                    editor: () => {
+                        return ``
+                    }
+                }
+            },
+        },
         empty: {
             defaultData: {
                 link: []
