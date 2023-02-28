@@ -424,7 +424,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             if (response) {
                                 Checkout.deleteCart(() => {
                                     getCartProData();
-                                    glitter.openNewTab(response.redirect);
+                                    gvc.glitter.runJsInterFace("openWeb", {
+                                        url: response.redirect
+                                    }, (data) => { }, {
+                                        webFunction(data, callback) {
+                                            gvc.glitter.openNewTab(response.redirect);
+                                        }
+                                    });
                                 });
                             }
                             else {
