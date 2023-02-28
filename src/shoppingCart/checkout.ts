@@ -797,7 +797,7 @@ color: #1E1E1E;">${dd.discount}</span>
                                     })()}
                                        
                                     <div class="d-flex align-items-center justify-content-between subTotal" style="padding:0 12px;margin-bottom:13px;">
-                                        <div style="font-size: 12px;">你有<span class="voucher mx-1" style="font-size: 15px;">$${voucher.toLocaleString()}</span>點數回饋</div>
+                                        <div style="font-size: 12px;">你有<span class="voucher mx-1" style="font-size: 15px;">${voucher.toLocaleString()}</span>點數回饋</div>
                                         <div class="d-flex align-items-center">- NT$
                                             <input class="voucherInput ms-1" type="number" value="${voucherUse}" style="border: 1px solid #E0E0E0;
 border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HTMLInputElement) => {

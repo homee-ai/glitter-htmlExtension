@@ -161,12 +161,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 return {
                     view: () => {
+                        console.log(widget.data)
                         if(widget.data.loading){
-                            return  `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`
+                            return  `
+                            <div class="w-100">
+                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+                            </div>`
                         }
                         let sku_list = (widget.data.productData && widget.data.productData.sku_list) ?? {}
                         let key: string[] = []
@@ -177,9 +179,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             select && key.push(select.value)
                         })
                         const selectSku = sku_list[key.join(' / ')]
-                        console.log(JSON.stringify(selectSku))
                         return `       
-       ${gvc.bindView({
+                           ${gvc.bindView({
                             bind: 'productTitle',
                             view: () => {
                                 return `  <div class="productTitle">${widget.data.name}</div>
@@ -238,14 +239,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                     className += " kindSelected"
                                                 }
                                                 return `
-                                                            <div class="${className}" onclick="${gvc.event(() => {
-
-                                                    sizeType.attribute_values.map((dd: any) => {
-                                                        dd.selected = false
-                                                    })
-                                                    data.selected = true
-                                                    widget.refreshComponent()
-                                                })}">${data.value}</div>
+                                                    <div class="${className}" onclick="${gvc.event(() => {
+                                                        sizeType.attribute_values.map((dd: any) => {
+                                                            dd.selected = false
+                                                        })
+                                                        data.selected = true
+                                                        widget.refreshComponent()
+                                                        })}">${data.value}
+                                                    </div>
                                                         `
                                             }))}
                                                 </div>      
@@ -256,8 +257,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     `
                                 }
 
+                                //todo 確認一下會不會有只有單規格的狀況
                                 return gvc.map(widget.data.attribute_list.map((sizeType: any, index: number) => {
-                                    return productKindDom(index, sizeType);
+                                    console.log(sizeType)
+                                    if (sizeType.attribute_key != "Title"){
+                                        return productKindDom(index, sizeType);    
+                                    }else 
+                                        return ``
+                                    
                                 }))
 
                             }, divCreate: {class: ``, style: "padding-bottom:32px;border-bottom: 1px solid #292929;"},
