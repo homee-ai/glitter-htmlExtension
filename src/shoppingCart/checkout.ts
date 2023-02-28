@@ -445,7 +445,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             if (response) {
                                 Checkout.deleteCart(() => {
                                     getCartProData();
-                                    glitter.openNewTab((response as any).redirect);
+                                    gvc.glitter.runJsInterFace("openWeb", {
+                                        url: (response as any).redirect
+                                    }, (data) => { }, {
+                                        webFunction(data: any, callback: (data: any) => void): any {
+                                            gvc.glitter.openNewTab((response as any).redirect)
+                                        }
+                                    })
                                 })
                             } else {
                                 dialog.showInfo('訂單新增異常!');
