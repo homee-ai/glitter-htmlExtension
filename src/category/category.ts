@@ -6,6 +6,7 @@ import {appConfig} from "../config.js";
 import {Dialog} from "../homee/legacy/widget/dialog.js";
 import {Category, CategoryListData, ProductData} from "../api/category.js";
 import {ViewModel} from "./view/categoryViewApi.js";
+import {Api} from '../homee/api/homee-api.js';
 
 Plugin.create(import.meta.url,(glitter)=>{
     return {
@@ -781,10 +782,11 @@ color: #1E1E1E;">${data.title}</div>
                 }
             }
         },
-        index: {
+        indexStatic: {
             defaultData:{
-                loading:false,
                 selectIndex : 0,
+                loading:false,
+                leftList:[],
             },
             render:(gvc, widget, setting, hoverID) => {
                 let topInset: number = 0;
@@ -794,7 +796,7 @@ color: #1E1E1E;">${data.title}</div>
                 const viewModel = new ViewModel(gvc)
                 const categoryAPI = new Category(gvc.glitter);
                 let categoryList:CategoryListData[] = [];
-
+                let loading = false
                 return {
                     view: ()=>{
                         gvc.addStyle(`
@@ -836,8 +838,6 @@ color: #1E1E1E;">${data.title}</div>
                             
                             `)
 
-
-
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
@@ -845,22 +845,74 @@ color: #1E1E1E;">${data.title}</div>
                                 ${shareView.navigationBar({
                                     title: "分類",
                                     leftIcon:`<img class="" src="${new URL!(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                        glitter.goBack("main")
-                                        // glitter.runJsInterFace("dismiss",{},()=>{})
+                                        if( gvc.glitter.pageConfig.length <= 1){
+                                            appConfig().setHome(gvc, "home", {})
+                                        }else{
+                                            gvc.glitter.goBack()
+                                        }
                                     })}">`,
-                                    rightIcon:`
-                        
+                                    rightIcon:`                        
                                     `           
                                 })}
                                 ${gvc.bindView({
                                     bind : 'mainDom',
                                     view : () => {
-                                        if (widget.data.loading){
+                                        
+                                        if (loading){
+                                            
                                         return `              
-                                            <div style="padding-left: 15px;"></div>                     
+                                            <div style="padding-left: 15px;"></div>                                                                 
                                             ${gvc.bindView({
                                                 bind : "leftMain",
                                                 view : ()=>{
+                                                    gvc.addStyle(`
+                a {
+                  all: initial;
+                }
+                .left-title *{
+                    width: 100%;
+                    height: 56px;
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 15px;
+                    line-height: 120%;
+                    word-break: break-word;
+                    white-space:pre-line;  
+                    color: #858585;
+                }
+                .selectClass *{
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 17px;
+                    line-height: 100%;
+                    /* HOMEE red */
+                    color: #FD6A58;
+                }
+            `)
+                                                    let returnData = ``;
+                                                    // console.log(widget.data.leftList)
+                                                    // widget.data.leftList.forEach((data:string,index)=>{
+                                                    //     let selectClass = (index == widget.data.selectIndex) ? "selectClass" : "";
+                                                    //
+                                                    //     returnData += `
+                                                    //     <div class="left-title  ${selectClass}" onclick="${gvc.event(()=>{
+                                                    //             widget.data.selectIndex = index;
+                                                    //             gvc.notifyDataChange('leftMain');
+                                                    //             gvc.notifyDataChange('rightMain');
+                                                    //         })}">                        
+                                                    //         <a class="d-flex align-items-center justify-content-start" href="#${data}"
+                                                    //         style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;"
+                                                    //         >${data}</a>
+                                                    //     </div>
+                                                    // `
+                                                    // })
+                                                    // return `
+                                                    //     <div class="d-flex flex-column w-100">
+                                                    //         ${returnData}
+                                                    //     </div>
+                                                    // `
                                                     return viewModel.setCategoryLeft(categoryList , widget.data);
                                                 },
                                                 divCreate : {style:`width:30%;border-right: 0.5px solid #E0E0E0;position:fixed;overflow-y: scroll;padding-left: 15px;padding-right: 15px;` , class:`h-100`}
@@ -919,13 +971,21 @@ color: #1E1E1E;">${data.title}</div>
                             },
                             divCreate: {class: `d-flex w-100 flex-column`, style: ``},
                             onCreate : ()=>{
-                                if (!widget.data.loading){
+                                const api = new Api()
 
+                                if (!loading){
                                     categoryAPI.getCategoryAllList((data:CategoryListData[])=>{
 
-                                        categoryList = data ;
+                                        data.forEach((element)=>{
+                                            if (!widget.data.loading){
+                                                widget.data.leftList.push(element.name)
+                                            }
+                                        })
                                         widget.data.loading = true;
-                                        console.log("test")
+
+                                        categoryList = data ;
+                                        loading = true;
+
                                         gvc.notifyDataChange('mainDom');
                                     })
                                 }
@@ -937,6 +997,363 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     editor: ()=>{
                         return ``
+                    }
+                }
+            },
+        },
+        indexDynamic: {
+            defaultData:{
+                selectIndex : 0,
+                dataList:[
+                    {title:"人氣活動" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072457700" , toPage:""},
+                    {title:"桌子" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675071897159", toPage:""},
+                    {title:"沙發" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072481671" , toPage:""},
+                    {title:"椅子" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072457700" , toPage:""},
+                    {title:"TERA\n系統儲物" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072618992" , toPage:""},
+                    {title:"BANFF\n系統儲物" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072650712" , toPage:""},
+                    {title:"床組/寢具" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072676832" , toPage:""},
+                    {title:"居家生活" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072699256" , toPage:""},
+                    {title:"生活方式" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072721565" , toPage:""},
+                    {title:"福利品專區" , img:"https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675072765031" , toPage:""},
+                ],
+            },
+            render:(gvc, widget, setting, hoverID) => {
+                let topInset: number = 0;
+                let bottomInset: number = 0;
+                const dialog = new Dialog(gvc);
+                let shareView = new SharedView(gvc);
+                const viewModel = new ViewModel(gvc)
+                const categoryAPI = new Category(gvc.glitter);
+                let categoryList:CategoryListData[] = [];
+                let loading = false
+                return {
+                    view: ()=>{
+                        gvc.addStyle(`
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Bold.otf);
+                                font-weight: bold;
+                            }
+                    
+                            @font-face {
+                                font-family: 'Noto Sans TC';
+                                src: url(assets/Font/NotoSansTC-Regular.otf);
+                                font-weight: normal;
+                            }
+                    
+                            html {
+                                width: 100%;
+                                height: 100%;
+                                background: #F8F3ED;
+                                overflow-y: auto;
+                                background : white;
+                            }
+                    
+                            body {
+                                width: 100%;
+                                height: 100%;
+                                background : white;
+                                
+                            }
+                    
+                            main {
+                                padding: 24px 35px 44px;
+                           
+                                font-family: 'Noto Sans TC';
+                                margin: 0;
+                                box-sizing: border-box;
+                                height:100vh;
+                            }
+                            
+                            `)
+
+                        return gvc.bindView({
+                            bind: `mainView`,
+                            view: () => {
+                                return `
+                                ${shareView.navigationBar({
+                                    title: "分類",
+                                    leftIcon:`<img class="" src="${new URL!(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                        if( gvc.glitter.pageConfig.length <= 1){
+                                            appConfig().setHome(gvc, "home", {})
+                                        }else{
+                                            gvc.glitter.goBack()
+                                        }
+                                    })}">`,
+                                    rightIcon:`                        
+                                    `
+                                })}
+                                ${gvc.bindView({
+                                    bind : 'mainDom',
+                                    view : () => {
+
+                                        if (loading){
+
+                                            return `              
+                                            <div style="padding-left: 15px;"></div>                                                                 
+                                            ${gvc.bindView({
+                                                bind : "leftMain",
+                                                view : ()=>{
+                                                    gvc.addStyle(`
+                a {
+                  all: initial;
+                }
+                .left-title *{
+                    width: 100%;
+                    height: 56px;
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 15px;
+                    line-height: 120%;
+                    word-break: break-word;
+                    white-space:pre-line;  
+                    color: #858585;
+                }
+                .selectClass *{
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 17px;
+                    line-height: 100%;
+                    /* HOMEE red */
+                    color: #FD6A58;
+                }
+            `)
+                                                    let returnData = ``;
+                                                  
+                                                    // console.log(widget.data.leftList)
+                                                    widget.data.dataList.forEach((data:any,index:number)=>{
+                                                        let selectClass = (index == widget.data.selectIndex) ? "selectClass" : "";
+
+                                                        returnData += `
+                                                        <div class="left-title  ${selectClass}" onclick="${gvc.event(()=>{
+                                                                widget.data.selectIndex = index;
+                                                                gvc.notifyDataChange('leftMain');
+                                                                gvc.notifyDataChange('rightMain');
+                                                            })}">                        
+                                                            <a class="d-flex align-items-center justify-content-start" href="#${data.title}"
+                                                            style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;"
+                                                            >${data.title}</a>
+                                                        </div>
+                                                    `
+                                                    })
+                                                    return `
+                                                        <div class="d-flex flex-column w-100">
+                                                            ${returnData}
+                                                        </div>
+                                                    `
+                                                    // return viewModel.setCategoryLeft(categoryList , widget.data);
+                                                },
+                                                divCreate : {style:`width:30%;border-right: 0.5px solid #E0E0E0;position:fixed;overflow-y: scroll;padding-left: 15px;padding-right: 15px;` , class:`h-100`}
+                                            })}
+                                            ${gvc.bindView({
+                                                bind : "rightMain",
+                                                view : ()=>{
+                                                    let returnHtml = ``
+                                                    
+                                                    widget.data.dataList.forEach((data:any)=>{
+                                                        let title = data.title;
+                                                        let dataList = data.subCategory;
+                                                     
+                                                        // let parentCategory = data.store_id;
+                                                        gvc.addStyle(`
+                .rightCategoryTitle{
+                    height: 25px;
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 17px;
+                    line-height: 25px;
+                    color: #292929;
+                    margin-bottom:24px;
+                }
+                .cardTitle{
+                    height: 40px;
+                    font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 120%;
+                    color: #292929;
+                    word-break: break-word;
+                    white-space:pre-line;  
+
+                }
+            `)
+                                                        let CardGroup = ``;
+                                                     
+                                                        if (dataList){
+                                                            
+                                                            dataList.forEach((element:any,index:number)=>{
+                                                                let margin = (index%2) ? "" : "margin-right: 22px;"
+                                                                // if (element.name){
+                                                                //     console.log(element)
+                                                                // }
+                                                                if (element.name){
+                                                                    console.log(element)
+                                                                    CardGroup += `
+                                                                    <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
+                                                                            // appConfig().changePage(gvc,"sub_category",{
+                                                                            //     title: element.name,
+                                                                            //     object: element,
+                                                                            //     category: "sub_category_id",
+                                                                            //     index: 0
+                                                                            // })
+                                                                            // glitter.changePage("jsPage/category/subCategory.js", "subCategory", true, {title:element.name , parent_category_id:parentCategory , category:"sub_category_id"  , category_id:element.easy_collection_id , index:index})
+                                                                        })}">
+                                                                        <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${element.img})"></div>
+                                                                        <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element.name}</div>
+                                                                    </div>
+                                                                    `
+                                                                }
+
+                                                            })
+                                                        }
+                                                       
+                                                        returnHtml += `
+                                                            <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
+                                                                <div class="d-flex rightCategoryTitle" id="${title}">${title}</div>
+                                                                <div class="d-flex flex-wrap w-100">
+                                                                    ${CardGroup}
+                                                                </div>
+                                                            </div>
+                                                        `
+                                                    })
+                                                    returnHtml += `
+                                                        <div class="w-100" style="height: 30vh"></div>
+                                                    `
+                                                    return returnHtml;
+                                                },
+                                                divCreate : {style:`width:70%;overflow-y:scroll;position:fixed;margin-left:26%` , class:`h-100`},
+                                                onCreate : ()=>{
+                                                    let div = document.getElementById(`${gvc.id('rightMain')}`);
+
+                                                    //左方的導覽要同步更新 函式定義位置
+                                                    div?.addEventListener("scroll",(e)=>{
+                                                        let distance = div!.scrollTop;
+                                                        let elementNodes = [];
+                                                        for (let i = 0; i < div!.childNodes.length; i++) {
+                                                            if (div!.childNodes[i].nodeType === 1) {
+                                                                elementNodes.push(div!.childNodes[i]);
+                                                            }
+                                                        }
+
+                                                        for (let i = 0 ; i < elementNodes.length ; i++){
+                                                            let e = elementNodes[i] as HTMLElement;
+
+                                                            if (distance < e.offsetTop - 50){
+                                                                if (widget.data.selectIndex != i - 1){
+                                                                    widget.data.selectIndex = i-1;
+                                                                    gvc.notifyDataChange('leftMain')
+                                                                }
+                                                                break;
+
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            })}                             
+                                        `
+                                        }else {
+                                            return viewModel.loadingView()
+                                        }
+
+                                    },
+                                    divCreate : {style :`min-height:100vh;` , class : `d-flex w-100`}
+                                })}     
+                        `
+                            },
+                            divCreate: {class: `d-flex w-100 flex-column`, style: ``},
+                            onCreate : ()=>{
+                                const api = new Api()
+
+                                if (!loading){
+                                    categoryAPI.getCategoryAllList((data:CategoryListData[])=>{
+                                        categoryList = data ;
+                                        loading = true;
+
+                                        gvc.notifyDataChange('mainDom');
+                                    })
+                                }
+
+
+
+                            }
+                        })
+                    },
+                    editor: ()=>{
+
+                        return `${gvc.map(widget.data.dataList.map((dd:any,index:number)=>{
+                            return `
+                            <div class="d-flex flex-column my-3 alert alert-dark">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;display: inline-block" onclick="${gvc.event(() => {
+                                widget.data.dataList.splice(index, 1)
+                                widget.refreshAll()
+                            })}"></i>區塊${index + 1}
+                                </div>
+                                ${glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `標題${index+1}`,
+                                default: dd.title,
+                                placeHolder: dd.title,
+                                callback: (text: string) => {
+                                    widget.data.dataList[index].title = text
+                                    widget.refreshAll!()
+                                }
+                            })}                                
+                                ${(()=>{
+                                    let returnHTML = ``
+                                    if (dd?.subCategory){
+                                        gvc.map(dd?.subCategory.map((data:any)=>{
+                                            
+                                            returnHTML += `
+                                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${data.name}照片</h3>
+                                            <div class="mt-2"></div>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${data.img}">
+                                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                                                    glitter.ut.chooseMediaCallback({
+                                                        single:true,
+                                                        accept:'image/*',
+                                                        callback(imgData: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                                            appConfig().uploadImage(imgData[0].file,(link)=>{
+                                                                data.img=link;
+                                                                widget.refreshAll()
+                                                            })
+                                                        }
+                                                    })
+                                                })}"></i>
+                                            </div>
+                                            `
+                               
+                                        }))    
+                                    }
+                                    return returnHTML   
+                                })()}     
+                                ${ClickEvent.editer(gvc,widget,dd)}  
+                                </div>
+                                
+                            </div>                 
+                                `
+                        }))}
+                        ${(()=>{
+                            gvc.addStyle(`
+                                    .add-btn:hover{
+                                        cursor: pointer;
+                                    }
+                                `)
+                            return `
+                                    <div class="add-btn text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${
+                                gvc.event(() => {
+                                    widget.data.dataList.push({img: `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg` , title : `` , toPage : ``})
+                                    widget.refreshAll()
+                                })
+                            }">添加目錄區塊</div>
+                                `
+                        })()}`
                     }
                 }
             },

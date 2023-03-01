@@ -331,6 +331,7 @@ ${gvc.bindView(() => {
                     `;
                 },
                 event: () => {
+                    console.log(object);
                     appConfig().changePage(gvc, "sub_category", {
                         title: object.name,
                         object: object,

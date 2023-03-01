@@ -2,6 +2,7 @@
 import { GVC } from '../../glitterBundle/GVController.js';
 import { Dialog } from "../../widget/dialog.js";
 import { Category } from "../../api/category.js";
+import { appConfig } from "../../config.js";
 export class ViewModel {
     constructor(gvc) {
         this.gvc = new GVC();
@@ -235,6 +236,12 @@ export class ViewModel {
                     CardGroup += `
                     <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e) => {
                         console.log(data.easy_collection_id);
+                        appConfig().changePage(gvc, "sub_category", {
+                            title: categoryListData.name,
+                            object: categoryListData,
+                            category: "sub_category_id",
+                            index: 0
+                        });
                         glitter.changePage("jsPage/category/subCategory.js", "subCategory", true, { title: categoryListData.name, parent_category_id: parentCategory, category: "sub_category_id", category_id: data.easy_collection_id, index: index });
                     })}">
                         <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${data.image_url})"></div>
