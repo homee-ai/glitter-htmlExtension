@@ -534,6 +534,7 @@ color: #1E1E1E;">${data.title}</div>
                              return  gvc.bindView({
                                     bind: "subCategoryRow",
                                     view: () => {
+
                                         return gvc.map([{name:"全部",id:gBundle.object.id}].concat(gBundle.object.subCategory ?? []).map((data: any, index: number)=>{
                                             return `
                             <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle`:``}" style="" onclick="${gvc.event(() => {
@@ -562,6 +563,7 @@ color: #1E1E1E;">${data.title}</div>
                         let sortPriceOrder = -1;
                         let origData:ProductData[] = [];
                         glitter.share.productData = {};
+                        console.log(gBundle)
                         let sortRow = [
                             {
                                 text: '綜合', img: '', click: (e:HTMLElement) => {
@@ -1158,29 +1160,29 @@ color: #1E1E1E;">${data.title}</div>
                                                      
                                                         // let parentCategory = data.store_id;
                                                         gvc.addStyle(`
-                .rightCategoryTitle{
-                    height: 25px;
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 500;
-                    font-size: 17px;
-                    line-height: 25px;
-                    color: #292929;
-                    margin-bottom:24px;
-                }
-                .cardTitle{
-                    height: 40px;
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    font-size: 14px;
-                    line-height: 120%;
-                    color: #292929;
-                    word-break: break-word;
-                    white-space:pre-line;  
-
-                }
-            `)
+                                                            .rightCategoryTitle{
+                                                                height: 25px;
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 500;
+                                                                font-size: 17px;
+                                                                line-height: 25px;
+                                                                color: #292929;
+                                                                margin-bottom:24px;
+                                                            }
+                                                            .cardTitle{
+                                                                height: 40px;
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 14px;
+                                                                line-height: 120%;
+                                                                color: #292929;
+                                                                word-break: break-word;
+                                                                white-space:pre-line;  
+                                            
+                                                            }
+                                                        `)
                                                         let CardGroup = ``;
                                                      
                                                         if (dataList){
@@ -1191,16 +1193,20 @@ color: #1E1E1E;">${data.title}</div>
                                                                 //     console.log(element)
                                                                 // }
                                                                 if (element.name){
-                                                                    console.log(element)
+                                                                    console.log(dataList)
+                                                                    let passData={
+                                                                        object:{
+                                                                            subCategory:dataList
+                                                                        }
+                                                                    }
                                                                     CardGroup += `
                                                                     <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
-                                                                            // appConfig().changePage(gvc,"sub_category",{
-                                                                            //     title: element.name,
-                                                                            //     object: element,
-                                                                            //     category: "sub_category_id",
-                                                                            //     index: 0
-                                                                            // })
-                                                                            // glitter.changePage("jsPage/category/subCategory.js", "subCategory", true, {title:element.name , parent_category_id:parentCategory , category:"sub_category_id"  , category_id:element.easy_collection_id , index:index})
+                                                                            appConfig().changePage(gvc,"sub_category",{
+                                                                                title: title,
+                                                                                object: element,
+                                                                                category: "sub_category_id",
+                                                                                index: 0
+                                                                            })                                                                         
                                                                         })}">
                                                                         <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${element.img})"></div>
                                                                         <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element.name}</div>
@@ -1307,7 +1313,6 @@ color: #1E1E1E;">${data.title}</div>
                                     let returnHTML = ``
                                     if (dd?.subCategory){
                                         gvc.map(dd?.subCategory.map((data:any)=>{
-                                            
                                             returnHTML += `
                                             <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${data.name}照片</h3>
                                             <div class="mt-2"></div>

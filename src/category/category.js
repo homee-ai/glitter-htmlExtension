@@ -529,6 +529,7 @@ color: #1E1E1E;">${data.title}</div>
                         let sortPriceOrder = -1;
                         let origData = [];
                         glitter.share.productData = {};
+                        console.log(gBundle);
                         let sortRow = [
                             {
                                 text: '綜合', img: '', click: (e) => {
@@ -1061,37 +1062,48 @@ color: #1E1E1E;">${data.title}</div>
                                                         let title = data.title;
                                                         let dataList = data.subCategory;
                                                         gvc.addStyle(`
-                .rightCategoryTitle{
-                    height: 25px;
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 500;
-                    font-size: 17px;
-                    line-height: 25px;
-                    color: #292929;
-                    margin-bottom:24px;
-                }
-                .cardTitle{
-                    height: 40px;
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    font-size: 14px;
-                    line-height: 120%;
-                    color: #292929;
-                    word-break: break-word;
-                    white-space:pre-line;  
-
-                }
-            `);
+                                                            .rightCategoryTitle{
+                                                                height: 25px;
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 500;
+                                                                font-size: 17px;
+                                                                line-height: 25px;
+                                                                color: #292929;
+                                                                margin-bottom:24px;
+                                                            }
+                                                            .cardTitle{
+                                                                height: 40px;
+                                                                font-family: 'Noto Sans TC';
+                                                                font-style: normal;
+                                                                font-weight: 400;
+                                                                font-size: 14px;
+                                                                line-height: 120%;
+                                                                color: #292929;
+                                                                word-break: break-word;
+                                                                white-space:pre-line;  
+                                            
+                                                            }
+                                                        `);
                                                         let CardGroup = ``;
                                                         if (dataList) {
                                                             dataList.forEach((element, index) => {
                                                                 let margin = (index % 2) ? "" : "margin-right: 22px;";
                                                                 if (element.name) {
-                                                                    console.log(element);
+                                                                    console.log(dataList);
+                                                                    let passData = {
+                                                                        object: {
+                                                                            subCategory: dataList
+                                                                        }
+                                                                    };
                                                                     CardGroup += `
                                                                     <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e) => {
+                                                                        appConfig().changePage(gvc, "sub_category", {
+                                                                            title: title,
+                                                                            object: element,
+                                                                            category: "sub_category_id",
+                                                                            index: 0
+                                                                        });
                                                                     })}">
                                                                         <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${element.img})"></div>
                                                                         <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element.name}</div>
