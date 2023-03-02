@@ -261,9 +261,6 @@ export class Idea {
                 callback(resposnse);
             },
             error: (e) => {
-                setTimeout(() => {
-                    this.searchUser(userData, seachWord, callback);
-                }, 1000);
             },
         });
     }

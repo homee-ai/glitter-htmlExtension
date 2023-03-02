@@ -931,11 +931,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         ${gvc.bindView({
                                         bind: "userSearch",
                                         view: () => {
-                                            if (vm.searchUserLoading && (searchWord !== '')) {
-                                                searchLimit = 3;
-                                                return viewModel.loadingView();
-                                            }
-                                            else if (searchUserData) {
+                                            if (!vm.searchUserLoading && (searchWord !== '') && searchUserData.length > 0) {
                                                 searchLimit = (searchLimit == -1) ? searchUserData.length : searchLimit;
                                                 for (let i = 0; i < searchLimit; i++) {
                                                     let userData = searchUserData[i];
@@ -963,12 +959,16 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 </div>
                                             `;
                                             }
+                                            else if (vm.searchUserLoading) {
+                                                searchLimit = 3;
+                                                return viewModel.loadingView();
+                                            }
                                             else {
                                                 return ``;
                                             }
                                         }, divCreate: { style: ``, class: `` },
                                         onCreate: () => {
-                                            if (!searchUserData && searchWord != "") {
+                                            if (vm.searchUserLoading && searchWord != "") {
                                                 ideaAPI.searchUser(userData, searchWord, (response) => {
                                                     searchUserData = response;
                                                     vm.searchUserLoading = false;

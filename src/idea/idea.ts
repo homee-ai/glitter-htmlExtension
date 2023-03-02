@@ -952,6 +952,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         let keyword = ["北歐風"]
                         let searchUserHTML = ``;
                         let searchUserData:UserData[];
+
                         let searchLimit = 3;
                         let userData:any;
                         function searchDataTimer(element: HTMLInputElement){
@@ -960,6 +961,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                             clock = setTimeout(()=>{
                                 vm.loading=true
                                 vm.searchUserLoading=true
+                                // searchUserData = newSearchUserData
+
                                 searchWord = value;
                                 searchUserHTML = "";
                                 gvc.notifyDataChange("userSearch")
@@ -967,7 +970,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             } , 1000);
 
                         }
-                        return gvc.bindView(    {
+                        return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
                                 if (!userData){
@@ -1000,10 +1003,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         ${gvc.bindView({
                                         bind:"userSearch",
                                         view : ()=>{
-                                            if(vm.searchUserLoading&&(searchWord!=='')){
-                                                searchLimit = 3;
-                                                return viewModel.loadingView()
-                                            }else if (searchUserData) {
+                                          
+                                            if(!vm.searchUserLoading&&(searchWord!=='')&&searchUserData.length>0){
+                                                
                                                 searchLimit = (searchLimit==-1)?searchUserData.length:searchLimit;
 
                                                 for (let i = 0 ; i < searchLimit ; i++){
@@ -1024,26 +1026,37 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                 <div class="d-flex flex-column align-items-baseline">
                                                     ${searchUserHTML}
                                                     <div class="w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
-                                                        searchLimit = -1;
-                                                        searchUserHTML = "";
-                                                        vm.searchUserLoading = true;
-                                                        gvc.notifyDataChange("userSearch");
-    
-                                                    })}"                                    
+                                                    searchLimit = -1;
+                                                    searchUserHTML = "";
+
+                                                    vm.searchUserLoading = true;
+                                                    gvc.notifyDataChange("userSearch");
+
+                                                })}"                                    
                                                     >點擊顯示更多</div>
                                                 </div>
                                             `
-                                            } else {
+                                            }else if (vm.searchUserLoading) {
+                                                searchLimit = 3;
+                                                
+                                                return viewModel.loadingView()
+                                            }
+                                            else {
+                                                
                                                 return ``
                                             }
 
 
                                         },divCreate:{style:`` , class:``}
                                         ,onCreate:()=>{
-                                            if (!searchUserData && searchWord != ""){
+                                            if (vm.searchUserLoading && searchWord != ""){
+                                                
                                                 ideaAPI.searchUser(userData, searchWord,(response)=>{
+                                                    
                                                     searchUserData = response;
+                                                    
                                                     vm.searchUserLoading = false;
+                                                    
                                                     gvc.notifyDataChange("userSearch")
                                                 })
                                             }

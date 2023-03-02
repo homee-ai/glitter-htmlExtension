@@ -354,12 +354,13 @@ export class Idea {
             contentType: 'application/json; charset=utf-8',
             headers: {Authorization: userData.token},
             success: (resposnse: any) => {
+
                 callback(resposnse)
             },
             error: (e) => {
-                setTimeout(() => {
-                    this.searchUser(userData , seachWord , callback , )
-                }, 1000)
+                // setTimeout(() => {
+                //     this.searchUser(userData , seachWord , callback , )
+                // }, 1000)
             },
         });
     }
