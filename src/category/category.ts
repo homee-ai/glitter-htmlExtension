@@ -33,7 +33,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             leftIcon:`<img class="" src="${new URL('../img/component/left-arrow.svg',import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                               gvc.glitter.goBack()
                             })}">
- <div class="  form-control flex-fill" style="
+                            <div class="  form-control flex-fill" style="
 border-radius: 20px;
 font-family: 'Noto Sans TC';
 padding-left: 30px;
@@ -1097,31 +1097,31 @@ color: #1E1E1E;">${data.title}</div>
                                                 bind : "leftMain",
                                                 view : ()=>{
                                                     gvc.addStyle(`
-                a {
-                  all: initial;
-                }
-                .left-title *{
-                    width: 100%;
-                    height: 56px;
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    font-size: 15px;
-                    line-height: 120%;
-                    word-break: break-word;
-                    white-space:pre-line;  
-                    color: #858585;
-                }
-                .selectClass *{
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 700;
-                    font-size: 17px;
-                    line-height: 100%;
-                    /* HOMEE red */
-                    color: #FD6A58;
-                }
-            `)
+                                                        a {
+                                                          all: initial;
+                                                        }
+                                                        .left-title *{
+                                                            width: 100%;
+                                                            height: 56px;
+                                                            font-family: 'Noto Sans TC';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 15px;
+                                                            line-height: 120%;
+                                                            word-break: break-word;
+                                                            white-space:pre-line;  
+                                                            color: #858585;
+                                                        }
+                                                        .selectClass *{
+                                                            font-family: 'Noto Sans TC';
+                                                            font-style: normal;
+                                                            font-weight: 700;
+                                                            font-size: 17px;
+                                                            line-height: 100%;
+                                                            /* HOMEE red */
+                                                            color: #FD6A58;
+                                                        }
+                                                    `)
                                                     let returnData = ``;
                                                   
                                                     // console.log(widget.data.leftList)
@@ -1186,7 +1186,6 @@ color: #1E1E1E;">${data.title}</div>
                                                         let CardGroup = ``;
                                                      
                                                         if (dataList){
-                                                            
                                                             dataList.forEach((element:any,index:number)=>{
                                                                 let margin = (index%2) ? "" : "margin-right: 22px;"
                                                                 // if (element.name){
@@ -1198,9 +1197,9 @@ color: #1E1E1E;">${data.title}</div>
                                                                         object:{
                                                                             subCategory:dataList
                                                                         }
-                                                                    }
+                                                                    }   
                                                                     CardGroup += `
-                                                                    <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
+                                                                    <div class="rounded" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
                                                                             appConfig().changePage(gvc,"sub_category",{
                                                                                 title: title,
                                                                                 object: element,
