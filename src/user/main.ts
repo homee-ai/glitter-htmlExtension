@@ -110,7 +110,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             <div class="last-name">${vm.data.last_name}</div><div class="first-name">${vm.data.first_name}</div>
                                         </div>
                                         <div class="name">
-                                            ${vm.data.name}
+                                            ${vm.data?.name}
                                         </div>
                                     </div>
                                 </div>

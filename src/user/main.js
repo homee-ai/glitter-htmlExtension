@@ -88,7 +88,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             dataList: [{ obj: vm, key: 'loading' }],
                             bind: "baseUserInf",
                             view: () => {
-                                var _a;
+                                var _a, _b;
                                 if (vm.loading) {
                                     return ``;
                                 }
@@ -105,7 +105,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             <div class="last-name">${vm.data.last_name}</div><div class="first-name">${vm.data.first_name}</div>
                                         </div>
                                         <div class="name">
-                                            ${vm.data.name}
+                                            ${(_b = vm.data) === null || _b === void 0 ? void 0 : _b.name}
                                         </div>
                                     </div>
                                 </div>
