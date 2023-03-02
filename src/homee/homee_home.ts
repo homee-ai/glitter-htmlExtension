@@ -578,7 +578,7 @@ ${gvc.map([EditerApi.upload("Logo", widget.data.logo.src ?? "", gvc, (text) => {
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data: any, index: number) => {
                                 return `
-                                <div class="d-flex flex-column align-items-center" style="" onclick="${gvc.event((e) => {
+                                <div class="d-flex flex-column align-items-center" style="width: 64px;" onclick="${gvc.event((e) => {
                                     ClickEvent.trigger({
                                         gvc, widget, clickEvent: data
                                     });

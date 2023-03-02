@@ -563,7 +563,7 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                             return gvc.map(widget.data.dataList.map((data, index) => {
                                 var _b;
                                 return `
-                                <div class="d-flex flex-column align-items-center" style="" onclick="${gvc.event((e) => {
+                                <div class="d-flex flex-column align-items-center" style="width: 64px;" onclick="${gvc.event((e) => {
                                     ClickEvent.trigger({
                                         gvc, widget, clickEvent: data
                                     });

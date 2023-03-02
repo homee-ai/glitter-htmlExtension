@@ -23,12 +23,12 @@ Plugin.create(import.meta.url, (glitter) => {
                         var _a, _b;
                         return gvc.map([
                             `<div class="my-2"></div>
-<span class="w-100 mb-2 fw-500 mt-2 " style="color: orange;">排版方式</span>
-<select class="form-select mt-2" onchange="${gvc.event((e) => {
+                            <span class="w-100 mb-2 fw-500 mt-2 " style="color: orange;">排版方式</span>
+                            <select class="form-select mt-2" onchange="${gvc.event((e) => {
                                 widget.data.layout = e.value;
                                 widget.refreshAll();
                             })}" >
-${(() => {
+                            ${(() => {
                                 const data = [
                                     { tit: "d-block", value: `d-block` },
                                     { tit: "d-inline-block", value: `d-inline-block` },
