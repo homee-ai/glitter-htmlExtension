@@ -59,7 +59,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         })
                                     }
                                 })
-                            })}"></i>
+                                })}"></i>
                             </div>
                         `,
                             glitter.htmlGenerate.editeInput({

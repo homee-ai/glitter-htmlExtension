@@ -9,6 +9,38 @@ import {ViewModel} from "./view/categoryViewApi.js";
 import {Api} from '../homee/api/homee-api.js';
 
 Plugin.create(import.meta.url,(glitter)=>{
+    const api={
+        upload:(photoFile:any,callback:(link:string)=>void)=>{
+            // glitter.share.dialog.dataLoading({text:'上傳中',visible:true})
+            $.ajax({
+                url: Api.serverURL+'/api/v1/scene/getSignedUrl',
+                type: 'post',
+                data: JSON.stringify({ file_name:`${new Date().getTime()}`}),
+                contentType: 'application/json; charset=utf-8',
+                headers: { Authorization: glitter.getCookieByName('token') },
+                success: (data1: { url: string; fullUrl: string }) => {
+                    $.ajax({
+                        url: data1.url,
+                        type: 'put',
+                        data: photoFile,
+                        processData: false,
+                        crossDomain: true,
+                        success: (data2: any) => {
+                            glitter.share.dialog.dataLoading({visible:false})
+                            glitter.share.dialog.successMessage({text:"上傳成功"})
+                            callback(data1.fullUrl)
+                        },
+                        error: (err: any) => {
+                            glitter.share.dialog.successMessage({text:"上傳失敗"})
+                        },
+                    });
+                },
+                error: (err: any) => {
+                    glitter.share.dialog.successMessage({text:"上傳失敗"})
+                },
+            });
+        }
+    }
     return {
         nav: {
             defaultData:{
@@ -139,36 +171,36 @@ width: calc(100vw - 180px);
                     editor: ()=>{
                         return gvc.map(widget.data.dataList.map((dd:any,index:number)=>{
                             return `<div class="alert alert-dark mt-2">
-${glitter.htmlGenerate.editeInput({
+                                ${glitter.htmlGenerate.editeInput({
                                     gvc: gvc,
                                     title: `banner標題${index+1}`,
                                     default: dd.title,
                                     placeHolder: dd.title,
                                     callback: (text: string) => {
-                                        widget.data.dataList[index].title = text
+                                        dd.title = text
                                         widget.refreshAll!()
                                     }
                                 })}
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index+1}</h3>
+                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index+1}</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
                                     <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].img}">
                                     <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                                    <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
-                                glitter.ut.chooseMediaCallback({
-                                    single:true,
-                                    accept:'image/*',
-                                    callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
-                                        glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
-                                            widget.data.dataList[index].img=link;
-                                            widget.refreshAll!()
+                                    <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                        glitter.ut.chooseMediaCallback({
+                                            single: true,
+                                            accept: 'image/*',
+                                            callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
+                                                appConfig().uploadImage(data[0].file, (link) => {
+                                                    dd.img = link;
+                                                    widget.refreshAll()
+                                                })
+                                            }
                                         })
-                                    }
-                                })
-                            })}"></i>
+                                    })}"></i>
                                 </div>
-${ClickEvent.editer(gvc,widget,dd)}
-</div>`
+                            ${ClickEvent.editer(gvc,widget,dd)}
+                            </div>`
                         }))
                     }
 

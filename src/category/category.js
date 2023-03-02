@@ -8,6 +8,37 @@ import { Category } from "../api/category.js";
 import { ViewModel } from "./view/categoryViewApi.js";
 import { Api } from '../homee/api/homee-api.js';
 Plugin.create(import.meta.url, (glitter) => {
+    const api = {
+        upload: (photoFile, callback) => {
+            $.ajax({
+                url: Api.serverURL + '/api/v1/scene/getSignedUrl',
+                type: 'post',
+                data: JSON.stringify({ file_name: `${new Date().getTime()}` }),
+                contentType: 'application/json; charset=utf-8',
+                headers: { Authorization: glitter.getCookieByName('token') },
+                success: (data1) => {
+                    $.ajax({
+                        url: data1.url,
+                        type: 'put',
+                        data: photoFile,
+                        processData: false,
+                        crossDomain: true,
+                        success: (data2) => {
+                            glitter.share.dialog.dataLoading({ visible: false });
+                            glitter.share.dialog.successMessage({ text: "上傳成功" });
+                            callback(data1.fullUrl);
+                        },
+                        error: (err) => {
+                            glitter.share.dialog.successMessage({ text: "上傳失敗" });
+                        },
+                    });
+                },
+                error: (err) => {
+                    glitter.share.dialog.successMessage({ text: "上傳失敗" });
+                },
+            });
+        }
+    };
     return {
         nav: {
             defaultData: {
@@ -136,17 +167,17 @@ width: calc(100vw - 180px);
                     editor: () => {
                         return gvc.map(widget.data.dataList.map((dd, index) => {
                             return `<div class="alert alert-dark mt-2">
-${glitter.htmlGenerate.editeInput({
+                                ${glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
                                 title: `banner標題${index + 1}`,
                                 default: dd.title,
                                 placeHolder: dd.title,
                                 callback: (text) => {
-                                    widget.data.dataList[index].title = text;
+                                    dd.title = text;
                                     widget.refreshAll();
                                 }
                             })}
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index + 1}</h3>
+                                <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index + 1}</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
                                     <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.dataList[index].img}">
@@ -156,16 +187,16 @@ ${glitter.htmlGenerate.editeInput({
                                     single: true,
                                     accept: 'image/*',
                                     callback(data) {
-                                        glitter.share.publicInterface["glitter"].upload(data[0].file, (link) => {
-                                            widget.data.dataList[index].img = link;
+                                        appConfig().uploadImage(data[0].file, (link) => {
+                                            dd.img = link;
                                             widget.refreshAll();
                                         });
                                     }
                                 });
                             })}"></i>
                                 </div>
-${ClickEvent.editer(gvc, widget, dd)}
-</div>`;
+                            ${ClickEvent.editer(gvc, widget, dd)}
+                            </div>`;
                         }));
                     }
                 };
