@@ -210,17 +210,21 @@ export class Idea {
     }
     uploadArticle(jsonData, callback) {
         const glitter = this.glitter;
-        $.ajax({
-            url: `${appConfig().serverURL}/api/v1/idea`,
-            type: 'POST',
-            data: JSON.stringify(jsonData),
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                callback(resposnse);
-            },
-            error: () => {
-            },
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea`,
+                    type: 'POST',
+                    data: JSON.stringify(jsonData),
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (resposnse) => {
+                        callback(resposnse);
+                    },
+                    error: () => {
+                    },
+                });
+            }
         });
     }
     searchData(userData, searchWord, callback) {

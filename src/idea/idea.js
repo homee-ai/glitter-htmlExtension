@@ -47,6 +47,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 ideaPostData: undefined,
             },
             render: (gvc, widget, setting, hoverID) => {
+                var _a, _b, _c;
                 const vm = { loading: true };
                 const viewModel = new ViewModel(gvc);
                 const ideaAPI = new Idea(gvc.glitter);
@@ -55,7 +56,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 let ideaPostData;
                 let charCount = '';
                 let noticeOpen = false;
-                let viewType = '';
+                let viewType = ((_c = (_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.viewType) || "";
                 let viewLoading = false;
                 let userData;
                 initGetData();
@@ -69,10 +70,19 @@ Plugin.create(import.meta.url, (glitter) => {
                     });
                     gvc.notifyDataChange('mainView');
                     ideaAPI.getData((() => {
-                        return {
-                            poster_id: userData.user_id,
-                            idea_id: ""
-                        };
+                        switch (viewType) {
+                            case "user":
+                                const dd = gvc.parameter.pageConfig.obj.data.data;
+                                return {
+                                    poster_id: dd.userID || "",
+                                    idea_id: gvc.parameter.pageConfig.obj.data.idea_id || ""
+                                };
+                            default:
+                                return {
+                                    poster_id: "",
+                                    idea_id: ""
+                                };
+                        }
                     })(), (response) => {
                         vm.loading = false;
                         widget.data.ideaPostData = response;
@@ -154,7 +164,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                             return shareView.navigationBar({
                                                 title: `${userData.name}的貼文`,
                                                 leftIcon: `<img class="" src="${new URL(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                                    glitter.goBack();
+                                                    if (gvc.glitter.pageConfig.length <= 1) {
+                                                        appConfig().setHome(gvc, "home", {});
+                                                    }
+                                                    else {
+                                                        gvc.glitter.goBack();
+                                                    }
                                                 })}">`,
                                                 rightIcon: ``
                                             });
@@ -582,7 +597,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${shareView.navigationBar({
                                         title: "留言",
                                         leftIcon: `<img class="" src="${new URL(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack("idea");
+                                            if (gvc.glitter.pageConfig.length <= 1) {
+                                                appConfig().setHome(gvc, "home", {});
+                                            }
+                                            else {
+                                                gvc.glitter.goBack();
+                                            }
                                         })}">`,
                                         rightIcon: `
                                             <img src="${new URL(`../img/component/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -704,7 +724,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${shareView.navigationBar({
                                         title: "留言",
                                         leftIcon: `<img class="" src="img/sample/idea/left-arrow.svg" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack("idea");
+                                            if (gvc.glitter.pageConfig.length <= 1) {
+                                                appConfig().setHome(gvc, "home", {});
+                                            }
+                                            else {
+                                                gvc.glitter.goBack();
+                                            }
                                         })}">`,
                                         rightIcon: `
                                             <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
@@ -887,7 +912,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${shareView.navigationBar({
                                         title: ``,
                                         leftIcon: `<i class="fa-regular fa-arrow-left" style="font-size: 20px;" onclick="${gvc.event(() => {
-                                            glitter.goBack("idea");
+                                            if (gvc.glitter.pageConfig.length <= 1) {
+                                                appConfig().setHome(gvc, "home", {});
+                                            }
+                                            else {
+                                                gvc.glitter.goBack();
+                                            }
                                         })}"></i>`,
                                         rightIcon: ` <div class="search-bar d-flex ms-auto" style="width: calc(100vw - 80px);">
                                             <img class="search-icon" src="img/search-black.svg" alt="" >
@@ -1168,7 +1198,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${shareView.navigationBar({
                                         title: userData.name,
                                         leftIcon: `<img class="" src="${new URL(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack();
+                                            if (gvc.glitter.pageConfig.length <= 1) {
+                                                appConfig().setHome(gvc, "home", {});
+                                            }
+                                            else {
+                                                gvc.glitter.goBack();
+                                            }
                                         })}">`,
                                         rightIcon: `
                                             <img src="${new URL(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -1223,11 +1258,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                         ideaDataArray.forEach((ideaAData) => {
                                             returnHtml += `
                                                 <div class="w-50 imgBlock" style="padding-bottom:33%; background:50% / cover url(${ideaAData.preview_image[0]})" onclick="${gvc.event(() => {
-                                                glitter.changePage("jsPage/idea/idea.js", "idea", true, {
-                                                    viewType: 'user',
+                                                appConfig().changePage(gvc, "idea", { viewType: 'user',
                                                     data: userData,
-                                                    idea_id: ideaAData.idea_id
-                                                });
+                                                    idea_id: ideaAData.idea_id });
                                             })}"></div>
                                             `;
                                         });
@@ -1246,7 +1279,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${shareView.navigationBar({
                                         title: "",
                                         leftIcon: `<img class="" src="${new URL(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack();
+                                            if (gvc.glitter.pageConfig.length <= 1) {
+                                                appConfig().setHome(gvc, "home", {});
+                                            }
+                                            else {
+                                                gvc.glitter.goBack();
+                                            }
                                         })}">`,
                                         rightIcon: `
                                         <img src="${new URL(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -1544,8 +1582,12 @@ Plugin.create(import.meta.url, (glitter) => {
                 const ideaAPI = new Idea(glitter);
                 const shareView = new SharedView(gvc);
                 const dialog = new Dialog(gvc);
-                let passData = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj;
+                let passData = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data;
+                console.log("passdata");
+                console.log(passData);
                 let imgArray = (_b = passData === null || passData === void 0 ? void 0 : passData.preview_image) !== null && _b !== void 0 ? _b : ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
+                console.log("photo");
+                console.log(imgArray);
                 let userData;
                 let topInset = 0;
                 appConfig().getUserData({
@@ -1570,12 +1612,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         dialog.dataLoading(true);
                         ideaAPI.uploadArticle(jsonData, (response) => {
                             dialog.dataLoading(false);
-                            if (passData.firstPageIsIdea) {
-                                glitter.goMenu();
-                            }
-                            else {
-                                viewModel.checkDismiss();
-                            }
+                            appConfig().changePage(gvc, "idea");
                         });
                     }
                 }
@@ -1627,6 +1664,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                             ${(() => {
                                         let slidePage = ``;
                                         imgArray.forEach((img) => {
+                                            console.log("slideHere");
+                                            console.log(imgArray);
                                             slidePage += `
                                                     <div class="swiper-slide" style="height:276px;background:50% / cover url(${img})"></div>
                                                     `;

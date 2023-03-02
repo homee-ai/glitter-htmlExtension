@@ -3,11 +3,13 @@ import {Funnel} from '../../glitterBundle/funnel.js';
 // @ts-ignore
 import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js'
 import {Dialog} from "../../dialog/dialog-mobile.js";
+import {appConfig} from "../../config.js";
+import {Api} from "../../homee/api/homee-api.js";
 
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID()
-    let funnel = new Funnel(gvc)
-    let botInset = 0
+    let funnel = new Funnel(gvc);
+    let botInset = 0;
     gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`)
     glitter.runJsInterFace("getBottom", {}, function (response) {
         botInset = response.data
@@ -55,7 +57,7 @@ init((gvc, glitter, gBundle) => {
                 bind: "productFooter",
                 view: () => {
                     return `
-<input type="file"
+                    <input type="file"
                             class="d-none"
                             id="${gvc.id("photo")}"
                             multiple="multiple"
@@ -71,32 +73,37 @@ init((gvc, glitter, gBundle) => {
                                 const extension = f.name.match(regex);
                                 const result = await new Promise((resolve) => {
                                     funnel.encodeFileBase64(f, (data) => {
-                                        $.ajax({
-                                            url: glitter.share.apiURL + '/api/v1/scene/getSignedUrl',
-                                            type: 'post',
-                                            data: JSON.stringify({file_name: `${new Date().getTime()}.png`}),
-                                            contentType: 'application/json; charset=utf-8',
-                                            headers: {Authorization: glitter.share.userData.AUTH},
-                                            success: (data1: { url: string; fullUrl: string }) => {
+                                        appConfig().getUserData({
+                                            callback: (response: any) => {
                                                 $.ajax({
-                                                    url: data1.url,
-                                                    type: 'put',
-                                                    data: f,
-                                                    processData: false,
-                                                    crossDomain: true,
-                                                    success: (data2: any) => {
-                                                        fullURL.push(data1.fullUrl)
-                                                        resolve(true)
+                                                    url:`${appConfig().serverURL}/api/v1/scene/getSignedUrl`,
+                                                    type: 'post',
+                                                    data: JSON.stringify({file_name: `${new Date().getTime()}.png`}),
+                                                    contentType: 'application/json; charset=utf-8',
+                                                    headers: {Authorization: response.token},
+                                                    success: (data1: { url: string; fullUrl: string }) => {
+                                                        $.ajax({
+                                                            url: data1.url,
+                                                            type: 'put',
+                                                            data: f,
+                                                            processData: false,
+                                                            crossDomain: true,
+                                                            success: (data2: any) => {
+                                                                fullURL.push(data1.fullUrl)
+                                                                resolve(true)
+                                                            },
+                                                            error: (err: any) => {
+                                                                resolve(false)
+                                                            },
+                                                        });
                                                     },
                                                     error: (err: any) => {
                                                         resolve(false)
                                                     },
                                                 });
-                                            },
-                                            error: (err: any) => {
-                                                resolve(false)
-                                            },
-                                        });
+                                            }
+                                        })
+                                        
                                     });
                                 })
                                 if (!result) {
@@ -107,27 +114,29 @@ init((gvc, glitter, gBundle) => {
                             }
                             glitter.closeDiaLog(gvc.parameter.pageConfig?.tag)
                             dialog.dataLoading(false)
-                            glitter.changePage('jsPage/idea/idea_post.js', "idea_post", true, {
-                                preview_image: fullURL,
-                                scene: "noImage",
-                                config: {}
-                            })
+                            appConfig().changePage(gvc,"idea_post",{preview_image: fullURL,scene: "noImage", config: {}})
+                            // glitter.changePage('jsPage/idea/idea_post.js', "idea_post", true, {
+                            //     preview_image: fullURL,
+                            //     scene: "noImage",
+                            //     config: {}
+                            // })
                         }
                         upload()
                     })}"
                         />
                         <div class="d-flex align-items-center justify-content-center bg-white" style="height:${90 + topInset}px;padding-top: ${topInset}px;">
                             <div class="d-flex flex-column align-items-center" onclick="${gvc.event((e) => {
-                        clickTimer.zeroing()
-                        $(`#${gvc.id("photo")}`).click()
-                    })}">
-                                <img class="addIcon" src="img/sample/idea/addImg.svg" onclick="">
+                                clickTimer.zeroing()
+                                $(`#${gvc.id("photo")}`).click()
+                            })}">
+                                <img class="addIcon" src="${new URL!(`../../img/sample/idea/addImg.svg`, import.meta.url)}" onclick="">
                                 <div class="addText">分享圖片</div>
                             </div>
                             <div class="d-flex flex-column align-items-center" style="margin-left: 64px;" onclick="${gvc.event(() => {
                         glitter.closeDiaLog(gvc.parameter.pageConfig?.tag)
                         glitter.runJsInterFace("selectModel", {}, function (response) {
-                            glitter.changePage('jsPage/idea/idea_selectPostImg.js', "idea_selectPostImg", true, response)
+                            appConfig().changePage(gvc,"idea_selectPostImg",{response})
+                            // glitter.changePage('jsPage/idea/idea_selectPostImg.js', "idea_selectPostImg", true, response)
                             // glitter.setHome('jsPage/idea/idea_post.js',"idea_post",response)
                         }, {
                             webFunction(data: {}): any {
@@ -164,7 +173,7 @@ init((gvc, glitter, gBundle) => {
                             }
                         })
                     })}">
-                                <img class="addIcon" src="img/sample/idea/addSpace.svg">
+                                <img class="addIcon" src="${new URL!(`../../img/sample/idea/addSpace.svg`, import.meta.url)}">
                                 <div class="addText">分享空間</div>
                             </div>
                         </div>

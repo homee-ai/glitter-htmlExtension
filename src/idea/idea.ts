@@ -58,7 +58,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 let ideaPostData:IdeaData[]
                 let charCount = '';
                 let noticeOpen = false;
-                let viewType = '' //原先是gBundle.user
+                let viewType = gvc.parameter.pageConfig?.obj?.data?.viewType || "" //原先是gBundle.user
                 let viewLoading = false;
                 let userData :any;
                 initGetData();
@@ -86,12 +86,23 @@ Plugin.create(import.meta.url,(glitter)=>{
                         //             idea_id:gBundle.idea_id
                         //         }
                         // }
+                        switch (viewType) {
+                            case "user":
+                                // parameter
+                                const dd=gvc.parameter.pageConfig!.obj.data.data as UserData
+                                return {
+                                    poster_id: dd.userID || "",
+                                    idea_id:gvc.parameter.pageConfig!.obj.data.idea_id || ""//特定貼文
+                                }
+                            default:
+                                return {
+                                    poster_id:"", //全搜尋
+                                    idea_id:"" //特定貼文
+                                }
+                        }
                         //測試端的資料
                         //12052350
-                        return {
-                            poster_id:userData.user_id,
-                            idea_id:""
-                        }
+
                     })(),(response) => {
                         vm.loading = false
                         widget.data.ideaPostData = response
@@ -190,7 +201,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         return shareView.navigationBar({
                                             title: `${userData.name}的貼文`,
                                             leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(()=>{
-                                                glitter.goBack()
+                                                if( gvc.glitter.pageConfig.length <= 1){
+                                                    appConfig().setHome(gvc, "home", {})
+                                                }else{
+                                                    gvc.glitter.goBack()
+                                                }
                                             })}">`,
                                             rightIcon:``
                                         })
@@ -641,7 +656,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${shareView.navigationBar({
                                         title: "留言",
                                         leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack("idea")
+                                            if( gvc.glitter.pageConfig.length <= 1){
+                                                appConfig().setHome(gvc, "home", {})
+                                            }else{
+                                                gvc.glitter.goBack()
+                                            }
                                         })}">`,
                                         rightIcon:`
                                             <img src="${new URL!(`../img/component/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -774,7 +793,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${shareView.navigationBar({
                                         title: "留言",
                                         leftIcon:`<img class="" src="img/sample/idea/left-arrow.svg" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack("idea")
+                                            if( gvc.glitter.pageConfig.length <= 1){
+                                                appConfig().setHome(gvc, "home", {})
+                                            }else{
+                                                gvc.glitter.goBack()
+                                            }
                                         })}">`,
                                         rightIcon:`
                                             <img src="img/sample/idea/send.svg" alt="" style="width: 24px;height: 24px;">
@@ -959,7 +982,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${shareView.navigationBar({
                                         title: ``,
                                         leftIcon:`<i class="fa-regular fa-arrow-left" style="font-size: 20px;" onclick="${gvc.event(()=>{
-                                            glitter.goBack("idea")
+                                            if( gvc.glitter.pageConfig.length <= 1){
+                                                appConfig().setHome(gvc, "home", {})
+                                            }else{
+                                                gvc.glitter.goBack()
+                                            }
                                         })}"></i>`,
                                         rightIcon:` <div class="search-bar d-flex ms-auto" style="width: calc(100vw - 80px);">
                                             <img class="search-icon" src="img/search-black.svg" alt="" >
@@ -1262,7 +1289,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${shareView.navigationBar({
                                         title: userData.name,
                                         leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
+                                            if( gvc.glitter.pageConfig.length <= 1){
+                                                appConfig().setHome(gvc, "home", {})
+                                            }else{
+                                                gvc.glitter.goBack()
+                                            }
                                         })}">`,
                                         rightIcon:`
                                             <img src="${new URL!(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -1317,11 +1348,9 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             ideaDataArray.forEach((ideaAData)=>{
                                                 returnHtml += `
                                                 <div class="w-50 imgBlock" style="padding-bottom:33%; background:50% / cover url(${ideaAData.preview_image[0]})" onclick="${gvc.event(()=>{
-                                                    glitter.changePage("jsPage/idea/idea.js", "idea", true, {
-                                                        viewType:'user',
+                                                    appConfig().changePage(gvc,"idea",{viewType:'user',
                                                         data:userData,
-                                                        idea_id:ideaAData.idea_id
-                                                    })
+                                                        idea_id:ideaAData.idea_id})
                                                 })}"></div>
                                             `
                                             })
@@ -1340,7 +1369,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${shareView.navigationBar({
                                         title: "",
                                         leftIcon:`<img class="" src="${new URL!(`../img/component/left-arrow.png`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
+                                            if( gvc.glitter.pageConfig.length <= 1){
+                                                appConfig().setHome(gvc, "home", {})
+                                            }else{
+                                                gvc.glitter.goBack()
+                                            }
                                         })}">`,
                                         rightIcon:`
                                         <img src="${new URL!(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -1737,8 +1770,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                 const shareView=new SharedView(gvc)
                 const dialog=new Dialog(gvc)
                 //todo 是否不需要預設
-                let passData = gvc.parameter.pageConfig?.obj
+                let passData = gvc.parameter.pageConfig?.obj.data
+                console.log("passdata")
+                console.log(passData)
                 let imgArray: string[] = passData?.preview_image ?? ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg" , "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg" , "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
+                console.log("photo")
+                console.log(imgArray)
                 let userData:any;
                 let topInset: number = 0;
                 appConfig().getUserData({
@@ -1759,13 +1796,16 @@ Plugin.create(import.meta.url,(glitter)=>{
                             preview_image:imgArray
                         }
                         dialog.dataLoading(true)
+
                         ideaAPI.uploadArticle(jsonData,(response)=>{
                             dialog.dataLoading(false)
-                            if(passData.firstPageIsIdea){
-                                glitter.goMenu()
-                            }else{
-                                viewModel.checkDismiss()
-                            }
+                            appConfig().changePage(gvc,"idea")
+                            //todo whats this?
+                            // if(passData.firstPageIsIdea){
+                            //     glitter.goMenu()
+                            // }else{
+                            //     viewModel.checkDismiss()
+                            // }
                         })
                     }
                 }
@@ -1820,6 +1860,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             ${(() => {
                                                 let slidePage = ``
                                                 imgArray.forEach((img: any) => {
+                                                    console.log("slideHere")
+                                                    console.log(imgArray)
                                                     slidePage += `
                                                     <div class="swiper-slide" style="height:276px;background:50% / cover url(${img})"></div>
                                                     `

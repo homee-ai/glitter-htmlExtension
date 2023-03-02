@@ -61,6 +61,7 @@ export class Idea {
             poster_id: data.poster_id,
             idea_id:data.idea_id
         }
+
         // appConfig().getUserData({
         //     callback: (response: any) => {
         //     }
@@ -300,18 +301,23 @@ export class Idea {
     //發布文章
     public uploadArticle(jsonData: any, callback: (result: Boolean) => void) {
         const glitter = this.glitter
-        $.ajax({
-            url: `${appConfig().serverURL}/api/v1/idea`,
-            type: 'POST',
-            data: JSON.stringify(jsonData),
-            contentType: 'application/json; charset=utf-8',
-            headers: {Authorization: glitter.share.userData.AUTH},
-            success: (resposnse: any) => {
-                callback(resposnse)
-            },
-            error: () => {
-            },
-        });
+        appConfig().getUserData({
+            callback: (response: any) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea`,
+                    type: 'POST',
+                    data: JSON.stringify(jsonData),
+                    contentType: 'application/json; charset=utf-8',
+                    headers: {Authorization: response.token},
+                    success: (resposnse: any) => {
+                        callback(resposnse)
+                    },
+                    error: () => {
+                    },
+                });
+            }
+        })
+
     }
 
     //搜尋文章 para1:搜尋字串 para2:callback
