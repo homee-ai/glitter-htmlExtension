@@ -276,8 +276,8 @@ ${
                             }
 
                             function load() {
-                                api.homeeAJAX({route: '/collection', method: 'get'}, (res) => {
-                                    res.map((x: { id: number; name: string; group: { id: number; name: string }[] }) => {
+                                function lo(){
+                                    gvc.glitter.share.storeCollection.map((x: { id: number; name: string; group: { id: number; name: string }[] }) => {
                                         vm.colOption += /*html*/ `
                                         <option value='${JSON.stringify({
                                             id: x.id,
@@ -300,6 +300,13 @@ ${
                                         );
                                     });
                                     gvc.notifyDataChange(id)
+                                }
+                                if(gvc.glitter.share.storeCollection){
+                                    lo()
+                                }
+                                api.homeeAJAX({route: '/collection', method: 'get'}, (res) => {
+                                    gvc.glitter.share.storeCollection=res
+                                    lo()
                                 });
                             }
 

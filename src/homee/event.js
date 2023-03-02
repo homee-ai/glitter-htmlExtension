@@ -263,8 +263,8 @@ ${gvc.bindView(() => {
                                 colOption: ''
                             };
                             function load() {
-                                api.homeeAJAX({ route: '/collection', method: 'get' }, (res) => {
-                                    res.map((x) => {
+                                function lo() {
+                                    gvc.glitter.share.storeCollection.map((x) => {
                                         vm.colOption += `
                                         <option value='${JSON.stringify({
                                             id: x.id,
@@ -284,6 +284,13 @@ ${gvc.bindView(() => {
                                             </option>`));
                                     });
                                     gvc.notifyDataChange(id);
+                                }
+                                if (gvc.glitter.share.storeCollection) {
+                                    lo();
+                                }
+                                api.homeeAJAX({ route: '/collection', method: 'get' }, (res) => {
+                                    gvc.glitter.share.storeCollection = res;
+                                    lo();
                                 });
                             }
                             load();
