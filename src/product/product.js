@@ -358,13 +358,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 `);
                                 return `
                                 <div class="footer d-flex align-items-center " style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
-                                    <div class="d-flex flex-column align-items-center" style="width: 40px;">
+                                    <div class="d-flex flex-column align-items-center d-none" style="width: 40px;">
                                         <img class="footerIMG" src="${new URL('../img/component/customer_service.png', import.meta.url)}" >
                                         <div class="footerText">
                                             客服
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-column align-items-center" style="width: 40px;">
+                                    <div class="d-flex flex-column align-items-center d-none" style="width: 40px;">
                                         <img class="footerIMG" src="${new URL('../img/component/send.svg', import.meta.url)}">
                                         <div class="footerText">
                                             分享給
@@ -372,7 +372,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         
                                     </div>
                                     
-                                    <div class="footerBTN ${selectSku.t3dModel ? `d-none` : ``} d-flex flex-fill align-items-center justify-content-center text-white" style="background: #FFDC6A;
+                                    <div class="footerBTN  flex-fill ${selectSku.t3dModel ? `d-none` : ``} d-flex flex-fill align-items-center justify-content-center text-white" style="background: #FFDC6A;
                                         padding:14px 29px;
                                         border-radius: 24px;
                                         background: #FE5541;
@@ -385,23 +385,23 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     Checkout.addToCart({
                                         category: "購物車",
                                         skuID: selectSku.sku_id,
-                                        amount: 1,
+                                        amount: widget.data.qty,
                                         callback: (response) => {
                                             dialog.showInfo('已加入購物車');
                                         }
                                     });
                                 })}">加入購物車
                                     </div>
-                                    <div class="footerBTN ms-auto d-flex  ${selectSku.t3dModel ? `` : `d-none`}">
-                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
+                                    <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? `` : `d-none`}">
+                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(() => {
                                     glitter.runJsInterFace("addToSpace", selectSku, () => { });
                                 })}">加入至空間</div>
-                                        <div class="footerBTNRight d-flex align-items-center justify-content-center" onclick="${gvc.event((e) => {
+                                        <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event((e) => {
                                     const dialog = new Dialog(gvc);
                                     Checkout.addToCart({
                                         category: "購物車",
                                         skuID: selectSku.sku_id,
-                                        amount: 1,
+                                        amount: widget.data.qty,
                                         callback: (response) => {
                                             dialog.showInfo('已加入購物車');
                                         }

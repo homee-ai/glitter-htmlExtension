@@ -2,9 +2,9 @@
 import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { ClickEvent } from "../glitterBundle/plugins/click-event.js";
 import { Api } from "../homee/api/homee-api.js";
-import { LegacyPage } from "../homee/legacy/interface.js";
 import { Checkout } from "../api/checkout.js";
 import { SharedView } from "../homee/shareView.js";
+import { appConfig } from "../config.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -164,6 +164,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 `);
                 return {
                     view: () => {
+                        var _a, _b;
                         return gvc.map([
                             gvc.bindView({
                                 bind: "inputVoucherCode",
@@ -184,7 +185,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 },
                                 divCreate: {
                                     style: "margin:24px;padding:13px 16px;border: 1px solid #E0E0E0 ;border-radius: 8px;position: relative;",
-                                    class: ""
+                                    class: `${(((_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) && ((_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data.callback)) ? `` : `d-none`}`
                                 }
                             })
                         ]);
@@ -343,7 +344,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     dateText: "有效期限：",
                                     date: dd.formatEndTime,
                                     dateType: "",
-                                    code: dd.code
+                                    code: dd.code,
+                                    ogData: dd
                                 };
                             });
                             gvc.notifyDataChange('voucherCardList');
@@ -358,20 +360,33 @@ Plugin.create(import.meta.url, (glitter) => {
                             gvc.bindView({
                                 bind: "voucherCardList",
                                 view: () => {
+                                    let clock = gvc.glitter.ut.clock();
                                     return gvc.map(widget.data.voucherCardList.map((data) => {
                                         return `
                                         <div class="voucherCard overflow-hidden" onclick="${gvc.event(() => {
-                                            var _a;
-                                            (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.callback(data.code);
-                                            gvc.glitter.goBack();
+                                            var _a, _b;
+                                            if (clock.stop() < 1000) {
+                                                return;
+                                            }
+                                            if (!((_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.callback)) {
+                                                appConfig().changePage(gvc, 'user_couponDetail', data);
+                                            }
+                                            else {
+                                                (_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data.callback(data.code);
+                                                gvc.glitter.goBack();
+                                            }
                                         })}"> 
                                             <div class="d-flex" style="padding: 8px 22px;">
                                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${data.vendor_name}</div>
                                                 <div class="vendor_context ms-auto" onclick="${gvc.event(() => {
-                                            LegacyPage.execute(gvc.glitter, () => {
-                                                gvc.glitter.changePage(LegacyPage.getLink("jsPage/user/couponDetail.js"), "subCategory", true, {});
-                                            });
+                                            clock.zeroing();
+                                            data.selectBack = () => {
+                                                var _a;
+                                                (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.callback(data.code);
+                                                gvc.glitter.goBack("shopping_cart");
+                                            };
+                                            appConfig().changePage(gvc, 'user_couponDetail', data);
                                         })}">${data.vendor_context}</div>
                                             </div>
                                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>

@@ -232,13 +232,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 let subTotal = 0;
                 let total = 0;
                 let refreshTimer = 0;
+                function storeLocal() {
+                    let mapData = {};
+                    widget.data.cartItem.map((data) => {
+                        const map2 = {};
+                        data.item.map((d2) => {
+                            map2[d2.item_id] = { "count": d2.qty, "sku": d2.item_id, "isSelect": d2.select };
+                        });
+                        mapData[data.category] = map2;
+                    });
+                    console.log(`storeLocal:` + JSON.stringify(mapData));
+                    Checkout.setCart({
+                        cartData: mapData, callback: (response) => {
+                        }
+                    });
+                }
                 function refreshCart() {
                     initial();
                     gvc.notifyDataChange(['cartIn', 'cartSubtotal', 'cartOut']);
-                    Checkout.setCart({
-                        cartData: cartData, callback: (response) => {
-                        }
-                    });
+                    storeLocal();
                     console.log('cartData---' + JSON.stringify(cartData));
                     cartSubTotalVM.loading = true;
                     clearInterval(refreshTimer);
@@ -297,12 +309,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 })
                             };
                         });
-                        Checkout.getCartSkuInfo({
-                            skuID: needGetInfoSku, next: (response) => {
+                        console.log(needGetInfoSku);
+                        Checkout.getCartSkuInfo({ skuID: needGetInfoSku, next: (response) => {
                                 dialog.dataLoading(false);
                                 if (!response) {
                                     widget.data.cartItem = [];
-                                    dialog.showInfo("取得資料異常．");
                                 }
                                 else {
                                     response.map((dd) => {
@@ -349,7 +360,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                         img: skuDataInfo[d4].preview_image,
                                                         kind: skuDataInfo[d4].attribute_value,
                                                         price: skuDataInfo[d4].price,
-                                                        subtotal: skuDataInfo[d4].price,
+                                                        subtotal: skuDataInfo[d4].price * oc.count,
                                                         deleteEvent: () => {
                                                             obj[d4] = undefined;
                                                         },
@@ -404,6 +415,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     return (item.subtotal).toLocaleString();
                 }
                 function checkOut() {
+                    dialog.dataLoading(true);
                     if (cartSubTotalVM.loading) {
                         dialog.showInfo('請先等待金額計算完畢!');
                         return;
@@ -421,7 +433,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             })
                         },
                         callback: (response) => {
+                            dialog.dataLoading(false);
                             if (response) {
+                                console.log(`redirect:${response.redirect}`);
                                 Checkout.deleteCart(() => {
                                     getCartProData();
                                     gvc.glitter.runJsInterFace("openWeb", {
@@ -506,6 +520,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                             }
                                                         `);
                                                     return gvc.map(category.item.map((item, itemIndex) => {
+                                                        if (item.select) {
+                                                            item.subtotal = item.qty * item.price;
+                                                        }
                                                         return gvc.bindView({
                                                             bind: `item${category.category_id}${item.item_id}`,
                                                             view: () => {
@@ -685,6 +702,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     subTotal = 0;
                                     cartIn.forEach((category) => {
                                         category.item.forEach((item) => {
+                                            console.log(`category.item--` + JSON.stringify(item));
                                             if (item.select) {
                                                 subTotal += item.subtotal;
                                             }

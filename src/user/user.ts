@@ -1274,7 +1274,32 @@ ${
                                 color: #292929;
                             }
                         `)
+                        const data=gvc.parameter.pageConfig?.obj.data
                         let coupon = widget.data.coupon
+                        console.log(`vendor:${JSON.stringify(data)}`)
+                        if(data.vendor_id){
+                            coupon={
+                                id: data.vendor_id,
+                                vendor_name: data.vendor_name,
+                                vendor_icon:data.vendor_icon,
+                                name: data.ogData.name,
+                                config: {},
+                                title: data.ogData.title,
+                                subTitle: data.ogData.subTitle,
+                                startTime: data.ogData.startTime.substring(0,10),
+                                endTime: (data.ogData.endTime) ? data.ogData.endTime.substring(0,10) : "無有效期限",
+                                formatEndTime: `有效期限：${(data.ogData.endTime) ? data.ogData.endTime.substring(0,10) : "無有效期限"}`,
+                                isUse: false,
+                                status: 0,
+                                content: data.ogData.note,
+                                product: "適用於所有商品",
+                                payway: "適用於所有付款方式",
+                                logistics: "適用於所有物流方式",
+                            }
+                            coupon.vendor_id=data.vendor_id;
+                            coupon.vendor_icon=data.vendor_icon
+                            coupon.vendor_name=data.vendor_name
+                        }
                         return `
                         <div class="w-100">                            
                             <div
@@ -1289,6 +1314,9 @@ ${
                                     margin-bottom:16px;
                                 "
                                 onclick="${gvc.event(() => {
+                                    if(data.selectBack){
+                                        data.selectBack();
+                                    }
                         })}">
                             <div
                                 class="d-flex flex-column align-items-center"

@@ -571,20 +571,52 @@ ${gvc.map([EditerApi.upload("Logo", widget.data.logo.src ?? "", gvc, (text) => {
                             color:#FE5541;
                         }
                     `);
+
                 return {
                     view: () => {
+                        // ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
                         return `
                         <footer class="d-flex align-items-center justify-content-around w-100" style="padding-bottom: ${widget.data.bottomInset - 10}px;position: fixed;bottom: 0px;left: 0px;">
                             ${(() => {
                             return gvc.map(widget.data.dataList.map((data: any, index: number) => {
+                                data.badge=data.badge??{}
                                 return `
-                                <div class="d-flex flex-column align-items-center" style="" onclick="${gvc.event((e) => {
+                                <div class="d-flex flex-column align-items-center position-relative" style="" onclick="${gvc.event((e) => {
                                     ClickEvent.trigger({
                                         gvc, widget, clickEvent: data
                                     });
                                 })}">
                                     <img src=${data.icon} style="width: 28px;height: 28px;">
                                     <div class="footerTitle" style="color:${data.color ?? `black`};">${data.title}</div>
+                                   ${gvc.bindView(()=>{
+                                    let badge=0
+                                    const id=gvc.glitter.getUUID()
+                                    data.badge.callback=(count:number)=>{
+                                        badge=count
+                                        gvc.notifyDataChange(id)
+                                    }
+                                    ClickEvent.trigger({
+                                        gvc, widget, clickEvent: data.badge
+                                    })
+                                    return {
+                                        bind:id,
+                                        view:()=>{
+                                            if(badge===0){return  ``}
+                                               return `<div class=" d-flex align-items-center justify-content-center" style="position: absolute;
+width: 16px;
+height: 16px;
+
+background: #FE5541;
+border: 1px solid #FFFFFF;
+font-size: 9px;
+
+color: white;
+border-radius: 8px;">${badge}</div>`
+                                        },
+                                        divCreate:{class:`position-relative position-absolute`}
+                                    }
+                                })}
+                                    
                                 </div>
                                 `;
                             }));
@@ -595,6 +627,7 @@ ${gvc.map([EditerApi.upload("Logo", widget.data.logo.src ?? "", gvc, (text) => {
                     editor: () => {
                         return `
 `+gvc.map(widget.data.dataList.map((dd: any, index: number) => {
+                            dd.badge=dd.badge??{}
                             return `<div class="alert alert-dark mt-2">
 <h3 style="color: white;font-size: 17px;color: orangered;">
 <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
@@ -643,6 +676,7 @@ ${glitter.htmlGenerate.editeInput({
                                 </div>
                             `
                             + ClickEvent.editer(gvc, widget, dd)
+                            + ClickEvent.editer(gvc, widget, dd.badge,{hover:false,option:['cartBadge'],title:"數量提示"})
                             }
 </div>`;
                         })) + `<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${
@@ -682,24 +716,59 @@ ${glitter.htmlGenerate.editeInput({
                                 }
                             }).join('<div class="mx-2"></div>'),
                             rightIcon: widget.data.right.map((dd: any) => {
+                                dd.badge=dd.badge ?? {}
                                 dd.type=dd.type ?? 'image'
-                                if(dd.type === 'image'){
-                                    return  (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
-                                        ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
-                                    })}">`)
-                                }else {
-                                    return  `<span class="${dd.class ?? ""}" style="${dd.style ?? ""}" onclick="${gvc.event(() => {
-                                        ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
-                                    })}">${dd.title ?? ""}</span>`
-                                }
-                            }).join('<div class="mx-2"></div>')
+                                return `<div class="position-relative">
+${(()=>{
+                                    if(dd.type === 'image'){
+                                        return  (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                            ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
+                                        })}">`)
+                                    }else {
+                                        return  `<span class="${dd.class ?? ""}" style="${dd.style ?? ""}" onclick="${gvc.event(() => {
+                                            ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
+                                        })}">${dd.title ?? ""}</span>`
+                                    }
+                                })()}
+      ${gvc.bindView(()=>{
+                                    let badge=0
+                                    const id=gvc.glitter.getUUID()
+                                    dd.badge.callback=(count:number)=>{
+                                        badge=count
+                                        gvc.notifyDataChange(id)
+                                    }
+                                    ClickEvent.trigger({
+                                        gvc, widget, clickEvent: dd.badge
+                                    })
+                                    return {
+                                        bind:id,
+                                        view:()=>{
+                                            if(badge===0){return  ``}
+                                            return `<div class=" d-flex align-items-center justify-content-center" style="position: absolute;
+width: 16px;
+height: 16px;
+background: #FE5541;
+border: 1px solid #FFFFFF;
+font-size: 9px;
 
+color: white;
+border-radius: 8px;" >${badge}</div>`
+                                        },
+                                        divCreate:{class:`position-absolute top-0 right-0`,style:`top:0px;
+right: 8px;`}
+                                    }
+                                })}
+</div>`
+                            }).join('<div class="mx-2"></div>'),
+                            background:widget.data.bgcolor ?? "white"
                         })
                     },
                     editor: () => {
                         function navItemAction(data: any) {
+
                             return data.map((dd: any, index: number) => {
                                 dd.type=dd.type ?? 'image'
+                                dd.badge=dd.badge ?? {}
                                 dd.clickEvent = dd.clickEvent ?? {}
                                 return `
 <div class="alert alert-dark">
@@ -765,12 +834,23 @@ ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
                                     })()
                                 }
 ${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+${ClickEvent.editer(gvc, widget, dd.badge,{hover:false,option:['cartBadge'],title:"數量提示"})}
 </div>
 `
                             }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)
                         }
 
                         return gvc.map([
+                            glitter.htmlGenerate.editeInput({
+                                gvc,
+                                title: "背景",
+                                default: widget.data.bgcolor,
+                                placeHolder: "請輸入背景色",
+                                callback: (text) => {
+                                    widget.data.bgcolor = text
+                                    widget.refreshComponent()
+                                }
+                            }),
                             glitter.htmlGenerate.editeInput({
                                 gvc,
                                 title: "標題",

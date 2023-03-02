@@ -4,6 +4,7 @@ import { Funnel } from "./funnel.js";
 import { appConfig } from "../config.js";
 import { User } from "../api/user.js";
 import { Dialog } from "../dialog/dialog-mobile.js";
+import { Checkout } from "../api/checkout.js";
 ClickEvent.create(import.meta.url, {
     link: {
         title: "連結跳轉",
@@ -404,7 +405,8 @@ ${gvc.bindView(() => {
                     return ``;
                 },
                 event: () => {
-                    gvc.glitter.runJsInterFace("openMyspace", {}, () => { });
+                    gvc.glitter.runJsInterFace("openMyspace", {}, () => {
+                    });
                 }
             };
         }
@@ -417,7 +419,38 @@ ${gvc.bindView(() => {
                     return ``;
                 },
                 event: () => {
-                    gvc.glitter.runJsInterFace("testMyspace", {}, () => { });
+                    gvc.glitter.runJsInterFace("testMyspace", {}, () => {
+                    });
+                }
+            };
+        }
+    },
+    cartBadge: {
+        title: '購物車數量',
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``;
+                },
+                event: () => {
+                    var _a, _b;
+                    gvc.glitter.share.cart = (_a = gvc.glitter.share.cart) !== null && _a !== void 0 ? _a : {};
+                    gvc.glitter.share.cart.callback = (_b = gvc.glitter.share.cart.callback) !== null && _b !== void 0 ? _b : [];
+                    function getCount() {
+                        let count = 0;
+                        Checkout.getCart((cartData) => {
+                            Object.keys(cartData).map((key) => {
+                                Object.values(cartData[key]).map((d2) => {
+                                    count += d2.count;
+                                });
+                            });
+                            object.callback(count);
+                        });
+                    }
+                    gvc.glitter.share.cart.callback.push((() => {
+                        getCount();
+                    }));
+                    getCount();
                 }
             };
         }

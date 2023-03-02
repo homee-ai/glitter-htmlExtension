@@ -25,17 +25,24 @@ export class Checkout {
             cartData[obj.category]!![obj.skuID].count += obj.amount
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
                 obj.callback(true)
+                glitter.share.cart=glitter.share.cart??{}
+                glitter.share.cart.callback=glitter.share.cart.callback ?? []
+                glitter.share.cart.callback.map((dd:any)=>{dd();});
             })
         })
     }
 
     public static setCart({cartData, callback}: { cartData: any, callback: (response: boolean) => void }){
         const glitter = (window as any).glitter
+        console.log(`setCart:${JSON.stringify(cartData)}`)
         glitter.runJsInterFace("setSpaceCartData",{
             data:JSON.stringify({cartData:cartData})
         },(response2:any)=>{
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
                 callback(true)
+                glitter.share.cart=glitter.share.cart??{}
+                glitter.share.cart.callback=glitter.share.cart.callback ?? []
+                glitter.share.cart.callback.map((dd:any)=>{dd();});
             })
         },{
             webFunction: () => {
@@ -236,8 +243,10 @@ export class Checkout {
                                 callback(
                                     res.voucherList.map((dd: any) => {
                                         const c = dd.config.config;
+                                        console.log(JSON.stringify(dd))
                                         return {
                                             id: dd.id,
+                                            note:dd.config.note,
                                             vendor_name: dd.config.vendor ? dd.config.vendor.name : 'HOMEE',
                                             vendor_icon: dd.config.vendor ? dd.config.vendor.icon : 'img/coupon1.svg',
                                             startTime: dd.startTime,
@@ -245,7 +254,7 @@ export class Checkout {
                                             formatEndTime: getEndtime(dd.endTime),
                                             config: dd.config.config,
                                             code: dd.config.code,
-                                            name: 'HOMEE',
+                                            name: dd.config.name,
                                             icon: 'img/coupon1.svg',
                                             title: (() => {
                                                 let text = '';
