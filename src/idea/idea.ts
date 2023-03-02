@@ -320,7 +320,6 @@ Plugin.create(import.meta.url,(glitter)=>{
 
             },
             render:(gvc, widget, setting, hoverID) => {
-
                 return {
                     view: ()=>{
                         gvc.addStyle(`          
@@ -446,7 +445,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                         }
                 
                        `)
-
                         let data = gvc.parameter.pageConfig?.obj.data.postData as IdeaData;
                         let vm = {
                             id: glitter.getUUID(),
@@ -467,7 +465,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 count: false,
                                 idea_id: data.idea_id
                             }, (response) => {
-
                                 data.message = response.message
                                 vm.loading = false
                                 gvc.notifyDataChange('mainView')

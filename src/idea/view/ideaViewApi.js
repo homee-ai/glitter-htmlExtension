@@ -113,14 +113,14 @@ export class ViewModel {
                 appConfig().getUserData({
                     callback: (response) => {
                         $.ajax({
-                            url: `${glitter.share.apiURL}/api/v1/idea/board`,
+                            url: `${appConfig().serverURL}/api/v1/idea/board`,
                             type: 'POST',
                             data: JSON.stringify(jsonData),
                             contentType: 'application/json; charset=utf-8',
                             headers: { Authorization: response.token },
                             success: (resposnse) => {
                                 dialog.dataLoading(false);
-                                appConfig().changePage(gvc, 'idea_board', { data: postData }, {});
+                                appConfig().changePage(gvc, 'idea_board', { postData: postData }, {});
                             },
                             error: () => {
                             },
