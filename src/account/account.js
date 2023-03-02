@@ -255,8 +255,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             <main style="overflow-x: hidden;">
                                 <div class="w-100" style="position: absolute;">
                                     <lottie-player src="${new URL('../img/component/login/login_page.json', import.meta.url)}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                    glitter.runJsInterFace("dismiss", {}, () => {
-                                    });
+                                    appConfig().setHome(gvc, 'home', {});
                                 })}" style="width: 100%;height: 900px;position: absolute;transform: translateY(-350px);"  loop  autoplay></lottie-player>
                                 </div>
                                 <div class="loginBoard d-flex flex-column align-items-center">

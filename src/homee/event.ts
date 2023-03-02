@@ -4,6 +4,7 @@ import {Funnel} from "./funnel.js";
 import {appConfig} from "../config.js";
 import {User} from "../api/user.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
+import {Checkout} from "../api/checkout.js";
 
 ClickEvent.create(import.meta.url, {
     link: {
@@ -224,33 +225,33 @@ ${
                     appConfig().getUserData({
                         callback: (userData) => {
                             try {
-                                const dialog=new Dialog(gvc)
+                                const dialog = new Dialog(gvc)
                                 dialog.dataLoading(true)
-                                if(userData.token){
-                                    User.checkToken(userData.token,(response)=>{
-                                        if(response){
+                                if (userData.token) {
+                                    User.checkToken(userData.token, (response) => {
+                                        if (response) {
                                             dialog.dataLoading(false)
                                             appConfig().setHome(gvc, object.selectPage.tag!)
-                                        }else{
+                                        } else {
                                             User.login({
-                                                account:userData.user_id,
-                                                pwd:userData.pwd,
-                                                callback:(response)=>{
+                                                account: userData.user_id,
+                                                pwd: userData.pwd,
+                                                callback: (response) => {
                                                     dialog.dataLoading(false)
-                                                    if(response){
+                                                    if (response) {
                                                         appConfig().setHome(gvc, object.selectPage.tag!)
-                                                    }else{
-                                                        appConfig().setHome(gvc,"login")
+                                                    } else {
+                                                        appConfig().setHome(gvc, "login")
                                                     }
                                                 }
                                             })
                                         }
                                     })
-                                }else{
-                                    appConfig().setHome(gvc,"login")
+                                } else {
+                                    appConfig().setHome(gvc, "login")
                                 }
                             } catch (e) {
-                                appConfig().setHome(gvc,"login")
+                                appConfig().setHome(gvc, "login")
                             }
                         }
                     })
@@ -265,16 +266,18 @@ ${
             return {
                 editor: () => {
                     const api = new Api()
-                    function getInput(object:any){
-                       return  gvc.bindView(() => {
+
+                    function getInput(object: any) {
+                        return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID()
                             const vm = {
                                 loading: true,
                                 colOption: ''
                             }
+
                             function load() {
-                                api.homeeAJAX({route: '/collection', method: 'get'}, (res) => {
-                                    res.map((x: { id: number; name: string; group: { id: number; name: string }[] }) => {
+                                function lo(){
+                                    gvc.glitter.share.storeCollection.map((x: { id: number; name: string; group: { id: number; name: string }[] }) => {
                                         vm.colOption += /*html*/ `
                                         <option value='${JSON.stringify({
                                             id: x.id,
@@ -297,8 +300,16 @@ ${
                                         );
                                     });
                                     gvc.notifyDataChange(id)
+                                }
+                                if(gvc.glitter.share.storeCollection){
+                                    lo()
+                                }
+                                api.homeeAJAX({route: '/collection', method: 'get'}, (res) => {
+                                    gvc.glitter.share.storeCollection=res
+                                    lo()
                                 });
                             }
+
                             load()
                             return {
                                 bind: id,
@@ -318,16 +329,17 @@ ${
 
 `
                                 },
-                                divCreate: {class:`flex-fill`}
+                                divCreate: {class: `flex-fill`}
                             }
                         })
                     }
+
                     return `
 <div class="alert alert-dark mt-2">
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">大分類</h3>
                     ${getInput(object)}
                     <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">子分類</h3>
-                    ${gvc.map((object.subCategory ?? []).map((dd:any,index:number)=>{
+                    ${gvc.map((object.subCategory ?? []).map((dd: any, index: number) => {
                         return `<div class="mb-3 d-flex align-items-center w-100"><i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                             object.subCategory.splice(index, 1);
                             widget.refreshAll();
@@ -335,7 +347,7 @@ ${
                     }))}
                  <div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${
                         gvc.event(() => {
-                            object.subCategory=object.subCategory ?? []
+                            object.subCategory = object.subCategory ?? []
                             object.subCategory.push({})
                             widget.refreshAll()
                         })
@@ -345,7 +357,7 @@ ${
                     `
                 },
                 event: () => {
-                    appConfig().changePage(gvc,"sub_category",{
+                    appConfig().changePage(gvc, "sub_category", {
                         title: object.name,
                         object: object,
                         category: "sub_category_id",
@@ -390,9 +402,9 @@ ${
                     return ``
                 },
                 event: () => {
-                    if( gvc.glitter.pageConfig.length <= 1){
+                    if (gvc.glitter.pageConfig.length <= 1) {
                         appConfig().setHome(gvc, "home", {})
-                    }else{
+                    } else {
                         gvc.glitter.goBack()
                     }
                 }
@@ -412,28 +424,60 @@ ${
             }
         }
     },
-    openMyspace:{
-        title:'我的空間',
+    openMyspace: {
+        title: '我的空間',
         fun: (gvc, widget, object) => {
             return {
                 editor: () => {
                     return ``
                 },
                 event: () => {
-                   gvc.glitter.runJsInterFace("openMyspace",{},()=>{})
+                    gvc.glitter.runJsInterFace("openMyspace", {}, () => {
+                    })
                 }
             }
         }
     },
-    testMode:{
-        title:'測試空間',
+    testMode: {
+        title: '測試空間',
         fun: (gvc, widget, object) => {
             return {
                 editor: () => {
                     return ``
                 },
                 event: () => {
-                    gvc.glitter.runJsInterFace("testMyspace",{},()=>{})
+                    gvc.glitter.runJsInterFace("testMyspace", {}, () => {
+                    })
+                }
+            }
+        }
+    },
+    cartBadge: {
+        title: '購物車數量',
+        fun: (gvc, widget, object) => {
+            return {
+                editor: () => {
+                    return ``
+                },
+                event: () => {
+
+                    gvc.glitter.share.cart=gvc.glitter.share.cart??{}
+                    gvc.glitter.share.cart.callback=gvc.glitter.share.cart.callback ?? []
+                    function getCount(){
+                        let count = 0
+                        Checkout.getCart((cartData) => {
+                            Object.keys(cartData).map((key) => {
+                                Object.values(cartData[key]).map((d2) => {
+                                    count += d2.count
+                                })
+                            })
+                            object.callback(count)
+                        })
+                    }
+                    gvc.glitter.share.cart.callback.push((()=>{
+                        getCount()
+                    }))
+                    getCount()
                 }
             }
         }

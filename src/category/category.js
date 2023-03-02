@@ -967,9 +967,8 @@ color: #1E1E1E;">${data.title}</div>
                 const dialog = new Dialog(gvc);
                 let shareView = new SharedView(gvc);
                 const viewModel = new ViewModel(gvc);
-                const categoryAPI = new Category(gvc.glitter);
                 let categoryList = [];
-                let loading = false;
+                let loading = true;
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -1193,14 +1192,6 @@ color: #1E1E1E;">${data.title}</div>
                             },
                             divCreate: { class: `d-flex w-100 flex-column`, style: `` },
                             onCreate: () => {
-                                const api = new Api();
-                                if (!loading) {
-                                    categoryAPI.getCategoryAllList((data) => {
-                                        categoryList = data;
-                                        loading = true;
-                                        gvc.notifyDataChange('mainDom');
-                                    });
-                                }
                             }
                         });
                     },

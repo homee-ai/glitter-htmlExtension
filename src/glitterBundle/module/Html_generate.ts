@@ -53,10 +53,10 @@ export class HtmlGenerate {
         },obj.option ?? {})
     }
     public static editeInput(obj: {
-        gvc: GVC, title: string, default: string, placeHolder: string, callback: (text: string) => void
+        gvc: GVC, title: string, default: string, placeHolder: string, callback: (text: string) => void,type?:string
     }) {
         return `<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${obj.title}</h3>
-<input class="form-control" placeholder="${obj.placeHolder}" onchange="${obj.gvc.event((e) => {
+<input class="form-control" placeholder="${obj.placeHolder}" type="${obj.type ?? "text"}" onchange="${obj.gvc.event((e) => {
             obj.callback(e.value);
         })}" value="${obj.default ?? ''}">`;
     };

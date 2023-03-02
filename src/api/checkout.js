@@ -12,17 +12,30 @@ export class Checkout {
             };
             cartData[obj.category][obj.skuID].count += obj.amount;
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response) => {
+                var _a, _b;
                 obj.callback(true);
+                glitter.share.cart = (_a = glitter.share.cart) !== null && _a !== void 0 ? _a : {};
+                glitter.share.cart.callback = (_b = glitter.share.cart.callback) !== null && _b !== void 0 ? _b : [];
+                glitter.share.cart.callback.map((dd) => {
+                    dd();
+                });
             });
         });
     }
     static setCart({ cartData, callback }) {
         const glitter = window.glitter;
+        console.log(`setCart:${JSON.stringify(cartData)}`);
         glitter.runJsInterFace("setSpaceCartData", {
             data: JSON.stringify({ cartData: cartData })
         }, (response2) => {
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response) => {
+                var _a, _b;
                 callback(true);
+                glitter.share.cart = (_a = glitter.share.cart) !== null && _a !== void 0 ? _a : {};
+                glitter.share.cart.callback = (_b = glitter.share.cart.callback) !== null && _b !== void 0 ? _b : [];
+                glitter.share.cart.callback.map((dd) => {
+                    dd();
+                });
             });
         }, {
             webFunction: () => {
@@ -196,8 +209,10 @@ export class Checkout {
                         success: (res) => {
                             callback(res.voucherList.map((dd) => {
                                 const c = dd.config.config;
+                                console.log(JSON.stringify(dd));
                                 return {
                                     id: dd.id,
+                                    note: dd.config.note,
                                     vendor_name: dd.config.vendor ? dd.config.vendor.name : 'HOMEE',
                                     vendor_icon: dd.config.vendor ? dd.config.vendor.icon : 'img/coupon1.svg',
                                     startTime: dd.startTime,
@@ -205,7 +220,7 @@ export class Checkout {
                                     formatEndTime: getEndtime(dd.endTime),
                                     config: dd.config.config,
                                     code: dd.config.code,
-                                    name: 'HOMEE',
+                                    name: dd.config.name,
                                     icon: 'img/coupon1.svg',
                                     title: (() => {
                                         let text = '';
@@ -285,6 +300,25 @@ export class Checkout {
                 }
             });
         }, () => {
+        });
+    }
+    static getOrderList(obj) {
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/order`,
+                    type: 'get',
+                    headers: { Authorization: response.token },
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response) => {
+                        obj.callback(response);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                        obj.callback(false);
+                    },
+                });
+            }
         });
     }
     static checkOut(obj) {
