@@ -1058,7 +1058,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 };
                 return {
                     view: () => {
-                        var _a;
+                        var _a, _b;
                         gvc.addStyle(`
         html{
             margin: 0;
@@ -1132,11 +1132,14 @@ Plugin.create(import.meta.url, (glitter) => {
                         let ideaDataArray;
                         let userInf;
                         let userData;
-                        let posterID = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.poster_id;
+                        let posterID = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.poster_id) || undefined;
                         if (!userInf) {
                             appConfig().getUserData({
                                 callback: (response) => {
                                     userInf = response;
+                                    if (!posterID) {
+                                        posterID = userInf.user_id;
+                                    }
                                     initGetData();
                                     gvc.notifyDataChange('mainView');
                                 }

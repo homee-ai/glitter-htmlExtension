@@ -102,8 +102,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="d-flex position-relative">
                                         <img src="${vm.data.photo ?? `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${vm.data.last_name}&txtfont=Helvetica&txtalign=middle,center`}" style="width: 88px;height: 88px;left: 8px;top: 0px;border-radius: 50%">
                                         <img src="${new URL!(`../img/component/edit.svg`, import.meta.url)}" style="position: absolute;right: 0;bottom: 0;" onclick="${gvc.event(() => {
-                                    appConfig().changePage(gvc, "user_edit_Profile")
-                                })}">
+                                            appConfig().changePage(gvc, "user_edit_Profile")
+                                        })}">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center align-baseline" style="margin-left: 32px;">
                                         <div class="d-flex">
@@ -296,12 +296,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })}">
                                         <div style="position: relative;width: 30px;height: 30px;">
                                             ${(() => {
-                                        if (item.count != 0) {
-                                            return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`
-                                        } else {
-                                            return ``
-                                        }
-                                    })()}
+                                            if (item.count != 0) {
+                                                return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`
+                                            } else {
+                                                return ``
+                                            }
+                                        })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
                                         <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';

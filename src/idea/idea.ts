@@ -1226,11 +1226,16 @@ Plugin.create(import.meta.url,(glitter)=>{
                         let ideaDataArray : IdeaData[];
                         let userInf:any; //這邊跟上面不一樣 Inf跟上面data一樣 這裡的data則是那個人的貼文相關資料
                         let userData:UserData;
-                        let posterID = gvc.parameter.pageConfig?.obj.data.poster_id;
+                        let posterID = gvc.parameter.pageConfig?.obj.data?.poster_id || undefined;
+
                         if (!userInf){
                             appConfig().getUserData({
                                 callback: (response: any) => {
                                     userInf = response;
+
+                                    if (!posterID){
+                                        posterID = userInf.user_id
+                                    }
                                     initGetData();
                                     gvc.notifyDataChange('mainView')
                                 }})
