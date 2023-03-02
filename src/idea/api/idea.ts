@@ -283,19 +283,25 @@ export class Idea {
         }
     }, callback: (result: Boolean) => void) {
         const glitter = this.glitter
-        $.ajax({
-            url: `${appConfig().serverURL}/api/v1/idea/board`,
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            headers: {Authorization: glitter.share.userData.AUTH},
-            success: (resposnse: any) => {
-                callback(true)
-            },
-            error: () => {
-                callback(false)
-            },
-        });
+        const dd=JSON.stringify(data)
+        appConfig().getUserData({
+            callback:(response:any)=>{
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea/board`,
+                    type: 'POST',
+                    data: dd,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: {Authorization: response.token},
+                    success: (resposnse: any) => {
+                        callback(true)
+                    },
+                    error: () => {
+                        callback(false)
+                    },
+                });
+            }
+        })
+
     }
 
     //發布文章

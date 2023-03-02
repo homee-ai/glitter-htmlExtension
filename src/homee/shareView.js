@@ -8,7 +8,7 @@ export class SharedView {
             gvc.notifyDataChange(['nav', 'ddd']);
         }, {
             webFunction: () => {
-                return { data: 0 };
+                return { data: 20 };
             }
         });
         glitter.runJsInterFace("getBottomInset", {}, (response) => {
@@ -18,7 +18,7 @@ export class SharedView {
             }
         }, {
             webFunction: () => {
-                return { data: 20 };
+                return { data: 0 };
             }
         });
         this.navigationBar = (item) => {
@@ -57,6 +57,9 @@ export class SharedView {
                 gvc.bindView({
                     bind: `ddd`,
                     view: () => {
+                        if (item.hideTb) {
+                            return ``;
+                        }
                         return `<div class="w-100" style="height:calc(${topInset || 20}px);"></div>`;
                     },
                     divCreate: {}

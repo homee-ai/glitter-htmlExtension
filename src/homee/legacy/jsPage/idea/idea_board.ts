@@ -4,10 +4,11 @@ import {ViewModel} from "../../view/ideaViewApi.js";
 import {Idea, IdeaData} from "../../api/idea.js"
 import {Dialog} from "../../widget/dialog.js"
 import {SharedView} from "../../widget/sharedView.js"
+import {appConfig} from "../../../../config";
 
 init((gvc, glitter, gBundle) => {
 
-    
+
 
     gvc.addStyle(`
         
@@ -415,20 +416,23 @@ init((gvc, glitter, gBundle) => {
                         }
                     }
                     dialog.dataLoading(true)
-                    $.ajax({
-                        url: `${glitter.share.apiURL}/api/v1/idea/board`,
-                        type: 'POST',
-                        data: JSON.stringify(jsonData),
-                        contentType: 'application/json; charset=utf-8',
-                        headers: {Authorization: glitter.share.userData.AUTH},
-                        success: (resposnse: any) => {
-                            dialog.dataLoading(false)
-                            getData()
-                        },
-                        error: () => {
-                        },
-                    });
-
+                    appConfig().getUserData({
+                        callback:(response:any)=>{
+                            $.ajax({
+                                url: `${appConfig().serverURL}/api/v1/idea/board`,
+                                type: 'POST',
+                                data: JSON.stringify(jsonData),
+                                contentType: 'application/json; charset=utf-8',
+                                headers: {Authorization: response.token},
+                                success: (resposnse: any) => {
+                                    dialog.dataLoading(false)
+                                    getData()
+                                },
+                                error: () => {
+                                },
+                            });
+                        }
+                    })
                 }, {
                     webFunction(data: {}): any {
                         return {

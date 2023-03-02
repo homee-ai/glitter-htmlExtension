@@ -110,18 +110,22 @@ export class ViewModel {
                     }
                 };
                 dialog.dataLoading(true);
-                $.ajax({
-                    url: `${glitter.share.apiURL}/api/v1/idea/board`,
-                    type: 'POST',
-                    data: JSON.stringify(jsonData),
-                    contentType: 'application/json; charset=utf-8',
-                    headers: { Authorization: glitter.share.userData.AUTH },
-                    success: (resposnse) => {
-                        dialog.dataLoading(false);
-                        appConfig().changePage(gvc, 'idea_board', { data: postData }, {});
-                    },
-                    error: () => {
-                    },
+                appConfig().getUserData({
+                    callback: (response) => {
+                        $.ajax({
+                            url: `${glitter.share.apiURL}/api/v1/idea/board`,
+                            type: 'POST',
+                            data: JSON.stringify(jsonData),
+                            contentType: 'application/json; charset=utf-8',
+                            headers: { Authorization: response.token },
+                            success: (resposnse) => {
+                                dialog.dataLoading(false);
+                                appConfig().changePage(gvc, 'idea_board', { data: postData }, {});
+                            },
+                            error: () => {
+                            },
+                        });
+                    }
                 });
             }, {
                 webFunction(data) {

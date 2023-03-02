@@ -10,6 +10,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.brow
 function getDateDiff(a) { return ``; }
 function detectIMG(a) { return ``; }
 Plugin.create(import.meta.url, (glitter) => {
+    glitter.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
     const api = {
         upload: (photoFile, callback) => {
             $.ajax({
@@ -171,7 +172,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         gvc.glitter.goBack();
                                                     }
                                                 })}">`,
-                                                rightIcon: ``
+                                                rightIcon: ``,
+                                                boxShadow: true,
+                                                hideTb: true
                                             });
                                         default:
                                             return shareView.navigationBar({
@@ -206,7 +209,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                     <img src="${new URL(`../img/sample/idea/chat.svg`, import.meta.url)}" style="width: 23px;height: 23px;" onclick="${gvc.event(() => {
                                                     dialog.showInfo('共同搭配功能即將上線，敬請期待!');
                                                 })}">
-                                                </div>`
+                                                </div>`,
+                                                boxShadow: true,
+                                                hideTb: true
                                             });
                                     }
                                 })();
@@ -570,6 +575,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             gvc.notifyDataChange('mainView');
                                         }
                                     });
+                                    return ``;
                                 }
                                 glitter.runJsInterFace("getTopInset", {}, (response) => {
                                     if (topInset != response.data) {
@@ -606,7 +612,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                         })}">`,
                                         rightIcon: `
                                             <img src="${new URL(`../img/component/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                        `
+                                        `,
+                                        hideTb: true,
+                                        boxShadow: true
                                     })}
                                     <main class="d-flex flex-column" style="">
                                         <div class="intro d-flex" style="border-bottom: 1px solid #D6D6D6;">
@@ -666,12 +674,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                             view: () => {
                                                 var sendView = glitter.getUUID();
                                                 return `
-                                                    <div id="${sendView}" class="d-flex leaveRow" style="position: fixed;bottom: ${bottomInset + 48}px;">
+                                                    <div id="${sendView}" class="d-flex leaveRow" style="left:0px;position: fixed;bottom: ${bottomInset}px;">
                                                         <div class="posterPhoto rounded-circle" style="width: 48px;height: 48px;margin-right: 8px;background: 50% / cover url('${userData['photo']}') no-repeat;"></div>
                                                         <div class="flex-fill leaveInput d-flex align-items-center" >
                                                         <!--發佈欄-->
                                                             <div class="w-100 my-auto d-flex align-items-center HOMEE-grey" contenteditable="true" style="line-height: 34px;border: none;background: transparent;margin-right: 50px;word-break: break-word;white-space: normal" onblur="${gvc.event((e) => {
-                                                    $(`#${sendView}`).css('bottom', `${bottomInset + 48}px`);
+                                                    $(`#${sendView}`).css('bottom', `${bottomInset}px`);
                                                     message.content.text = e.innerHTML;
                                                     if (message.content.text === '') {
                                                         $(e).parent().children('.leaveBTN').removeClass('leaveEvent');
@@ -906,6 +914,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             gvc.notifyDataChange('mainView');
                                         }
                                     });
+                                    return ``;
                                 }
                                 if (topInset !== undefined) {
                                     return `
@@ -920,7 +929,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             }
                                         })}"></i>`,
                                         rightIcon: ` <div class="search-bar d-flex ms-auto" style="width: calc(100vw - 80px);">
-                                            <img class="search-icon" src="img/search-black.svg" alt="" >
+                                            <img class="search-icon" src="${new URL('../img/search-black.svg', import.meta.url)}" alt="" >
                                             <input class="w-100 search-input" placeholder="大家都在搜尋:${keyword}" oninput="${gvc.event((e) => {
                                             searchDataTimer(e);
                                         })}">
@@ -1406,6 +1415,10 @@ Plugin.create(import.meta.url, (glitter) => {
                         let viewModel = new ViewModel(gvc);
                         let dialog = new Dialog(gvc);
                         let shareView = new SharedView(gvc);
+                        let vm = {
+                            loading: true,
+                            data: []
+                        };
                         let imgArray = (_c = (_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj) === null || _b === void 0 ? void 0 : _b.preview_image) !== null && _c !== void 0 ? _c : ["https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg", "https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg"];
                         let deleteIMGArray = [];
                         let userData;
@@ -1453,10 +1466,16 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }
                             });
                         }
+                        glitter.runJsInterFace("modelData", {}, (response) => {
+                            vm.loading = false;
+                            imgArray = response.data.preview_image;
+                            vm.data = response.data;
+                            gvc.notifyDataChange('mainView');
+                        });
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
-                                if (interact == null) {
+                                if (interact == null || vm.loading) {
                                     return ``;
                                 }
                                 return `
@@ -1466,12 +1485,19 @@ Plugin.create(import.meta.url, (glitter) => {
                                         viewModel.checkDismiss();
                                     })}">`,
                                     rightIcon: `<div class="nextStep"  onclick="${gvc.event(() => {
-                                        appConfig().changePage(gvc, "idea_post", {});
+                                        var _a;
+                                        appConfig().changePage(gvc, "idea_post", {
+                                            poster: userData.user_id,
+                                            scene: (_a = vm.data) === null || _a === void 0 ? void 0 : _a.scene,
+                                            config: JSON.parse(vm.data.config),
+                                            preview_image: imgArray
+                                        });
                                     })}">
                                     下一步
-                                </div>`
+                                </div>`,
+                                    hideTb: true
                                 })}
-                                <main class="d-flex align-items-center w-100" style="">                    
+                                <main class="d-flex align-items-center w-100" style="margin-top: -60px;">                    
                                 ${(() => {
                                     return gvc.bindView({
                                         bind: `slideImg`,
@@ -1514,24 +1540,7 @@ Plugin.create(import.meta.url, (glitter) => {
             defaultData: {},
             render: (gvc, widget, setting, hoverID) => {
                 var _a, _b;
-                gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
                 gvc.addStyle(`
-                    @font-face {
-                        font-family: 'Noto Sans TC';
-                        src: url(assets/Font/NotoSansTC-Bold.otf);
-                        font-weight: bold;
-                    }
-                
-                    @font-face {
-                        font-family: 'Noto Sans TC';
-                        src: url(assets/Font/NotoSansTC-Regular.otf);
-                        font-weight: normal;
-                    }
-                    html{
-                        margin: 0;
-                        box-sizing: border-box;
-                    }
-                  
                     .confirm{
                         height: 24px;
                         font-family: 'Noto Sans TC';
@@ -1615,7 +1624,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         dialog.dataLoading(true);
                         ideaAPI.uploadArticle(jsonData, (response) => {
                             dialog.dataLoading(false);
-                            appConfig().changePage(gvc, "idea");
+                            appConfig().setHome(gvc, "idea");
                         });
                     }
                 }
@@ -1649,20 +1658,25 @@ Plugin.create(import.meta.url, (glitter) => {
                         return gvc.bindView({
                             bind: `mainView`,
                             view: () => {
+                                if (!userData) {
+                                    return ``;
+                                }
                                 if (topInset !== undefined) {
                                     return `
                                     ${shareView.navigationBar({
                                         title: "新貼文",
                                         leftIcon: `  <img class="" src="${new URL(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="width: 24px;height: 24px;margin-right: 27px" alt="" onclick="${gvc.event(() => {
-                                            viewModel.checkDismiss();
+                                            gvc.glitter.goBack();
                                         })}">`,
                                         rightIcon: `<div class="nextStep confirm"  onclick="${gvc.event(() => {
                                             upload();
                                         })}">
                                             確定
-                                        </div>`
+                                        </div>`,
+                                        hideTb: true,
+                                        boxShadow: true
                                     })}
-                                    <div class="w-100" style="padding-top: ${topInset}px;">
+                                    <div class="w-100" style="">
                                         <banner class="w-100" >
                                             ${(() => {
                                         let slidePage = ``;
