@@ -12,7 +12,8 @@ export interface CheckOutData {
 
 
 export class Checkout {
-    public static cartTag="njasndjnui32hi2"
+    public static cartTag = "njasndjnui32hi2"
+
     public static addToCart(obj: { category: string, skuID: string, amount: number, callback: (response: boolean) => void }) {
         const glitter = (window as any).glitter
         Checkout.getCart((cartData) => {
@@ -25,29 +26,33 @@ export class Checkout {
             cartData[obj.category]!![obj.skuID].count += obj.amount
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
                 obj.callback(true)
-                glitter.share.cart=glitter.share.cart??{}
-                glitter.share.cart.callback=glitter.share.cart.callback ?? []
-                glitter.share.cart.callback.map((dd:any)=>{dd();});
+                glitter.share.cart = glitter.share.cart ?? {}
+                glitter.share.cart.callback = glitter.share.cart.callback ?? []
+                glitter.share.cart.callback.map((dd: any) => {
+                    dd();
+                });
             })
         })
     }
 
-    public static setCart({cartData, callback}: { cartData: any, callback: (response: boolean) => void }){
+    public static setCart({cartData, callback}: { cartData: any, callback: (response: boolean) => void }) {
         const glitter = (window as any).glitter
         console.log(`setCart:${JSON.stringify(cartData)}`)
-        glitter.runJsInterFace("setSpaceCartData",{
-            data:JSON.stringify({cartData:cartData})
-        },(response2:any)=>{
+        glitter.runJsInterFace("setSpaceCartData", {
+            data: JSON.stringify({cartData: cartData})
+        }, (response2: any) => {
             glitter.setPro(Checkout.cartTag, JSON.stringify(cartData), (response: any) => {
                 callback(true)
-                glitter.share.cart=glitter.share.cart??{}
-                glitter.share.cart.callback=glitter.share.cart.callback ?? []
-                glitter.share.cart.callback.map((dd:any)=>{dd();});
+                glitter.share.cart = glitter.share.cart ?? {}
+                glitter.share.cart.callback = glitter.share.cart.callback ?? []
+                glitter.share.cart.callback.map((dd: any) => {
+                    dd();
+                });
             })
-        },{
+        }, {
             webFunction: () => {
                 return {
-                    data:JSON.stringify({})
+                    data: JSON.stringify({})
                 }
             }
         })
@@ -64,16 +69,16 @@ export class Checkout {
         }
     }) => void) {
         const glitter = (window as any).glitter;
-        glitter.runJsInterFace("getSpaceCartData",{},(response2:any)=>{
+        glitter.runJsInterFace("getSpaceCartData", {}, (response2: any) => {
             glitter.getPro(Checkout.cartTag, (response: any) => {
                 callback((() => {
                     try {
-                        const data1=JSON.parse(response2.data)
+                        const data1 = JSON.parse(response2.data)
                         console.log(`getSpaceCartData:${JSON.stringify(data1)}`)
-                        let data=JSON.parse(response.data)
-                        console.log('parse'+JSON.stringify(data))
-                        Object.keys(data1).map((dd)=>{
-                            data[dd]=data1[dd];
+                        let data = JSON.parse(response.data)
+                        console.log('parse' + JSON.stringify(data))
+                        Object.keys(data1).map((dd) => {
+                            data[dd] = data1[dd];
                         })
                         return data
                     } catch (e) {
@@ -81,27 +86,27 @@ export class Checkout {
                     }
                 })())
             })
-        },{
+        }, {
             webFunction: () => {
                 return {
-                    data:JSON.stringify({})
+                    data: JSON.stringify({})
                 }
             }
         })
     }
 
-    public static deleteCart(callback:()=>void){
+    public static deleteCart(callback: () => void) {
         const glitter = (window as any).glitter;
-        glitter.runJsInterFace("setSpaceCartData",{
-            data:''
-        },(response2:any)=>{
-            glitter.setPro(Checkout.cartTag,'', (response: any) => {
+        glitter.runJsInterFace("setSpaceCartData", {
+            data: ''
+        }, (response2: any) => {
+            glitter.setPro(Checkout.cartTag, '', (response: any) => {
                 callback()
             })
-        },{
+        }, {
             webFunction: () => {
                 return {
-                    data:JSON.stringify({})
+                    data: JSON.stringify({})
                 }
             }
         })
@@ -246,7 +251,7 @@ export class Checkout {
                                         console.log(JSON.stringify(dd))
                                         return {
                                             id: dd.id,
-                                            note:dd.config.note,
+                                            note: dd.config.note,
                                             vendor_name: dd.config.vendor ? dd.config.vendor.name : 'HOMEE',
                                             vendor_icon: dd.config.vendor ? dd.config.vendor.icon : 'img/coupon1.svg',
                                             startTime: dd.startTime,
@@ -341,8 +346,30 @@ export class Checkout {
         );
     }
 
-    public static checkOut(obj:{
-        data:{
+    public static getOrderList(obj: {
+        callback: (result: any) => void
+    }) {
+        appConfig().getUserData({
+            callback: (response: any) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/order`,
+                    type: 'get',
+                    headers: {Authorization: response.token},
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response: any) => {
+                        obj.callback(response)
+                    },
+                    error: (err: any) => {
+                        console.log(err)
+                        obj.callback(false)
+                    },
+                });
+            }
+        })
+    }
+
+    public static checkOut(obj: {
+        data: {
             "cartInfo": {
                 "sku": string,
                 "quantity": number
@@ -353,18 +380,18 @@ export class Checkout {
             "mainURL"?: string,
             "voucherArray": string[]
         }
-        callback:(response:boolean|{
+        callback: (response: boolean | {
             "result": boolean,
             "message": string,
             "create_time": string,
             "redirect": string
-        })=>void
-    }){
-        obj.data.mainURL=appConfig().serverURL
+        }) => void
+    }) {
+        obj.data.mainURL = appConfig().serverURL
 
         appConfig().getUserData({
             callback: (response: any) => {
-                obj.data.customerInfo={
+                obj.data.customerInfo = {
                     "email": response.email
                 }
                 $.ajax({

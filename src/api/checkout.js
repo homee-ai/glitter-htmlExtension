@@ -16,7 +16,9 @@ export class Checkout {
                 obj.callback(true);
                 glitter.share.cart = (_a = glitter.share.cart) !== null && _a !== void 0 ? _a : {};
                 glitter.share.cart.callback = (_b = glitter.share.cart.callback) !== null && _b !== void 0 ? _b : [];
-                glitter.share.cart.callback.map((dd) => { dd(); });
+                glitter.share.cart.callback.map((dd) => {
+                    dd();
+                });
             });
         });
     }
@@ -31,7 +33,9 @@ export class Checkout {
                 callback(true);
                 glitter.share.cart = (_a = glitter.share.cart) !== null && _a !== void 0 ? _a : {};
                 glitter.share.cart.callback = (_b = glitter.share.cart.callback) !== null && _b !== void 0 ? _b : [];
-                glitter.share.cart.callback.map((dd) => { dd(); });
+                glitter.share.cart.callback.map((dd) => {
+                    dd();
+                });
             });
         }, {
             webFunction: () => {
@@ -296,6 +300,25 @@ export class Checkout {
                 }
             });
         }, () => {
+        });
+    }
+    static getOrderList(obj) {
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/order`,
+                    type: 'get',
+                    headers: { Authorization: response.token },
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response) => {
+                        obj.callback(response);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                        obj.callback(false);
+                    },
+                });
+            }
         });
     }
     static checkOut(obj) {
