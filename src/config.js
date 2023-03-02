@@ -84,8 +84,11 @@ export function appConfig() {
         getUserData: ({ callback }) => {
             const glitter = window.glitter;
             glitter.getPro("daiqdmoiwme21", (response) => {
+                var _a, _b;
                 try {
                     const userData = JSON.parse(response.data);
+                    userData.name = (_a = userData.name) !== null && _a !== void 0 ? _a : userData.first_name + userData.last_name;
+                    userData.photo = (_b = userData.photo) !== null && _b !== void 0 ? _b : `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${userData.first_name}&txtfont=Helvetica&txtalign=middle,center`;
                     callback(userData);
                 }
                 catch (e) {

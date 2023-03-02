@@ -1317,7 +1317,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             <img src="${new URL!(`../img/sample/idea/send.svg`, import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                         `
                                     })}
-                                    <main class="d-flex flex-column" style="padding-bottom: 100px;">                    
+                                    <main class="d-flex flex-column" style="padding-bottom: 100px;margin-top: -${topInset}px;">                    
                                         ${(()=>{
                                             return gvc.bindView({
                                                 bind:`inf`,
