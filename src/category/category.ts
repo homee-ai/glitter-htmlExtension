@@ -181,6 +181,7 @@ width: calc(100vw - 180px);
                                         widget.refreshAll!()
                                     }
                                 })}
+                                
                                 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index+1}</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
@@ -1161,11 +1162,12 @@ color: #1E1E1E;">${data.title}</div>
 
                                                         returnData += `
                                                         <div class="left-title  ${selectClass}" onclick="${gvc.event(()=>{
+                                                                
                                                                 widget.data.selectIndex = index;
                                                                 gvc.notifyDataChange('leftMain');
                                                                 gvc.notifyDataChange('rightMain');
                                                             })}">                        
-                                                            <a class="d-flex align-items-center justify-content-start" href="#${data.title}"
+                                                            <a class="d-flex align-items-center justify-content-start" href="#pageIndex${data.title}"
                                                             style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;"
                                                             >${data.title}</a>
                                                         </div>
@@ -1186,7 +1188,7 @@ color: #1E1E1E;">${data.title}</div>
                                                     let returnHtml = ``
                                                     
                                                     widget.data.dataList.forEach((data:any)=>{
-                                                        let title = data.title;
+                                                        let title = data.pageTitile??data.title;
                                                         let dataList = data.subCategory;
                                                      
                                                         // let parentCategory = data.store_id;
@@ -1223,7 +1225,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                 //     console.log(element)
                                                                 // }
                                                                 if (element.name){
-                                                                    console.log(dataList)
+                                                                   
                                                                     let passData={
                                                                         object:{
                                                                             subCategory:dataList
@@ -1249,7 +1251,7 @@ color: #1E1E1E;">${data.title}</div>
                                                        
                                                         returnHtml += `
                                                             <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
-                                                                <div class="d-flex rightCategoryTitle" id="${title}">${title}</div>
+                                                                <div class="d-flex rightCategoryTitle" id="pageIndex${title}">${title}</div>
                                                                 <div class="d-flex flex-wrap w-100">
                                                                     ${CardGroup}
                                                                 </div>
@@ -1317,15 +1319,25 @@ color: #1E1E1E;">${data.title}</div>
                             })}"></i>區塊${index + 1}
                                 </div>
                                 ${glitter.htmlGenerate.editeInput({
-                                gvc: gvc,
-                                title: `標題${index+1}`,
-                                default: dd.title,
-                                placeHolder: dd.title,
-                                callback: (text: string) => {
-                                    widget.data.dataList[index].title = text
-                                    widget.refreshAll!()
-                                }
-                            })}                                
+                                    gvc: gvc,
+                                    title: `左標題`,
+                                    default: dd.title,
+                                    placeHolder: dd.title,
+                                    callback: (text: string) => {
+                                        widget.data.dataList[index].title = text
+                                        widget.refreshAll!()
+                                    }
+                                })}                            
+                                 ${glitter.htmlGenerate.editeInput({
+                                    gvc: gvc,
+                                    title: `大標題`,
+                                    default: dd.pageTitile??dd.title,
+                                    placeHolder: dd.pageTitile??dd.title,
+                                    callback: (text: string) => {
+                                        widget.data.dataList[index].pageTitile = text
+                                        widget.refreshAll!()
+                                    }
+                                })}               
                                 ${(()=>{
                                     let returnHTML = ``
                                     if (dd?.subCategory){

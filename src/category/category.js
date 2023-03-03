@@ -177,6 +177,7 @@ width: calc(100vw - 180px);
                                     widget.refreshAll();
                                 }
                             })}
+                                
                                 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">banner圖片${index + 1}</h3>
                                 <div class="mt-2"></div>
                                 <div class="d-flex align-items-center mb-3">
@@ -1070,7 +1071,7 @@ color: #1E1E1E;">${data.title}</div>
                                                             gvc.notifyDataChange('leftMain');
                                                             gvc.notifyDataChange('rightMain');
                                                         })}">                        
-                                                            <a class="d-flex align-items-center justify-content-start" href="#${data.title}"
+                                                            <a class="d-flex align-items-center justify-content-start" href="#pageIndex${data.title}"
                                                             style="color:${(index == widget.data.selectIndex) ? `#FD6A58` : `#858585`};text-decoration: inherit;"
                                                             >${data.title}</a>
                                                         </div>
@@ -1089,7 +1090,8 @@ color: #1E1E1E;">${data.title}</div>
                                                 view: () => {
                                                     let returnHtml = ``;
                                                     widget.data.dataList.forEach((data) => {
-                                                        let title = data.title;
+                                                        var _a;
+                                                        let title = (_a = data.pageTitile) !== null && _a !== void 0 ? _a : data.title;
                                                         let dataList = data.subCategory;
                                                         gvc.addStyle(`
                                                             .rightCategoryTitle{
@@ -1120,7 +1122,6 @@ color: #1E1E1E;">${data.title}</div>
                                                             dataList.forEach((element, index) => {
                                                                 let margin = (index % 2) ? "" : "margin-right: 22px;";
                                                                 if (element.name) {
-                                                                    console.log(dataList);
                                                                     let passData = {
                                                                         object: {
                                                                             subCategory: dataList
@@ -1144,7 +1145,7 @@ color: #1E1E1E;">${data.title}</div>
                                                         }
                                                         returnHtml += `
                                                             <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
-                                                                <div class="d-flex rightCategoryTitle" id="${title}">${title}</div>
+                                                                <div class="d-flex rightCategoryTitle" id="pageIndex${title}">${title}</div>
                                                                 <div class="d-flex flex-wrap w-100">
                                                                     ${CardGroup}
                                                                 </div>
@@ -1197,6 +1198,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     editor: () => {
                         return `${gvc.map(widget.data.dataList.map((dd, index) => {
+                            var _a, _b;
                             return `
                             <div class="d-flex flex-column my-3 alert alert-dark">
                                 <div class="d-flex align-items-center">
@@ -1207,14 +1209,24 @@ color: #1E1E1E;">${data.title}</div>
                                 </div>
                                 ${glitter.htmlGenerate.editeInput({
                                 gvc: gvc,
-                                title: `標題${index + 1}`,
+                                title: `左標題`,
                                 default: dd.title,
                                 placeHolder: dd.title,
                                 callback: (text) => {
                                     widget.data.dataList[index].title = text;
                                     widget.refreshAll();
                                 }
-                            })}                                
+                            })}                            
+                                 ${glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `大標題`,
+                                default: (_a = dd.pageTitile) !== null && _a !== void 0 ? _a : dd.title,
+                                placeHolder: (_b = dd.pageTitile) !== null && _b !== void 0 ? _b : dd.title,
+                                callback: (text) => {
+                                    widget.data.dataList[index].pageTitile = text;
+                                    widget.refreshAll();
+                                }
+                            })}               
                                 ${(() => {
                                 let returnHTML = ``;
                                 if (dd === null || dd === void 0 ? void 0 : dd.subCategory) {
