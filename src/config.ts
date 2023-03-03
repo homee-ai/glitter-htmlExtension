@@ -117,6 +117,8 @@ export function appConfig(): {
             glitter.getPro("daiqdmoiwme21", (response: any) => {
                 try {
                     const userData: any = JSON.parse(response.data)
+                    userData.name=userData.name ?? userData.first_name+userData.last_name
+                    userData.photo=userData.photo ?? `https://assets.imgix.net/~text?bg=7ED379&txtclr=ffffff&w=200&h=200&txtsize=90&txt=${userData.first_name}&txtfont=Helvetica&txtalign=middle,center`
                     callback(userData)
                 } catch (e) {
                     callback({})

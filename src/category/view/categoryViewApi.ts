@@ -48,6 +48,7 @@ export class ViewModel {
             `)
 
             categoryAPI.getSubcategoryList(category, (returnData:any) => {
+
                 getHtml(gvc.bindView({
                     bind: "subCategoryRow",
                     view: () => {
@@ -83,7 +84,7 @@ export class ViewModel {
                                 gvc.notifyDataChange('cardGroup')
                                 glitter.share.selectSubCategory = index + 1;
                                 gvc.notifyDataChange('subCategoryRow')
-                                console.log(data.easy_collection_id)
+                            
                                 categoryAPI.getCategoryData("sub_category_id", data.easy_collection_id, (response:any) => {
                                     glitter.share.productData = response
                                     glitter.share.subCategoryVM.productLoading = true;
@@ -281,7 +282,7 @@ export class ViewModel {
 
                     CardGroup += `
                     <div class="rounded flex-grow-1" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
-                        console.log(data.easy_collection_id)
+            
                         
                         appConfig().changePage(gvc,"sub_category",{
                             title: categoryListData.name,
@@ -311,8 +312,7 @@ export class ViewModel {
         this.setMainPuzzle = (viewJson:any)=>{
 
             let returnHTML = ``;
-            // console.log(viewJson)
-            console.log(viewJson.length)
+
             viewJson.forEach((puzzle:any)=>{
 
                 if (puzzle?.box){

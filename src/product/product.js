@@ -70,7 +70,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 }
             },
             render: (gvc, widget, setting, hoverID) => {
-                const data = widget.data;
                 let bottomInset = 0;
                 gvc.addStyle(`
                     .productTitleRow{
@@ -156,17 +155,18 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 }
                 return {
                     view: () => {
-                        var _a;
-                        console.log(widget.data);
+                        var _a, _b, _c;
+                        let posterID = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.poster_id) || undefined;
                         if (widget.data.loading) {
                             return `
+                            
                             <div class="w-100">
                                 <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                                     <div class="spinner-border" role="status"></div>
                                 </div>
                             </div>`;
                         }
-                        let sku_list = (_a = (widget.data.productData && widget.data.productData.sku_list)) !== null && _a !== void 0 ? _a : {};
+                        let sku_list = (_c = (widget.data.productData && widget.data.productData.sku_list)) !== null && _c !== void 0 ? _c : {};
                         let key = [];
                         widget.data.attribute_list.map((dd) => {
                             const select = dd.attribute_values.find((d2) => {

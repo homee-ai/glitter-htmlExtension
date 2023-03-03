@@ -194,18 +194,23 @@ export class Idea {
     }
     leaveMessage(data, callback) {
         const glitter = this.glitter;
-        $.ajax({
-            url: `${appConfig().serverURL}/api/v1/idea/board`,
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            headers: { Authorization: glitter.share.userData.AUTH },
-            success: (resposnse) => {
-                callback(true);
-            },
-            error: () => {
-                callback(false);
-            },
+        const dd = JSON.stringify(data);
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/idea/board`,
+                    type: 'POST',
+                    data: dd,
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { Authorization: response.token },
+                    success: (resposnse) => {
+                        callback(true);
+                    },
+                    error: () => {
+                        callback(false);
+                    },
+                });
+            }
         });
     }
     uploadArticle(jsonData, callback) {

@@ -1,7 +1,7 @@
 import {GVC} from "../glitterBundle/GVController";
 
 export class SharedView {
-    public navigationBar: (item: { title: string; leftIcon: string; rightIcon: string , boxShadow?:true , background?:"#FFFFFF"}) => string;
+    public navigationBar: (item: { title: string; leftIcon: string; rightIcon: string , boxShadow?:true , background?:"#FFFFFF",hideTb?:boolean}) => string;
     public biggerTitle: (item: { title: string; leftIcon: string; rightIcon: string }) => string;
 
     constructor(gvc: GVC) {
@@ -13,7 +13,7 @@ export class SharedView {
             gvc.notifyDataChange(['nav','ddd'])
         }, {
             webFunction: () => {
-                return {data: 0}
+                return {data: 20}
             }
         })
         glitter.runJsInterFace("getBottomInset", {}, (response) => {
@@ -23,10 +23,10 @@ export class SharedView {
             }
         }, {
             webFunction: () => {
-                return {data: 20}
+                return {data: 0}
             }
         })
-        this.navigationBar = (item: { title: string, leftIcon: string, rightIcon: string , boxShadow?:true ,background?:"#FFFFFF"}) => {
+        this.navigationBar = (item: { title: string, leftIcon: string, rightIcon: string , boxShadow?:true ,background?:"#FFFFFF",hideTb?:boolean}) => {
             return gvc.map([
                 gvc.bindView({
                     bind: `nav`,
@@ -61,6 +61,9 @@ export class SharedView {
                 gvc.bindView({
                     bind:`ddd`,
                     view:()=>{
+                        if(item.hideTb){
+                            return  ``
+                        }
                         return `<div class="w-100" style="height:calc(${topInset || 20}px);"></div>`
                     },
                     divCreate:{}

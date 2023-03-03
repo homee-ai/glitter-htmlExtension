@@ -502,41 +502,40 @@ color: #1E1E1E;">${data.title}</div>
             render:(gvc, widget, setting, hoverID)=>{
                 return {
                     view:()=>{
-                        gvc.addStyle(`
-     
-        nav{
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        main {
-            padding: 24px 35px 44px;
-      
-            font-family: 'Noto Sans TC';
-            margin: 0;
-            box-sizing: border-box;
-        }
-        .sortRawText{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 13px;
-            line-height: 19px;
-            /* identical to box height */
-            
-            display: flex;
-            align-items: center;
-            text-align: center;
-            
-            /* HOMEE dark grey */
-            
-            color: #858585;
-
-        }
-        a{
-        
-        }
-
-        `)
+                        gvc.addStyle(`     
+                        nav{
+                            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+                        }
+                
+                        main {
+                            padding: 24px 35px 44px;
+                      
+                            font-family: 'Noto Sans TC';
+                            margin: 0;
+                            box-sizing: border-box;
+                        }
+                        .sortRawText{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 13px;
+                            line-height: 19px;
+                            /* identical to box height */
+                            
+                            display: flex;
+                            align-items: center;
+                            text-align: center;
+                            
+                            /* HOMEE dark grey */
+                            
+                            color: #858585;
+                
+                        }
+                        a{
+                        
+                        }
+                
+                        `)
                         const gBundle=(gvc.parameter.pageConfig?.obj.data.object && gvc.parameter.pageConfig?.obj.data) ?? {"title":"本週新品","object":{"link":"https://mitblog.pixnet.net/blog/post/37708222","name":"本週新品","value":"gid://shopify/Collection/435249512748","clickEvent":{"src":"$homee/homee/event.js","route":"category"},"selectPage":{"tag":"product_show","name":"產品展示頁面","group":"產品頁"},"subCategory":[{"name":"銀標福利品","value":"gid://shopify/Collection/435260719404"},{"name":"布沙發 ( 更多商品即將更新 )","value":"gid://shopify/Collection/432946676012"}]},"category":"sub_category_id","index":0}
                         const viewModel:{
                             select:number,
@@ -544,9 +543,9 @@ color: #1E1E1E;">${data.title}</div>
                             loading:boolean,
                             product:any
                         } = {
-                            select:0,
+                            select:gBundle.selectIndex??0,
                             setSubCategoryRow:(category: string) => {
-                            gvc.addStyle(`
+                                gvc.addStyle(`
                 .subcateTitle{
                     font-weight: 400;
                     font-size: 14px;
@@ -564,22 +563,27 @@ color: #1E1E1E;">${data.title}</div>
                     font-weight: 700;
                 }
             `)
-                             return  gvc.bindView({
+                                return  gvc.bindView({
                                     bind: "subCategoryRow",
                                     view: () => {
+                                        //全部先拿掉
 
-                                        return gvc.map([{name:"全部",id:gBundle.object.id}].concat(gBundle.object.subCategory ?? []).map((data: any, index: number)=>{
+                                        // return gvc.map(gBundle.object.subCategory ?? [].map((data: any, index: number)=>{
+                                        return gvc.map([].concat(gBundle.object.subCategory ?? []).map((data: any, index: number)=>{
+                                        // return gvc.map([{name:"全部",id:gBundle.object.id}].concat(gBundle.object.subCategory ?? []).map((data: any, index: number)=>{
+                                            console.log(gBundle)
+                                            console.log("here")
                                             return `
-                            <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle`:``}" style="" onclick="${gvc.event(() => {
-                                                viewModel.loading=true
-                                                viewModel.select=index
-                                                gvc.notifyDataChange('mainView')
-                                                gvc.notifyDataChange('cardGroup')
-                                                gvc.notifyDataChange('subCategoryRow')
-                                            })}">
-                                ${data["name"]}
-                                
-                            </div>
+                                            <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle`:``}" style="" onclick="${gvc.event(() => {
+                                                    viewModel.loading=true
+                                                    viewModel.select=index
+                                                    gvc.notifyDataChange('mainView')
+                                                    gvc.notifyDataChange('cardGroup')
+                                                    gvc.notifyDataChange('subCategoryRow')
+                                                })}">
+                                                ${data["name"]}
+                                                
+                                            </div>
                                 `
                                         }))
                                     }, divCreate: {class: `d-flex`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;`}
@@ -596,7 +600,7 @@ color: #1E1E1E;">${data.title}</div>
                         let sortPriceOrder = -1;
                         let origData:ProductData[] = [];
                         glitter.share.productData = {};
-                        console.log(gBundle)
+
                         let sortRow = [
                             {
                                 text: '綜合', img: '', click: (e:HTMLElement) => {
@@ -611,22 +615,6 @@ color: #1E1E1E;">${data.title}</div>
                                     gvc.notifyDataChange('cardGroup');
                                 }
                             },
-                            // {
-                            //     text: '銷量', img: '', click: (e:HTMLElement) => {
-                            //         if (!origData){
-                            //             origData = glitter.share.productData;
-                            //         }
-                            //
-                            //         //reset orderPrice
-                            //         sortPriceOrder = -1;
-                            //         sortRow[2].img = 'img/sample/category/sort.svg';
-                            //
-                            //         sortSelect = 1;
-                            //         // todo sort by 銷量 目前沒有
-                            //         gvc.notifyDataChange('sortBar');
-                            //         gvc.notifyDataChange('cardGroup');
-                            //     }
-                            // },
                             (()=>{
                                 const map={
                                     text: '價格', img: new URL('../img/sample/category/sort.svg',import.meta.url).href, click: (e:HTMLElement) => {
@@ -664,6 +652,7 @@ color: #1E1E1E;">${data.title}</div>
                             return gvc.bindView({
                                 bind: `mainView`,
                                 view: () => {
+
                                     if (topInset !== undefined && bottomInset !== undefined) {
                                         return /* HTML */ `
                         <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
@@ -685,6 +674,7 @@ color: #1E1E1E;">${data.title}</div>
                                 ${gvc.bindView({
                                             bind: 'sortBar',
                                             view: () => {
+                                                
                                                 let returnHTML = ``;
                                                 sortRow.forEach((element, index: number) => {
                                                     let style = (index == sortSelect) ? "color: #292929;font-weight: 500;" : ""
@@ -719,73 +709,75 @@ color: #1E1E1E;">${data.title}</div>
                         </nav>
                         <main style="background: white;padding-top:${topInset - 20 + (((gBundle.object.subCategory ?? []).length>0) ? 150:120)}px;padding-left: 23px;padding-right: 23px;">
                             ${gvc.bindView({
-                                            bind: "cardGroup",
-                                            view: () => {
-                                                if (viewModel.loading) {
-                                                    let returnHTML = `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
-                                                    return returnHTML
-                                                } else {
-                                                    return new glitter.htmlGenerate([
-                                                        {
-                                                            "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
-                                                            "js": "$homee/official/official.js",
+                                bind: "cardGroup",
+                                view: () => {
+                                    if (viewModel.loading) {
+                                        let returnHTML = `
+                                        <div class="w-100">
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`;
+                                        return returnHTML
+                                    } else {
+                                        return new glitter.htmlGenerate([
+                                            {
+                                                "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
+                                                "js": "$homee/official/official.js",
+                                                "data": {
+                                                    "class": "m-0 p-0 flex-wrap justify-content-around",
+                                                    "style": "gap:10px;",
+                                                    "layout": "d-flex",
+                                                    "marginB": "86px",
+                                                    "marginL": "0px",
+                                                    "marginR": "0px",
+                                                    "setting": viewModel.product.map((dd:any)=>{
+                                                        
+                                                        return {
+                                                            "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
+                                                            "js": "$homee/homee/homee_home.js",
                                                             "data": {
-                                                                "class": "m-0 p-0 flex-wrap justify-content-around",
-                                                                "style": "gap:10px;",
-                                                                "layout": "d-flex",
-                                                                "marginB": "86px",
-                                                                "marginL": "0px",
-                                                                "marginR": "0px",
-                                                                "setting": viewModel.product.map((dd:any)=>{
-                                                                    return {
-                                                                        "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
-                                                                        "js": "$homee/homee/homee_home.js",
-                                                                        "data": {
-                                                                            "data": {
-                                                                                "id": dd.id,
-                                                                                "name": dd.name,
-                                                                                "price": dd.price,
-                                                                                "quantity": dd.quantity,
-                                                                                "sale_price": dd.sale_price,
-                                                                                "preview_image": dd.preview_image
-                                                                            },
-                                                                            "style": "\n",
-                                                                            "paddingL": "",
-                                                                            "paddingR": "",
-                                                                            "clickEvent": {
-                                                                                "src": "$homee/homee/event.js",
-                                                                                "route": "toProductDetail"
-                                                                            }
-                                                                        },
-                                                                        "type": "productItem",
-                                                                        "label": "商品",
-                                                                        "route": "homee_home",
-                                                                        "style": "width:calc(50% - 8px);",
-                                                                        "expandStyle": false,
-                                                                        "refreshAllParameter": {},
-                                                                        "refreshComponentParameter": {}
-                                                                    }
-                                                                }),
-                                                                "paddingB": "16px",
+                                                                "data": {
+                                                                    "id": dd.id,
+                                                                    "name": dd.name,
+                                                                    "price": dd.price,
+                                                                    "quantity": dd.quantity,
+                                                                    "sale_price": dd.sale_price,
+                                                                    "preview_image": dd.preview_image
+                                                                },
+                                                                "style": "\n",
                                                                 "paddingL": "",
-                                                                "paddingR": ""
+                                                                "paddingR": "",
+                                                                "clickEvent": {
+                                                                    "src": "$homee/homee/event.js",
+                                                                    "route": "toProductDetail"
+                                                                }
                                                             },
-                                                            "type": "container",
-                                                            "class": " ",
-                                                            "label": "元件容器",
-                                                            "route": "Glitter",
-                                                            "style": ""
+                                                            "type": "productItem",
+                                                            "label": "商品",
+                                                            "route": "homee_home",
+                                                            "style": "width:calc(50% - 8px);",
+                                                            "expandStyle": false,
+                                                            "refreshAllParameter": {},
+                                                            "refreshComponentParameter": {}
                                                         }
-                                                    ], []).render(gvc);
-                                                }
+                                                    }),
+                                                    "paddingB": "16px",
+                                                    "paddingL": "",
+                                                    "paddingR": ""
+                                                },
+                                                "type": "container",
+                                                "class": " ",
+                                                "label": "元件容器",
+                                                "route": "Glitter",
+                                                "style": ""
+                                            }
+                                        ], []).render(gvc);
+                                    }
 
-                                            },
-                                            divCreate: {style: `padding-top:20px;`, class: ``}
-                                        })}
+                                },
+                                divCreate: {style: `padding-top:20px;`, class: ``}
+                            })}
                         </main>                         
                         `
                                     } else {
@@ -797,14 +789,29 @@ color: #1E1E1E;">${data.title}</div>
                                 }, divCreate: {class: ``, style: `min-height : 100vh;padding-bottom:100px;`},
                                 onCreate: () => {
                                     if(viewModel.loading){
-                                        const id=[{name:"全部",id:gBundle.object.value}].concat((gBundle.object.subCategory ?? []).map((dd:any)=>{
-                                            return {name:dd.title,id:dd.value}
-                                        }))[viewModel.select].id
+                                        // const id=[{name:"全部",id:"0"}].concat((gBundle.object.subCategory ?? []).map((dd:any)=>{
+                                        //     return {name:dd.title,id:dd.value}
+                                        // }))[viewModel.select].id
+                                        const id = gBundle.object.subCategory[viewModel.select].value
+
                                         new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                             viewModel.product=response
                                             viewModel.loading=false
                                             gvc.notifyDataChange('cardGroup')
                                         })
+
+
+
+                                        // const id=[{name:"全部",id:gBundle.object.value}].concat((gBundle.object.subCategory ?? []).map((dd:any)=>{
+                                        //     return {name:dd.title,id:dd.value}
+                                        // }))[viewModel.select].id
+                                        //
+                                        // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                        //     viewModel.product=response
+                                        //     viewModel.loading=false
+                                        //     gvc.notifyDataChange('cardGroup')
+                                        // })
+
                                     }
 
                                 }
@@ -1122,7 +1129,6 @@ color: #1E1E1E;">${data.title}</div>
                                     view : () => {
 
                                         if (loading){
-
                                             return `              
                                             <div style="padding-left: 15px;"></div>                                                                 
                                             ${gvc.bindView({
@@ -1186,9 +1192,9 @@ color: #1E1E1E;">${data.title}</div>
                                                 bind : "rightMain",
                                                 view : ()=>{
                                                     let returnHtml = ``
-                                                    
                                                     widget.data.dataList.forEach((data:any)=>{
                                                         let title = data.pageTitile??data.title;
+
                                                         let dataList = data.subCategory;
                                                      
                                                         // let parentCategory = data.store_id;
@@ -1201,7 +1207,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                 font-size: 17px;
                                                                 line-height: 25px;
                                                                 color: #292929;
-                                                                margin-bottom:24px;
+                                                               
                                                             }
                                                             .cardTitle{
                                                                 height: 40px;
@@ -1225,33 +1231,32 @@ color: #1E1E1E;">${data.title}</div>
                                                                 //     console.log(element)
                                                                 // }
                                                                 if (element.name){
-                                                                   
-                                                                    let passData={
-                                                                        object:{
-                                                                            subCategory:dataList
-                                                                        }
-                                                                    }   
+
                                                                     CardGroup += `
                                                                     <div class="rounded" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e)=>{
                                                                             appConfig().changePage(gvc,"sub_category",{
                                                                                 title: title,
-                                                                                object: element,
+                                                                                object: data,
                                                                                 category: "sub_category_id",
-                                                                                index: 0
+                                                                                selectIndex: index
                                                                             })                                                                         
                                                                         })}">
                                                                         <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${element.img})"></div>
-                                                                        <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element.name}</div>
+                                                                        <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element?.appearText??element.name}</div>
                                                                     </div>
                                                                     `
                                                                 }
 
                                                             })
                                                         }
-                                                       
+                                                        console.log(data)
                                                         returnHtml += `
                                                             <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
+<<<<<<< HEAD
                                                                 <div class="d-flex rightCategoryTitle" id="pageIndex${title}">${title}</div>
+=======
+                                                                <div class="d-flex rightCategoryTitle" style="margin-bottom: ${data.titleDistance??0}px" id="${title}">${title}</div>
+>>>>>>> 3bd917e54d0c7739db95eb0cd1b84e8c551568ca
                                                                 <div class="d-flex flex-wrap w-100">
                                                                     ${CardGroup}
                                                                 </div>
@@ -1314,9 +1319,9 @@ color: #1E1E1E;">${data.title}</div>
                             <div class="d-flex flex-column my-3 alert alert-dark">
                                 <div class="d-flex align-items-center">
                                     <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;display: inline-block" onclick="${gvc.event(() => {
-                                widget.data.dataList.splice(index, 1)
-                                widget.refreshAll()
-                            })}"></i>區塊${index + 1}
+                                    widget.data.dataList.splice(index, 1)
+                                    widget.refreshAll()
+                                })}"></i>區塊${index + 1}
                                 </div>
                                 ${glitter.htmlGenerate.editeInput({
                                     gvc: gvc,
@@ -1343,7 +1348,10 @@ color: #1E1E1E;">${data.title}</div>
                                     if (dd?.subCategory){
                                         gvc.map(dd?.subCategory.map((data:any)=>{
                                             returnHTML += `
-                                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${data.name}照片</h3>
+                                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" contenteditable="true" class="mt-2" onblur="${gvc.event((e:HTMLElement)=>{
+                                                data.appearText = e.innerHTML;
+                                                widget.refreshAll()
+                                            })}">${data?.appearText??data.name}</h3>
                                             <div class="mt-2"></div>
                                             <div class="d-flex align-items-center mb-3">
                                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${data.img}">

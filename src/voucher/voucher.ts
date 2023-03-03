@@ -328,10 +328,16 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
+                const vm={
+                    loading:false
+                }
                 try {
                     if (!(window.parent as any).editerData) {
+                        vm.loading=true
+                        gvc.notifyDataChange('voucherCardList')
                         widget.data.voucherCardList = []
                         Checkout.getVoucher('Select', (data) => {
+                            vm.loading=false
                             data = (data as VoucherModel[]).filter((dd) => {
                                 return dd.config.howToPlay !== 'rebate'
                             })
@@ -367,6 +373,13 @@ Plugin.create(import.meta.url, (glitter) => {
                             gvc.bindView({
                                 bind: "voucherCardList",
                                 view: () => {
+                                    if(vm.loading){
+                                        return  `<div class="w-100">
+            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        </div>`
+                                    }
                                     let clock:any=gvc.glitter.ut.clock()
                                     return gvc.map(widget.data.voucherCardList.map((data: any) => {
                                         return `

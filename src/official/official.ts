@@ -17,7 +17,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 const htmlGenerate = new glitter.htmlGenerate(widget.data.setting,hoverID);
                 return {
                     view: ()=>{
-                        return htmlGenerate.render(gvc, {class:`m-0 ${widget.data.layout} ${widget.data.class}`,style:`${widget.data.style}`})
+                        return htmlGenerate.render(gvc, {class:`m-0 ${widget.data.layout} ${widget.data.alignItems} ${widget.data.justifyContent} ${widget.data.class}`,style:`${widget.data.style}`})
                     },
                     editor: (() => {
                         return gvc.map([
@@ -27,20 +27,77 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 widget.data.layout=e.value
                                 widget.refreshAll!()
                             })}" >
-                            ${(() => {
-                                const data = [
-                                    {tit: "d-block", value: `d-block`},
-                                    {tit: "d-inline-block", value: `d-inline-block`},
-                                    {tit: "d-inline-flex", value: `d-inline-flex`},
-                                    {tit: "d-flex", value: `d-flex`},
-                                    {tit: "row", value: `row`},
-                                ]
-
-                                return gvc.map(data.map((it) => {
-                                    return `<option value="${it.value}" ${(widget.data.layout === it.value) ? `selected`:``} >${it.tit}</option>`
-                                }))
+                                ${(() => {
+                                    const data = [
+                                        {tit: "d-block", value: `d-block`},
+                                        {tit: "d-inline-block", value: `d-inline-block`},
+                                        {tit: "d-inline-flex", value: `d-inline-flex`},
+                                        {tit: "d-flex", value: `d-flex`},
+                                        {tit: "row", value: `row`},
+                                    ]
+    
+                                    return gvc.map(data.map((it) => {
+                                        return `<option value="${it.value}" ${(widget.data.layout === it.value) ? `selected`:``} >${it.tit}</option>`
+                                    }))
+                                })()}
+                            </select>
+                            ${(()=>{
+                                if (widget.data.layout == "d-flex"){
+                                    return `                                    
+                                        <span class="w-100 mb-2 fw-500 mt-2 " style="color: orange;">垂直對齊</span>
+                                        <select class="form-select mt-2 " onchange="${gvc.event((e:any) => {
+                                            widget.data.alignItems=e.value
+                                            widget.refreshAll!()
+                                        })}" >
+                                        ${(() => {
+                                            const data = [
+                                                {tit: "無", value: ``},
+                                                {tit: "對齊最上方", value: `align-items-start`},
+                                                {tit: "對齊最下方", value: `align-items-end`},
+                                                {tit: "對齊中間", value: `align-items-center`},
+                                                {tit: "元素的基線置中對齊", value: `align-items-baseline`},
+                                                {tit: "元件拉伸填滿高度並對齊", value: `align-items-stretch`},
+                                            ]
+    
+                                            return gvc.map(data.map((it) => {
+                                                return `<option value="${it.value}" ${(widget.data.alignItems === it.value) ? `selected`:``} >${it.tit}</option>`
+                                            }))
+                                        })()}
+                                        </select>
+                                    
+                                    `
+                                }
+                                return ``
                             })()}
-</select>
+                            ${(()=>{
+                                if (widget.data.layout == "d-flex"){
+                                    return `
+                                        <span class="w-100 mb-2 fw-500 mt-2 " style="color: orange;">水平對齊</span>
+                                        <select class="form-select mt-2 " onchange="${gvc.event((e:any) => {
+                                            widget.data.justifyContent=e.value
+                                            widget.refreshAll!()
+                                        })}" >
+                                        ${(() => {
+                                        const data = [
+                                            {tit: "無", value: ``},
+                                            {tit: "水平置左", value: `justify-content-start`},
+                                            {tit: "水平置右", value: `justify-content-end`},
+                                            {tit: "水平置中", value: `justify-content-center`},
+                                            {tit: "水平平均分布不留左右", value: `justify-content-between`},
+                                            {tit: "水平平均分布留左右", value: `justify-content-around`},
+                                            {tit: "水平和左右接平均分布", value: `justify-content-evenly`},
+                                        ]
+
+                                        return gvc.map(data.map((it) => {
+                                            return `<option value="${it.value}" ${(widget.data.justifyContent === it.value) ? `selected`:``} >${it.tit}</option>`
+                                        }))
+                                    })()}
+                                        </select>
+                                    
+                                    `
+                                }
+                                return ``
+                            })()}
 <span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Class</span>
 <input class="form-control" value="${widget.data.class ?? ""}" onchange="${gvc.event((e:any)=>{
                                 widget.data.class=e.value

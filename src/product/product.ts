@@ -71,7 +71,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 }
             },
             render: (gvc, widget, setting, hoverID) => {
-                const data: { link: { img: string, code?: string }[] } = widget.data
                 let bottomInset = 0;
                 gvc.addStyle(`
                     .productTitleRow{
@@ -161,9 +160,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 return {
                     view: () => {
-                        console.log(widget.data)
+
+                        let posterID = gvc.parameter.pageConfig?.obj.data?.poster_id || undefined;
                         if(widget.data.loading){
                             return  `
+                            
                             <div class="w-100">
                                 <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                                     <div class="spinner-border" role="status"></div>
