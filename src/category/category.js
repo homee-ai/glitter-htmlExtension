@@ -473,45 +473,44 @@ color: #1E1E1E;">${data.title}</div>
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        var _a, _b, _c, _d;
-                        gvc.addStyle(`
-     
-        nav{
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        main {
-            padding: 24px 35px 44px;
-      
-            font-family: 'Noto Sans TC';
-            margin: 0;
-            box-sizing: border-box;
-        }
-        .sortRawText{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 13px;
-            line-height: 19px;
-            /* identical to box height */
-            
-            display: flex;
-            align-items: center;
-            text-align: center;
-            
-            /* HOMEE dark grey */
-            
-            color: #858585;
-
-        }
-        a{
-        
-        }
-
-        `);
+                        var _a, _b, _c, _d, _e;
+                        gvc.addStyle(`     
+                        nav{
+                            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+                        }
+                
+                        main {
+                            padding: 24px 35px 44px;
+                      
+                            font-family: 'Noto Sans TC';
+                            margin: 0;
+                            box-sizing: border-box;
+                        }
+                        .sortRawText{
+                            font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 13px;
+                            line-height: 19px;
+                            /* identical to box height */
+                            
+                            display: flex;
+                            align-items: center;
+                            text-align: center;
+                            
+                            /* HOMEE dark grey */
+                            
+                            color: #858585;
+                
+                        }
+                        a{
+                        
+                        }
+                
+                        `);
                         const gBundle = (_c = (((_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.object) && ((_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data))) !== null && _c !== void 0 ? _c : { "title": "本週新品", "object": { "link": "https://mitblog.pixnet.net/blog/post/37708222", "name": "本週新品", "value": "gid://shopify/Collection/435249512748", "clickEvent": { "src": "$homee/homee/event.js", "route": "category" }, "selectPage": { "tag": "product_show", "name": "產品展示頁面", "group": "產品頁" }, "subCategory": [{ "name": "銀標福利品", "value": "gid://shopify/Collection/435260719404" }, { "name": "布沙發 ( 更多商品即將更新 )", "value": "gid://shopify/Collection/432946676012" }] }, "category": "sub_category_id", "index": 0 };
                         const viewModel = {
-                            select: 0,
+                            select: (_d = gBundle.selectIndex) !== null && _d !== void 0 ? _d : 0,
                             setSubCategoryRow: (category) => {
                                 gvc.addStyle(`
                 .subcateTitle{
@@ -535,18 +534,20 @@ color: #1E1E1E;">${data.title}</div>
                                     bind: "subCategoryRow",
                                     view: () => {
                                         var _a;
-                                        return gvc.map([{ name: "全部", id: gBundle.object.id }].concat((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((data, index) => {
+                                        return gvc.map([].concat((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((data, index) => {
+                                            console.log(gBundle);
+                                            console.log("here");
                                             return `
-                            <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle` : ``}" style="" onclick="${gvc.event(() => {
+                                            <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle` : ``}" style="" onclick="${gvc.event(() => {
                                                 viewModel.loading = true;
                                                 viewModel.select = index;
                                                 gvc.notifyDataChange('mainView');
                                                 gvc.notifyDataChange('cardGroup');
                                                 gvc.notifyDataChange('subCategoryRow');
                                             })}">
-                                ${data["name"]}
-                                
-                            </div>
+                                                ${data["name"]}
+                                                
+                                            </div>
                                 `;
                                         }));
                                     }, divCreate: { class: `d-flex`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;` }
@@ -556,11 +557,10 @@ color: #1E1E1E;">${data.title}</div>
                             product: []
                         };
                         let sortSelect = 0;
-                        let title = (_d = gBundle.title) !== null && _d !== void 0 ? _d : "分類頁";
+                        let title = (_e = gBundle.title) !== null && _e !== void 0 ? _e : "分類頁";
                         let sortPriceOrder = -1;
                         let origData = [];
                         glitter.share.productData = {};
-                        console.log(gBundle);
                         let sortRow = [
                             {
                                 text: '綜合', img: '', click: (e) => {
@@ -667,11 +667,12 @@ color: #1E1E1E;">${data.title}</div>
                                             bind: "cardGroup",
                                             view: () => {
                                                 if (viewModel.loading) {
-                                                    let returnHTML = `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
+                                                    let returnHTML = `
+                                        <div class="w-100">
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`;
                                                     return returnHTML;
                                                 }
                                                 else {
@@ -741,11 +742,8 @@ color: #1E1E1E;">${data.title}</div>
                                     }
                                 }, divCreate: { class: ``, style: `min-height : 100vh;padding-bottom:100px;` },
                                 onCreate: () => {
-                                    var _a;
                                     if (viewModel.loading) {
-                                        const id = [{ name: "全部", id: gBundle.object.value }].concat(((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((dd) => {
-                                            return { name: dd.title, id: dd.value };
-                                        }))[viewModel.select].id;
+                                        const id = gBundle.object.subCategory[viewModel.select].value;
                                         new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
                                             viewModel.product = response;
                                             viewModel.loading = false;
@@ -1089,7 +1087,8 @@ color: #1E1E1E;">${data.title}</div>
                                                 view: () => {
                                                     let returnHtml = ``;
                                                     widget.data.dataList.forEach((data) => {
-                                                        let title = data.title;
+                                                        var _a;
+                                                        let title = data.name;
                                                         let dataList = data.subCategory;
                                                         gvc.addStyle(`
                                                             .rightCategoryTitle{
@@ -1100,7 +1099,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                 font-size: 17px;
                                                                 line-height: 25px;
                                                                 color: #292929;
-                                                                margin-bottom:24px;
+                                                               
                                                             }
                                                             .cardTitle{
                                                                 height: 40px;
@@ -1118,33 +1117,29 @@ color: #1E1E1E;">${data.title}</div>
                                                         let CardGroup = ``;
                                                         if (dataList) {
                                                             dataList.forEach((element, index) => {
+                                                                var _a;
                                                                 let margin = (index % 2) ? "" : "margin-right: 22px;";
                                                                 if (element.name) {
-                                                                    console.log(dataList);
-                                                                    let passData = {
-                                                                        object: {
-                                                                            subCategory: dataList
-                                                                        }
-                                                                    };
                                                                     CardGroup += `
                                                                     <div class="rounded" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e) => {
                                                                         appConfig().changePage(gvc, "sub_category", {
                                                                             title: title,
-                                                                            object: element,
+                                                                            object: data,
                                                                             category: "sub_category_id",
-                                                                            index: 0
+                                                                            selectIndex: index
                                                                         });
                                                                     })}">
                                                                         <div class="w-100 rounded" style="padding-top: 86%;background:50% / cover url(${element.img})"></div>
-                                                                        <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${element.name}</div>
+                                                                        <div class="cardTitle d-flex justify-content-center align-items-baseline mt-1 text-center">${(_a = element === null || element === void 0 ? void 0 : element.appearText) !== null && _a !== void 0 ? _a : element.name}</div>
                                                                     </div>
                                                                     `;
                                                                 }
                                                             });
                                                         }
+                                                        console.log(data);
                                                         returnHtml += `
                                                             <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
-                                                                <div class="d-flex rightCategoryTitle" id="${title}">${title}</div>
+                                                                <div class="d-flex rightCategoryTitle" style="margin-bottom: ${(_a = data.titleDistance) !== null && _a !== void 0 ? _a : 0}px" id="${title}">${title}</div>
                                                                 <div class="d-flex flex-wrap w-100">
                                                                     ${CardGroup}
                                                                 </div>
@@ -1197,6 +1192,7 @@ color: #1E1E1E;">${data.title}</div>
                     },
                     editor: () => {
                         return `${gvc.map(widget.data.dataList.map((dd, index) => {
+                            var _a, _b;
                             return `
                             <div class="d-flex flex-column my-3 alert alert-dark">
                                 <div class="d-flex align-items-center">
@@ -1214,13 +1210,27 @@ color: #1E1E1E;">${data.title}</div>
                                     widget.data.dataList[index].title = text;
                                     widget.refreshAll();
                                 }
-                            })}                                
+                            })}   
+                                ${glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: `標題和下方元素的距離`,
+                                default: (_a = dd.titleDistance) !== null && _a !== void 0 ? _a : 0,
+                                placeHolder: (_b = dd.titleDistance) !== null && _b !== void 0 ? _b : 0,
+                                callback: (text) => {
+                                    widget.data.dataList[index].titleDistance = text;
+                                    widget.refreshAll();
+                                }
+                            })}                             
                                 ${(() => {
                                 let returnHTML = ``;
                                 if (dd === null || dd === void 0 ? void 0 : dd.subCategory) {
                                     gvc.map(dd === null || dd === void 0 ? void 0 : dd.subCategory.map((data) => {
+                                        var _a;
                                         returnHTML += `
-                                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">${data.name}照片</h3>
+                                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" contenteditable="true" class="mt-2" onblur="${gvc.event((e) => {
+                                            data.appearText = e.innerHTML;
+                                            widget.refreshAll();
+                                        })}">${(_a = data === null || data === void 0 ? void 0 : data.appearText) !== null && _a !== void 0 ? _a : data.name}</h3>
                                             <div class="mt-2"></div>
                                             <div class="d-flex align-items-center mb-3">
                                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${data.img}">

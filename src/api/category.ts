@@ -44,6 +44,7 @@ export class Category {
         const glitter = this.glitter;
         const that = this;
         let jsonData: any
+
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/category`,
             type: 'get',
