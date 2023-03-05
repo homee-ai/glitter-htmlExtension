@@ -161,7 +161,7 @@ ClickEvent.create(import.meta.url, {
                                         }
                                         else {
                                             User.login({
-                                                account: userData.user_id,
+                                                account: userData.email,
                                                 pwd: userData.pwd,
                                                 callback: (response) => {
                                                     dialog.dataLoading(false);
@@ -315,7 +315,7 @@ ${gvc.bindView(() => {
                                         }
                                         else {
                                             User.login({
-                                                account: userData.user_id,
+                                                account: userData.email,
                                                 pwd: userData.pwd,
                                                 callback: (response) => {
                                                     dialog.dataLoading(false);

@@ -172,7 +172,7 @@ ClickEvent.create(import.meta.url, {
                                             appConfig().changePage(gvc, object.selectPage.tag!)
                                         } else {
                                             User.login({
-                                                account: userData.user_id,
+                                                account: userData.email,
                                                 pwd: userData.pwd,
                                                 callback: (response) => {
                                                     dialog.dataLoading(false)
@@ -328,7 +328,7 @@ ${
                                             appConfig().setHome(gvc, object.selectPage.tag!)
                                         } else {
                                             User.login({
-                                                account: userData.user_id,
+                                                account: userData.email,
                                                 pwd: userData.pwd,
                                                 callback: (response) => {
                                                     dialog.dataLoading(false)
@@ -349,7 +349,6 @@ ${
                             }
                         }
                     })
-
                 }
             }
         }
