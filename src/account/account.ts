@@ -938,14 +938,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                             <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="LOGO">
                                             <div class="loginInf d-flex flex-column align-items-center">
                                                 <div class="hint">
-                                                    您可以透過註冊電子郵件或手機查收並輸入正確的驗證碼完成密碼重設
+                                                    您可以透過註冊電子郵件並前往官網完成密碼重設
                                                 </div>
                                                 <div class="loginRow d-flex">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址或手機號碼">
+                                                    <input class="w-100 border-0" placeholder="電子郵件地址">
                                                 </div>
-                        
-                                                <div class="d-flex " style="margin-top: 32px">
+                                                <div class="d-flex d-none" style="margin-top: 32px">
                                                     <div class="authRow d-flex align-items-center">
                                                         <img src="${new URL('../img/component/login/shield.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                         <input class="w-100 border-0" placeholder="驗證碼" style="margin-left: 16px;">
@@ -956,7 +955,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         獲取驗證碼
                                                     </div>
                                                 </div>
-                                                <div class="helpText d-flex align-items-center justify-content-end">
+                                                <div class="helpText d-flex align-items-center justify-content-end d-none">
                                                     需要協助？
                                                 </div>
                         
