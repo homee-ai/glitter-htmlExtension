@@ -30,19 +30,21 @@ export class SharedView {
                         return `
                     <nav class="bg-white w-100" style="position: fixed;z-index: 3;padding-top: ${topInset - 20}px;width: 100vw;">
                         <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 26px; background: ${item.background};${shadow} position:relative;">
-                            <div class="me-auto p-0 d-flex align-items-center" style="">
+                            <div class="me-auto p-0 d-flex align-items-center navLeft" style="">
                                 ${item.leftIcon}
                             </div>
-                            <div class="" style="font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-size: 16px;
-                    font-weight: 700;
-                    white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
-                    
-                    ">${item.title}</div>
+                            <div class="navTitle" style="font-family: 'Noto Sans TC';
+                            font-style: normal;
+                            font-size: 16px;
+                            font-weight: 700;
+                            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;                            
+                            " onclick="${gvc.event(() => {
+                            let title = document.querySelectorAll('.navTitle');
+                            console.log(title);
+                        })}">${item.title}</div>
                             ${(() => {
                             if (item.rightIcon) {
-                                return `<div class="d-flex ms-auto align-items-center" style="">
+                                return `<div class="d-flex ms-auto align-items-center navRight" style="">
                                         ${item.rightIcon}
                                     </div>`;
                             }
@@ -55,7 +57,25 @@ export class SharedView {
                         `;
                     },
                     divCreate: { style: `width:100vw;height:calc(63px + ${topInset - 20}px);` },
-                    onCreate: () => { }
+                    onCreate: () => {
+                        var _a, _b;
+                        let left = document.querySelectorAll('.navLeft');
+                        let right = document.querySelectorAll('.navRight');
+                        let title = document.querySelectorAll('.navTitle');
+                        let diff = (((_a = left[left.length - 1]) === null || _a === void 0 ? void 0 : _a.offsetWidth) || 0) - (((_b = right[right.length - 1]) === null || _b === void 0 ? void 0 : _b.offsetWidth) || 0);
+                        console.log("差距");
+                        console.log(left[left.length - 1].offsetWidth);
+                        console.log(right[right.length - 1].offsetWidth);
+                        console.log(title[title.length - 1]);
+                        if (item.title) {
+                            if (diff > 0) {
+                                title[title.length - 1].style.paddingRight = `${diff}px`;
+                            }
+                            else {
+                                title[title.length - 1].style.paddingLeft = `${diff * -1}px`;
+                            }
+                        }
+                    }
                 }),
                 gvc.bindView({
                     bind: `ddd`,

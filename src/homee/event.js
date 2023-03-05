@@ -299,7 +299,7 @@ ${gvc.bindView(() => {
                                 view: () => {
                                     var _a;
                                     return `
-<select
+                            <select
                                 class="form-select flex-fill"
                                 onchange="${gvc.event((e) => {
                                         const val = JSON.parse(e.value);
@@ -321,7 +321,30 @@ ${gvc.bindView(() => {
 <div class="alert alert-dark mt-2">
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">大分類</h3>
                     ${getInput(object)}
+                    <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">跳轉後的子分類首頁</h3>
+                    <select
+                        class="form-select flex-fill"
+                        onchange="${gvc.event((e) => {
+                        const val = JSON.parse(e.value);
+                        object.selectIndex = val;
+                        widget.refreshAll();
+                    })}">
+                    ${(() => {
+                        let returnHTML = `
+                            
+                        `;
+                        object.subCategory.forEach((data, index) => {
+                            var _a;
+                            let select = (index == object.selectIndex) ? "selected" : "";
+                            returnHTML += `
+                                <option value="${index}" ${select}>${(_a = data.appearText) !== null && _a !== void 0 ? _a : data.name}</option>
+                            `;
+                        });
+                        return returnHTML;
+                    })()}
+                    </select>
                     <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">子分類</h3>
+                    
                     ${gvc.map(((_a = object.subCategory) !== null && _a !== void 0 ? _a : []).map((dd, index) => {
                         return `<div class="mb-3 d-flex align-items-center w-100"><i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                             object.subCategory.splice(index, 1);
@@ -339,11 +362,12 @@ ${gvc.bindView(() => {
                     `;
                 },
                 event: () => {
+                    var _a;
                     appConfig().changePage(gvc, "sub_category", {
                         title: object.name,
                         object: object,
                         category: "sub_category_id",
-                        index: 0
+                        selectIndex: (_a = object === null || object === void 0 ? void 0 : object.selectIndex) !== null && _a !== void 0 ? _a : 0
                     });
                 }
             };

@@ -536,8 +536,6 @@ color: #1E1E1E;">${data.title}</div>
                                     view: () => {
                                         var _a;
                                         return gvc.map([].concat((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).map((data, index) => {
-                                            console.log(gBundle);
-                                            console.log("here");
                                             return `
                                             <div class="subcateTitle ${(viewModel.select === index) ? `selectTitle` : ``}" style="" onclick="${gvc.event(() => {
                                                 viewModel.loading = true;
@@ -551,7 +549,26 @@ color: #1E1E1E;">${data.title}</div>
                                             </div>
                                 `;
                                         }));
-                                    }, divCreate: { class: `d-flex`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;` }
+                                    }, divCreate: { class: `d-flex rowBar`, style: `margin-left:8px;overflow-x: scroll;padding-right:8px;` },
+                                    onCreate: () => {
+                                        const parent = document.querySelector('.rowBar');
+                                        const center = document.querySelector('.selectTitle');
+                                        const centerOffsetLeft = center.offsetLeft;
+                                        const centerWidth = center.offsetWidth;
+                                        const parentWidth = parent.offsetWidth;
+                                        let sumWidth = 0;
+                                        let scrollTo = 0;
+                                        const children = Array.from(parent.children);
+                                        for (const data of children) {
+                                            let child = data;
+                                            sumWidth += child.offsetWidth + parseInt(window.getComputedStyle(child).marginLeft);
+                                            if (child.offsetLeft + child.offsetWidth / 2 >= centerOffsetLeft + centerWidth / 2) {
+                                                scrollTo = sumWidth - parentWidth / 2 - child.offsetWidth / 2 - parseInt(window.getComputedStyle(child).marginLeft);
+                                                break;
+                                            }
+                                        }
+                                        parent.scrollLeft = scrollTo;
+                                    }
                                 });
                             },
                             loading: true,
@@ -1116,6 +1133,7 @@ color: #1E1E1E;">${data.title}</div>
                                                             }
                                                         `);
                                                         let CardGroup = ``;
+                                                        console.log(data);
                                                         if (dataList) {
                                                             dataList.forEach((element, index) => {
                                                                 var _a;
@@ -1123,6 +1141,9 @@ color: #1E1E1E;">${data.title}</div>
                                                                 if (element.name) {
                                                                     CardGroup += `
                                                                     <div class="rounded" style="width: calc(50% - 11px); ${margin}" onclick="${gvc.event((e) => {
+                                                                        data.subCategory.forEach((sub) => {
+                                                                            sub.name = (sub.appearText) ? sub.appearText : sub.name;
+                                                                        });
                                                                         appConfig().changePage(gvc, "sub_category", {
                                                                             title: title,
                                                                             object: data,

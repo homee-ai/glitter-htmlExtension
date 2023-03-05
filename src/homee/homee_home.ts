@@ -414,17 +414,19 @@ height: ${([undefined, ''].indexOf(widget.data.logo.height) !== -1) ? 'auto' : w
 src="${(!widget.data.logo.src || widget.data.logo.src === '') ? new URL('./src/home_logo.svg', import.meta.url) : widget.data.logo.src}"><h3 class="p-0 m-0" style="${widget.data.titleStyle ?? ""}">${widget.data.title ?? ""}</h3></div>`,
                             rightIcon: `
                        <div class="d-flex align-items-center" style="gap:15px;">
-                       <img src="${rootURL}/homee/src/searchBlack.svg" onclick="${gvc.event(() => {
-                                appConfig().changePage(gvc, 'category')
+                       
+                       <img src="${rootURL}/img/component/scan.svg" onclick="${gvc.event(() => {
+                                glitter.runJsInterFace("qrcodeScanner", {}, () => {
+                                })
                             })}">
                        <img src="${rootURL}/homee/src/bell.svg" onclick="${gvc.event(() => {
                                 glitter.runJsInterFace("noticeBell", {}, () => {
                                 })
                             })}">
-                       <img src="${rootURL}/img/component/scan.svg" onclick="${gvc.event(() => {
-                                glitter.runJsInterFace("qrcodeScanner", {}, () => {
-                                })
+                       <img src="${rootURL}/homee/src/category.svg" onclick="${gvc.event(() => {
+                                appConfig().changePage(gvc, 'category')
                             })}">
+                       
 </div>
                        `
                         })

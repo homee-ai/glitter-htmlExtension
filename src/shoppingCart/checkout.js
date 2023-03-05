@@ -542,7 +542,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     checkPic = '../img/component/shoppingCart/deleteCircle.png';
                                                                     chooseEvent = () => {
                                                                         dialog.confirm("確定要刪除嘛?", (result) => {
-                                                                            if (result) {
+                                                                            if (result == true) {
                                                                                 item.deleteEvent();
                                                                                 category.item.splice(itemIndex, 1);
                                                                                 if (category.item.length == 0) {
@@ -579,11 +579,22 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             <div class="d-flex" style="">
                                                                                 <img style="width: 24px;height: 24px;" src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty--;
-                                                                    item.qty = (item.qty < 1) ? 1 : item.qty;
-                                                                    item.subtotal = item.qty * item.price;
-                                                                    refreshCart();
+                                                                    dialog.confirm("確定要刪除嘛?", (result) => {
+                                                                        if (result == true) {
+                                                                            item.deleteEvent();
+                                                                            category.item.splice(itemIndex, 1);
+                                                                            if (category.item.length == 0) {
+                                                                                let indexToRemove = widget.data.cartItem.findIndex((item) => item.category_id == category.category_id);
+                                                                                widget.data.cartItem.splice(indexToRemove, 1);
+                                                                                refreshCart();
+                                                                            }
+                                                                            else {
+                                                                                refreshCart();
+                                                                            }
+                                                                        }
+                                                                    });
                                                                 })}">
-                                                                                ${gvc.bindView({
+                                                                    ${gvc.bindView({
                                                                     bind: `qtyNumber${item.item_id}`,
                                                                     view: () => {
                                                                         return `
