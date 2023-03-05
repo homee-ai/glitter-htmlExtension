@@ -463,6 +463,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     return gvc.bindView({
                                         bind: category.category_id,
                                         view: () => {
+                                            var _a, _b;
                                             let categoryCheck = true;
                                             category.item.forEach((item) => {
                                                 if (!item.select) {
@@ -481,8 +482,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(() => {
                                                 category.delete = (category === null || category === void 0 ? void 0 : category.delete) ? !category.delete : true;
+                                                if (widget.data.DomText == "完成") {
+                                                    widget.data.DomText = "編輯";
+                                                }
+                                                else {
+                                                    widget.data.DomText = "完成";
+                                                }
                                                 refreshCart();
-                                            })}">編輯</div>
+                                            })}">${(_b = (_a = widget.data) === null || _a === void 0 ? void 0 : _a.DomText) !== null && _b !== void 0 ? _b : "編輯"}</div>
                                             </div>
                                             <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
                                             <div style="padding:0 12px;">   
@@ -556,7 +563,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                 })}">
                                                                     <img class="itemImg" src="${item.img}">
                                                                     <div class="d-flex flex-column flex-grow-1">
-                                                                        <div class="item-name">${item.name}</div>
+                                                                        <div class="item-name" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${item.name}</div>
                                                                         <div class="d-flex">
                                                                     ${(() => {
                                                                     if (item.kind) {

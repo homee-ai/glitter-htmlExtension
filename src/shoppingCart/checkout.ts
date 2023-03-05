@@ -504,8 +504,16 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 <div class="item-category">${category.category}</div>
                                                 <div class="ms-auto item-edit" onclick="${gvc.event(() => {
                                                 category.delete = (category?.delete) ? !category.delete : true;
+                                                if (widget.data.DomText == "完成" ){
+                                                    widget.data.DomText = "編輯"
+                                                }else{
+                                                   
+                                                    widget.data.DomText = "完成"
+                                                }
                                                 refreshCart()
-                                            })}">編輯</div>
+                                                
+                                                 
+                                            })}">${widget.data?.DomText??"編輯"}</div>
                                             </div>
                                             <div style="height:1px; width: 100%;background: #E0E0E0;margin-bottom:12px;"></div>
                                             <div style="padding:0 12px;">   
@@ -581,7 +589,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                 })}">
                                                                     <img class="itemImg" src="${item.img}">
                                                                     <div class="d-flex flex-column flex-grow-1">
-                                                                        <div class="item-name">${item.name}</div>
+                                                                        <div class="item-name" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${item.name}</div>
                                                                         <div class="d-flex">
                                                                     ${(() => {
                                                                     if (item.kind) {
