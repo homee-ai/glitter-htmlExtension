@@ -1088,7 +1088,7 @@ color: #1E1E1E;">${data.title}</div>
                                                 view: () => {
                                                     let returnHtml = ``;
                                                     widget.data.dataList.forEach((data) => {
-                                                        var _a, _b;
+                                                        var _a;
                                                         let title = (_a = data.pageTitile) !== null && _a !== void 0 ? _a : data.title;
                                                         let dataList = data.subCategory;
                                                         gvc.addStyle(`
@@ -1137,14 +1137,9 @@ color: #1E1E1E;">${data.title}</div>
                                                                 }
                                                             });
                                                         }
-                                                        console.log(data);
                                                         returnHtml += `
                                                             <div class="d-flex flex-column" style="padding:40px 16px 24px 24px;">
-<<<<<<< HEAD
                                                                 <div class="d-flex rightCategoryTitle" id="pageIndex${title}">${title}</div>
-=======
-                                                                <div class="d-flex rightCategoryTitle" style="margin-bottom: ${(_b = data.titleDistance) !== null && _b !== void 0 ? _b : 0}px" id="${title}">${title}</div>
->>>>>>> 3bd917e54d0c7739db95eb0cd1b84e8c551568ca
                                                                 <div class="d-flex flex-wrap w-100">
                                                                     ${CardGroup}
                                                                 </div>

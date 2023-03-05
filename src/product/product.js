@@ -179,7 +179,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                            ${gvc.bindView({
                             bind: 'productTitle',
                             view: () => {
-                                return `  <div class="productTitle">${widget.data.name}</div>
+                                return `  <div class="productTitle" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${widget.data.name}</div>
                             <div class="d-flex productPriceRow">
                                 <div class="sale_price">NT$ ${addThousandSeparator(selectSku.sale_price)}</div>
                                 <div class="price ${selectSku && (selectSku.sale_price === selectSku.price) ? 'd-none' : ''}">NT$ ${addThousandSeparator(selectSku.price)}</div>

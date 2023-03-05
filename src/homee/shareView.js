@@ -33,10 +33,13 @@ export class SharedView {
                             <div class="me-auto p-0 d-flex align-items-center" style="">
                                 ${item.leftIcon}
                             </div>
-                            <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="position: absolute;top: 50%;   font-family: 'Noto Sans TC';
+                            <div class="" style="font-family: 'Noto Sans TC';
                     font-style: normal;
                     font-size: 16px;
-                    font-weight: 700;">${item.title}</div>
+                    font-weight: 700;
+                    white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
+                    
+                    ">${item.title}</div>
                             ${(() => {
                             if (item.rightIcon) {
                                 return `<div class="d-flex ms-auto align-items-center" style="">
