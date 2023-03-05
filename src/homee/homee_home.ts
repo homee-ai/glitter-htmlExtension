@@ -170,6 +170,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
 
                                     return `
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">寬高比</h3>
+
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {
@@ -709,7 +711,7 @@ ${glitter.htmlGenerate.editeInput({
                             leftIcon: widget.data.left.map((dd: any) => {
                                 dd.type=dd.type ?? 'image'
                                 if(dd.type === 'image'){
-                                    return  (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                    return  (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight||"24px"};width: ${dd.imgWidth||"24px"};" alt="" onclick="${gvc.event(() => {
                                         ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
                                     })}">`)
                                 }else {
@@ -724,7 +726,7 @@ ${glitter.htmlGenerate.editeInput({
                                 return `<div class="position-relative">
 ${(()=>{
                                     if(dd.type === 'image'){
-                                        return  (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        return  (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight||"24px"};width: ${dd.imgWidth||"24px"};" alt="" onclick="${gvc.event(() => {
                                             ClickEvent.trigger({gvc, widget, clickEvent: dd.clickEvent})
                                         })}">`)
                                     }else {
@@ -805,7 +807,22 @@ ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
                                                 }
                                             })
                                         })}"></i>
-</div>` : gvc.map([glitter.htmlGenerate.editeInput({
+</div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片寬度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${dd.imgWidth ?? "24px"}" onchange="${gvc.event((e:HTMLInputElement)=>{
+            dd.imgWidth = e.value;
+            widget.refreshAll();
+        })}">
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片高度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${dd.imgHeight ?? "24px"}" onchange="${gvc.event((e:HTMLInputElement)=>{
+            dd.imgHeight = e.value;
+            widget.refreshAll();
+        })}">
+    </div>
+` : gvc.map([glitter.htmlGenerate.editeInput({
                                             gvc:gvc,
                                             title:'按鈕文字',
                                             default:dd.title ?? '',

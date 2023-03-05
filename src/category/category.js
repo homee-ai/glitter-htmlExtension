@@ -79,7 +79,7 @@ width: calc(100vw - 180px);
 " placeholder="${widget.data.searchDefault}" onclick="${gvc.event(() => {
                                 glitter.changePage(new URL('../homee/jspage/search-page.js', import.meta.url).href, 'searchPage', true, {}, { animation: glitter.animation.fade });
                             })}" >${widget.data.searchDefault}</div>
-`,
+                            `,
                             rightIcon: `
                              <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1675061894470" style="width: 28px;height: 28px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                 glitter.runJsInterFace("noticeBell", {}, () => { });

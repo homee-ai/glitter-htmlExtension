@@ -154,6 +154,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                         return arr;
                                     }
                                     return `
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">寬高比</h3>
+
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {
@@ -693,7 +695,7 @@ ${glitter.htmlGenerate.editeInput({
                                 var _b, _c, _d, _e;
                                 dd.type = (_b = dd.type) !== null && _b !== void 0 ? _b : 'image';
                                 if (dd.type === 'image') {
-                                    return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                    return (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight || "24px"};width: ${dd.imgWidth || "24px"};" alt="" onclick="${gvc.event(() => {
                                         ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
                                     })}">`);
                                 }
@@ -711,7 +713,7 @@ ${glitter.htmlGenerate.editeInput({
 ${(() => {
                                     var _b, _c, _d;
                                     if (dd.type === 'image') {
-                                        return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        return (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight || "24px"};width: ${dd.imgWidth || "24px"};" alt="" onclick="${gvc.event(() => {
                                             ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
                                         })}">`);
                                     }
@@ -766,7 +768,7 @@ right: 8px;` }
                                 return `
 <div class="alert alert-dark">
 ${(() => {
-                                    var _b, _c, _d, _e;
+                                    var _b, _c, _d, _e, _f, _g;
                                     return `
 <h3 class="text-white" style="font-size: 16px;">類型</h3>
 <select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
@@ -795,10 +797,25 @@ ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
                                             }
                                         });
                                     })}"></i>
-</div>` : gvc.map([glitter.htmlGenerate.editeInput({
+</div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片寬度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${(_c = dd.imgWidth) !== null && _c !== void 0 ? _c : "24px"}" onchange="${gvc.event((e) => {
+                                        dd.imgWidth = e.value;
+                                        widget.refreshAll();
+                                    })}">
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片高度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${(_d = dd.imgHeight) !== null && _d !== void 0 ? _d : "24px"}" onchange="${gvc.event((e) => {
+                                        dd.imgHeight = e.value;
+                                        widget.refreshAll();
+                                    })}">
+    </div>
+` : gvc.map([glitter.htmlGenerate.editeInput({
                                             gvc: gvc,
                                             title: '按鈕文字',
-                                            default: (_c = dd.title) !== null && _c !== void 0 ? _c : '',
+                                            default: (_e = dd.title) !== null && _e !== void 0 ? _e : '',
                                             placeHolder: `請輸入按鈕文字`,
                                             callback: (text) => {
                                                 dd.title = text;
@@ -807,7 +824,7 @@ ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
                                         }), glitter.htmlGenerate.editeText({
                                             gvc: gvc,
                                             title: 'Style',
-                                            default: (_d = dd.style) !== null && _d !== void 0 ? _d : '',
+                                            default: (_f = dd.style) !== null && _f !== void 0 ? _f : '',
                                             placeHolder: ``,
                                             callback: (text) => {
                                                 dd.style = text;
@@ -816,7 +833,7 @@ ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
                                         }), glitter.htmlGenerate.editeText({
                                             gvc: gvc,
                                             title: 'Class',
-                                            default: (_e = dd.class) !== null && _e !== void 0 ? _e : '',
+                                            default: (_g = dd.class) !== null && _g !== void 0 ? _g : '',
                                             placeHolder: ``,
                                             callback: (text) => {
                                                 dd.class = text;
