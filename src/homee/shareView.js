@@ -63,10 +63,6 @@ export class SharedView {
                         let right = document.querySelectorAll('.navRight');
                         let title = document.querySelectorAll('.navTitle');
                         let diff = (((_a = left[left.length - 1]) === null || _a === void 0 ? void 0 : _a.offsetWidth) || 0) - (((_b = right[right.length - 1]) === null || _b === void 0 ? void 0 : _b.offsetWidth) || 0);
-                        console.log("差距");
-                        console.log(left[left.length - 1].offsetWidth);
-                        console.log(right[right.length - 1].offsetWidth);
-                        console.log(title[title.length - 1]);
                         if (item.title) {
                             if (diff > 0) {
                                 title[title.length - 1].style.paddingRight = `${diff}px`;

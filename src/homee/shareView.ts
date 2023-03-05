@@ -67,10 +67,7 @@ export class SharedView {
                         let title = document.querySelectorAll<HTMLDivElement>('.navTitle');
 
                         let diff = (left[left.length - 1]?.offsetWidth||0) - (right[right.length - 1]?.offsetWidth||0);
-                        console.log("差距")
-                        console.log(left[left.length - 1]!.offsetWidth)
-                        console.log(right[right.length - 1]!.offsetWidth)
-                        console.log(title[title.length - 1 ])
+
                         if (item.title){
                             if (diff > 0){
                                 title[title.length - 1]!.style.paddingRight=`${diff}px`;
