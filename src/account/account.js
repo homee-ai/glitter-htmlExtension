@@ -933,8 +933,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                     <input class="w-100 border-0" placeholder="電子郵件地址">
                                                 </div>
-                                                <a class="button form-control" style="background: blue;" href="https://www.google.com.tw/?gfe_rd=cr&dcr=0&ei=-Ba0WZO8Gtqi4wKe-KOADA">連結</a>
-                        
                                                 <div class="d-flex d-none" style="margin-top: 32px">
                                                     <div class="authRow d-flex align-items-center">
                                                         <img src="${new URL('../img/component/login/shield.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
