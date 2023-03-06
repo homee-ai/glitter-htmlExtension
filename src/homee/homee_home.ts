@@ -47,7 +47,11 @@ Plugin.create(import.meta.url, (glitter) => {
         banner: {
             defaultData: {
                 link: [],
-                height:"128"
+                height:"128",
+                slideColor:"#E0E0E0",
+                slideBorderColor:"",
+                slideSelectColor:"#FFFFFF",
+                slideSelectBorderColor:"1px solid #FE5541",
             },
             render: (gvc, widget, setting, hoverID) => {
                 // glitter.share.clickEvent
@@ -56,16 +60,43 @@ Plugin.create(import.meta.url, (glitter) => {
                 function slideControl(pageImgArray: any, pagination: boolean, navigation: boolean, scrollbar: boolean) {
                     const glitter = gvc.glitter
                     gvc.addStyle(`
-            .swiper-slide{
-                width: 100%;
-                background-repeat: no-repeat;
-            }
-        `)
+                        .swiper-slide{
+                            width: 100%;
+                            background-repeat: no-repeat;
+                        }
+                        .swiper-pagination-bullet {
+                            ${(()=>{
+                                if (widget.data.slideColor){
+                                    return `background: ${widget.data.slideColor};`;
+                                }else return ``   
+                            })()}
+                            ${(()=>{
+                                if (widget.data.slideBorderColor){
+                                    return `background: ${widget.data.slideBorderColor};`;
+                                }else return ``
+                            })()}                            
+                            width:7px;
+                            height:7px;                         
+                        }
+                        .swiper-pagination-bullet-active {
+                      
+                            ${(()=>{
+                                if (widget.data.slideSelectColor){
+                                    return `background: ${widget.data.slideSelectColor};`;
+                                }else return ``
+                            })()}
+                            ${(()=>{
+                                if (widget.data.slideSelectBorderColor){
+                                    return `border: ${widget.data.slideSelectBorderColor};`;
+                                }else return ``
+                            })()}                       
+                        }
+                    `)
                     let slidePage = ``
                     pageImgArray.forEach((item: any, index: number) => {
                         // <!-- Slides -->
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: ${widget.data}128%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
+                <div class="swiper-slide" style="padding-bottom: ${widget.data.height ?? 128}%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             })
@@ -162,6 +193,53 @@ Plugin.create(import.meta.url, (glitter) => {
                     },
                     editor: () => {
                         return gvc.map([
+                            // slideColor:"#E0E0E0",
+                            // slideBorderColor:"",
+                            // slideSelectColor:"#FFFFFF",
+                            // slideSelectBorderColor:"1px solid #FE5541",
+                            `
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點顏色</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="" type="color" value="${widget.data.slideColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                    widget.data.slideColor = e.value;
+                                    widget.refreshAll();
+                                    
+                                })}">
+                                <input class="form-control" type="text" value="${widget.data.slideColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                    widget.data.slideColor = e.value
+                                    widget.refreshAll();
+                                })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="form-control" type="text" value="${widget.data.slideBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideBorderColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點顏色</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="" type="color" value="${widget.data.slideSelectColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectColor = e.value;
+                                widget.refreshAll();
+
+                            })}">
+                                <input class="form-control" type="text" value="${widget.data.slideSelectColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="form-control" type="text" value="${widget.data.slideSelectBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectBorderColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+
+<!--                                1px solid #FE5541-->
+                            
+                            `,
                             gvc.bindView({
                                 bind: editorID,
                                 view: () => {
@@ -171,6 +249,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
 
                                     return `
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片寬高比</h3>
+<input class="mt-2 form-control" value="${widget.data.height??128}" onchange="${gvc.event((e:HTMLInputElement)=>{
+    widget.data.height = e.value;
+    widget.refreshAll();
+})}">
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {
@@ -775,71 +858,71 @@ right: 8px;`}
                                 dd.badge=dd.badge ?? {}
                                 dd.clickEvent = dd.clickEvent ?? {}
                                 return `
-<div class="alert alert-dark">
-${
-                                    (()=>{
-                                        return `
-<h3 class="text-white" style="font-size: 16px;">類型</h3>
-<select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
-                                            dd.type = e.value
-                                            widget.refreshComponent()
-                                        })}">
-<option value="image" ${dd.type === 'image' && 'selected'}>圖片</option>
-<option ${dd.type === 'title' && 'selected'} value="title">文字</option>
-</select>
-${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
-<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
-                                            widget.data.right.splice(index, 1)
-                                            widget.refreshComponent()
-                                        })}"></i>
-<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img ?? ""}">
-<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
-                                            glitter.ut.chooseMediaCallback({
-                                                single: true,
-                                                accept: 'image/*',
-                                                callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
-                                                    api.upload(data[0].file, (link) => {
-                                                        dd.img = link;
-                                                        widget.refreshComponent()
-                                                    })
-                                                }
-                                            })
-                                        })}"></i>
-</div>` : gvc.map([glitter.htmlGenerate.editeInput({
-                                            gvc:gvc,
-                                            title:'按鈕文字',
-                                            default:dd.title ?? '',
-                                            placeHolder:`請輸入按鈕文字`,
-                                            callback:(text)=>{
-                                                dd.title=text
-                                                widget.refreshComponent()
-                                            }
-                                        }),glitter.htmlGenerate.editeText({
-                                            gvc:gvc,
-                                            title:'Style',
-                                            default:dd.style ?? '',
-                                            placeHolder:``,
-                                            callback:(text)=>{
-                                                dd.style=text
-                                                widget.refreshComponent()
-                                            }
-                                        }),glitter.htmlGenerate.editeText({
-                                            gvc:gvc,
-                                            title:'Class',
-                                            default:dd.class ?? '',
-                                            placeHolder:``,
-                                            callback:(text)=>{
-                                                dd.class=text
-                                                widget.refreshComponent()
-                                            }
-                                        })])}
-`
-                                    })()
-                                }
-${ClickEvent.editer(gvc, widget, dd.clickEvent)}
-${ClickEvent.editer(gvc, widget, dd.badge,{hover:false,option:['cartBadge'],title:"數量提示"})}
-</div>
+                            <div class="alert alert-dark">
+                            ${
+                                                                (()=>{
+                                                                    return `
+                            <h3 class="text-white" style="font-size: 16px;">類型</h3>
+                            <select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
+                                                                        dd.type = e.value
+                                                                        widget.refreshComponent()
+                                                                    })}">
+                            <option value="image" ${dd.type === 'image' && 'selected'}>圖片</option>
+                            <option ${dd.type === 'title' && 'selected'} value="title">文字</option>
+                            </select>
+                            ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
+                            <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+                                                                        widget.data.right.splice(index, 1)
+                                                                        widget.refreshComponent()
+                                                                    })}"></i>
+                            <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${dd.img ?? ""}">
+                            <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                            <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                                                                        glitter.ut.chooseMediaCallback({
+                                                                            single: true,
+                                                                            accept: 'image/*',
+                                                                            callback(data: { file: any; data: any; type: string; name: string; extension: string }[]) {
+                                                                                api.upload(data[0].file, (link) => {
+                                                                                    dd.img = link;
+                                                                                    widget.refreshComponent()
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    })}"></i>
+                            </div>` : gvc.map([glitter.htmlGenerate.editeInput({
+                                                                        gvc:gvc,
+                                                                        title:'按鈕文字',
+                                                                        default:dd.title ?? '',
+                                                                        placeHolder:`請輸入按鈕文字`,
+                                                                        callback:(text)=>{
+                                                                            dd.title=text
+                                                                            widget.refreshComponent()
+                                                                        }
+                                                                    }),glitter.htmlGenerate.editeText({
+                                                                        gvc:gvc,
+                                                                        title:'Style',
+                                                                        default:dd.style ?? '',
+                                                                        placeHolder:``,
+                                                                        callback:(text)=>{
+                                                                            dd.style=text
+                                                                            widget.refreshComponent()
+                                                                        }
+                                                                    }),glitter.htmlGenerate.editeText({
+                                                                        gvc:gvc,
+                                                                        title:'Class',
+                                                                        default:dd.class ?? '',
+                                                                        placeHolder:``,
+                                                                        callback:(text)=>{
+                                                                            dd.class=text
+                                                                            widget.refreshComponent()
+                                                                        }
+                                                                    })])}
+                            `
+                                                                })()
+                                                            }
+                            ${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+                            ${ClickEvent.editer(gvc, widget, dd.badge,{hover:false,option:['cartBadge'],title:"數量提示"})}
+                            </div>
 `
                             }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)
                         }
