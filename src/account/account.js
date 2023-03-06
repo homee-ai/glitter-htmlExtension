@@ -893,6 +893,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     color: #FD6A58;
                 }
                `);
+                widget.data.background = new URL('../img/component/login/login_page.json', import.meta.url);
                 function checkRegister() {
                     appConfig().changePage(gvc, "newPW");
                 }

@@ -899,7 +899,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     color: #FD6A58;
                 }
                `)
-
+                widget.data.background=new URL('../img/component/login/login_page.json', import.meta.url)
                 function checkRegister() {
                     //    todo 驗證碼驗證 跳至新設定密碼
                     appConfig().changePage(gvc, "newPW");
