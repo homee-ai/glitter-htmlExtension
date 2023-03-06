@@ -485,6 +485,25 @@ ${glitter.htmlGenerate.editeInput({
                 };
             }
         },
+        productDetail: {
+            defaultData:{
+
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+
+                return {
+                    view: ()=>{
+                        return `
+                           
+                        `
+                    },
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
         empty: {
             defaultData:{
 
