@@ -80,6 +80,31 @@ export class User {
             },
         });
     }
+    static forgetPwd(email, callback) {
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/forgetPwd`,
+            type: 'post',
+            data: JSON.stringify({ email: email }),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss) => {
+                if (suss) {
+                    appConfig().setUserData({
+                        value: suss, callback: (response) => {
+                            Plugin.setAppConfig('HOMEEAppConfig', {
+                                token: suss.token,
+                                serverURL: appConfig().serverURL
+                            });
+                        }
+                    });
+                }
+                callback(suss, 200);
+            },
+            error: (err) => {
+                const resp = JSON.parse(err.responseText).message;
+                callback(false, resp);
+            },
+        });
+    }
     static loginFB(email, token, third, callback) {
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,

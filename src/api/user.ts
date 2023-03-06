@@ -88,6 +88,31 @@ export class User {
             },
         });
     }
+    public static forgetPwd(email:string,callback:(result:any,code:any)=>void){
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/user/forgetPwd`,
+            type: 'post',
+            data: JSON.stringify({email: email}),
+            contentType: 'application/json; charset=utf-8',
+            success: (suss: any) => {
+                if(suss){
+                    appConfig().setUserData({
+                        value:suss,callback:(response)=>{
+                            Plugin.setAppConfig('HOMEEAppConfig',{
+                                token:suss.token,
+                                serverURL:appConfig().serverURL
+                            })
+                        }
+                    })
+                }
+                callback(suss,200)
+            },
+            error: (err: any) => {
+                const resp= JSON.parse(err.responseText).message
+                callback(false,resp)
+            },
+        });
+    }
     public static loginFB(email:string,token:string,third:any,callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void ){
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/signInWithFacebook`,
