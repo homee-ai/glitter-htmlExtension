@@ -42,10 +42,11 @@ export class SharedView {
                             font-style: normal;
                             font-size: 16px;
                             font-weight: 700;
-                            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;                            
+                            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;       
+                            max-width: 65%;                     
                             " onclick="${gvc.event(()=>{
                             let title = document.querySelectorAll<HTMLDivElement>('.navTitle');
-                            console.log(title)
+                           
                         })}">${item.title}</div>
                             ${(()=>{
                             if (item.rightIcon){

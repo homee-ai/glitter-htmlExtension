@@ -484,7 +484,23 @@ ${glitter.htmlGenerate.editeInput({
                     }
                 };
             }
-        }
+        },
+        empty: {
+            defaultData:{
+
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+
+                return {
+                    view: ()=>{return ``},
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+
     }
 })
 ClickEvent.create(import.meta.url,{

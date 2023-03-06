@@ -226,7 +226,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
-                                                <div class="kindArray d-flex" style="overflow: scroll;">
+                                                <div class="kindArray d-flex flex-wrap" style="overflow: scroll;">
                                                     ${gvc.map(sizeType.attribute_values.map((data, index) => {
                                                 let className = "kindUnselected";
                                                 if (data.selected) {
