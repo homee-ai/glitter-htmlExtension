@@ -61,19 +61,7 @@ export class SharedView {
                     },
                     divCreate: {style:`width:100vw;height:calc(63px + ${topInset - 20}px);`},
                     onCreate: () => {
-                        let left = document.querySelectorAll<HTMLDivElement>('.navLeft');
-                        let right = document.querySelectorAll<HTMLDivElement>('.navRight');
-                        let title = document.querySelectorAll<HTMLDivElement>('.navTitle');
 
-                        let diff = (left[left.length - 1]?.offsetWidth||0) - (right[right.length - 1]?.offsetWidth||0);
-
-                        if (item.title){
-                            if (diff > 0){
-                                title[title.length - 1]!.style.paddingRight=`${diff}px`;
-                            }else {
-                                title[title.length - 1]!.style.paddingLeft=`${diff * -1}px`;
-                            }
-                        }
 
 
                     }
