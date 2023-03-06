@@ -57,19 +57,6 @@ export class SharedView {
                     },
                     divCreate: { style: `width:100vw;height:calc(63px + ${topInset - 20}px);` },
                     onCreate: () => {
-                        var _a, _b;
-                        let left = document.querySelectorAll('.navLeft');
-                        let right = document.querySelectorAll('.navRight');
-                        let title = document.querySelectorAll('.navTitle');
-                        let diff = (((_a = left[left.length - 1]) === null || _a === void 0 ? void 0 : _a.offsetWidth) || 0) - (((_b = right[right.length - 1]) === null || _b === void 0 ? void 0 : _b.offsetWidth) || 0);
-                        if (item.title) {
-                            if (diff > 0) {
-                                title[title.length - 1].style.paddingRight = `${diff}px`;
-                            }
-                            else {
-                                title[title.length - 1].style.paddingLeft = `${diff * -1}px`;
-                            }
-                        }
                     }
                 }),
                 gvc.bindView({
