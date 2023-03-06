@@ -621,6 +621,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                                                                             }
                                                                         })
+                                                                    }else{
+                                                                        refreshCart();
                                                                     }
                                                                     
                                                                     

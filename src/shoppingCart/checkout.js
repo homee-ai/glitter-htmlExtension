@@ -595,6 +595,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             }
                                                                         });
                                                                     }
+                                                                    else {
+                                                                        refreshCart();
+                                                                    }
                                                                 })}">
                                                                     ${gvc.bindView({
                                                                     bind: `qtyNumber${item.item_id}`,
