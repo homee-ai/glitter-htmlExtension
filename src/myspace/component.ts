@@ -5,6 +5,7 @@ import {appConfig} from "../config.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
 import {Myspace, Space} from "../api/myspace.js";
 import {Api} from "../homee/api/homee-api.js";
+import {SharedView} from "../homee/shareView.js";
 
 Plugin.create(import.meta.url, (glitter) => {
     return {
@@ -487,15 +488,31 @@ ${glitter.htmlGenerate.editeInput({
         },
         productDetail: {
             defaultData:{
-
+                title:``
             },
             render:(gvc, widget, setting, hoverID) => {
-
-
+                const sharedView=new SharedView(gvc)
                 return {
                     view: ()=>{
                         return `
-                           
+                        ${(()=>{
+                            return sharedView.navigationBar({
+                                title:`${widget.data.title}`,
+                                leftIcon:`<img class="" src="${new URL('../img/component/left-arrow.svg',import.meta.url).href}" style="width: 28px;height: 28px;" alt="" onclick="${gvc.event(() => {
+                                    if (gvc.glitter.pageConfig.length <= 1) {
+                                        appConfig().setHome(gvc, "home", {})
+                                    } else {
+                                        gvc.glitter.goBack()
+                                    }
+                                })}">`,
+                                rightIcon:`
+                                <img class="" src="${new URL('../img/component/service2.svg',import.meta.url).href}" style="width: 28px;height: 28px;" alt="" onclick="${gvc.event(() => {
+
+                                })}">
+                            `
+                            })
+                        })()}
+                          
                         `
                     },
                     editor: ()=>{

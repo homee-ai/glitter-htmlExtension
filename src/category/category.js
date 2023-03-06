@@ -62,7 +62,12 @@ Plugin.create(import.meta.url, (glitter) => {
                         return sharedView.navigationBar({
                             title: ``,
                             leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                gvc.glitter.goBack();
+                                if (gvc.glitter.pageConfig.length <= 1) {
+                                    appConfig().setHome(gvc, "home", {});
+                                }
+                                else {
+                                    gvc.glitter.goBack();
+                                }
                             })}">
                             <div class="  form-control flex-fill" style="
 border-radius: 20px;
