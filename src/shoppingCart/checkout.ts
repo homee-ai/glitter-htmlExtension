@@ -406,9 +406,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                     })
                 }
-
                 getCartProData()
-
                 function initial() {
                     cartIn = []
                     cartOut = []
