@@ -137,6 +137,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         color: #292929;
                     }
                 `)
+
                 function addThousandSeparator(numStr: string): string {
                     const num = Number(numStr);
                     return num.toLocaleString();
@@ -154,6 +155,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 return {
                     view: () => {
+                        console.log(widget.data)
 
                         let posterID = gvc.parameter.pageConfig?.obj.data?.poster_id || undefined;
                         if(widget.data.loading){
@@ -299,6 +301,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 `)
                                 return `
                                     ${gvc.map(widget.data.intro.map((intro: any) => {
+                                  
                                     return `
                                             <div class="intro">
                                                 <div class="introTitle">${intro.title}</div>

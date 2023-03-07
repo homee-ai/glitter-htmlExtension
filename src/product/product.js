@@ -150,6 +150,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 return {
                     view: () => {
                         var _a, _b, _c;
+                        console.log(widget.data);
                         let posterID = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.poster_id) || undefined;
                         if (widget.data.loading) {
                             return `
