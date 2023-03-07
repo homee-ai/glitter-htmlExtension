@@ -3,6 +3,7 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Product } from "../api/product.js";
 import { Checkout } from "../api/checkout.js";
 import { Dialog } from "../dialog/dialog-mobile.js";
+import { appConfig } from "../config.js";
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         allPage: {
@@ -171,7 +172,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         });
                         const selectSku = sku_list[key.join(' / ')];
                         return `       
-                           ${gvc.bindView({
+                       ${gvc.bindView({
                             bind: 'productTitle',
                             view: () => {
                                 return `  
@@ -389,7 +390,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     </div>
                                     <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? `` : `d-none`}">
                                         <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(() => {
-                                    glitter.runJsInterFace("addToSpace", selectSku, () => { });
+                                    const data = {
+                                        data: widget.data.productData.product_detail,
+                                        sku: selectSku
+                                    };
+                                    appConfig().changePage(gvc, 'more_space', {
+                                        product: data
+                                    }, {});
                                 })}">加入至空間</div>
                                         <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event((e) => {
                                     const dialog = new Dialog(gvc);
