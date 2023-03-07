@@ -941,9 +941,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <div class="hint">
                                                     您可以透過註冊電子郵件並前往官網完成密碼重設
                                                 </div>
-                                                <div class="loginRow d-flex">
+                                                <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址" onchange="${gvc.event((e)=>{
+                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e)=>{
                                         email=e.value
                                     })}">
                                                 </div>
