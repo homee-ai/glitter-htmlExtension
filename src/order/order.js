@@ -36,33 +36,38 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     vm.loading = true;
                     Checkout.getOrderList({
                         callback: (result) => {
+                            console.log(result);
                             vm.loading = false;
                             gvc.notifyDataChange(id);
-                            console.log(result);
-                            widget.data.orderData = result.map((orderData) => {
-                                return {
-                                    number: orderData.id,
-                                    date: orderData.created_at.substring(0, 10),
-                                    paysStatus: (() => {
-                                        if (orderData.financial_status === 'paid') {
-                                            return `已付款`;
-                                        }
-                                        else {
-                                            return `未付款`;
-                                        }
-                                    })(),
-                                    processingStatus: (() => {
-                                        if (orderData.fulfillment_status === 'fulfilled') {
-                                            return `已出貨`;
-                                        }
-                                        else {
-                                            return `待出貨`;
-                                        }
-                                    })(),
-                                    amount: orderData.subtotal_price,
-                                    origin: orderData
-                                };
-                            });
+                            if (result) {
+                                widget.data.orderData = result.map((orderData) => {
+                                    return {
+                                        number: orderData.id,
+                                        date: orderData.created_at.substring(0, 10),
+                                        paysStatus: (() => {
+                                            if (orderData.financial_status === 'paid') {
+                                                return `已付款`;
+                                            }
+                                            else {
+                                                return `未付款`;
+                                            }
+                                        })(),
+                                        processingStatus: (() => {
+                                            if (orderData.fulfillment_status === 'fulfilled') {
+                                                return `已出貨`;
+                                            }
+                                            else {
+                                                return `待出貨`;
+                                            }
+                                        })(),
+                                        amount: orderData.subtotal_price,
+                                        origin: orderData
+                                    };
+                                });
+                            }
+                            else {
+                                widget.data.orderData = [];
+                            }
                             gvc.notifyDataChange(id);
                         }
                     });

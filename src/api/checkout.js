@@ -305,6 +305,7 @@ export class Checkout {
     static getOrderList(obj) {
         appConfig().getUserData({
             callback: (response) => {
+                console.log(response.token);
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/order`,
                     type: 'get',

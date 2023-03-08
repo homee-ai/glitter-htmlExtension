@@ -179,17 +179,17 @@ ClickEvent.create(import.meta.url, {
                                                     if (response) {
                                                         appConfig().changePage(gvc, object.selectPage.tag!)
                                                     } else {
-                                                        appConfig().changePage(gvc, object.selectPage.tag!)
+                                                        appConfig().setHome(gvc, "login")
                                                     }
                                                 }
                                             })
                                         }
                                     })
                                 } else {
-                                    appConfig().changePage(gvc, object.selectPage.tag!)
+                                    appConfig().setHome(gvc, "login")
                                 }
                             } catch (e) {
-                                appConfig().changePage(gvc, object.selectPage.tag!)
+                                appConfig().setHome(gvc, "login")
                             }
                         }
                     })

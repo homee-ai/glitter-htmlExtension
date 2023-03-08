@@ -169,7 +169,7 @@ ClickEvent.create(import.meta.url, {
                                                         appConfig().changePage(gvc, object.selectPage.tag);
                                                     }
                                                     else {
-                                                        appConfig().changePage(gvc, object.selectPage.tag);
+                                                        appConfig().setHome(gvc, "login");
                                                     }
                                                 }
                                             });
@@ -177,11 +177,11 @@ ClickEvent.create(import.meta.url, {
                                     });
                                 }
                                 else {
-                                    appConfig().changePage(gvc, object.selectPage.tag);
+                                    appConfig().setHome(gvc, "login");
                                 }
                             }
                             catch (e) {
-                                appConfig().changePage(gvc, object.selectPage.tag);
+                                appConfig().setHome(gvc, "login");
                             }
                         }
                     });
