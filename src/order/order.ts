@@ -369,6 +369,7 @@ line-height: 17px;
 color: #292929;`
                         var loading = true
                         loading = false
+                        origin.billing_address=origin.billing_address??{}
                         order =  {
                             total: origin.current_subtotal_price,
                             status: (() => {
