@@ -1841,7 +1841,7 @@ ${glitter.htmlGenerate.editeInput({
                                         <div class="w-100 d-flex flex-column">
                                             <div class="acc-title">帳號資料</div>
                                             ${gvc.map(vm.data.map((dd) => {
-                                        if (dd.name === 'password') {
+                                        if (dd.name === 'password' && dd.check == false) {
                                             return gvc.bindView({
                                                 bind: `${dd.name}-inputRow`,
                                                 view: () => {
@@ -1857,9 +1857,14 @@ ${glitter.htmlGenerate.editeInput({
                                                         }
                                                         else {
                                                             vm.data.map((d2) => {
-                                                                d2.visible = 'true';
+                                                                if (d2.left != "密碼") {
+                                                                    d2.visible = 'true';
+                                                                }
+                                                                else {
+                                                                    d2.visible = false;
+                                                                }
                                                             });
-                                                            dd.visible = 'false';
+                                                            dd.visible = false;
                                                             dd.check = true;
                                                             resetPassword = true;
                                                             gvc.notifyDataChange('accountData');
