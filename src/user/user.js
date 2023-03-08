@@ -1859,6 +1859,7 @@ ${glitter.htmlGenerate.editeInput({
                                                             vm.data.map((d2) => {
                                                                 d2.visible = 'true';
                                                             });
+                                                            dd.visible = 'false';
                                                             dd.check = true;
                                                             resetPassword = true;
                                                             gvc.notifyDataChange('accountData');

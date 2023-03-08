@@ -96,7 +96,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     pageImgArray.forEach((item: any, index: number) => {
                         // <!-- Slides -->
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: ${widget.data.height ?? 128}%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
+                <div class="swiper-slide" style="padding-bottom: ${widget.data.height ?? 128}%; background:50% / contain url(${item.img});" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             })
@@ -210,7 +210,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     widget.refreshAll();
                                 })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框</h3>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框(border的Css)</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${widget.data.slideBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
                                 widget.data.slideBorderColor = e.value
@@ -229,7 +229,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框</h3>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框(border的Css)</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${widget.data.slideSelectBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
                                 widget.data.slideSelectBorderColor = e.value

@@ -152,7 +152,7 @@ ${(() => {
                                             return `<div style="font-family: 'Noto Sans TC';
 font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height: 150%;color: #1E1E1E;
 " onclick="${gvc.event(()=>{
-    appConfig().setHome(gvc,'more_space')
+    appConfig().changePage(gvc,'more_space',{})
                                             })}">更多空間</div>`
                                         } else {
                                             return ``
@@ -199,9 +199,10 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
         allSpace: {
             defaultData: {},
             render: (gvc, widget, setting, hoverID) => {
-
                 return {
                     view: () => {
+                        const product=(gvc.parameter.pageConfig?.obj.data ?? {}).product
+
                         return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID()
                             let vm: {
@@ -234,9 +235,7 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
                                     gvc.notifyDataChange(id)
                                 })
                             }
-
                             getData()
-
                             async function getPageHeight() {
                                 let top = await new Promise((resolve, reject) => {
                                     appConfig().getTopInset((number) => {
@@ -252,7 +251,6 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
                                 vm.height = `calc(100vh - ${63 + top + 73}px)`
                                 gvc.notifyDataChange(id)
                             }
-
                             getPageHeight()
                             let spaceData: { title: string, date: string, img: string, config: Space }[] = []
                             let clickEvent = glitter.ut.clock()
@@ -282,9 +280,17 @@ onclick="${gvc.event((e, event) => {
                                                     .replace(/space_image/g, 'spaceImage')
                                                     .replace(/preview_image/g, 'previewImage')
                                                     .replace(/model_url/g, 'modelUrl')
-                                                glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
-                                                    getData()
-                                                })
+                                                if(product){
+                                                    (dd.config as any)['addPD']=product
+                                                    console.log(JSON.stringify(product))
+                                                    // return
+                                                    glitter.runJsInterFace("selectSpaceToAdd",dd.config,()=>{})
+                                                }else{
+                                                    glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
+                                                        getData()
+                                                    })
+                                                }
+                                                
                                             }
                                         })}">
 <div class="h-100 bg-white" style="width: 160px;background: url('${dd.img}')  50% / cover;border-top-left-radius: 20px;border-bottom-left-radius: 20px;"></div>
@@ -584,8 +590,8 @@ ${glitter.htmlGenerate.editeInput({
                     }
                     .productQTYRow .qtyBar{
                         width:40px;
-                        height:1px;
-                        background:#292929;
+                        height:2px;
+                        background:#1E1E1E;
                     }
                     .productQTYRow .qtyNumber{
                         font-family: 'Noto Sans TC';
@@ -666,15 +672,15 @@ ${glitter.htmlGenerate.editeInput({
                             bind: 'productTitle',
                             view: () => {
                                 return `  <div class="productTitle" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${widget.data.name}</div>
-                            <div class="d-flex productPriceRow">
+                            <div class="d-flex productPriceRow" style="">
                                 <div class="sale_price">NT$ ${addThousandSeparator(selectSku.sale_price)}</div>
                                 <div class="price ${selectSku && (selectSku.sale_price === selectSku.price) ? 'd-none' : ''}">NT$ ${addThousandSeparator(selectSku.price)}</div>
                             </div>`
                             },
-                            divCreate: {class: `productTitleRow d-flex flex-column`}
+                            divCreate: {class: `productTitleRow d-flex flex-column` , style:`padding:0 24px`}
                         })}   
                         
-                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="margin-top: 34px;margin-bottom: 26px;">
+                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="padding:0 24px; margin-top: 34px;margin-bottom: 26px;">
                             <div class="qtyBar" style="width: 40px;"></div>                            
                         </div>
                         
@@ -690,14 +696,14 @@ ${glitter.htmlGenerate.editeInput({
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
-                                                <div class="kindArray d-flex flex-wrap" style="overflow: scroll;">
+                                                <div class="d-flex flex-wrap" style="overflow: scroll;">
                                                     ${gvc.map(sizeType.attribute_values.map((data: any, index: number) => {
                                                 let className = "kindUnselected"
                                                 if (data.selected) {
                                                     className += " kindSelected"
                                                 }
                                                 return `
-                                                    <div class="${className}" onclick="${gvc.event(() => {
+                                                    <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
                                                     sizeType.attribute_values.map((dd: any) => {
                                                         dd.selected = false
                                                     })
@@ -714,10 +720,8 @@ ${glitter.htmlGenerate.editeInput({
                                         
                                     `
                                 }
-
                                 //todo 確認一下會不會有只有單規格的狀況
                                 return gvc.map(widget.data.attribute_list.map((sizeType: any, index: number) => {
-                                    console.log(sizeType)
                                     if (sizeType.attribute_key != "Title"){
                                         return productKindDom(index, sizeType);
                                     }else
@@ -725,9 +729,15 @@ ${glitter.htmlGenerate.editeInput({
 
                                 }))
 
-                            }, divCreate: {class: ``, style: "padding-bottom:32px;border-bottom: 1px solid #292929;"},
+                            }, divCreate: {class: ``, style: "padding:0 24px 32px;"},
 
                         })}
+                        
+                        <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
+                            <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(()=>{
+                                glitter.runJsInterFace("addToSpace",selectSku,()=>{})
+                            })}">加入至空間</div>                                        
+                        </div>
                         
                         ${gvc.bindView({
                             bind: `intro`,
@@ -763,107 +773,17 @@ ${glitter.htmlGenerate.editeInput({
                                 return `
                                     ${gvc.map(widget.data.intro.map((intro: any) => {
                                     return `
-                                            <div class="intro">
+                                            <div class="">
                                                 <div class="introTitle">${intro.title}</div>
                                                 <div class="introText">${intro.text}</div>
                                             </div>
                                         `
                                 }))}
                                 `
-                            }, divCreate: {class: ``, style: `padding-top:40px;`}
+                            }, divCreate: {class: ``, style: `padding:40px 24px 100px;`}
                         })}
                         
-                        ${gvc.bindView({
-                            bind: "footer",
-                            view: () => {
-                                glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                                    if (bottomInset != response.data) {
-                                        bottomInset = response.data;
-                                        gvc.notifyDataChange("footer")
-                                    }
-
-                                }, {
-                                    webFunction: () => {
-                                        return {data: 20}
-                                    }
-                                })
-                                gvc.addStyle(`
-                                    .footerIMG {
-                                        width: 22px;
-                                        height: 20px;
-                                    }
-                                    .footerText{
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                        text-align: center;
-                                        color: #858585;
-                                    }
-                                    .footerBTN{
-                                        
-                                    }
-                                    .footerBTNLeft{
-                                        background: #FFDC6A;
-                                        padding:14px 29px;
-                                        border-radius: 24px 0px 0px 24px;
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 14px;
-                                        color: #1E1E1E;
-                                    }
-                                    .footerBTNRight{
-                                        background: #FE5541;
-                                        padding:14px 29px;
-                                        border-radius: 0px 24px 24px 0px;
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 14px;
-                                        color: #FFFFFF;
-                                    }
-                                `)
-                                return `
-                                <div class="footer d-flex align-items-center " style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
-                                    <div class="d-flex flex-column align-items-center d-none" style="width: 40px;">
-                                        <img class="footerIMG" src="${new URL('../img/component/customer_service.png', import.meta.url)}" >
-                                        <div class="footerText">
-                                            客服
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column align-items-center d-none" style="width: 40px;">
-                                        <img class="footerIMG" src="${new URL('../img/component/send.svg', import.meta.url)}">
-                                        <div class="footerText">
-                                            分享給
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    
-                                    <div class="footerBTN ms-auto d-flex  flex-fill ">
-                                        <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(()=>{
-                                        glitter.runJsInterFace("addToSpace",selectSku,()=>{})
-                                        })}">加入至空間</div>
-                                        <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${
-                                            gvc.event((e)=>{
-                                                const dialog=new Dialog(gvc)
-                                                Checkout.addToCart({
-                                                    category:"購物車",
-                                                    skuID:selectSku.sku_id,
-                                                    amount:widget.data.qty,
-                                                    callback:(response)=>{
-                                                        dialog.showInfo('已加入購物車')
-                                                    }
-                                                })
-                                            })
-                                        }">加入購物車</div>
-                                    </div>
-                                </div>
-                                `
-                            }, divCreate: {style: `left: 0px;`, class: `position-fixed bottom-0 w-100 m-0 left-0 p-0`}
-                        })}
+                      
                     `
                     },
                     editor: () => {

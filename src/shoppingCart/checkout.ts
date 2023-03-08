@@ -406,9 +406,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                     })
                 }
-
                 getCartProData()
-
                 function initial() {
                     cartIn = []
                     cartOut = []
@@ -639,9 +637,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             item.subtotal = item.qty * item.price;
                                                                             refreshCart()
                                                                         })}">`
-                                                                    }, divCreate: {class: `qtyNumber`, style: ``}
+                                                                    }, 
+                                                                    divCreate: {class: `qtyNumber`, style: ``}
                                                                 })}
-                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty++;
                                                                     item.subtotal = item.qty * item.price;
                                                                     refreshCart()

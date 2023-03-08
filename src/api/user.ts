@@ -63,6 +63,7 @@ export class User {
                             third
                         }: { third?:any,account: string, pwd: string,inviteCode?:string, callback: (data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean,code:any) => void }){
         const glitter=Glitter.glitter
+
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/user/login`,
             type: 'post',
