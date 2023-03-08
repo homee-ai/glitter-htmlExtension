@@ -32,7 +32,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const vm = {
                     loading: true
                 };
-                if (!editMode) {
+                if (editMode) {
                     vm.loading = true;
                     Checkout.getOrderList({
                         callback: (result) => {
@@ -73,6 +73,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     });
                 }
                 else {
+                    vm.loading = false;
                     widget.data.orderData = [{
                             "number": 5274857668908,
                             "date": "2023-03-02",
@@ -362,64 +363,49 @@ font-size: 12px;
 line-height: 17px;
 color: #292929;`;
                         var loading = true;
-                        glitter.runJsInterFace("getOrderDetail", {}, function (response) {
-                            try {
-                                loading = false;
-                                order = response.data;
-                                gvc.notifyDataChange('order-container');
-                            }
-                            catch (e) {
-                                glitter.runJsInterFace("logData", { data: e.stack }, function (response) {
-                                });
-                            }
-                        }, {
-                            webFunction() {
-                                return {
-                                    data: {
-                                        total: origin.current_subtotal_price,
-                                        status: (() => {
-                                            if (origin.paysStatus === '已付款') {
-                                                if (origin.processingStatus === '已出貨') {
-                                                    return '2';
-                                                }
-                                                else {
-                                                    return '1';
-                                                }
-                                            }
-                                            else {
-                                                return '0';
-                                            }
-                                        })(),
-                                        order_number: "#" + data.orderData.number,
-                                        datetime: data.orderData.date,
-                                        line_items: origin.line_items.map((dd) => {
-                                            return {
-                                                product_name: dd.name,
-                                                sku: dd.sku,
-                                                price: dd.price,
-                                                quantity: dd.quantity,
-                                                subtotal: dd.price,
-                                            };
-                                        }),
-                                        shipping_fees: origin.total_shipping_price_set.shop_money.amount,
-                                        billing_address: {
-                                            state: data.orderData.paysStatus,
-                                            first_name: origin.billing_address.first_name,
-                                            last_name: origin.billing_address.last_name,
-                                            address1: origin.billing_address.address1,
-                                            phone: origin.billing_address.phone,
-                                        },
-                                        shipping_address: {
-                                            state: data.orderData.processingStatus,
-                                            first_name: origin.billing_address.first_name,
-                                            last_name: origin.billing_address.last_name,
-                                            address1: origin.billing_address.address1,
-                                            phone: origin.billing_address.phone,
-                                        },
+                        loading = false;
+                        order = {
+                            total: origin.current_subtotal_price,
+                            status: (() => {
+                                if (origin.paysStatus === '已付款') {
+                                    if (origin.processingStatus === '已出貨') {
+                                        return '2';
                                     }
+                                    else {
+                                        return '1';
+                                    }
+                                }
+                                else {
+                                    return '0';
+                                }
+                            })(),
+                            order_number: "#" + data.orderData.number,
+                            datetime: data.orderData.date,
+                            line_items: origin.line_items.map((dd) => {
+                                return {
+                                    product_name: dd.name,
+                                    sku: dd.sku,
+                                    price: dd.price,
+                                    quantity: dd.quantity,
+                                    subtotal: dd.price,
                                 };
-                            }
-                        });
+                            }),
+                            shipping_fees: origin.total_shipping_price_set.shop_money.amount,
+                            billing_address: {
+                                state: data.orderData.paysStatus,
+                                first_name: origin.billing_address.first_name,
+                                last_name: origin.billing_address.last_name,
+                                address1: origin.billing_address.address1,
+                                phone: origin.billing_address.phone,
+                            },
+                            shipping_address: {
+                                state: data.orderData.processingStatus,
+                                first_name: origin.billing_address.first_name,
+                                last_name: origin.billing_address.last_name,
+                                address1: origin.billing_address.address1,
+                                phone: origin.billing_address.phone,
+                            },
+                        };
                         let topInset = 0;
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             topInset = response.data;
