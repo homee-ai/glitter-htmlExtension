@@ -35,7 +35,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const vm = {
                     loading: true
                 }
-                if (editMode) {
+                if (!editMode) {
                     vm.loading = true
                     Checkout.getOrderList({
                         callback: (result) => {
@@ -369,6 +369,7 @@ line-height: 17px;
 color: #292929;`
                         var loading = true
                         loading = false
+                        origin.billing_address=origin.billing_address??{}
                         order =  {
                             total: origin.current_subtotal_price,
                             status: (() => {

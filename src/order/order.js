@@ -32,7 +32,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const vm = {
                     loading: true
                 };
-                if (editMode) {
+                if (!editMode) {
                     vm.loading = true;
                     Checkout.getOrderList({
                         callback: (result) => {
@@ -253,6 +253,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 console.log(JSON.stringify(data));
                 return {
                     view: () => {
+                        var _a;
                         gvc.addStyle(` @font-face {
       font-family: 'Noto Sans TC';
       src:   url(assets/Font/NotoSansTC-Bold.otf);
@@ -364,6 +365,7 @@ line-height: 17px;
 color: #292929;`;
                         var loading = true;
                         loading = false;
+                        origin.billing_address = (_a = origin.billing_address) !== null && _a !== void 0 ? _a : {};
                         order = {
                             total: origin.current_subtotal_price,
                             status: (() => {
