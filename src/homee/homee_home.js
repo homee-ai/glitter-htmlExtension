@@ -98,7 +98,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     pageImgArray.forEach((item, index) => {
                         var _b;
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: ${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}%; background:50% / contain url(${item.img});" onclick="${gvc.event(() => {
+                <div class="swiper-slide" style="padding-bottom: ${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}%; background:50% / contain url(${item.img}) no-repeat white;" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             });

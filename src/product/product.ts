@@ -153,15 +153,33 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                     gvc.notifyDataChange("qtyNumber");
                 }
+                function goToSlide(index: number): void {
+                    const Swiper = (window as any).Swiper
+                    let mySwiper = new Swiper('.swiper', {
+                        // 選項設置
+                    });
+
+                    mySwiper.slideTo(index+1);
+
+                    // 取消原本 active 的樣式
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+
+                    // 給目前的 index 加上 active 的樣式
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
 
                 return {
                     view: () => {
-                        console.log(widget.data)
 
                         let posterID = gvc.parameter.pageConfig?.obj.data?.poster_id || undefined;
                         if(widget.data.loading){
-                            return  `
-                            
+                            return  `                            
                             <div class="w-100">
                                 <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                                     <div class="spinner-border" role="status"></div>
@@ -177,6 +195,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             select && key.push(select.value)
                         })
                         const selectSku = sku_list[key.join(' / ')]
+                        setTimeout(()=>{
+                            goToSlide(selectSku.image_index);
+                        },250)
+
                         return `       
                        ${gvc.bindView({
                             bind: 'productTitle',
@@ -239,6 +261,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 }
                                                 return `
                                                     <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
+                                                        
+                                                        
+                                                        // console.log(widget.data.productData.sku_list)
+                                            
+                                                        // 切換到指定的 index，並更新頁面指示器
+                                                        
+    
+                                                        // 點擊頁面指示器時，切換到相應的 index
+                                                        const paginationEl = document.querySelector('.swiper-pagination');
+                                                        if (paginationEl) {
+                                                            paginationEl.addEventListener('click', (event: Event) => {
+                                                                const index = (event.target as HTMLElement).getAttribute('data-swiper-slide-index');
+                                                                if (index) {
+                                                                    goToSlide(parseInt(index));
+                                                                }
+                                                            });
+                                                        }
+                                                        
+                                                        
                                                         sizeType.attribute_values.map((dd: any) => {
                                                             dd.selected = false
                                                         })
@@ -250,7 +291,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                             }))}
                                                 </div>      
                                                 `
-                                        }, divCreate: {class: ``, style: ``},
+                                        }, divCreate: {class: ``, style: `margin-bottom:8px;`},
                                     })}
                                         
                                     `
@@ -265,7 +306,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     
                                 }))
 
-                            }, divCreate: {class: ``, style: "padding-bottom:32px;border-bottom:1px solid rgb(30,30,30,0.1);"},
+                            }, divCreate: {class: ``, style: "padding-bottom:24px;border-bottom:1px solid rgb(30,30,30,0.1);"},
 
                         })}
                         
@@ -470,6 +511,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         }
                         if(data.id){
                             Product.productDetail(data.id, (result) => {
+
                                 dialog.dataLoading(false)
                                 if (!result) {
                                     dialog.showInfo('加載失敗')
