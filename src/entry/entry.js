@@ -85,6 +85,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                         id: glitter.getUrlParameter('id'),
                                                         name: glitter.getUrlParameter('name')
                                                     };
+                                                case 'mysapce_product_show':
+                                                    return {
+                                                        id: glitter.getUrlParameter('id'),
+                                                        name: glitter.getUrlParameter('name')
+                                                    };
                                                 default:
                                                     return {};
                                             }
