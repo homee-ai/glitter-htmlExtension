@@ -444,14 +444,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             banner && (banner.data.link = ['https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg']);
                             banner.refreshComponent();
                             const allPage = config.find((dd) => {
-                                return dd.type === 'allPage';
+                                return dd.type === 'allPage' || dd.type === 'productDetail';
                             });
                             allPage.data.loading = true;
                             allPage.refreshComponent();
                         }
                         if (data.id) {
                             Product.productDetail(data.id, (result) => {
-                                console.log(JSON.stringify(result));
                                 dialog.dataLoading(false);
                                 if (!result) {
                                     dialog.showInfo('加載失敗');
@@ -471,7 +470,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     }));
                                     banner.refreshComponent();
                                     const allPage = config.find((dd) => {
-                                        return dd.type === 'allPage';
+                                        return dd.type === 'allPage' || dd.type === 'productDetail';
                                     });
                                     allPage.data.attribute_list = result.attribute_list.map((dd) => {
                                         dd.attribute_values[0].selected = true;
