@@ -655,14 +655,14 @@ ${glitter.htmlGenerate.editeInput({
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
-                                                <div class="d-flex flex-wrap" style="overflow: scroll;padding: 8px;">
+                                                <div class="d-flex flex-wrap" style="overflow: scroll;">
                                                     ${gvc.map(sizeType.attribute_values.map((data, index) => {
                                                 let className = "kindUnselected";
                                                 if (data.selected) {
                                                     className += " kindSelected";
                                                 }
                                                 return `
-                                                    <div class="${className}" onclick="${gvc.event(() => {
+                                                    <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
                                                     sizeType.attribute_values.map((dd) => {
                                                         dd.selected = false;
                                                     });

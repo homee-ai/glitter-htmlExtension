@@ -197,6 +197,10 @@ Plugin.create(import.meta.url, (glitter) => {
                `)
                 return {
                     view: () => {
+                        widget.data.accountData= {
+                            account : '',
+                            password : ''
+                        };
                         gvc.addMtScript([{src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js`}], () => {
                             gvc.notifyDataChange('mainView')
                         }, () => {
@@ -289,8 +293,15 @@ Plugin.create(import.meta.url, (glitter) => {
                                            
                                         </div>
                                         <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
-                                    checkRegister()
-                                })}">
+                                            if (!widget.data.accountData.account){
+                                                alert("帳號不得為空!");
+                                            }else if (widget.data.accountData.password.length < 8){
+                                                alert("密碼必須大於8位數");
+                                            }else {
+                                                checkRegister();    
+                                            }
+                                            
+                                        })}">
                                             登入 / 註冊
                                         </div>
                                          <div class="w-100 text-danger text-center mt-2 ${vm.fet ? '' : 'd-none'}">驗證成功，登入或註冊後即可綁定遠傳帳號</div>

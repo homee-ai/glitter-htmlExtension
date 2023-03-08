@@ -1931,13 +1931,15 @@ ${
                                                                 })}" value="${dd.placehold}">
                                                                     ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
                                                                     if (vm.userData.pwd !== dd.placehold) {
+                                                                        
                                                                         dialog.showInfo("密碼輸入錯誤!")
                                                                     } else {
                                                                         vm.data.map((d2: any) => {
                                                                             d2.visible = 'true'
                                                                         })
-                                                                        dd.check = true
-                                                                        resetPassword = true
+                                                                        dd.visible = 'false';
+                                                                        dd.check = true;
+                                                                        resetPassword = true;
                                                                         gvc.notifyDataChange('accountData')
                                                                     }
                                                                 })}">確認</div>    
