@@ -650,10 +650,11 @@ color: #1E1E1E;">${data.title}</div>
                             (()=>{
                                 const map={
                                     text: '價格', img: new URL('../img/sample/category/sort.svg',import.meta.url).href, click: (e:HTMLElement) => {
-                                        if (!origData){
-                                            origData = glitter.share.productData;
-                                        }
+                                        // if (!origData){
+                                        //     origData = glitter.share.productData;
+                                        // }
                                         //
+                                        console.log(viewModel.product)
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder==1){
@@ -661,7 +662,7 @@ color: #1E1E1E;">${data.title}</div>
                                         }else if (sortPriceOrder){
                                             map.img = new URL('../img/sample/category/sortHigher.svg',import.meta.url).href ;
                                         }
-                                        glitter.share.productData.sort((a:ProductData, b:ProductData)=>(a.sale_price - b.sale_price) * sortPriceOrder);
+                                        viewModel.product.sort((a:any, b:any)=>(a.sale_price - b.sale_price) * sortPriceOrder);
                                         gvc.notifyDataChange('sortBar');
                                         gvc.notifyDataChange('cardGroup');
                                     }
