@@ -1845,7 +1845,7 @@ ${glitter.htmlGenerate.editeInput({
                                             return gvc.bindView({
                                                 bind: `${dd.name}-inputRow`,
                                                 view: () => {
-                                                    return `                            
+                                                    return `                   
                                                                 <div class="left" style="">${dd.left}</div>
                                                                 <div class="right" style="width: 78%;position: relative">
                                                                 <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e) => {
