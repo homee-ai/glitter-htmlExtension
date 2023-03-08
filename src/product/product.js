@@ -148,14 +148,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     }
                     gvc.notifyDataChange("qtyNumber");
                 }
+                function goToSlide(index) {
+                    const Swiper = window.Swiper;
+                    let mySwiper = new Swiper('.swiper', {});
+                    mySwiper.slideTo(index + 1);
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
                 return {
                     view: () => {
                         var _a, _b, _c;
-                        console.log(widget.data);
                         let posterID = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.poster_id) || undefined;
                         if (widget.data.loading) {
-                            return `
-                            
+                            return `                            
                             <div class="w-100">
                                 <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                                     <div class="spinner-border" role="status"></div>
@@ -171,6 +182,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
+                        setTimeout(() => {
+                            goToSlide(selectSku.image_index);
+                        }, 250);
                         return `       
                        ${gvc.bindView({
                             bind: 'productTitle',
@@ -231,6 +245,15 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 }
                                                 return `
                                                     <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
+                                                    const paginationEl = document.querySelector('.swiper-pagination');
+                                                    if (paginationEl) {
+                                                        paginationEl.addEventListener('click', (event) => {
+                                                            const index = event.target.getAttribute('data-swiper-slide-index');
+                                                            if (index) {
+                                                                goToSlide(parseInt(index));
+                                                            }
+                                                        });
+                                                    }
                                                     sizeType.attribute_values.map((dd) => {
                                                         dd.selected = false;
                                                     });
@@ -242,7 +265,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                             }))}
                                                 </div>      
                                                 `;
-                                        }, divCreate: { class: ``, style: `` },
+                                        }, divCreate: { class: ``, style: `margin-bottom:8px;` },
                                     })}
                                         
                                     `;
@@ -254,7 +277,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     else
                                         return ``;
                                 }));
-                            }, divCreate: { class: ``, style: "padding-bottom:32px;border-bottom:1px solid rgb(30,30,30,0.1);" },
+                            }, divCreate: { class: ``, style: "padding-bottom:24px;border-bottom:1px solid rgb(30,30,30,0.1);" },
                         })}
                         
                         ${gvc.bindView({

@@ -644,6 +644,26 @@ ${glitter.htmlGenerate.editeInput({
 
                     gvc.notifyDataChange("qtyNumber");
                 }
+                function goToSlide(index: number): void {
+                    const Swiper = (window as any).Swiper
+                    let mySwiper = new Swiper('.swiper', {
+                        // 選項設置
+                    });
+
+                    mySwiper.slideTo(index+1);
+
+                    // 取消原本 active 的樣式
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+
+                    // 給目前的 index 加上 active 的樣式
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
 
                 return {
                     view: () => {
@@ -667,6 +687,9 @@ ${glitter.htmlGenerate.editeInput({
                             select && key.push(select.value)
                         })
                         const selectSku = sku_list[key.join(' / ')]
+                        setTimeout(()=>{
+                            goToSlide(selectSku.image_index);
+                        },250)
                         return `       
                            ${gvc.bindView({
                             bind: 'productTitle',
@@ -715,7 +738,7 @@ ${glitter.htmlGenerate.editeInput({
                                             }))}
                                                 </div>      
                                                 `
-                                        }, divCreate: {class: ``, style: ``},
+                                        }, divCreate: {class: ``, style: `margin-bottom:8px;`},
                                     })}
                                         
                                     `

@@ -613,6 +613,19 @@ ${glitter.htmlGenerate.editeInput({
                     }
                     gvc.notifyDataChange("qtyNumber");
                 }
+                function goToSlide(index) {
+                    const Swiper = window.Swiper;
+                    let mySwiper = new Swiper('.swiper', {});
+                    mySwiper.slideTo(index + 1);
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
                 return {
                     view: () => {
                         var _a, _b, _c, _d;
@@ -635,6 +648,9 @@ ${glitter.htmlGenerate.editeInput({
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
+                        setTimeout(() => {
+                            goToSlide(selectSku.image_index);
+                        }, 250);
                         return `       
                            ${gvc.bindView({
                             bind: 'productTitle',
@@ -683,7 +699,7 @@ ${glitter.htmlGenerate.editeInput({
                                             }))}
                                                 </div>      
                                                 `;
-                                        }, divCreate: { class: ``, style: `` },
+                                        }, divCreate: { class: ``, style: `margin-bottom:8px;` },
                                     })}
                                         
                                     `;
