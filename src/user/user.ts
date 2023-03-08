@@ -1918,7 +1918,7 @@ ${
                                         <div class="w-100 d-flex flex-column">
                                             <div class="acc-title">帳號資料</div>
                                             ${gvc.map(vm.data.map((dd: any) => {
-                                            if (dd.name === 'password') {
+                                            if (dd.name === 'password' && dd.check==false) {
                                                 return gvc.bindView({
                                                     bind: `${dd.name}-inputRow`,
                                                     view: () => {
@@ -1935,11 +1935,17 @@ ${
                                                                         dialog.showInfo("密碼輸入錯誤!")
                                                                     } else {
                                                                         vm.data.map((d2: any) => {
-                                                                            d2.visible = 'true'
+                                                                            if (d2.left != "密碼"){
+                                                                                d2.visible = 'true'
+                                                                            }else{
+                                                                                d2.visible = false
+                                                                            }
+                                                                                
                                                                         })
-                                                                        dd.visible = 'false';
-                                                                        dd.check = true;
-                                                                        resetPassword = true;
+                                                                        
+                                                                        dd.visible = false;
+                                                                        dd.check = true
+                                                                        resetPassword = true
                                                                         gvc.notifyDataChange('accountData')
                                                                     }
                                                                 })}">確認</div>    
