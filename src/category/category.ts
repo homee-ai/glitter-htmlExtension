@@ -550,23 +550,23 @@ color: #1E1E1E;">${data.title}</div>
                             select:gBundle.selectIndex??0,
                             setSubCategoryRow:(category: string) => {
                                 gvc.addStyle(`
-                .subcateTitle{
-                    font-weight: 400;
-                    font-size: 14px;
-                    line-height: 20px;
-                    display: flex;
-                    align-items: center;
-                    text-align: center;
-                    /* HOMEE dark grey */
-                    margin-left: 16px;
-                    color: #858585;
-                }
-                .selectTitle{
-                    /* HOMEE black */
-                    color: #292929;
-                    font-weight: 700;
-                }
-            `)
+                                .subcateTitle{
+                                    font-weight: 400;
+                                    font-size: 14px;
+                                    line-height: 20px;
+                                    display: flex;
+                                    align-items: center;
+                                    text-align: center;
+                                    /* HOMEE dark grey */
+                                    margin-left: 16px;
+                                    color: #858585;
+                                }
+                                .selectTitle{
+                                    /* HOMEE black */
+                                    color: #292929;
+                                    font-weight: 700;
+                                }
+                            `)
                                 return  gvc.bindView({
                                     bind: "subCategoryRow",
                                     view: () => {
@@ -654,7 +654,7 @@ color: #1E1E1E;">${data.title}</div>
                                         //     origData = glitter.share.productData;
                                         // }
                                         //
-                                        console.log(viewModel.product)
+
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder==1){
@@ -699,7 +699,7 @@ color: #1E1E1E;">${data.title}</div>
                                 <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="color: #292929;;position: absolute;top: 50%;   font-family: 'Noto Sans TC';font-style: normal;font-size: 16px;font-weight: 700;">
                                     ${title}
                                 </div>
-                         
+                            
                             </div>
                             <banner style="">
                                ${((gBundle.object.subCategory ?? []).length>0) ? viewModel.setSubCategoryRow(gBundle.parent_category_id):``}
@@ -765,7 +765,7 @@ color: #1E1E1E;">${data.title}</div>
                                                     "marginL": "0px",
                                                     "marginR": "0px",
                                                     "setting": viewModel.product.map((dd:any)=>{
-                                                        
+                                                        console.log(viewModel.product)
                                                         return {
                                                             "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                             "js": "$homee/homee/homee_home.js",
@@ -1256,7 +1256,7 @@ color: #1E1E1E;">${data.title}</div>
                                                             }
                                                         `)
                                                         let CardGroup = ``;
-                                                        console.log(data)
+                                           
                                                      
                                                         if (dataList){
                                                             dataList.forEach((element:any,index:number)=>{

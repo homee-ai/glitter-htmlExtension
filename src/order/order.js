@@ -115,10 +115,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             view: () => {
                                 if (vm.loading) {
                                     return `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
+                                    <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                        <div class="spinner-border" role="status"></div>
+                                    </div>
+                                </div>`;
                                 }
                                 return `${gvc.map(widget.data.orderData.map((orderData) => {
                                     return `
