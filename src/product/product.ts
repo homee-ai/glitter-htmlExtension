@@ -3,6 +3,7 @@ import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Product} from "../api/product.js";
 import {Checkout} from "../api/checkout.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
+import {appConfig} from "../config.js";
 
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
@@ -177,7 +178,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                         const selectSku = sku_list[key.join(' / ')]
                         return `       
-                           ${gvc.bindView({
+                       ${gvc.bindView({
                             bind: 'productTitle',
                             view: () => {
                                 return `  
@@ -405,7 +406,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     </div>
                                     <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? ``:`d-none`}">
                                         <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(()=>{
-                                            glitter.runJsInterFace("addToSpace",selectSku,()=>{})
+                                            const data={
+                                                data:widget.data.productData.product_detail,
+                                                sku:selectSku
+                                            }
+                                            appConfig().changePage(gvc,'more_space',{
+                                                product:data
+                                            },{})
                                 })}">加入至空間</div>
                                         <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${
                                     gvc.event((e)=>{
@@ -456,14 +463,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             banner && (banner.data.link = ['https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg'])
                             banner.refreshComponent()
                             const allPage = config.find((dd: any) => {
-                                return dd.type === 'allPage'
+                                return dd.type === 'allPage' || dd.type === 'productDetail'
                             })
                             allPage.data.loading=true
                             allPage.refreshComponent()
                         }
                         if(data.id){
                             Product.productDetail(data.id, (result) => {
-                                console.log(JSON.stringify(result))
                                 dialog.dataLoading(false)
                                 if (!result) {
                                     dialog.showInfo('加載失敗')
@@ -483,7 +489,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     }))
                                     banner.refreshComponent()
                                     const allPage = config.find((dd: any) => {
-                                        return dd.type === 'allPage'
+                                        return dd.type === 'allPage'  || dd.type === 'productDetail'
                                     })
                                     allPage.data.attribute_list = result.attribute_list.map((dd: any) => {
                                         dd.attribute_values[0].selected = true
@@ -494,10 +500,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     allPage && (allPage.data.intro[0].text = result.product_detail.bodyHtml)
                                     allPage.data.productData = result
                                     allPage.refreshComponent()
-
                                 }
                             })
                         }
+
                         return ``
                     },
                     editor: () => {

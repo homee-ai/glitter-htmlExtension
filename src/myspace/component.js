@@ -137,7 +137,7 @@ ${(() => {
                                             return `<div style="font-family: 'Noto Sans TC';
 font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height: 150%;color: #1E1E1E;
 " onclick="${gvc.event(() => {
-                                                appConfig().setHome(gvc, 'more_space');
+                                                appConfig().changePage(gvc, 'more_space', {});
                                             })}">更多空間</div>`;
                                         }
                                         else {
@@ -184,6 +184,8 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
+                        var _a, _b;
+                        const product = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) !== null && _b !== void 0 ? _b : {}).product;
                         return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID();
                             let vm = {
@@ -255,9 +257,16 @@ onclick="${gvc.event((e, event) => {
                                                     .replace(/space_image/g, 'spaceImage')
                                                     .replace(/preview_image/g, 'previewImage')
                                                     .replace(/model_url/g, 'modelUrl');
-                                                glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
-                                                    getData();
-                                                });
+                                                if (product) {
+                                                    dd.config['addPD'] = product;
+                                                    console.log(JSON.stringify(product));
+                                                    glitter.runJsInterFace("selectSpaceToAdd", dd.config, () => { });
+                                                }
+                                                else {
+                                                    glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
+                                                        getData();
+                                                    });
+                                                }
                                             }
                                         })}">
 <div class="h-100 bg-white" style="width: 160px;background: url('${dd.img}')  50% / cover;border-top-left-radius: 20px;border-bottom-left-radius: 20px;"></div>
