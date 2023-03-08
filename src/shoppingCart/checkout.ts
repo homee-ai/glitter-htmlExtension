@@ -568,7 +568,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             if (result == true) {
                                                                                 item.deleteEvent()
                                                                                 category.item.splice(itemIndex, 1);
-                                                                              
                                                                                 if (category.item.length == 0) {
                                                                                     let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
                                                                                     widget.data.cartItem.splice(indexToRemove, 1);
