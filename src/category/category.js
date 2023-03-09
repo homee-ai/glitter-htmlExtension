@@ -584,33 +584,59 @@ color: #1E1E1E;">${data.title}</div>
                         let sortPriceOrder = -1;
                         let origData = [];
                         glitter.share.productData = {};
+                        function resetSort() {
+                            sortRow[1].img = new URL('../img/sample/category/sort.svg', import.meta.url).href;
+                            sortPriceOrder = -1;
+                        }
                         let sortRow = [
-                            {
-                                text: '綜合', img: '', click: (e) => {
-                                    sortPriceOrder = -1;
-                                    sortRow[1].img = glitter.share.getLink('../img/sample/category/sort.svg');
-                                    sortSelect = 0;
-                                    if (origData.length != 0) {
-                                        glitter.share.productData = origData;
+                            (() => {
+                                const map = {
+                                    text: '精選', img: '', click: (e) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value;
+                                        viewModel.loading = true;
+                                        gvc.notifyDataChange('cardGroup');
+                                        resetSort();
+                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                            viewModel.product = response;
+                                            viewModel.loading = false;
+                                            gvc.notifyDataChange('sortBar');
+                                            gvc.notifyDataChange('cardGroup');
+                                        }, "manual");
                                     }
-                                    gvc.notifyDataChange('sortBar');
-                                    gvc.notifyDataChange('cardGroup');
-                                }
-                            },
+                                };
+                                return map;
+                            })(),
                             (() => {
                                 const map = {
                                     text: '價格', img: new URL('../img/sample/category/sort.svg', import.meta.url).href, click: (e) => {
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder == 1) {
-                                            map.img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
+                                            sortRow[1].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
                                         }
                                         else if (sortPriceOrder) {
-                                            map.img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
+                                            sortRow[1].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
                                         }
                                         viewModel.product.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
                                         gvc.notifyDataChange('sortBar');
                                         gvc.notifyDataChange('cardGroup');
+                                    }
+                                };
+                                return map;
+                            })(),
+                            (() => {
+                                const map = {
+                                    text: '銷量', img: '', click: (e) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value;
+                                        viewModel.loading = true;
+                                        gvc.notifyDataChange('cardGroup');
+                                        resetSort();
+                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                            viewModel.product = response;
+                                            viewModel.loading = false;
+                                            gvc.notifyDataChange('sortBar');
+                                            gvc.notifyDataChange('cardGroup');
+                                        }, "best-selling");
                                     }
                                 };
                                 return map;
@@ -708,7 +734,6 @@ color: #1E1E1E;">${data.title}</div>
                                                                 "marginL": "0px",
                                                                 "marginR": "0px",
                                                                 "setting": viewModel.product.map((dd) => {
-                                                                    console.log(viewModel.product);
                                                                     return {
                                                                         "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                                         "js": "$homee/homee/homee_home.js",
@@ -769,7 +794,7 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product = response;
                                             viewModel.loading = false;
                                             gvc.notifyDataChange('cardGroup');
-                                        });
+                                        }, "manual");
                                     }
                                 }
                             });

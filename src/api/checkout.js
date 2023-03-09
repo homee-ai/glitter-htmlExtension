@@ -336,7 +336,7 @@ export class Checkout {
                     data: JSON.stringify(obj.data),
                     contentType: 'application/json; charset=utf-8',
                     success: (response) => {
-                        obj.callback(response);
+                        console.log(response);
                     },
                     error: (err) => {
                         obj.callback(false);

@@ -28,12 +28,13 @@ export class Category {
             },
         });
     }
-    getCategoryData(parameter, value, callback) {
+    getCategoryData(parameter, value, callback, sortby) {
         const glitter = this.glitter;
         const that = this;
         let jsonData;
+        let sortPara = (sortby) ? `&sortBy=${sortby}` : "";
         $.ajax({
-            url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}`,
+            url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`,
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response) => {
