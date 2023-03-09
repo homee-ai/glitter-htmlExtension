@@ -3,6 +3,7 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { Product } from "../api/product.js";
 import { Checkout } from "../api/checkout.js";
 import { Dialog } from "../dialog/dialog-mobile.js";
+import { appConfig } from "../config.js";
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         allPage: {
@@ -72,9 +73,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             render: (gvc, widget, setting, hoverID) => {
                 let bottomInset = 0;
                 gvc.addStyle(`
-                    .productTitleRow{
-                        margin-top:16px;
-                    }
+                   
                     .productTitle{
                         font-family: 'Noto Sans TC';
                         font-style: normal;
@@ -102,7 +101,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     }
                     .productQTYRow .qtyBar{
                         width:40px;
-                        height:1px;
+                        height:2px;
                         background:#292929;
                     }
                     .productQTYRow .qtyNumber{
@@ -130,10 +129,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         border-radius: 5px;
         
                     }
-                    .kindArray{
-                        margin-top : 8px;
-                        margin-bottom: 20px;
-                    }
                     .sizeSelectTitle{
                         font-family: 'Noto Sans TC';
                         font-style: normal;
@@ -153,13 +148,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     }
                     gvc.notifyDataChange("qtyNumber");
                 }
+                function goToSlide(index) {
+                    const Swiper = window.Swiper;
+                    let mySwiper = new Swiper('.swiper', {});
+                    mySwiper.slideTo(index + 1);
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
                 return {
                     view: () => {
                         var _a, _b, _c;
                         let posterID = ((_b = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data) === null || _b === void 0 ? void 0 : _b.poster_id) || undefined;
                         if (widget.data.loading) {
-                            return `
-                            
+                            return `                            
                             <div class="w-100">
                                 <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
                                     <div class="spinner-border" role="status"></div>
@@ -175,20 +182,24 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
+                        setTimeout(() => {
+                            goToSlide(selectSku.image_index);
+                        }, 250);
                         return `       
-                           ${gvc.bindView({
+                       ${gvc.bindView({
                             bind: 'productTitle',
                             view: () => {
-                                return `  <div class="productTitle" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${widget.data.name}</div>
-                            <div class="d-flex productPriceRow">
+                                return `  
+                            <div class="productTitle" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${widget.data.name}</div>
+                            <div class="d-flex productPriceRow" style="">
                                 <div class="sale_price">NT$ ${addThousandSeparator(selectSku.sale_price)}</div>
                                 <div class="price ${selectSku && (selectSku.sale_price === selectSku.price) ? 'd-none' : ''}">NT$ ${addThousandSeparator(selectSku.price)}</div>
                             </div>`;
                             },
-                            divCreate: { class: `productTitleRow d-flex flex-column` }
+                            divCreate: { class: `d-flex flex-column` }
                         })}   
                         
-                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="">
+                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="margin: 16px 0;">
                             <div class="qtyBar"></div>
                             <div class="d-flex">
                                 <img src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
@@ -226,14 +237,23 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
-                                                <div class="kindArray d-flex" style="overflow: scroll;">
+                                                <div class="d-flex flex-wrap" style="overflow: scroll;">
                                                     ${gvc.map(sizeType.attribute_values.map((data, index) => {
                                                 let className = "kindUnselected";
                                                 if (data.selected) {
                                                     className += " kindSelected";
                                                 }
                                                 return `
-                                                    <div class="${className}" onclick="${gvc.event(() => {
+                                                    <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
+                                                    const paginationEl = document.querySelector('.swiper-pagination');
+                                                    if (paginationEl) {
+                                                        paginationEl.addEventListener('click', (event) => {
+                                                            const index = event.target.getAttribute('data-swiper-slide-index');
+                                                            if (index) {
+                                                                goToSlide(parseInt(index));
+                                                            }
+                                                        });
+                                                    }
                                                     sizeType.attribute_values.map((dd) => {
                                                         dd.selected = false;
                                                     });
@@ -245,20 +265,19 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                             }))}
                                                 </div>      
                                                 `;
-                                        }, divCreate: { class: ``, style: `` },
+                                        }, divCreate: { class: ``, style: `margin-bottom:8px;` },
                                     })}
                                         
                                     `;
                                 }
                                 return gvc.map(widget.data.attribute_list.map((sizeType, index) => {
-                                    console.log(sizeType);
                                     if (sizeType.attribute_key != "Title") {
                                         return productKindDom(index, sizeType);
                                     }
                                     else
                                         return ``;
                                 }));
-                            }, divCreate: { class: ``, style: "padding-bottom:32px;border-bottom: 1px solid #292929;" },
+                            }, divCreate: { class: ``, style: "padding-bottom:24px;border-bottom:1px solid rgb(30,30,30,0.1);" },
                         })}
                         
                         ${gvc.bindView({
@@ -394,7 +413,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     </div>
                                     <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? `` : `d-none`}">
                                         <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(() => {
-                                    glitter.runJsInterFace("addToSpace", selectSku, () => { });
+                                    const data = {
+                                        data: widget.data.productData.product_detail,
+                                        sku: selectSku
+                                    };
+                                    appConfig().changePage(gvc, 'more_space', {
+                                        product: data
+                                    }, {});
                                 })}">加入至空間</div>
                                         <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event((e) => {
                                     const dialog = new Dialog(gvc);
@@ -442,14 +467,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             banner && (banner.data.link = ['https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg']);
                             banner.refreshComponent();
                             const allPage = config.find((dd) => {
-                                return dd.type === 'allPage';
+                                return dd.type === 'allPage' || dd.type === 'productDetail';
                             });
                             allPage.data.loading = true;
                             allPage.refreshComponent();
                         }
                         if (data.id) {
                             Product.productDetail(data.id, (result) => {
-                                console.log(JSON.stringify(result));
                                 dialog.dataLoading(false);
                                 if (!result) {
                                     dialog.showInfo('加載失敗');
@@ -469,7 +493,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     }));
                                     banner.refreshComponent();
                                     const allPage = config.find((dd) => {
-                                        return dd.type === 'allPage';
+                                        return dd.type === 'allPage' || dd.type === 'productDetail';
                                     });
                                     allPage.data.attribute_list = result.attribute_list.map((dd) => {
                                         dd.attribute_values[0].selected = true;

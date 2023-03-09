@@ -79,6 +79,7 @@ export class Category {
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response: any) => {
+                console.log(response)
                 callback(response["product_list"])
             },
             error: (e) => {

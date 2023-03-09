@@ -38,15 +38,14 @@ export class SharedView {
                             <div class="me-auto p-0 d-flex align-items-center navLeft" style="">
                                 ${item.leftIcon}
                             </div>
-                            <div class="navTitle" style="font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-size: 16px;
-                            font-weight: 700;
-                            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;                            
-                            " onclick="${gvc.event(()=>{
-                            let title = document.querySelectorAll<HTMLDivElement>('.navTitle');
-                            console.log(title)
-                        })}">${item.title}</div>
+                            
+                            <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="position: absolute;top: 50%;   font-family: 'Noto Sans TC';
+                    font-style: normal;
+                    font-size: 16px;
+                    font-weight: 700;
+                         
+                    max-width: 50%;   
+                    "><p style="margin:0;width:100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;text-align: left;">${item.title}</p></div>
                             ${(()=>{
                             if (item.rightIcon){
                                 return `<div class="d-flex ms-auto align-items-center navRight" style="">
@@ -62,19 +61,7 @@ export class SharedView {
                     },
                     divCreate: {style:`width:100vw;height:calc(63px + ${topInset - 20}px);`},
                     onCreate: () => {
-                        let left = document.querySelectorAll<HTMLDivElement>('.navLeft');
-                        let right = document.querySelectorAll<HTMLDivElement>('.navRight');
-                        let title = document.querySelectorAll<HTMLDivElement>('.navTitle');
 
-                        let diff = (left[left.length - 1]?.offsetWidth||0) - (right[right.length - 1]?.offsetWidth||0);
-
-                        if (item.title){
-                            if (diff > 0){
-                                title[title.length - 1]!.style.paddingRight=`${diff}px`;
-                            }else {
-                                title[title.length - 1]!.style.paddingLeft=`${diff * -1}px`;
-                            }
-                        }
 
 
                     }

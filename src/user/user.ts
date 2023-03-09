@@ -1918,12 +1918,11 @@ ${
                                         <div class="w-100 d-flex flex-column">
                                             <div class="acc-title">帳號資料</div>
                                             ${gvc.map(vm.data.map((dd: any) => {
-                                            if (dd.name === 'password') {
+                                            if (dd.name === 'password' && dd.check==false) {
                                                 return gvc.bindView({
                                                     bind: `${dd.name}-inputRow`,
                                                     view: () => {
-                                                       
-                                                        return `                            
+                                                        return `                   
                                                                 <div class="left" style="">${dd.left}</div>
                                                                 <div class="right" style="width: 78%;position: relative">
                                                                 <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e:HTMLInputElement) => {
@@ -1931,11 +1930,17 @@ ${
                                                                 })}" value="${dd.placehold}">
                                                                     ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
                                                                     if (vm.userData.pwd !== dd.placehold) {
+                                                                        
                                                                         dialog.showInfo("密碼輸入錯誤!")
                                                                     } else {
                                                                         vm.data.map((d2: any) => {
-                                                                            d2.visible = 'true'
+                                                                            if (d2.left != "密碼"){
+                                                                                d2.visible = 'true'
+                                                                            }else{
+                                                                                d2.visible = false
+                                                                            }                                                                             
                                                                         })
+                                                                        dd.visible = false;
                                                                         dd.check = true
                                                                         resetPassword = true
                                                                         gvc.notifyDataChange('accountData')

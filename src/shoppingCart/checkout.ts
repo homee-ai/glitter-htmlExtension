@@ -406,9 +406,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                     })
                 }
-
                 getCartProData()
-
                 function initial() {
                     cartIn = []
                     cartOut = []
@@ -570,7 +568,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             if (result == true) {
                                                                                 item.deleteEvent()
                                                                                 category.item.splice(itemIndex, 1);
-                                                                              
                                                                                 if (category.item.length == 0) {
                                                                                     let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
                                                                                     widget.data.cartItem.splice(indexToRemove, 1);
@@ -605,22 +602,26 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             <div class="d-flex" style="">
                                                                                 <img style="width: 24px;height: 24px;" src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty--;
-                                                                    
-                                                                    dialog.confirm("確定要刪除嘛?", (result) => {
-                                                                        if (result == true) {
-                                                                            item.deleteEvent()
-                                                                            category.item.splice(itemIndex, 1);
+                                                                    if (item.qty == 0){
+                                                                        dialog.confirm("確定要刪除嘛?", (result) => {
+                                                                            if (result == true) {
+                                                                                item.deleteEvent()
+                                                                                category.item.splice(itemIndex, 1);
 
-                                                                            if (category.item.length == 0) {
-                                                                                let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
-                                                                                widget.data.cartItem.splice(indexToRemove, 1);
-                                                                                refreshCart();
-                                                                            } else {
-                                                                                refreshCart();
+                                                                                if (category.item.length == 0) {
+                                                                                    let indexToRemove = widget.data.cartItem.findIndex((item: any) => item.category_id == category.category_id);
+                                                                                    widget.data.cartItem.splice(indexToRemove, 1);
+                                                                                    refreshCart();
+                                                                                } else {
+                                                                                    refreshCart();
+                                                                                }
+
                                                                             }
-
-                                                                        }
-                                                                    })
+                                                                        })
+                                                                    }else{
+                                                                        refreshCart();
+                                                                    }
+                                                                    
                                                                     
                                                                 })}">
                                                                     ${gvc.bindView({
@@ -635,9 +636,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             item.subtotal = item.qty * item.price;
                                                                             refreshCart()
                                                                         })}">`
-                                                                    }, divCreate: {class: `qtyNumber`, style: ``}
+                                                                    }, 
+                                                                    divCreate: {class: `qtyNumber`, style: ``}
                                                                 })}
-                                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
+                                                                <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty++;
                                                                     item.subtotal = item.qty * item.price;
                                                                     refreshCart()

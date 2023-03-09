@@ -32,42 +32,48 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const vm = {
                     loading: true
                 };
-                if (editMode) {
+                if (!editMode) {
                     vm.loading = true;
                     Checkout.getOrderList({
                         callback: (result) => {
+                            console.log(result);
                             vm.loading = false;
                             gvc.notifyDataChange(id);
-                            console.log(result);
-                            widget.data.orderData = result.map((orderData) => {
-                                return {
-                                    number: orderData.id,
-                                    date: orderData.created_at.substring(0, 10),
-                                    paysStatus: (() => {
-                                        if (orderData.financial_status === 'paid') {
-                                            return `已付款`;
-                                        }
-                                        else {
-                                            return `未付款`;
-                                        }
-                                    })(),
-                                    processingStatus: (() => {
-                                        if (orderData.fulfillment_status === 'fulfilled') {
-                                            return `已出貨`;
-                                        }
-                                        else {
-                                            return `待出貨`;
-                                        }
-                                    })(),
-                                    amount: orderData.subtotal_price,
-                                    origin: orderData
-                                };
-                            });
+                            if (result) {
+                                widget.data.orderData = result.map((orderData) => {
+                                    return {
+                                        number: orderData.id,
+                                        date: orderData.created_at.substring(0, 10),
+                                        paysStatus: (() => {
+                                            if (orderData.financial_status === 'paid') {
+                                                return `已付款`;
+                                            }
+                                            else {
+                                                return `未付款`;
+                                            }
+                                        })(),
+                                        processingStatus: (() => {
+                                            if (orderData.fulfillment_status === 'fulfilled') {
+                                                return `已出貨`;
+                                            }
+                                            else {
+                                                return `待出貨`;
+                                            }
+                                        })(),
+                                        amount: orderData.subtotal_price,
+                                        origin: orderData
+                                    };
+                                });
+                            }
+                            else {
+                                widget.data.orderData = [];
+                            }
                             gvc.notifyDataChange(id);
                         }
                     });
                 }
                 else {
+                    vm.loading = false;
                     widget.data.orderData = [{
                             "number": 5274857668908,
                             "date": "2023-03-02",
@@ -110,10 +116,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             view: () => {
                                 if (vm.loading) {
                                     return `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
+                                    <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                        <div class="spinner-border" role="status"></div>
+                                    </div>
+                                </div>`;
                                 }
                                 return `${gvc.map(widget.data.orderData.map((orderData) => {
                                     return `
@@ -247,6 +253,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 console.log(JSON.stringify(data));
                 return {
                     view: () => {
+                        var _a;
                         gvc.addStyle(` @font-face {
       font-family: 'Noto Sans TC';
       src:   url(assets/Font/NotoSansTC-Bold.otf);
@@ -357,64 +364,50 @@ font-size: 12px;
 line-height: 17px;
 color: #292929;`;
                         var loading = true;
-                        glitter.runJsInterFace("getOrderDetail", {}, function (response) {
-                            try {
-                                loading = false;
-                                order = response.data;
-                                gvc.notifyDataChange('order-container');
-                            }
-                            catch (e) {
-                                glitter.runJsInterFace("logData", { data: e.stack }, function (response) {
-                                });
-                            }
-                        }, {
-                            webFunction() {
-                                return {
-                                    data: {
-                                        total: origin.current_subtotal_price,
-                                        status: (() => {
-                                            if (origin.paysStatus === '已付款') {
-                                                if (origin.processingStatus === '已出貨') {
-                                                    return '2';
-                                                }
-                                                else {
-                                                    return '1';
-                                                }
-                                            }
-                                            else {
-                                                return '0';
-                                            }
-                                        })(),
-                                        order_number: "#" + data.orderData.number,
-                                        datetime: data.orderData.date,
-                                        line_items: origin.line_items.map((dd) => {
-                                            return {
-                                                product_name: dd.name,
-                                                sku: dd.sku,
-                                                price: dd.price,
-                                                quantity: dd.quantity,
-                                                subtotal: dd.price,
-                                            };
-                                        }),
-                                        shipping_fees: origin.total_shipping_price_set.shop_money.amount,
-                                        billing_address: {
-                                            state: data.orderData.paysStatus,
-                                            first_name: origin.billing_address.first_name,
-                                            last_name: origin.billing_address.last_name,
-                                            address1: origin.billing_address.address1,
-                                            phone: origin.billing_address.phone,
-                                        },
-                                        shipping_address: {
-                                            state: data.orderData.processingStatus,
-                                            first_name: origin.billing_address.first_name,
-                                            last_name: origin.billing_address.last_name,
-                                            address1: origin.billing_address.address1,
-                                            phone: origin.billing_address.phone,
-                                        },
+                        loading = false;
+                        origin.billing_address = (_a = origin.billing_address) !== null && _a !== void 0 ? _a : {};
+                        order = {
+                            total: origin.current_subtotal_price,
+                            status: (() => {
+                                if (origin.paysStatus === '已付款') {
+                                    if (origin.processingStatus === '已出貨') {
+                                        return '2';
                                     }
+                                    else {
+                                        return '1';
+                                    }
+                                }
+                                else {
+                                    return '0';
+                                }
+                            })(),
+                            order_number: "#" + data.orderData.number,
+                            datetime: data.orderData.date,
+                            line_items: origin.line_items.map((dd) => {
+                                return {
+                                    product_name: dd.name,
+                                    sku: dd.sku,
+                                    price: dd.price,
+                                    quantity: dd.quantity,
+                                    subtotal: dd.price,
                                 };
-                            }
-                        });
+                            }),
+                            shipping_fees: origin.total_shipping_price_set.shop_money.amount,
+                            billing_address: {
+                                state: data.orderData.paysStatus,
+                                first_name: origin.billing_address.first_name,
+                                last_name: origin.billing_address.last_name,
+                                address1: origin.billing_address.address1,
+                                phone: origin.billing_address.phone,
+                            },
+                            shipping_address: {
+                                state: data.orderData.processingStatus,
+                                first_name: origin.billing_address.first_name,
+                                last_name: origin.billing_address.last_name,
+                                address1: origin.billing_address.address1,
+                                phone: origin.billing_address.phone,
+                            },
+                        };
                         let topInset = 0;
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             topInset = response.data;

@@ -5,6 +5,8 @@ import {appConfig} from "../config.js";
 import {Dialog} from "../dialog/dialog-mobile.js";
 import {Myspace, Space} from "../api/myspace.js";
 import {Api} from "../homee/api/homee-api.js";
+import {SharedView} from "../homee/shareView.js";
+import {Checkout} from "../api/checkout.js";
 
 Plugin.create(import.meta.url, (glitter) => {
     return {
@@ -150,7 +152,7 @@ ${(() => {
                                             return `<div style="font-family: 'Noto Sans TC';
 font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height: 150%;color: #1E1E1E;
 " onclick="${gvc.event(()=>{
-    appConfig().setHome(gvc,'more_space')
+    appConfig().changePage(gvc,'more_space',{})
                                             })}">更多空間</div>`
                                         } else {
                                             return ``
@@ -197,9 +199,10 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
         allSpace: {
             defaultData: {},
             render: (gvc, widget, setting, hoverID) => {
-
                 return {
                     view: () => {
+                        const product=(gvc.parameter.pageConfig?.obj.data ?? {}).product
+
                         return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID()
                             let vm: {
@@ -232,9 +235,7 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
                                     gvc.notifyDataChange(id)
                                 })
                             }
-
                             getData()
-
                             async function getPageHeight() {
                                 let top = await new Promise((resolve, reject) => {
                                     appConfig().getTopInset((number) => {
@@ -250,7 +251,6 @@ color: #FFFFFF;" class="m-0" >開始掃描</h3>
                                 vm.height = `calc(100vh - ${63 + top + 73}px)`
                                 gvc.notifyDataChange(id)
                             }
-
                             getPageHeight()
                             let spaceData: { title: string, date: string, img: string, config: Space }[] = []
                             let clickEvent = glitter.ut.clock()
@@ -280,9 +280,17 @@ onclick="${gvc.event((e, event) => {
                                                     .replace(/space_image/g, 'spaceImage')
                                                     .replace(/preview_image/g, 'previewImage')
                                                     .replace(/model_url/g, 'modelUrl')
-                                                glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
-                                                    getData()
-                                                })
+                                                if(product){
+                                                    (dd.config as any)['addPD']=product
+                                                    console.log(JSON.stringify(product))
+                                                    // return
+                                                    glitter.runJsInterFace("selectSpaceToAdd",dd.config,()=>{})
+                                                }else{
+                                                    glitter.runJsInterFace("openMySpaceMd", dd.config, () => {
+                                                        getData()
+                                                    })
+                                                }
+                                                
                                             }
                                         })}">
 <div class="h-100 bg-white" style="width: 160px;background: url('${dd.img}')  50% / cover;border-top-left-radius: 20px;border-bottom-left-radius: 20px;"></div>
@@ -484,7 +492,345 @@ ${glitter.htmlGenerate.editeInput({
                     }
                 };
             }
-        }
+        },
+        productDetail: {
+            defaultData: {
+                "qty": 1,
+                "intro": [{
+                    "text": "<p>OLVAN 檯燈外形簡約優雅，能為您的睡房添加充滿格調，同時具有極佳質感的照明單品。</p>\n<div style=\"text-align: center;\" data-mce-style=\"text-align: center;\"><img style=\"margin-bottom: 14px; float: none;\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842090_1024x1024.jpg?v=1675167211\" data-mce-src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842090_1024x1024.jpg?v=1675167211\" data-mce-style=\"margin-bottom: 14px; float: none;\"></div>\n<p>OLVAN 檯燈底座採用實木材料，具有優良出色的穩固承重力，整體厚實穩固。棉布或百頁材質燈罩讓燈光更柔和，輕鬆營造朦朧浪漫的氛圍，為你快節奏的生活中帶來一些平靜和溫柔，別有一番浪漫情懷。</p>\n<div style=\"text-align: center;\" data-mce-style=\"text-align: center;\"><img style=\"margin-bottom: 14px; float: none;\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842091_1024x1024.jpg?v=1675167329\" data-mce-src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842091_1024x1024.jpg?v=1675167329\" data-mce-style=\"margin-bottom: 14px; float: none;\"></div>\n<p>OLVAN 檯燈有多重款式任你選擇，很適合自用或作為禮品送給親友。HOMEE 成就每一個明亮溫馨的家，與您一同構建理想中的質感生活！</p>\n<p> </p>\n<p> </p>\n<h4>商品規格</h4>\n<table width=\"100%\">\n<tbody>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p><strong>直徑</strong></p>\n</td>\n<td style=\"width: 70%;\" data-mce-style=\"width: 70%;\">\n<p>棉布款：26 公分，百頁：24 公分</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p><strong>寬</strong></p>\n</td>\n<td style=\"width: 70%;\" data-mce-style=\"width: 70%;\">\n<p>32 公分</p>\n</td>\n</tr>\n</tbody>\n</table>\n<br>\n<table width=\"100%\">\n<tbody>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p data-mce-style=\"text-align: left;\"><strong>材質說明</strong></p>\n</td>\n<td data-mce-style=\"width: 70%;\">\n<p>底座：原木，燈罩：棉布 / PVC</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p> </p>\n<p> </p>\n<h4>相關說明</h4>\n<p>※ 訂購前敬請詳閱<a href=\"https://homee.cc/legal/refund-policy\" target=\"_blank\">退換貨說明</a>，您送出訂單的同時將視同您已詳閱、同意以下規定。</p>\n<p>※ 顏色差異：商品顏色或布料會因您觀看的裝置 (手機、平板或電腦等) 而無法100%相同，商品顏色與布料以實品為主。</p>\n<p>※ 尺寸誤差：所有產品尺寸皆為人工丈量，可能因測量不同而存在誤差，0.5 - 2 公分 屬正常。</p>\n<p>※ 溫馨提醒：家具類商品長途運輸難免有碰撞風險，HOMEE 將盡力協助您服務至商品完善，您可放心選購。</p>\n<p>※ 商品交期：HOMEE 提供平台讓您使用合宜價錢直接向供應廠採購因此交期會因工廠有無現貨而有異動，有現貨約 1 週配送，無現貨需等約 2~4 週。 </p>",
+                    "title": "商品介紹"
+                }],
+                "price": "9960",
+                "marginL": "10px",
+                "marginR": "10px",
+                "sale_price": "13500",
+                "preview_image": "",
+                "attribute_list": [{
+                    "attribute_key": "定制款式",
+                    "display_order": 1,
+                    "attribute_values": [{"value": "棉布款", "display_order": 1, "selected": true}, {
+                        "value": "百頁款",
+                        "display_order": 2
+                    }]
+                }],
+                "name": "OLVAN 檯燈",
+                "productData": {
+                    "attribute_list": [{
+                        "attribute_key": "定制款式",
+                        "display_order": 1,
+                        "attribute_values": [{
+                            "value": "棉布款",
+                            "display_order": 1,
+                            "selected": true
+                        }, {"value": "百頁款", "display_order": 2}]
+                    }],
+                    "product_detail": {
+                        "id": 8129130922284,
+                        "name": "OLVAN 檯燈",
+                        "handle": "olvan-檯燈",
+                        "images": ["https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44609065.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471483.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471451.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471499.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471468.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471467.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44471477.jpg?v=1675167898&width=720", "https://cdn.shopify.com/s/files/1/0704/0158/9548/products/44609066.jpg?v=1675167898&width=720"],
+                        "created_time": 1675166918000,
+                        "updated_time": 1675175826000,
+                        "bodyHtml": "<p>OLVAN 檯燈外形簡約優雅，能為您的睡房添加充滿格調，同時具有極佳質感的照明單品。</p>\n<div style=\"text-align: center;\" data-mce-style=\"text-align: center;\"><img style=\"margin-bottom: 14px; float: none;\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842090_1024x1024.jpg?v=1675167211\" data-mce-src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842090_1024x1024.jpg?v=1675167211\" data-mce-style=\"margin-bottom: 14px; float: none;\"></div>\n<p>OLVAN 檯燈底座採用實木材料，具有優良出色的穩固承重力，整體厚實穩固。棉布或百頁材質燈罩讓燈光更柔和，輕鬆營造朦朧浪漫的氛圍，為你快節奏的生活中帶來一些平靜和溫柔，別有一番浪漫情懷。</p>\n<div style=\"text-align: center;\" data-mce-style=\"text-align: center;\"><img style=\"margin-bottom: 14px; float: none;\" alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842091_1024x1024.jpg?v=1675167329\" data-mce-src=\"https://cdn.shopify.com/s/files/1/0704/0158/9548/files/8842091_1024x1024.jpg?v=1675167329\" data-mce-style=\"margin-bottom: 14px; float: none;\"></div>\n<p>OLVAN 檯燈有多重款式任你選擇，很適合自用或作為禮品送給親友。HOMEE 成就每一個明亮溫馨的家，與您一同構建理想中的質感生活！</p>\n<p> </p>\n<p> </p>\n<h4>商品規格</h4>\n<table width=\"100%\">\n<tbody>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p><strong>直徑</strong></p>\n</td>\n<td style=\"width: 70%;\" data-mce-style=\"width: 70%;\">\n<p>棉布款：26 公分，百頁：24 公分</p>\n</td>\n</tr>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p><strong>寬</strong></p>\n</td>\n<td style=\"width: 70%;\" data-mce-style=\"width: 70%;\">\n<p>32 公分</p>\n</td>\n</tr>\n</tbody>\n</table>\n<br>\n<table width=\"100%\">\n<tbody>\n<tr>\n<td style=\"width: 30%; text-align: center; background-color: #efefef;\" data-mce-style=\"width: 30%; text-align: center; background-color: #efefef;\">\n<p data-mce-style=\"text-align: left;\"><strong>材質說明</strong></p>\n</td>\n<td data-mce-style=\"width: 70%;\">\n<p>底座：原木，燈罩：棉布 / PVC</p>\n</td>\n</tr>\n</tbody>\n</table>\n<p> </p>\n<p> </p>\n<h4>相關說明</h4>\n<p>※ 訂購前敬請詳閱<a href=\"https://homee.cc/legal/refund-policy\" target=\"_blank\">退換貨說明</a>，您送出訂單的同時將視同您已詳閱、同意以下規定。</p>\n<p>※ 顏色差異：商品顏色或布料會因您觀看的裝置 (手機、平板或電腦等) 而無法100%相同，商品顏色與布料以實品為主。</p>\n<p>※ 尺寸誤差：所有產品尺寸皆為人工丈量，可能因測量不同而存在誤差，0.5 - 2 公分 屬正常。</p>\n<p>※ 溫馨提醒：家具類商品長途運輸難免有碰撞風險，HOMEE 將盡力協助您服務至商品完善，您可放心選購。</p>\n<p>※ 商品交期：HOMEE 提供平台讓您使用合宜價錢直接向供應廠採購因此交期會因工廠有無現貨而有異動，有現貨約 1 週配送，無現貨需等約 2~4 週。 </p>"
+                    },
+                    "sku_list": {
+                        "棉布款": {
+                            "sku_id": "G010025-1",
+                            "attribute_key": "棉布款",
+                            "attribute_value": "棉布款",
+                            "attribute_list": ["棉布款", null, null],
+                            "isEnabled": true,
+                            "sale_price": 519,
+                            "price": 519,
+                            "image_index": 0
+                        },
+                        "百頁款": {
+                            "sku_id": "G010025-2",
+                            "attribute_key": "百頁款",
+                            "attribute_value": "百頁款",
+                            "attribute_list": ["百頁款", null, null],
+                            "isEnabled": true,
+                            "sale_price": 519,
+                            "price": 519,
+                            "image_index": 7
+                        }
+                    }
+                }
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                let bottomInset = 0;
+                gvc.addStyle(`
+                    .productTitleRow{
+                        margin-top:16px;
+                    }
+                    .productTitle{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 24px;
+                        color: #292929;
+                    }
+                    .productPriceRow .sale_price{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 20px;
+                        color: #FD6A58;
+                    }
+                    .productPriceRow .price{
+                        font-family: 'Noto Sans TC';
+                        font-weight: 400;
+                        font-size: 15px;
+                        font-size: 20px;
+                        color: #858585;
+                        text-decoration-line: line-through;
+                        
+                        margin-left:40px;
+                        padding-top:6px;
+                    }
+                    .productQTYRow .qtyBar{
+                        width:40px;
+                        height:2px;
+                        background:#1E1E1E;
+                    }
+                    .productQTYRow .qtyNumber{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 24px;
+                        margin:0 16px;
+                        color: #292929;
+                    }
+                    .kindUnselected{                                        
+                        border: 1px solid #D6D6D6;
+                        border-radius: 5px;
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 14px;
+                        color: #292929;
+                        margin-right : 8px;
+                        padding: 4px 12px 3px;
+                    }
+                    .kindSelected{                                        
+                        background: rgba(41, 41, 41, 0.1);                                                                                
+                        border: 1px solid #292929;
+                        border-radius: 5px;
+        
+                    }
+                    .kindArray{
+                        margin-top : 8px;
+                        margin-bottom: 20px;
+                    }
+                    .sizeSelectTitle{
+                        font-family: 'Noto Sans TC';
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 15px;
+                        color: #292929;
+                    }
+                `)
+                function addThousandSeparator(numStr: string): string {
+                    const num = Number(numStr);
+                    return num.toLocaleString();
+                }
+                function qtyChange(action: boolean = true) {
+                    widget.data.qty += (action) ? 1 : -1;
+
+                    if (widget.data.qty < 0) {
+                        widget.data.qty = 0
+                    }
+
+
+                    gvc.notifyDataChange("qtyNumber");
+                }
+                function goToSlide(index: number): void {
+                    const Swiper = (window as any).Swiper
+                    let mySwiper = new Swiper('.swiper', {
+                        // 選項設置
+                    });
+
+                    mySwiper.slideTo(index+1);
+
+                    // 取消原本 active 的樣式
+                    const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
+                    if (oldActiveEl) {
+                        oldActiveEl.classList.remove('swiper-pagination-bullet-active');
+                    }
+
+                    // 給目前的 index 加上 active 的樣式
+                    const newActiveEl = document.querySelectorAll('.swiper-pagination .swiper-pagination-bullet')[index];
+                    if (newActiveEl) {
+                        newActiveEl.classList.add('swiper-pagination-bullet-active');
+                    }
+                }
+
+                return {
+                    view: () => {
+
+                        let posterID = gvc.parameter.pageConfig?.obj.data?.poster_id || undefined;
+                        if(widget.data.loading){
+                            return  `
+                            
+                            <div class="w-100">
+                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+                            </div>`
+                        }
+                        let sku_list = (widget.data.productData && widget.data.productData.sku_list) ?? {}
+                        let key: string[] = []
+                        widget.data.attribute_list?.map((dd: any) => {
+                            const select = dd.attribute_values.find((d2: any) => {
+                                return d2.selected
+                            })
+                            select && key.push(select.value)
+                        })
+                        const selectSku = sku_list[key.join(' / ')]
+                        setTimeout(()=>{
+                            goToSlide(selectSku.image_index);
+                        },250)
+                        return `       
+                           ${gvc.bindView({
+                            bind: 'productTitle',
+                            view: () => {
+                                return `  <div class="productTitle" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${widget.data.name}</div>
+                            <div class="d-flex productPriceRow" style="">
+                                <div class="sale_price">NT$ ${addThousandSeparator(selectSku.sale_price)}</div>
+                                <div class="price ${selectSku && (selectSku.sale_price === selectSku.price) ? 'd-none' : ''}">NT$ ${addThousandSeparator(selectSku.price)}</div>
+                            </div>`
+                            },
+                            divCreate: {class: `productTitleRow d-flex flex-column` , style:`padding:0 24px`}
+                        })}   
+                        
+                        <div class="productQTYRow d-flex align-items-center justify-content-between " style="padding:0 24px; margin-top: 34px;margin-bottom: 26px;">
+                            <div class="qtyBar" style="width: 40px;"></div>                            
+                        </div>
+                        
+                        ${gvc.bindView({
+                            bind: "sizeSelect",
+                            view: () => {
+                                function productKindDom(index: number, sizeType: any) {
+                                    return `
+                                        ${gvc.bindView({
+                                        bind: `type${index}`,
+                                        view: () => {
+                                            return `
+                                                <div class="sizeSelectTitle">
+                                                    ${sizeType.attribute_key}
+                                                </div>
+                                                <div class="d-flex flex-wrap" style="overflow: scroll;">
+                                                    ${gvc.map(sizeType.attribute_values.map((data: any, index: number) => {
+                                                let className = "kindUnselected"
+                                                if (data.selected) {
+                                                    className += " kindSelected"
+                                                }
+                                                return `
+                                                    <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
+                                                    sizeType.attribute_values.map((dd: any) => {
+                                                        dd.selected = false
+                                                    })
+                                                    data.selected = true
+                                                    widget.refreshComponent()
+                                                })}">${data.value}
+                                                    </div>
+                                                        `
+                                            }))}
+                                                </div>      
+                                                `
+                                        }, divCreate: {class: ``, style: `margin-bottom:8px;`},
+                                    })}
+                                        
+                                    `
+                                }
+                                //todo 確認一下會不會有只有單規格的狀況
+                                return gvc.map(widget.data.attribute_list.map((sizeType: any, index: number) => {
+                                    if (sizeType.attribute_key != "Title"){
+                                        return productKindDom(index, sizeType);
+                                    }else
+                                        return ``
+
+                                }))
+
+                            }, divCreate: {class: ``, style: "padding:0 24px 32px;"},
+
+                        })}
+                        
+                        <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
+                            <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(()=>{
+                                glitter.runJsInterFace("addToSpace",selectSku,()=>{})
+                            })}">加入至空間</div>                                        
+                        </div>
+                        
+                        ${gvc.bindView({
+                            bind: `intro`,
+                            view: () => {
+                                gvc.addStyle(`
+                                    .intro{
+                                        padding-bottom : 90px;
+                                    }
+                                    .intro img{
+                                      max-width:100%;
+                                    }
+                                    .introTitle{
+                                        font-family : 'Noto Sans TC';
+                                        font-style : normal;
+                                        font-weight : 700;
+                                        font-size : 24px;
+                                        color : #292929;
+                                        margin-bottom : 16px;
+                                    }
+                                    .introText{
+                                        font-family: 'Noto Sans TC';
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        font-size: 15px;
+                                        color: #292929;
+                                        white-space:normal;
+                                        word-wrap:break-word;
+                                        word-break:break-all;        
+                                                                       
+                                    }
+                                    
+                                `)
+                                return `
+                                    ${gvc.map(widget.data.intro.map((intro: any) => {
+                                    return `
+                                            <div class="">
+                                                <div class="introTitle">${intro.title}</div>
+                                                <div class="introText">${intro.text}</div>
+                                            </div>
+                                        `
+                                }))}
+                                `
+                            }, divCreate: {class: ``, style: `padding:40px 24px 100px;`}
+                        })}
+                        
+                      
+                    `
+                    },
+                    editor: () => {
+                        return ``
+                    }
+                }
+            },
+        },
+        empty: {
+            defaultData:{
+
+            },
+            render:(gvc, widget, setting, hoverID) => {
+
+
+                return {
+                    view: ()=>{return ``},
+                    editor: ()=>{
+                        return ``
+                    }
+                }
+            },
+        },
+
     }
 })
 ClickEvent.create(import.meta.url,{

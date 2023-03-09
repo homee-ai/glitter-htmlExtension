@@ -191,6 +191,10 @@ Plugin.create(import.meta.url, (glitter) => {
                `);
                 return {
                     view: () => {
+                        widget.data.accountData = {
+                            account: '',
+                            password: ''
+                        };
                         gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
                             gvc.notifyDataChange('mainView');
                         }, () => {
@@ -282,7 +286,15 @@ Plugin.create(import.meta.url, (glitter) => {
                                            
                                         </div>
                                         <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
-                                    checkRegister();
+                                    if (!widget.data.accountData.account) {
+                                        alert("帳號不得為空!");
+                                    }
+                                    else if (widget.data.accountData.password.length < 8) {
+                                        alert("密碼必須大於8位數");
+                                    }
+                                    else {
+                                        checkRegister();
+                                    }
                                 })}">
                                             登入 / 註冊
                                         </div>
@@ -893,6 +905,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     color: #FD6A58;
                 }
                `);
+                widget.data.background = new URL('../img/component/login/login_page.json', import.meta.url);
                 function checkRegister() {
                     appConfig().changePage(gvc, "newPW");
                 }
@@ -910,6 +923,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     gvc.notifyDataChange('mainView');
                 }, () => {
                 });
+                let email = '';
                 return {
                     view: () => {
                         return gvc.bindView({
@@ -920,7 +934,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <main style="">                                       
                                         <div class="w-100" style="position: absolute;">
                                             <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                        gvc.glitter.goBack();
+                                        appConfig().setHome(gvc, "login");
                                     })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                         </div>
                                         <div class="loginBoard d-flex flex-column align-items-center">
@@ -929,9 +943,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <div class="hint">
                                                     您可以透過註冊電子郵件並前往官網完成密碼重設
                                                 </div>
-                                                <div class="loginRow d-flex">
+                                                <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址">
+                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e) => {
+                                        email = e.value;
+                                    })}">
                                                 </div>
                                                 <div class="d-flex d-none" style="margin-top: 32px">
                                                     <div class="authRow d-flex align-items-center">
@@ -950,9 +966,20 @@ Plugin.create(import.meta.url, (glitter) => {
                         
                                             <!--todo click-->
                                                 <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
-                                        checkRegister();
+                                        const dialog = new Dialog();
+                                        dialog.dataLoading(true);
+                                        User.forgetPwd(email, (response, code) => {
+                                            dialog.dataLoading(false);
+                                            if (response) {
+                                                dialog.showInfo("驗證信已送出");
+                                                gvc.glitter.goBack();
+                                            }
+                                            else {
+                                                dialog.showInfo("驗證信送出失敗");
+                                            }
+                                        });
                                     })}">
-                                                    下一步
+                                                    傳送驗證信
                                                 </div>
                                             </div>
                         
@@ -979,6 +1006,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 background: new URL('../img/component/login/login_page.json', import.meta.url),
             },
             render: (gvc, widget, setting, hoverID) => {
+                widget.data.background = new URL('../img/component/login/login_page.json', import.meta.url);
                 gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
                     gvc.notifyDataChange('mainView');
                 }, () => {
@@ -1144,8 +1172,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <main>
                                         <div class="w-100" style="position: absolute;">
                                             <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                        glitter.runJsInterFace("dismiss", {}, () => {
-                                        });
                                     })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                             <img class="arrow" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="top: ${widget.data.topInset}" alt="">
                                         </div>

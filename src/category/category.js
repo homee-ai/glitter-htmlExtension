@@ -62,7 +62,12 @@ Plugin.create(import.meta.url, (glitter) => {
                         return sharedView.navigationBar({
                             title: ``,
                             leftIcon: `<img class="" src="${new URL('../img/component/left-arrow.svg', import.meta.url).href}" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                gvc.glitter.goBack();
+                                if (gvc.glitter.pageConfig.length <= 1) {
+                                    appConfig().setHome(gvc, "home", {});
+                                }
+                                else {
+                                    gvc.glitter.goBack();
+                                }
                             })}">
                             <div class="  form-control flex-fill" style="
 border-radius: 20px;
@@ -514,23 +519,23 @@ color: #1E1E1E;">${data.title}</div>
                             select: (_d = gBundle.selectIndex) !== null && _d !== void 0 ? _d : 0,
                             setSubCategoryRow: (category) => {
                                 gvc.addStyle(`
-                .subcateTitle{
-                    font-weight: 400;
-                    font-size: 14px;
-                    line-height: 20px;
-                    display: flex;
-                    align-items: center;
-                    text-align: center;
-                    /* HOMEE dark grey */
-                    margin-left: 16px;
-                    color: #858585;
-                }
-                .selectTitle{
-                    /* HOMEE black */
-                    color: #292929;
-                    font-weight: 700;
-                }
-            `);
+                                .subcateTitle{
+                                    font-weight: 400;
+                                    font-size: 14px;
+                                    line-height: 20px;
+                                    display: flex;
+                                    align-items: center;
+                                    text-align: center;
+                                    /* HOMEE dark grey */
+                                    margin-left: 16px;
+                                    color: #858585;
+                                }
+                                .selectTitle{
+                                    /* HOMEE black */
+                                    color: #292929;
+                                    font-weight: 700;
+                                }
+                            `);
                                 return gvc.bindView({
                                     bind: "subCategoryRow",
                                     view: () => {
@@ -595,9 +600,6 @@ color: #1E1E1E;">${data.title}</div>
                             (() => {
                                 const map = {
                                     text: '價格', img: new URL('../img/sample/category/sort.svg', import.meta.url).href, click: (e) => {
-                                        if (!origData) {
-                                            origData = glitter.share.productData;
-                                        }
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder == 1) {
@@ -606,7 +608,7 @@ color: #1E1E1E;">${data.title}</div>
                                         else if (sortPriceOrder) {
                                             map.img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
                                         }
-                                        glitter.share.productData.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
+                                        viewModel.product.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
                                         gvc.notifyDataChange('sortBar');
                                         gvc.notifyDataChange('cardGroup');
                                     }
@@ -641,7 +643,7 @@ color: #1E1E1E;">${data.title}</div>
                                 <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="color: #292929;;position: absolute;top: 50%;   font-family: 'Noto Sans TC';font-style: normal;font-size: 16px;font-weight: 700;">
                                     ${title}
                                 </div>
-                         
+                            
                             </div>
                             <banner style="">
                                ${(((_a = gBundle.object.subCategory) !== null && _a !== void 0 ? _a : []).length > 0) ? viewModel.setSubCategoryRow(gBundle.parent_category_id) : ``}
@@ -706,6 +708,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                 "marginL": "0px",
                                                                 "marginR": "0px",
                                                                 "setting": viewModel.product.map((dd) => {
+                                                                    console.log(viewModel.product);
                                                                     return {
                                                                         "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                                         "js": "$homee/homee/homee_home.js",
@@ -1133,7 +1136,6 @@ color: #1E1E1E;">${data.title}</div>
                                                             }
                                                         `);
                                                         let CardGroup = ``;
-                                                        console.log(data);
                                                         if (dataList) {
                                                             dataList.forEach((element, index) => {
                                                                 var _a;
