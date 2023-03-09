@@ -164,6 +164,53 @@ Plugin.create(import.meta.url, (glitter) => {
                     },
                     editor: () => {
                         return gvc.map([
+                            // slideColor:"#E0E0E0",
+                            // slideBorderColor:"",
+                            // slideSelectColor:"#FFFFFF",
+                            // slideSelectBorderColor:"1px solid #FE5541",
+                            `
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點顏色</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="" type="color" value="${widget.data.slideColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideColor = e.value;
+                                widget.refreshAll();
+
+                            })}">
+                                <input class="form-control" type="text" value="${widget.data.slideColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框(border的Css)</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="form-control" type="text" value="${widget.data.slideBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideBorderColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點顏色</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="" type="color" value="${widget.data.slideSelectColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectColor = e.value;
+                                widget.refreshAll();
+
+                            })}">
+                                <input class="form-control" type="text" value="${widget.data.slideSelectColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框(border的Css)</h3>
+                            <div class="d-flex align-items-center">                                
+                                <input class="form-control" type="text" value="${widget.data.slideSelectBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                widget.data.slideSelectBorderColor = e.value
+                                widget.refreshAll();
+                            })}">
+                            </div>
+
+<!--                                1px solid #FE5541-->
+                            
+                            `,
                             gvc.bindView({
                                 bind: editorID,
                                 view: () => {
