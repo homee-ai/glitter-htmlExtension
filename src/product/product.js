@@ -404,14 +404,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         font-size: 14px;
                                         margin-left: 20px;" onclick="${gvc.event((e) => {
                                     const dialog = new Dialog(gvc);
-                                    Checkout.addToCart({
-                                        category: "購物車",
-                                        skuID: selectSku.sku_id,
-                                        amount: widget.data.qty,
-                                        callback: (response) => {
-                                            dialog.showInfo('已加入購物車');
-                                        }
-                                    });
+                                    console.log(widget.data.productData.productData.product_detail.id);
                                 })}">加入購物車
                                     </div>
                                     <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? `` : `d-none`}">

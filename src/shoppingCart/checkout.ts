@@ -4,6 +4,7 @@ import {SharedView} from "../homee/shareView.js";
 import {appConfig} from "../config.js"
 import {Checkout, CheckOutData} from "../api/checkout.js";
 import {Dialog} from "../homee/legacy/widget/dialog.js";
+import {Product} from "../api/product.js";
 
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
@@ -251,6 +252,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     widget.data.cartItem.map((data:any)=>{
                         const map2:any={}
                         data.item.map((d2:any)=>{
+
                             map2[d2.item_id]={"count":d2.qty,"sku":d2.item_id,"isSelect":d2.select}
                         })
                         mapData[data.category]=map2;
@@ -315,6 +317,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 function getCartProData() {
                     Checkout.getCart((cdata) => {
                         cartData = cdata
+                        console.log("購物車資料")
+                        console.log(cdata)
                         let needGetInfoSku: string[] = []
                         Object.keys(cartData).map((dd: any) => {
                             const obj: any = cartData[dd]
@@ -327,83 +331,84 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     })
                             }
                         })
-                        console.log(needGetInfoSku)
+                        // console.log(needGetInfoSku)
                         Checkout.getCartSkuInfo({skuID: needGetInfoSku, next: (response) => {
-                                dialog.dataLoading(false)
-                                if (!response) {
-                                    widget.data.cartItem = []
-                                    // dialog.showInfo("取得資料異常．")
-                                } else {
-                                    response.map((dd: any) => {
-                                        skuDataInfo[dd.sku_id] = dd;
-                                    })
-                                    widget.data.cartItem = Object.keys(cartData).map((dd: any) => {
-                                        const obj: any = cartData[dd]
-                                        return {
-                                            category: dd,
-                                            category_id: dd,
-                                            item: Object.keys(obj).map((d4) => {
-                                                const oc = obj[d4]
-                                                needGetInfoSku.push(d4)
-                                                if (!skuDataInfo[d4]) {
-                                                    return {
-                                                        item_id: d4,//variant
-                                                        name: "error",
-                                                        img: ``,
-                                                        kind: "error",
-                                                        price: oc.price ?? 0,
-                                                        subtotal: oc.price ?? 0,
-                                                        deleteEvent: () => {
-                                                            obj[d4] = undefined
-                                                        },
-                                                        get qty() {
-                                                            return oc.count
-                                                        },
-                                                        set qty(newValue) {
-                                                            oc.count = parseInt(newValue, 10)
-                                                        },
-                                                        get select() {
-                                                            return oc.isSelect
-                                                        },
-                                                        set select(newValue) {
-                                                            oc.isSelect = newValue;
-                                                        }
-                                                    }
-                                                } else {
-                                                    return {
-                                                        item_id: d4,//variant
-                                                        name: skuDataInfo[d4].name,
-                                                        img: skuDataInfo[d4].preview_image,
-                                                        kind: skuDataInfo[d4].attribute_value,
-                                                        price: skuDataInfo[d4].price,
-                                                        subtotal: skuDataInfo[d4].price * oc.count,
-                                                        deleteEvent: () => {
-                                                            obj[d4] = undefined
-                                                        },
-                                                        get qty() {
-                                                            return oc.count
-                                                        },
-                                                        set qty(newValue) {
-                                                            oc.count = parseInt(newValue, 10)
-                                                        },
-                                                        get select() {
-                                                            return oc.isSelect
-                                                        },
-                                                        set select(newValue) {
-                                                            oc.isSelect = newValue;
-                                                        }
+
+                            dialog.dataLoading(false)
+                            if (!response) {
+                                widget.data.cartItem = []
+                                // dialog.showInfo("取得資料異常．")
+                            } else {
+                                response.map((dd: any) => {
+                                    skuDataInfo[dd.sku_id] = dd;
+                                })
+                                widget.data.cartItem = Object.keys(cartData).map((dd: any) => {
+                                    const obj: any = cartData[dd]
+                                    return {
+                                        category: dd,
+                                        category_id: dd,
+                                        item: Object.keys(obj).map((d4) => {
+                                            const oc = obj[d4]
+                                            needGetInfoSku.push(d4)
+                                            if (!skuDataInfo[d4]) {
+                                                return {
+                                                    item_id: d4,//variant
+                                                    name: "error",
+                                                    img: ``,
+                                                    kind: "error",
+                                                    price: oc.price ?? 0,
+                                                    subtotal: oc.price ?? 0,
+                                                    deleteEvent: () => {
+                                                        obj[d4] = undefined
+                                                    },
+                                                    get qty() {
+                                                        return oc.count
+                                                    },
+                                                    set qty(newValue) {
+                                                        oc.count = parseInt(newValue, 10)
+                                                    },
+                                                    get select() {
+                                                        return oc.isSelect
+                                                    },
+                                                    set select(newValue) {
+                                                        oc.isSelect = newValue;
                                                     }
                                                 }
-                                            })
-                                        }
-                                    })
-                                    widget.data.cartItem = widget.data.cartItem.filter((d4: any) => {
-                                        return d4.item.length > 0
-                                    })
-                                }
-                                refreshCart()
+                                            } else {
+                                                return {
+                                                    item_id: d4,//variant
+                                                    name: skuDataInfo[d4].name,
+                                                    img: skuDataInfo[d4].preview_image,
+                                                    kind: skuDataInfo[d4].attribute_value,
+                                                    price: skuDataInfo[d4].price,
+                                                    subtotal: skuDataInfo[d4].price * oc.count,
+                                                    deleteEvent: () => {
+                                                        obj[d4] = undefined
+                                                    },
+                                                    get qty() {
+                                                        return oc.count
+                                                    },
+                                                    set qty(newValue) {
+                                                        oc.count = parseInt(newValue, 10)
+                                                    },
+                                                    get select() {
+                                                        return oc.isSelect
+                                                    },
+                                                    set select(newValue) {
+                                                        oc.isSelect = newValue;
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                                widget.data.cartItem = widget.data.cartItem.filter((d4: any) => {
+                                    return d4.item.length > 0
+                                })
                             }
-                        })
+                            refreshCart()
+                        }})
+
                     })
                 }
                 getCartProData()
@@ -591,7 +596,18 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     ${(() => {
                                                                     if (item.kind) {
                                                                         return `
-                                                                        <div class="item-kind">${item.kind}</div>
+                                                                        <div class="item-kind" onclick="${gvc.event(()=>{
+                                                                            console.log("test")
+
+
+                                                                            glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{},{animation:glitter.animation.topToBottom})
+                                                                            // glitter.openDiaLog(`${new URL(`../dialog/dialog-helper.js`, import.meta.url)}`,"selectKind",skuDataInfo[item["item_id"]])
+                                                                            // Product.productDetail("123",(result)=>{
+                                                                            //    
+                                                                            // })
+                                                                    
+                                                                            
+                                                                        })}">${item.kind}</div>
                                                                         <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `
                                                                     }
@@ -982,9 +998,9 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                                                             ${(() => {
                                                                 if (item.kind) {
                                                                     return `
-                                                                                            <div class="item-kind">${item.kind}</div>
-                                                                                            <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
-                                                                                        `
+                                                                        <div class="item-kind">${item.kind}</div>
+                                                                        <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
+                                                                    `
                                                                 }
                                                                 return ``
                                                             })()}                                                                            
