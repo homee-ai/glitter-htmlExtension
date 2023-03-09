@@ -680,7 +680,11 @@ ${glitter.htmlGenerate.editeInput({
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
+<<<<<<< HEAD
                                                 <div class="d-flex flex-wrap" style="overflow: scroll;">
+=======
+                                                <div class="d-flex flex-wrap" style="overflow: scroll;padding: 8px;">
+>>>>>>> dded4b79 (fix product detail)
                                                     ${gvc.map(sizeType.attribute_values.map((data, index) => {
                                                 let className = "kindUnselected";
                                                 if (data.selected) {

@@ -42,63 +42,22 @@ Plugin.create(import.meta.url, (glitter) => {
     return {
         banner: {
             defaultData: {
-                link: [],
-                height: "128",
-                slideColor: "#E0E0E0",
-                slideBorderColor: "",
-                slideSelectColor: "#FFFFFF",
-                slideSelectBorderColor: "1px solid #FE5541",
+                link: []
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
                 function slideControl(pageImgArray, pagination, navigation, scrollbar) {
                     const glitter = gvc.glitter;
                     gvc.addStyle(`
-                        .swiper-slide{
-                            width: 100%;
-                            background-repeat: no-repeat;
-                        }
-                        .swiper-pagination-bullet {
-                            ${(() => {
-                        if (widget.data.slideColor) {
-                            return `background: ${widget.data.slideColor};`;
-                        }
-                        else
-                            return ``;
-                    })()}
-                            ${(() => {
-                        if (widget.data.slideBorderColor) {
-                            return `background: ${widget.data.slideBorderColor};`;
-                        }
-                        else
-                            return ``;
-                    })()}                            
-                            width:7px;
-                            height:7px;                         
-                        }
-                        .swiper-pagination-bullet-active {
-                      
-                            ${(() => {
-                        if (widget.data.slideSelectColor) {
-                            return `background: ${widget.data.slideSelectColor};`;
-                        }
-                        else
-                            return ``;
-                    })()}
-                            ${(() => {
-                        if (widget.data.slideSelectBorderColor) {
-                            return `border: ${widget.data.slideSelectBorderColor};`;
-                        }
-                        else
-                            return ``;
-                    })()}                       
-                        }
-                    `);
+            .swiper-slide{
+                width: 100%;
+                background-repeat: no-repeat;
+            }
+        `);
                     let slidePage = ``;
                     pageImgArray.forEach((item, index) => {
-                        var _b;
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: ${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}%; background:50% / contain url(${item.img}) no-repeat white;" onclick="${gvc.event(() => {
+                <div class="swiper-slide" style="padding-bottom: 128%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             });
@@ -149,6 +108,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             glitter.addMtScript([{
                                     src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                 }], () => {
+                                var _b;
                                 const Swiper = window.Swiper;
                                 const swiper = new Swiper(`.${id}`, {
                                     direction: 'horizontal',
@@ -164,6 +124,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                         el: `.${id} .swiper-scrollbar`,
                                     },
                                 });
+                                glitter.share.swiper = (_b = glitter.share.swiper) !== null && _b !== void 0 ? _b : [];
+                                glitter.share.swiper.push(swiper);
                             }, () => {
                             });
                         }
@@ -232,17 +194,13 @@ Plugin.create(import.meta.url, (glitter) => {
                             gvc.bindView({
                                 bind: editorID,
                                 view: () => {
-                                    var _b;
                                     function swapArr(arr, index1, index2) {
                                         arr[index1] = arr.splice(index2, 1, arr[index1])[0];
                                         return arr;
                                     }
                                     return `
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片寬高比</h3>
-<input class="mt-2 form-control" value="${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}" onchange="${gvc.event((e) => {
-                                        widget.data.height = e.value;
-                                        widget.refreshAll();
-                                    })}">
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">寬高比</h3>
+
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {
@@ -782,7 +740,7 @@ ${glitter.htmlGenerate.editeInput({
                                 var _b, _c, _d, _e;
                                 dd.type = (_b = dd.type) !== null && _b !== void 0 ? _b : 'image';
                                 if (dd.type === 'image') {
-                                    return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                    return (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight || "24px"};width: ${dd.imgWidth || "24px"};" alt="" onclick="${gvc.event(() => {
                                         ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
                                     })}">`);
                                 }
@@ -800,7 +758,7 @@ ${glitter.htmlGenerate.editeInput({
 ${(() => {
                                     var _b, _c, _d;
                                     if (dd.type === 'image') {
-                                        return (dd.img && `<img class="" src="${dd.img}" style="height: 24px;" alt="" onclick="${gvc.event(() => {
+                                        return (dd.img && `<img class="" src="${dd.img}" style="height: ${dd.imgHeight || "24px"};width: ${dd.imgWidth || "24px"};" alt="" onclick="${gvc.event(() => {
                                             ClickEvent.trigger({ gvc, widget, clickEvent: dd.clickEvent });
                                         })}">`);
                                     }
@@ -853,26 +811,26 @@ right: 8px;` }
                                 dd.badge = (_c = dd.badge) !== null && _c !== void 0 ? _c : {};
                                 dd.clickEvent = (_d = dd.clickEvent) !== null && _d !== void 0 ? _d : {};
                                 return `
-                            <div class="alert alert-dark">
-                            ${(() => {
-                                    var _b, _c, _d, _e;
+<div class="alert alert-dark">
+${(() => {
+                                    var _b, _c, _d, _e, _f, _g;
                                     return `
-                            <h3 class="text-white" style="font-size: 16px;">類型</h3>
-                            <select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
+<h3 class="text-white" style="font-size: 16px;">類型</h3>
+<select class="form-control form-select mb-3" onchange="${gvc.event((e) => {
                                         dd.type = e.value;
                                         widget.refreshComponent();
                                     })}">
-                            <option value="image" ${dd.type === 'image' && 'selected'}>圖片</option>
-                            <option ${dd.type === 'title' && 'selected'} value="title">文字</option>
-                            </select>
-                            ${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
-                            <i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
+<option value="image" ${dd.type === 'image' && 'selected'}>圖片</option>
+<option ${dd.type === 'title' && 'selected'} value="title">文字</option>
+</select>
+${(dd.type === 'image') ? `<div class="d-flex align-items-center mb-3 mt-1 ">
+<i class="fa-regular fa-circle-minus text-danger me-2" style="font-size: 20px;cursor: pointer;" onclick="${gvc.event(() => {
                                         widget.data.right.splice(index, 1);
                                         widget.refreshComponent();
                                     })}"></i>
-                            <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${(_b = dd.img) !== null && _b !== void 0 ? _b : ""}">
-                            <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
-                            <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${(_b = dd.img) !== null && _b !== void 0 ? _b : ""}">
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
                                         glitter.ut.chooseMediaCallback({
                                             single: true,
                                             accept: 'image/*',
@@ -884,10 +842,25 @@ right: 8px;` }
                                             }
                                         });
                                     })}"></i>
-                            </div>` : gvc.map([glitter.htmlGenerate.editeInput({
+</div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片寬度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${(_c = dd.imgWidth) !== null && _c !== void 0 ? _c : "24px"}" onchange="${gvc.event((e) => {
+                                        dd.imgWidth = e.value;
+                                        widget.refreshAll();
+                                    })}">
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex align-items-center justify-content-center">圖片高度</div>
+        <input class="flex-fill form-control ms-2" style="width: 100px;" value="${(_d = dd.imgHeight) !== null && _d !== void 0 ? _d : "24px"}" onchange="${gvc.event((e) => {
+                                        dd.imgHeight = e.value;
+                                        widget.refreshAll();
+                                    })}">
+    </div>
+` : gvc.map([glitter.htmlGenerate.editeInput({
                                             gvc: gvc,
                                             title: '按鈕文字',
-                                            default: (_c = dd.title) !== null && _c !== void 0 ? _c : '',
+                                            default: (_e = dd.title) !== null && _e !== void 0 ? _e : '',
                                             placeHolder: `請輸入按鈕文字`,
                                             callback: (text) => {
                                                 dd.title = text;
@@ -896,7 +869,7 @@ right: 8px;` }
                                         }), glitter.htmlGenerate.editeText({
                                             gvc: gvc,
                                             title: 'Style',
-                                            default: (_d = dd.style) !== null && _d !== void 0 ? _d : '',
+                                            default: (_f = dd.style) !== null && _f !== void 0 ? _f : '',
                                             placeHolder: ``,
                                             callback: (text) => {
                                                 dd.style = text;
@@ -905,18 +878,18 @@ right: 8px;` }
                                         }), glitter.htmlGenerate.editeText({
                                             gvc: gvc,
                                             title: 'Class',
-                                            default: (_e = dd.class) !== null && _e !== void 0 ? _e : '',
+                                            default: (_g = dd.class) !== null && _g !== void 0 ? _g : '',
                                             placeHolder: ``,
                                             callback: (text) => {
                                                 dd.class = text;
                                                 widget.refreshComponent();
                                             }
                                         })])}
-                            `;
+`;
                                 })()}
-                            ${ClickEvent.editer(gvc, widget, dd.clickEvent)}
-                            ${ClickEvent.editer(gvc, widget, dd.badge, { hover: false, option: ['cartBadge'], title: "數量提示" })}
-                            </div>
+${ClickEvent.editer(gvc, widget, dd.clickEvent)}
+${ClickEvent.editer(gvc, widget, dd.badge, { hover: false, option: ['cartBadge'], title: "數量提示" })}
+</div>
 `;
                             }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`);
                         }

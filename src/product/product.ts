@@ -154,13 +154,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     gvc.notifyDataChange("qtyNumber");
                 }
                 function goToSlide(index: number): void {
-                    const Swiper = (window as any).Swiper
-                    let mySwiper = new Swiper('.swiper', {
-                        // 選項設置
-                    });
-
-                    mySwiper.slideTo(index+1);
-
                     // 取消原本 active 的樣式
                     const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
                     if (oldActiveEl) {
@@ -172,6 +165,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     if (newActiveEl) {
                         newActiveEl.classList.add('swiper-pagination-bullet-active');
                     }
+                    glitter.share.swiper.map((dd:any)=>{
+                        try{
+                            dd.slideTo(index+1);
+                        }catch (e){}
+                    })
                 }
 
                 return {
@@ -196,6 +194,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                         const selectSku = sku_list[key.join(' / ')]
                         setTimeout(()=>{
+                            // alert(selectSku.image_index)
                             goToSlide(selectSku.image_index);
                         },250)
 
@@ -261,26 +260,24 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 }
                                                 return `
                                                     <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
-                                                        
-                                                        
-                                                        // console.log(widget.data.productData.sku_list)
-                                            
-                                                        // 切換到指定的 index，並更新頁面指示器
-                                                        
-    
-                                                        // 點擊頁面指示器時，切換到相應的 index
-                                                        const paginationEl = document.querySelector('.swiper-pagination');
-                                                        if (paginationEl) {
-                                                            paginationEl.addEventListener('click', (event: Event) => {
-                                                                const index = (event.target as HTMLElement).getAttribute('data-swiper-slide-index');
-                                                                if (index) {
-                                                                    goToSlide(parseInt(index));
-                                                                }
-                                                            });
-                                                        }
-                                                        
-                                                        
-                                                        sizeType.attribute_values.map((dd: any) => {
+                                                    // console.log(widget.data.productData.sku_list)
+
+                                                    // 切換到指定的 index，並更新頁面指示器
+
+
+                                                    // 點擊頁面指示器時，切換到相應的 index
+                                                    const paginationEl = document.querySelector('.swiper-pagination');
+                                                    if (paginationEl) {
+                                                        paginationEl.addEventListener('click', (event: Event) => {
+                                                            const index = (event.target as HTMLElement).getAttribute('data-swiper-slide-index');
+                                                            if (index) {
+                                                                goToSlide(parseInt(index));
+                                                            }
+                                                        });
+                                                    }
+
+
+                                                    sizeType.attribute_values.map((dd: any) => {
                                                             dd.selected = false
                                                         })
                                                         data.selected = true
