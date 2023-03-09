@@ -53,11 +53,47 @@ Plugin.create(import.meta.url, (glitter) => {
                 width: 100%;
                 background-repeat: no-repeat;
             }
+             .swiper-pagination-bullet {
+                            ${(() => {
+                        if (widget.data.slideColor) {
+                            return `background: ${widget.data.slideColor};`;
+                        }
+                        else
+                            return ``;
+                    })()}
+                            ${(() => {
+                        if (widget.data.slideBorderColor) {
+                            return `background: ${widget.data.slideBorderColor};`;
+                        }
+                        else
+                            return ``;
+                    })()}                            
+                            width:7px;
+                            height:7px;                         
+                        }
+                        .swiper-pagination-bullet-active {
+                      
+                            ${(() => {
+                        if (widget.data.slideSelectColor) {
+                            return `background: ${widget.data.slideSelectColor};`;
+                        }
+                        else
+                            return ``;
+                    })()}
+                            ${(() => {
+                        if (widget.data.slideSelectBorderColor) {
+                            return `border: ${widget.data.slideSelectBorderColor};`;
+                        }
+                        else
+                            return ``;
+                    })()}                       
+                        }
         `);
                     let slidePage = ``;
                     pageImgArray.forEach((item, index) => {
+                        var _b;
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: 128%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
+                 <div class="swiper-slide" style="padding-bottom: ${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             });
@@ -162,7 +198,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框(border的Css)</h3>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${(_d = widget.data.slideBorderColor) !== null && _d !== void 0 ? _d : ""}" onchange="${gvc.event((e) => {
                                 widget.data.slideBorderColor = e.value;
@@ -180,7 +216,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框(border的Css)</h3>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${(_g = widget.data.slideSelectBorderColor) !== null && _g !== void 0 ? _g : ""}" onchange="${gvc.event((e) => {
                                 widget.data.slideSelectBorderColor = e.value;
@@ -194,13 +230,17 @@ Plugin.create(import.meta.url, (glitter) => {
                             gvc.bindView({
                                 bind: editorID,
                                 view: () => {
+                                    var _b;
                                     function swapArr(arr, index1, index2) {
                                         arr[index1] = arr.splice(index2, 1, arr[index1])[0];
                                         return arr;
                                     }
                                     return `
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">寬高比</h3>
-
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片寬高比</h3>
+<input class="mt-2 form-control" value="${(_b = widget.data.height) !== null && _b !== void 0 ? _b : 128}" onchange="${gvc.event((e) => {
+                                        widget.data.height = e.value;
+                                        widget.refreshAll();
+                                    })}">
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {

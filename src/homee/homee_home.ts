@@ -59,12 +59,39 @@ Plugin.create(import.meta.url, (glitter) => {
                 width: 100%;
                 background-repeat: no-repeat;
             }
+             .swiper-pagination-bullet {
+                            ${(()=>{
+                        if (widget.data.slideColor){
+                            return `background: ${widget.data.slideColor};`;
+                        }else return ``
+                    })()}
+                            ${(()=>{
+                        if (widget.data.slideBorderColor){
+                            return `background: ${widget.data.slideBorderColor};`;
+                        }else return ``
+                    })()}                            
+                            width:7px;
+                            height:7px;                         
+                        }
+                        .swiper-pagination-bullet-active {
+                      
+                            ${(()=>{
+                        if (widget.data.slideSelectColor){
+                            return `background: ${widget.data.slideSelectColor};`;
+                        }else return ``
+                    })()}
+                            ${(()=>{
+                        if (widget.data.slideSelectBorderColor){
+                            return `border: ${widget.data.slideSelectBorderColor};`;
+                        }else return ``
+                    })()}                       
+                        }
         `)
                     let slidePage = ``
                     pageImgArray.forEach((item: any, index: number) => {
                         // <!-- Slides -->
                         slidePage += `
-                <div class="swiper-slide" style="padding-bottom: 128%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
+                 <div class="swiper-slide" style="padding-bottom: ${widget.data.height ?? 128}%; background:50% / cover url(${item.img});" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc, widget, clickEvent: item
                             })
@@ -181,7 +208,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框(border的Css)</h3>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${widget.data.slideBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
                                 widget.data.slideBorderColor = e.value
@@ -200,7 +227,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框(border的Css)</h3>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${widget.data.slideSelectBorderColor ?? ""}" onchange="${gvc.event((e:HTMLInputElement)=>{
                                 widget.data.slideSelectBorderColor = e.value
@@ -220,8 +247,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
 
                                     return `
-<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">寬高比</h3>
-
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片寬高比</h3>
+<input class="mt-2 form-control" value="${widget.data.height??128}" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                        widget.data.height = e.value;
+                                        widget.refreshAll();
+                                    })}">
 <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
 <div class="mt-2"></div>
 ${data.link.map((dd, index) => {
