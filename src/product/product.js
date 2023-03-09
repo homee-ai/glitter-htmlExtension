@@ -149,9 +149,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     gvc.notifyDataChange("qtyNumber");
                 }
                 function goToSlide(index) {
-                    const Swiper = window.Swiper;
-                    let mySwiper = new Swiper('.swiper', {});
-                    mySwiper.slideTo(index + 1);
                     const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
                     if (oldActiveEl) {
                         oldActiveEl.classList.remove('swiper-pagination-bullet-active');
@@ -160,6 +157,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     if (newActiveEl) {
                         newActiveEl.classList.add('swiper-pagination-bullet-active');
                     }
+                    glitter.share.swiper.map((dd) => {
+                        try {
+                            dd.slideTo(index + 1);
+                        }
+                        catch (e) { }
+                    });
                 }
                 return {
                     view: () => {
