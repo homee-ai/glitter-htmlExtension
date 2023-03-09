@@ -631,22 +631,34 @@ color: #1E1E1E;">${data.title}</div>
                         let title = gBundle.title ?? "分類頁";
                         let sortPriceOrder = -1;
                         let origData:ProductData[] = [];
-                        glitter.share.productData = {};
 
+
+                        glitter.share.productData = {};
+                        function resetSort(){
+                            sortRow[1].img = new URL('../img/sample/category/sort.svg',import.meta.url).href;
+                            sortPriceOrder = -1;
+
+                        }
+                        // sort_by: 'manual' | 'best-selling' | 'alpha' | 'alpha-desc' | 'price' | 'price-desc' | 'lastest' | 'lastest-desc';
                         let sortRow = [
-                            {
-                                text: '綜合', img: '', click: (e:HTMLElement) => {
-                                    //reset orderPrice
-                                    sortPriceOrder = -1;
-                                    sortRow[1].img = glitter.share.getLink('../img/sample/category/sort.svg');
-                                    sortSelect = 0;
-                                    if (origData.length != 0){
-                                        glitter.share.productData = origData;
+                            (()=>{
+                                const map={
+                                    text: '精選', img: '', click: (e:HTMLElement) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value
+                                        viewModel.loading=true
+                                        gvc.notifyDataChange('cardGroup')
+                                        resetSort();
+                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                            viewModel.product=response
+
+                                            viewModel.loading=false;
+                                            gvc.notifyDataChange('sortBar');
+                                            gvc.notifyDataChange('cardGroup')
+                                        },"manual")
                                     }
-                                    gvc.notifyDataChange('sortBar');
-                                    gvc.notifyDataChange('cardGroup');
                                 }
-                            },
+                                return map
+                            })(),
                             (()=>{
                                 const map={
                                     text: '價格', img: new URL('../img/sample/category/sort.svg',import.meta.url).href, click: (e:HTMLElement) => {
@@ -658,9 +670,9 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder==1){
-                                            map.img = new URL('../img/sample/category/sortSmaller.svg',import.meta.url).href ;
+                                            sortRow[1].img = new URL('../img/sample/category/sortSmaller.svg',import.meta.url).href ;
                                         }else if (sortPriceOrder){
-                                            map.img = new URL('../img/sample/category/sortHigher.svg',import.meta.url).href ;
+                                            sortRow[1].img = new URL('../img/sample/category/sortHigher.svg',import.meta.url).href ;
                                         }
                                         viewModel.product.sort((a:any, b:any)=>(a.sale_price - b.sale_price) * sortPriceOrder);
                                         gvc.notifyDataChange('sortBar');
@@ -668,7 +680,25 @@ color: #1E1E1E;">${data.title}</div>
                                     }
                                 }
                                 return map
+                            })(),
+                            (()=>{
+                                const map={
+                                    text: '銷量', img: '', click: (e:HTMLElement) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value
+                                        viewModel.loading=true
+                                        gvc.notifyDataChange('cardGroup')
+                                        resetSort();
+                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                            viewModel.product=response
+                                            viewModel.loading=false
+                                            gvc.notifyDataChange('sortBar');
+                                            gvc.notifyDataChange('cardGroup')
+                                        },"best-selling")
+                                    }
+                                }
+                                return map
                             })()
+
                         ]
                         return (()=>{
                             let topInset: number = 0
@@ -717,14 +747,14 @@ color: #1E1E1E;">${data.title}</div>
                                                     })}">
                                         ${element.text}
                                         ${gvc.bindView({
-                                                        bind: "",
-                                                        view: () => {
-                                                            if (element.img) {
-                                                                return `<img src="${element.img}" style="height: 16px;width: 16px;">`
-                                                            }
-                                                            return ``
-                                                        }
-                                                    })}
+                                            bind: "",
+                                            view: () => {
+                                                if (element.img) {
+                                                    return `<img src="${element.img}" style="height: 16px;width: 16px;">`
+                                                }
+                                                return ``
+                                            }
+                                        })}
                                     </div>
                                     `
                                                     //直槓
@@ -765,7 +795,7 @@ color: #1E1E1E;">${data.title}</div>
                                                     "marginL": "0px",
                                                     "marginR": "0px",
                                                     "setting": viewModel.product.map((dd:any)=>{
-                                                        console.log(viewModel.product)
+                                          
                                                         return {
                                                             "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                             "js": "$homee/homee/homee_home.js",
@@ -831,19 +861,11 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product=response
                                             viewModel.loading=false
                                             gvc.notifyDataChange('cardGroup')
-                                        })
+                                        },"manual")
 
 
 
-                                        // const id=[{name:"全部",id:gBundle.object.value}].concat((gBundle.object.subCategory ?? []).map((dd:any)=>{
-                                        //     return {name:dd.title,id:dd.value}
-                                        // }))[viewModel.select].id
-                                        //
-                                        // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                        //     viewModel.product=response
-                                        //     viewModel.loading=false
-                                        //     gvc.notifyDataChange('cardGroup')
-                                        // })
+
 
                                     }
 

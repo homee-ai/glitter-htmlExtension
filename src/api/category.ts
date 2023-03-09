@@ -70,12 +70,14 @@ export class Category {
 
     }
 
-    public getCategoryData(parameter: string, value: string, callback: (data: ProductData[]) => void): void {
+    public getCategoryData(parameter: string, value: string, callback: (data: ProductData[] ) => void , sortby?:string): void {
         const glitter = this.glitter;
         const that = this;
         let jsonData: any
+        let sortPara = (sortby)?`&sortBy=${sortby}`:""
+        // sort_by: 'manual' | 'best-selling' | 'alpha' | 'alpha-desc' | 'price' | 'price-desc' | 'lastest' | 'lastest-desc';
         $.ajax({
-            url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}`,
+            url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`,
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response: any) => {

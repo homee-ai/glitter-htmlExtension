@@ -395,6 +395,7 @@ export class Checkout {
                 obj.data.customerInfo = {
                     "email": response.email
                 }
+
                 $.ajax({
                     url: `${appConfig().serverURL}/api/bm/checkout`,
                     type: 'post',
@@ -402,7 +403,8 @@ export class Checkout {
                     data: JSON.stringify(obj.data),
                     contentType: 'application/json; charset=utf-8',
                     success: (response: any) => {
-                        obj.callback(response)
+                        console.log(response)
+
                     },
                     error: (err: any) => {
                         obj.callback(false)
