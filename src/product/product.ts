@@ -154,13 +154,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     gvc.notifyDataChange("qtyNumber");
                 }
                 function goToSlide(index: number): void {
-                    const Swiper = (window as any).Swiper
-                    let mySwiper = new Swiper('.swiper', {
-                        // 選項設置
-                    });
-
-                    mySwiper.slideTo(index+1);
-
                     // 取消原本 active 的樣式
                     const oldActiveEl = document.querySelector('.swiper-pagination .swiper-pagination-bullet-active');
                     if (oldActiveEl) {
@@ -172,6 +165,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     if (newActiveEl) {
                         newActiveEl.classList.add('swiper-pagination-bullet-active');
                     }
+                    glitter.share.swiper.map((dd:any)=>{
+                        try{
+                            dd.slideTo(index+1);
+                        }catch (e){}
+                    })
                 }
 
                 return {
@@ -196,6 +194,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                         })
                         const selectSku = sku_list[key.join(' / ')]
                         setTimeout(()=>{
+                            // alert(selectSku.image_index)
                             goToSlide(selectSku.image_index);
                         },250)
 

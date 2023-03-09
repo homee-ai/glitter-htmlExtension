@@ -114,6 +114,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                             }], () => {
                                 const Swiper = (window as any).Swiper
+                                
                                 const swiper = new Swiper(`.${id}`, {
                                     // Optional parameters
                                     direction: 'horizontal',
@@ -137,6 +138,8 @@ Plugin.create(import.meta.url, (glitter) => {
 
 
                                 });
+                                glitter.share.swiper=glitter.share.swiper ?? []
+                                glitter.share.swiper.push(swiper)
                             }, () => {
                             })
                         }

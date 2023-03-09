@@ -108,6 +108,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             glitter.addMtScript([{
                                     src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                 }], () => {
+                                var _b;
                                 const Swiper = window.Swiper;
                                 const swiper = new Swiper(`.${id}`, {
                                     direction: 'horizontal',
@@ -123,6 +124,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                         el: `.${id} .swiper-scrollbar`,
                                     },
                                 });
+                                glitter.share.swiper = (_b = glitter.share.swiper) !== null && _b !== void 0 ? _b : [];
+                                glitter.share.swiper.push(swiper);
                             }, () => {
                             });
                         }
