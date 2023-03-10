@@ -248,15 +248,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 }
                                                 return `
                                                     <div class="${className}" style="margin-top: 8px;" onclick="${gvc.event(() => {
-                                                    const paginationEl = document.querySelector('.swiper-pagination');
-                                                    if (paginationEl) {
-                                                        paginationEl.addEventListener('click', (event) => {
-                                                            const index = event.target.getAttribute('data-swiper-slide-index');
-                                                            if (index) {
-                                                                goToSlide(parseInt(index));
-                                                            }
-                                                        });
-                                                    }
                                                     sizeType.attribute_values.map((dd) => {
                                                         dd.selected = false;
                                                     });
@@ -280,7 +271,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     else
                                         return ``;
                                 }));
-                            }, divCreate: { class: ``, style: "padding-bottom:24px;border-bottom:1px solid rgb(30,30,30,0.1);" },
+                            }, divCreate: { class: ``, style: "padding-bottom:32px;border-bottom:1px solid rgb(30,30,30,0.1);" },
                         })}
                         
                         ${gvc.bindView({
