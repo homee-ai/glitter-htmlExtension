@@ -74,13 +74,15 @@ export class Category {
         const glitter = this.glitter;
         const that = this;
         let jsonData: any
-        let sortPara = (sortby)?`&sortBy=${sortby}`:""
+        let sortPara = (sortby)?`&sort_by=${sortby}`:""
         // sort_by: 'manual' | 'best-selling' | 'alpha' | 'alpha-desc' | 'price' | 'price-desc' | 'lastest' | 'lastest-desc';
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`,
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response: any) => {
+                console.log("資料")
+                console.log(`${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`)
                 console.log(response)
                 callback(response["product_list"])
             },

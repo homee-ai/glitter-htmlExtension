@@ -99,7 +99,6 @@ export class Checkout {
                     data: { sku: skuID },
                     contentType: 'application/json; charset=utf-8',
                     success: (response) => {
-                        console.log(JSON.stringify(response));
                         next(response.data);
                     },
                     error: (err) => {

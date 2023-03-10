@@ -32,12 +32,14 @@ export class Category {
         const glitter = this.glitter;
         const that = this;
         let jsonData;
-        let sortPara = (sortby) ? `&sortBy=${sortby}` : "";
+        let sortPara = (sortby) ? `&sort_by=${sortby}` : "";
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`,
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response) => {
+                console.log("資料");
+                console.log(`${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`);
                 console.log(response);
                 callback(response["product_list"]);
             },
