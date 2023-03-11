@@ -719,11 +719,9 @@ ${glitter.htmlGenerate.editeInput({
                                                 <div class="sizeSelectTitle">
                                                     ${sizeType.attribute_key}
                                                 </div>
-<<<<<<< HEAD
-                                                <div class="d-flex flex-wrap" style="overflow: scroll;">
-=======
+
                                                 <div class="d-flex flex-wrap" style="overflow: scroll;padding: 8px;">
->>>>>>> dded4b79 (fix product detail)
+
                                                     ${gvc.map(sizeType.attribute_values.map((data: any, index: number) => {
                                                 let className = "kindUnselected"
                                                 if (data.selected) {
@@ -759,7 +757,7 @@ ${glitter.htmlGenerate.editeInput({
                             }, divCreate: {class: ``, style: "padding:0 24px 32px;"},
 
                         })}
-                        
+                       
                         <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
                             <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(()=>{
                                 glitter.runJsInterFace("addToSpace",selectSku,()=>{})

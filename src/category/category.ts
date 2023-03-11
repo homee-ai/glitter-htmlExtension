@@ -661,6 +661,23 @@ color: #1E1E1E;">${data.title}</div>
                             })(),
                             (()=>{
                                 const map={
+                                    text: '銷量', img: '', click: (e:HTMLElement) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value
+                                        viewModel.loading=true
+                                        gvc.notifyDataChange('cardGroup')
+                                        resetSort();
+                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                            viewModel.product=response
+                                            viewModel.loading=false
+                                            gvc.notifyDataChange('sortBar');
+                                            gvc.notifyDataChange('cardGroup')
+                                        },"best-selling")
+                                    }
+                                }
+                                return map
+                            })(),
+                            (()=>{
+                                const map={
                                     text: '價格', img: new URL('../img/sample/category/sort.svg',import.meta.url).href, click: (e:HTMLElement) => {
                                         // if (!origData){
                                         //     origData = glitter.share.productData;
@@ -681,23 +698,6 @@ color: #1E1E1E;">${data.title}</div>
                                 }
                                 return map
                             })(),
-                            (()=>{
-                                const map={
-                                    text: '銷量', img: '', click: (e:HTMLElement) => {
-                                        const id = gBundle.object.subCategory[viewModel.select].value
-                                        viewModel.loading=true
-                                        gvc.notifyDataChange('cardGroup')
-                                        resetSort();
-                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                            viewModel.product=response
-                                            viewModel.loading=false
-                                            gvc.notifyDataChange('sortBar');
-                                            gvc.notifyDataChange('cardGroup')
-                                        },"best-selling")
-                                    }
-                                }
-                                return map
-                            })()
 
                         ]
                         return (()=>{
