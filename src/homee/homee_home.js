@@ -198,7 +198,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框</h3>
+                            <h3 class="text-white" style="font-size: 16px;">圖片標示點邊框(border的Css)</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${(_d = widget.data.slideBorderColor) !== null && _d !== void 0 ? _d : ""}" onchange="${gvc.event((e) => {
                                 widget.data.slideBorderColor = e.value;
@@ -216,7 +216,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框</h3>
+                            <h3 class="text-white" style="font-size: 16px;">目前圖片標示點邊框(border的Css)</h3>
                             <div class="d-flex align-items-center">                                
                                 <input class="form-control" type="text" value="${(_g = widget.data.slideSelectBorderColor) !== null && _g !== void 0 ? _g : ""}" onchange="${gvc.event((e) => {
                                 widget.data.slideSelectBorderColor = e.value;
