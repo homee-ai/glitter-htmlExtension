@@ -328,7 +328,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     loading: false
                 };
                 try {
-                    if (!window.parent.editerData) {
+                    if (true) {
                         vm.loading = true;
                         gvc.notifyDataChange('voucherCardList');
                         widget.data.voucherCardList = [];
