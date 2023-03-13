@@ -217,7 +217,22 @@ Plugin.create(import.meta.url, (glitter) => {
                             }
                         })
                         const dialog = new Dialog(gvc)
-
+                        function login(){
+                            User.login({
+                                third:vm.fet ? {type:'fet',uid:vm.fet} : undefined,
+                                pwd: widget.data.accountData.password,
+                                account: widget.data.accountData.account,
+                                callback(data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean): void {
+                                    dialog.dataLoading(false)
+                                    if (!data) {
+                                        dialog.showInfo('密碼輸入錯誤或是查無此帳號')
+                                    } else {
+                                        dialog.showInfo('登入成功!')
+                                        appConfig().setHome(gvc, 'user_setting', {})
+                                    }
+                                },
+                            })
+                        }
                         function checkRegister() {
                             dialog.dataLoading(true)
                             User.checkUserExists(widget.data.accountData.account, (response) => {
@@ -225,20 +240,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     dialog.dataLoading(false)
                                     dialog.showInfo("連線逾時")
                                 } else if (response) {
-                                    User.login({
-                                        third:vm.fet ? {type:'fet',uid:vm.fet} : undefined,
-                                        pwd: widget.data.accountData.password,
-                                        account: widget.data.accountData.account,
-                                        callback(data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean): void {
-                                            dialog.dataLoading(false)
-                                            if (!data) {
-                                                dialog.showInfo('密碼輸入錯誤')
-                                            } else {
-                                                dialog.showInfo('登入成功!')
-                                                appConfig().setHome(gvc, 'user_setting', {})
-                                            }
-                                        },
-                                    })
+                                    dialog.showInfo("此帳號已被使用")
                                 } else {
 
                                     setTimeout(() => {
@@ -275,7 +277,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="loginInf d-flex flex-column align-items-center">
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                <input class="w-100 border-0" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                <input class="w-100 border-0 bg-white" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e: HTMLInputElement) => {
                                     widget.data.accountData.account = e.value;
                                 })}">
                                             </div>
@@ -292,19 +294,23 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })}">忘記密碼？</div>
                                            
                                         </div>
-                                        <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
+                                        <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;" onclick="${gvc.event(() => {
                                             if (!widget.data.accountData.account){
                                                 alert("帳號不得為空!");
                                             }else if (widget.data.accountData.password.length < 8){
                                                 alert("密碼必須大於8位數");
                                             }else {
-                                                checkRegister();    
+                                                // checkRegister();
+                                                login();
                                             }
                                             
                                         })}">
-                                            登入 / 註冊
+                                            登入
                                         </div>
-                                         <div class="w-100 text-danger text-center mt-2 ${vm.fet ? '' : 'd-none'}">驗證成功，登入或註冊後即可綁定遠傳帳號</div>
+                                        <div class="w-100 d-flex align-items-center justify-content-center" style="margin-top:16px;font-weight: 500;font-size: 18px;line-height: 26px;font-feature-settings: 'pnum' on, 'lnum' on;color: #1E1E1E;" onclick="${gvc.event(()=>{
+                                            checkRegister();
+                                        })}">註冊帳號</div>
+                                        <div class="w-100 text-danger text-center mt-2 ${vm.fet ? '' : 'd-none'}">驗證成功，登入或註冊後即可綁定遠傳帳號</div>
                                         <div class="moreLogin d-flex justify-content-center align-items-center">更多的登入方式</div>
                                         <div class="funGroup d-flex justify-content-between">
                                             <img src="${new URL('../img/component/login/FB.png', import.meta.url)}" style="height: 50px;width:50px;" alt="" onclick="${gvc.event(() => {
@@ -811,7 +817,7 @@ Plugin.create(import.meta.url, (glitter) => {
         
                 }
                 .loginInf{
-                    margin-top: 76px;
+                    margin-top: 56px;
                     padding-bottom: 25px;
         
                 }
@@ -949,8 +955,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="loginBoard d-flex flex-column align-items-center">
                                             <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="LOGO">
                                             <div class="loginInf d-flex flex-column align-items-center">
-                                                <div class="hint">
-                                                    您可以透過註冊電子郵件並前往官網完成密碼重設
+                                                <div style="font-weight: 700;font-size: 32px;line-height: 46px;text-align: center;color: #1E1E1E;">
+                                                    重置密碼
+                                                </div>
+                                                <div style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 500;font-size: 18px;line-height: 26px;font-feature-settings: 'pnum' on, 'lnum' on;color: #1E1E1E;margin-bottom: 59px;">
+                                                    我們將向您發送電子郵件或短信以重置密碼
                                                 </div>
                                                 <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
@@ -966,9 +975,10 @@ Plugin.create(import.meta.url, (glitter) => {
                             <!--                    todo 黑轉色 時間count-->
                                                     <div class="authBtn d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
                                     })}">
-                                                        獲取驗證碼
+                                                        下一步
                                                     </div>
                                                 </div>
+<!--                                                todo 協助沒有 目前先拿掉-->
                                                 <div class="helpText d-flex align-items-center justify-content-end d-none">
                                                     需要協助？
                                                 </div>
@@ -1066,7 +1076,7 @@ Plugin.create(import.meta.url, (glitter) => {
         
                 }
                 .loginInf{
-                    margin-top: 76px;
+                    margin-top: px;
                     padding-bottom: 25px;
         
                 }

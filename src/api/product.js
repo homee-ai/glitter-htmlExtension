@@ -1,8 +1,7 @@
 import { appConfig } from "../config.js";
 export class Product {
     static productDetail(productId, callback) {
-        console.log("id是..");
-        console.log(productId);
+        alert("test");
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/product/detail?product_id=${productId}`,
             type: 'get',
