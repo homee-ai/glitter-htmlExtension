@@ -317,8 +317,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 function getCartProData() {
                     Checkout.getCart((cdata) => {
                         cartData = cdata
-                        console.log("購物車資料")
-                        console.log(cdata)
+
                         let needGetInfoSku: string[] = []
                         Object.keys(cartData).map((dd: any) => {
                             const obj: any = cartData[dd]
@@ -332,8 +331,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             }
                         })
                         // console.log(needGetInfoSku)
-                        console.log("原始資料")
-                        console.log(needGetInfoSku)
+
                         Checkout.getCartSkuInfo({skuID: needGetInfoSku, next: (response) => {
 
                             dialog.dataLoading(false)
@@ -604,6 +602,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             Checkout.getCartSkuInfo({skuID: item.item_id, next: (response) => {
                                                                                 console.log("回應")
                                                                                 console.log(response)
+                                                                                Product.productDetail(response[0].variant_id , (result:any)=>{
+                                                                                    console.log("商品資訊")
+                                                                                    console.log(result)
+                                                                                })    
                                                                                     
                                                                             }})
                                                                             glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{item:item},{animation:glitter.animation.topToBottom})

@@ -4,6 +4,7 @@ import { SharedView } from "../homee/shareView.js";
 import { appConfig } from "../config.js";
 import { Checkout } from "../api/checkout.js";
 import { Dialog } from "../homee/legacy/widget/dialog.js";
+import { Product } from "../api/product.js";
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
         nav: {
@@ -298,8 +299,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 function getCartProData() {
                     Checkout.getCart((cdata) => {
                         cartData = cdata;
-                        console.log("購物車資料");
-                        console.log(cdata);
                         let needGetInfoSku = [];
                         Object.keys(cartData).map((dd) => {
                             const obj = cartData[dd];
@@ -311,8 +310,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 })
                             };
                         });
-                        console.log("原始資料");
-                        console.log(needGetInfoSku);
                         Checkout.getCartSkuInfo({ skuID: needGetInfoSku, next: (response) => {
                                 dialog.dataLoading(false);
                                 if (!response) {
@@ -575,6 +572,10 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             Checkout.getCartSkuInfo({ skuID: item.item_id, next: (response) => {
                                                                                     console.log("回應");
                                                                                     console.log(response);
+                                                                                    Product.productDetail(response[0].variant_id, (result) => {
+                                                                                        console.log("商品資訊");
+                                                                                        console.log(result);
+                                                                                    });
                                                                                 } });
                                                                             glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', { item: item }, { animation: glitter.animation.topToBottom });
                                                                         })}">${item.kind}</div>
