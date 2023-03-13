@@ -585,7 +585,7 @@ color: #1E1E1E;">${data.title}</div>
                         let origData = [];
                         glitter.share.productData = {};
                         function resetSort() {
-                            sortRow[1].img = new URL('../img/sample/category/sort.svg', import.meta.url).href;
+                            sortRow[2].img = new URL('../img/sample/category/sort.svg', import.meta.url).href;
                             sortPriceOrder = -1;
                         }
                         let sortRow = [
@@ -629,10 +629,10 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 1;
                                         sortPriceOrder *= -1;
                                         if (sortPriceOrder == 1) {
-                                            sortRow[1].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
+                                            sortRow[2].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
                                         }
                                         else if (sortPriceOrder) {
-                                            sortRow[1].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
+                                            sortRow[2].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
                                         }
                                         viewModel.product.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
                                         gvc.notifyDataChange('sortBar');
