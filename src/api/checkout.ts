@@ -404,7 +404,7 @@ export class Checkout {
                     contentType: 'application/json; charset=utf-8',
                     success: (response: any) => {
                         console.log(response)
-
+obj.callback(response)
                     },
                     error: (err: any) => {
                         obj.callback(false)
