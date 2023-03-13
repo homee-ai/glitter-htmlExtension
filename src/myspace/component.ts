@@ -788,9 +788,7 @@ ${glitter.htmlGenerate.editeInput({
                             divCreate:{}
                             
                         })}
-           
-                        
-                        
+            
                         ${gvc.bindView({
                             bind: `intro`,
                             view: () => {
@@ -832,7 +830,26 @@ ${glitter.htmlGenerate.editeInput({
                                         `
                                 }))}
                                 `
-                            }, divCreate: {class: ``, style: `padding:40px 24px 100px;`}
+                            }, divCreate: {class: `productIntroText`, style: `padding:40px 24px 100px;`},
+                            onCreate : ()=>{
+                                let intro = document.querySelector('.productIntroText');
+                                let links  = intro!.querySelectorAll('a');
+                                links.forEach(link => {
+                                    link.addEventListener('click', (event) => {
+                                        event.preventDefault();
+                                        gvc.glitter.runJsInterFace("openWeb", {
+                                            url: link.href
+                                        }, (data) => {
+                                        }, {
+                                            webFunction(data: any, callback: (data: any) => void): any {
+                                                gvc.glitter.openNewTab(link.href)
+                                                // gvc.glitter.location.href=object.link
+                                            }
+                                        })
+                                        console.log()
+                                    });
+                                });
+                            }
                         })}
                         
                       

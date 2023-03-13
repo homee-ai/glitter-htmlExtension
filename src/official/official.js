@@ -177,6 +177,80 @@ ${ClickEvent.editer(gvc, widget, widget.data.clickEvent)}
                 };
             }
         },
+        imageTitle: {
+            defaultData: {
+                title: "",
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                var _a;
+                widget.data.clickEvent = (_a = widget.data.clickEvent) !== null && _a !== void 0 ? _a : {};
+                return {
+                    view: () => {
+                        var _a, _b, _c;
+                        return `
+                        <div class="w-100 h-100" style="position: relative">
+                            <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${(_a = widget.data.link) !== null && _a !== void 0 ? _a : `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
+                                onclick="${gvc.event(() => {
+                            ClickEvent.trigger({
+                                gvc,
+                                widget,
+                                clickEvent: widget.data.clickEvent
+                            });
+                        })}">
+                            <div style="position: absolute;left: 12px;top: 8px;${(_b = widget.data.testStyle) !== null && _b !== void 0 ? _b : ''}">${(_c = widget.data.title) !== null && _c !== void 0 ? _c : ""}</div>
+                        </div> 
+                        `;
+                    },
+                    editor: () => {
+                        var _a, _b, _c, _d;
+                        return `
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Class</span>
+<input class="form-control" value="${(_a = widget.data.class) !== null && _a !== void 0 ? _a : ""}" onchange="${gvc.event((e) => {
+                            widget.data.class = e.value;
+                            widget.refreshAll();
+                        })}">
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Style</span>
+<input class="form-control" value="${(_b = widget.data.style) !== null && _b !== void 0 ? _b : ""}" onchange="${gvc.event((e) => {
+                            widget.data.style = e.value;
+                            widget.refreshAll();
+                        })}">
+<div class="mt-2"></div>
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">標題文字</span>
+<input class="form-control" placeholder="請輸入標題文字" value="${(_c = widget.data.title) !== null && _c !== void 0 ? _c : ""}" onchange="${gvc.event((e) => {
+                            widget.data.title = e.value;
+                            widget.refreshAll();
+                        })}">
+<div class="mt-2"></div>
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">字體Style</span>
+<input class="form-control" value="${(_d = widget.data.testStyle) !== null && _d !== void 0 ? _d : ""}" onchange="${gvc.event((e) => {
+                            widget.data.testStyle = e.value;
+                            widget.refreshAll();
+                        })}">
+<div class="mt-2"></div>
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
+<div class="mt-2"></div>
+<div class="d-flex align-items-center mb-3">
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.link}">
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(() => {
+                            glitter.ut.chooseMediaCallback({
+                                single: true,
+                                accept: 'image/*',
+                                callback(data) {
+                                    appConfig().uploadImage(data[0].file, (link) => {
+                                        widget.data.link = link;
+                                        widget.refreshAll();
+                                    });
+                                }
+                            });
+                        })}"></i>
+</div>
+${ClickEvent.editer(gvc, widget, widget.data.clickEvent)}
+                `;
+                    }
+                };
+            }
+        },
         label: {
             defaultData: {},
             render: (gvc, widget, setting, hoverID) => {

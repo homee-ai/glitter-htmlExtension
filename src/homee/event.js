@@ -428,13 +428,15 @@ ${gvc.bindView(() => {
                         let returnHTML = `
                             
                         `;
-                        object.subCategory.forEach((data, index) => {
-                            var _a;
-                            let select = (index == object.selectIndex) ? "selected" : "";
-                            returnHTML += `
+                        if (object.subCategory) {
+                            object.subCategory.forEach((data, index) => {
+                                var _a;
+                                let select = (index == object.selectIndex) ? "selected" : "";
+                                returnHTML += `
                                 <option value="${index}" ${select}>${(_a = data.appearText) !== null && _a !== void 0 ? _a : data.name}</option>
                             `;
-                        });
+                            });
+                        }
                         return returnHTML;
                     })()}
                     </select>

@@ -176,6 +176,77 @@ ${ClickEvent.editer(gvc,widget,widget.data.clickEvent)}
                 }
             }
         },
+        imageTitle:{
+            defaultData:{
+                title:"",
+            },
+            render:(gvc, widget, setting, hoverID)=>{
+                widget.data.clickEvent=widget.data.clickEvent ?? {}
+                return {
+                    view:()=>{
+                        return `
+                        <div class="w-100 h-100" style="position: relative">
+                            <img class="w-100 ${widget.data.layout} ${widget.data.class}" style="${widget.data.style}" src="${widget.data.link ?? `https://oursbride.com/wp-content/uploads/2018/06/no-image.jpg`}"
+                                onclick="${gvc.event(()=>{
+                                    ClickEvent.trigger({
+                                        gvc,
+                                        widget,
+                                        clickEvent:widget.data.clickEvent
+                                    })
+                                })}">
+                            <div style="position: absolute;left: 12px;top: 8px;${widget.data.testStyle??''}">${widget.data.title??""}</div>
+                        </div> 
+                        `
+                    },
+                    editor:()=>{
+                        return `
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Class</span>
+<input class="form-control" value="${widget.data.class ?? ""}" onchange="${gvc.event((e:any)=>{
+                            widget.data.class=e.value
+                            widget.refreshAll!()
+                        })}">
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">Style</span>
+<input class="form-control" value="${widget.data.style ?? ""}" onchange="${gvc.event((e:any)=>{
+                            widget.data.style=e.value
+                            widget.refreshAll!()
+                        })}">
+<div class="mt-2"></div>
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">標題文字</span>
+<input class="form-control" placeholder="請輸入標題文字" value="${widget.data.title ?? ""}" onchange="${gvc.event((e:any)=>{
+                            widget.data.title=e.value
+                            widget.refreshAll!()
+                        })}">
+<div class="mt-2"></div>
+<span class="w-100 mb-2 fw-500 mt-2" style="color: orange;">字體Style</span>
+<input class="form-control" value="${widget.data.testStyle ?? ""}" onchange="${gvc.event((e:any)=>{
+                            widget.data.testStyle=e.value
+                            widget.refreshAll!()
+                        })}">
+<div class="mt-2"></div>
+<h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">圖片連結</h3>
+<div class="mt-2"></div>
+<div class="d-flex align-items-center mb-3">
+<input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.link}">
+<div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+<i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                            glitter.ut.chooseMediaCallback({
+                                single:true,
+                                accept:'image/*',
+                                callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                    appConfig().uploadImage(data[0].file,(link:string)=>{
+                                        widget.data.link=link;
+                                        widget.refreshAll!()
+                                    })
+                                }
+                            })
+                        })}"></i>
+</div>
+${ClickEvent.editer(gvc,widget,widget.data.clickEvent)}
+                `
+                    }
+                }
+            }
+        },
         label:{
             defaultData:{},
             render:(gvc, widget, setting, hoverID)=>{
