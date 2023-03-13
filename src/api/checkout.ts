@@ -100,6 +100,7 @@ export class Checkout {
         glitter.runJsInterFace("setSpaceCartData", {
             data: ''
         }, (response2: any) => {
+
             glitter.setPro(Checkout.cartTag, '', (response: any) => {
                 callback()
             })
@@ -404,7 +405,7 @@ export class Checkout {
                     contentType: 'application/json; charset=utf-8',
                     success: (response: any) => {
                         console.log(response)
-
+                        obj.callback(response)
                     },
                     error: (err: any) => {
                         obj.callback(false)
