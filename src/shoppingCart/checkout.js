@@ -311,6 +311,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 })
                             };
                         });
+                        console.log("原始資料");
+                        console.log(needGetInfoSku);
                         Checkout.getCartSkuInfo({ skuID: needGetInfoSku, next: (response) => {
                                 dialog.dataLoading(false);
                                 if (!response) {
@@ -570,7 +572,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                         return `
                                                                         <div class="item-kind" onclick="${gvc.event(() => {
                                                                             console.log("test");
-                                                                            glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {}, { animation: glitter.animation.topToBottom });
+                                                                            Checkout.getCartSkuInfo({ skuID: item.item_id, next: (response) => {
+                                                                                    console.log("回應");
+                                                                                    console.log(response);
+                                                                                } });
+                                                                            glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', { item: item }, { animation: glitter.animation.topToBottom });
                                                                         })}">${item.kind}</div>
                                                                         <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `;

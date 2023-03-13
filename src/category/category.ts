@@ -855,15 +855,17 @@ color: #1E1E1E;">${data.title}</div>
                                         // const id=[{name:"全部",id:"0"}].concat((gBundle.object.subCategory ?? []).map((dd:any)=>{
                                         //     return {name:dd.title,id:dd.value}
                                         // }))[viewModel.select].id
-                                        const id = gBundle.object.subCategory[viewModel.select].value
 
-                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                            viewModel.product=response
-                                            viewModel.loading=false
-                                            gvc.notifyDataChange('cardGroup')
-                                        },"manual")
-
-
+                                        if (gBundle.object.subCategory){
+                                            const id = gBundle.object.subCategory[viewModel?.select].value
+                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                                viewModel.product=response
+                                                viewModel.loading=false
+                                                gvc.notifyDataChange('cardGroup')
+                                            },"manual")
+                                        }else{
+                                            viewModel.loading=false;
+                                        }
 
 
 

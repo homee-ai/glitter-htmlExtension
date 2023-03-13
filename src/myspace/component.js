@@ -798,7 +798,6 @@ ${glitter.htmlGenerate.editeInput({
                                                 gvc.glitter.openNewTab(link.href);
                                             }
                                         });
-                                        console.log();
                                     });
                                 });
                             }

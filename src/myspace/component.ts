@@ -846,7 +846,6 @@ ${glitter.htmlGenerate.editeInput({
                                                 // gvc.glitter.location.href=object.link
                                             }
                                         })
-                                        console.log()
                                     });
                                 });
                             }

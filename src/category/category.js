@@ -789,12 +789,17 @@ color: #1E1E1E;">${data.title}</div>
                                 }, divCreate: { class: ``, style: `min-height : 100vh;padding-bottom:100px;` },
                                 onCreate: () => {
                                     if (viewModel.loading) {
-                                        const id = gBundle.object.subCategory[viewModel.select].value;
-                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                            viewModel.product = response;
+                                        if (gBundle.object.subCategory) {
+                                            const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
+                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                                viewModel.product = response;
+                                                viewModel.loading = false;
+                                                gvc.notifyDataChange('cardGroup');
+                                            }, "manual");
+                                        }
+                                        else {
                                             viewModel.loading = false;
-                                            gvc.notifyDataChange('cardGroup');
-                                        }, "manual");
+                                        }
                                     }
                                 }
                             });

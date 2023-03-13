@@ -332,6 +332,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             }
                         })
                         // console.log(needGetInfoSku)
+                        console.log("原始資料")
+                        console.log(needGetInfoSku)
                         Checkout.getCartSkuInfo({skuID: needGetInfoSku, next: (response) => {
 
                             dialog.dataLoading(false)
@@ -599,8 +601,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                         <div class="item-kind" onclick="${gvc.event(()=>{
                                                                             console.log("test")
 
-
-                                                                            glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{},{animation:glitter.animation.topToBottom})
+                                                                            Checkout.getCartSkuInfo({skuID: item.item_id, next: (response) => {
+                                                                                console.log("回應")
+                                                                                console.log(response)
+                                                                                    
+                                                                            }})
+                                                                            glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{item:item},{animation:glitter.animation.topToBottom})
                                                                             // glitter.openDiaLog(`${new URL(`../dialog/dialog-helper.js`, import.meta.url)}`,"selectKind",skuDataInfo[item["item_id"]])
                                                                             // Product.productDetail("123",(result)=>{
                                                                             //    

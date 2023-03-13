@@ -2,6 +2,7 @@ import { init } from '../../glitterBundle/GVController.js';
 init((gvc, glitter, gBundle) => {
     return {
         onCreateView: () => {
+            var _a;
             let viewModel = {
                 title: "SORIA 雙抽玻璃移門電視櫃",
                 price: "11,520",
@@ -34,6 +35,7 @@ init((gvc, glitter, gBundle) => {
                                         
                                     `;
             }
+            console.log((_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj);
             return `
                 <div class="position-relative h-100" style="width:100vw;padding: 0 31px;;top: 50%;z-index: 99999;">
                     <div class="d-flex flex-column" style="width: 100%;padding: 16px 24px;background: #FFFFFF;border-radius: 24px;font-family: 'Noto Sans TC';font-style: normal;">

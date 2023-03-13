@@ -332,7 +332,25 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         `
                                 }))}
                                 `
-                            }, divCreate: {class: ``, style: `padding-top:40px;`}
+                            }, divCreate: {class: `productIntroText`, style: `padding-top:40px;`},
+                            onCreate : ()=>{
+                                let intro = document.querySelector('.productIntroText');
+                                let links  = intro!.querySelectorAll('a');
+                                links.forEach(link => {
+                                    link.addEventListener('click', (event) => {
+                                        event.preventDefault();
+                                        gvc.glitter.runJsInterFace("openWeb", {
+                                            url: link.href
+                                        }, (data) => {
+                                        }, {
+                                            webFunction(data: any, callback: (data: any) => void): any {
+                                                gvc.glitter.openNewTab(link.href)
+                                                // gvc.glitter.location.href=object.link
+                                            }
+                                        })
+                                    });
+                                });
+                            }
                         })}
                         
                         ${gvc.bindView({

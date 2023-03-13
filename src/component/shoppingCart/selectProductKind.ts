@@ -41,6 +41,8 @@ init((gvc, glitter, gBundle) => {
                                         
                                     `
             }
+
+            console.log(gvc.parameter.pageConfig?.obj)
             return `
                 <div class="position-relative h-100" style="width:100vw;padding: 0 31px;;top: 50%;z-index: 99999;">
                     <div class="d-flex flex-column" style="width: 100%;padding: 16px 24px;background: #FFFFFF;border-radius: 24px;font-family: 'Noto Sans TC';font-style: normal;">
