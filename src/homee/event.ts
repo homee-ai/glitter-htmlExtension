@@ -443,12 +443,15 @@ ${
                         let returnHTML = `
                             
                         `;
-                        object.subCategory.forEach((data:any , index:number)=>{
-                            let select = (index == object.selectIndex)?"selected":""
-                            returnHTML += `
+                        if (object.subCategory){
+                            object.subCategory.forEach((data:any , index:number)=>{
+                                let select = (index == object.selectIndex)?"selected":""
+                                returnHTML += `
                                 <option value="${index}" ${select}>${data.appearText??data.name}</option>
                             `
-                        })
+                            })
+                        }
+                        
                         return returnHTML
                     })()}
                     </select>
