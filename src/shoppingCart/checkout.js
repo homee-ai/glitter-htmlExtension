@@ -442,7 +442,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         url: response.redirect
                                     }, (data) => { }, {
                                         webFunction(data, callback) {
-                                            gvc.glitter.openNewTab(response.redirect);
+                                            location.href = response.redirect;
                                         }
                                     });
                                 });

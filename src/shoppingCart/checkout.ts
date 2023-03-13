@@ -468,7 +468,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         url: (response as any).redirect
                                     }, (data) => { }, {
                                         webFunction(data: any, callback: (data: any) => void): any {
-                                            gvc.glitter.openNewTab((response as any).redirect)
+                                           location.href=(response as any).redirect
                                         }
                                     })
                                 })
