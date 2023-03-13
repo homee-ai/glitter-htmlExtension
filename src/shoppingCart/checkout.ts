@@ -439,11 +439,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 //todo nextstep?
                 function checkOut() {
-                    dialog.dataLoading(true)
                     if (cartSubTotalVM.loading) {
                         dialog.showInfo('請先等待金額計算完畢!')
                         return;
                     }
+                    dialog.dataLoading(true)
                     let skuAmount: { sku_id: string, amount: number }[] = cartSubTotalVM.skuData;
                     // dialog.dataLoading(true)
                     Checkout.checkOut({
