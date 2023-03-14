@@ -4,13 +4,14 @@ import {CategoryListData, ProductData} from "../homee/legacy/api/category";
 export class Product {
     public static productDetail(productId: string, callback: (result: any) => void) {
 
-        alert("test")
         $.ajax({
             url: `${appConfig().serverURL}/api/v1/product/detail?product_id=${productId}`,
             type: 'get',
             headers: {Authorization: appConfig().token},
             contentType: 'application/json; charset=utf-8',
             success: (response: any) => {
+                console.log("商品資訊")
+                console.log(response)
                 callback(response)
             },
             error: (err: any) => {

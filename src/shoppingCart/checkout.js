@@ -568,16 +568,12 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     if (item.kind) {
                                                                         return `
                                                                         <div class="item-kind" onclick="${gvc.event(() => {
-                                                                            console.log("test");
+                                                                            console.log(widget.data.cartItem);
                                                                             Checkout.getCartSkuInfo({ skuID: item.item_id, next: (response) => {
-                                                                                    console.log("回應");
-                                                                                    console.log(response);
-                                                                                    Product.productDetail(response[0].variant_id, (result) => {
-                                                                                        console.log("商品資訊");
-                                                                                        console.log(result);
+                                                                                    Product.productDetail(response[0].productId.replace("gid://shopify/Product/", ""), (result) => {
+                                                                                        glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', { item: item, other: result, callback: () => { refreshCart(); } }, { animation: glitter.animation.topToBottom });
                                                                                     });
                                                                                 } });
-                                                                            glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', { item: item }, { animation: glitter.animation.topToBottom });
                                                                         })}">${item.kind}</div>
                                                                         <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `;
