@@ -126,7 +126,7 @@ init((gvc, glitter, gBundle) => {
                                     }
                 
                 
-                                }, divCreate: {class: ``, style: "padding-bottom:32px;border-bottom:1px solid rgb(30,30,30,0.1);"},
+                                }, divCreate: {class: ``, style: "padding-bottom:24px;"},
                 
                             })}
                         </div>

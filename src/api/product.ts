@@ -19,6 +19,22 @@ export class Product {
             },
         });
     }
+    public static productDetailwithSkuid(productId: string, callback: (result: any) => void) {
+
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/product/detail?sku=${productId}`,
+            type: 'get',
+            headers: {Authorization: appConfig().token},
+            contentType: 'application/json; charset=utf-8',
+            success: (response: any) => {
+
+                callback(response)
+            },
+            error: (err: any) => {
+                callback(false)
+            },
+        });
+    }
 
     //取得文章列表
     public static getSubcategoryList(parCategoryID: string, callback: (data: any) => void) {

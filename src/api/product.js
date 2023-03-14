@@ -16,6 +16,20 @@ export class Product {
             },
         });
     }
+    static productDetailwithSkuid(productId, callback) {
+        $.ajax({
+            url: `${appConfig().serverURL}/api/v1/product/detail?sku=${productId}`,
+            type: 'get',
+            headers: { Authorization: appConfig().token },
+            contentType: 'application/json; charset=utf-8',
+            success: (response) => {
+                callback(response);
+            },
+            error: (err) => {
+                callback(false);
+            },
+        });
+    }
     static getSubcategoryList(parCategoryID, callback) {
         const that = this;
         let jsonData;
