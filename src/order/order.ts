@@ -35,7 +35,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 const vm = {
                     loading: true
                 }
-                if (!editMode) {
+                if (true) {
                     vm.loading = true
                     Checkout.getOrderList({
                         callback: (result) => {
