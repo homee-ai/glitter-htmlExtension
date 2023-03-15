@@ -489,10 +489,10 @@ Plugin.create(import.meta.url, (glitter) => {
                     contactUs: {
                         title: "聯絡我們",
                         servicePhoneTitle: "客服專線",
-                        servicePhone: "8729-5939 （手機用戶請加02）",
+                        servicePhone: "0972-636-236",
                         serviceTimeTitle: "服務時間",
-                        physicalStore: "分店：週一 ~ 週日 10:00-21:00",
-                        onlineStore: "線上購物：週一 ~ 週日 09:00-18:00",
+                        physicalStore: "週一 ~ 週五 10:00-18:00",
+                        onlineStore: "週一 ~ 週日 09:00-18:00",
                         service1v1: {
                             title: "線上專人服務",
                             onclick: () => {
@@ -741,12 +741,11 @@ Plugin.create(import.meta.url, (glitter) => {
                         
                                 <div class="lastSectionTitle d-flex justify-content-center align-items-center">${thisModel.contactUs.title}</div>
                                 <div class="servicePhoneBlock d-flex flex-column align-items-start justify-content-start" style="margin-bottom: 16px;">
-                                    <div>${thisModel.contactUs.servicePhoneTitle}</div>
-                                    <div>${thisModel.contactUs.servicePhone}</div>
+                                    <div>${thisModel.contactUs.servicePhoneTitle} : ${thisModel.contactUs.servicePhone}</div>
+                                    
                                 </div>
                                 <div class="serviceTimeBlock" >
-                                    <div>${thisModel.contactUs.serviceTimeTitle}</div>
-                                    <div>${thisModel.contactUs.physicalStore}</div>
+                                    <div>${thisModel.contactUs.serviceTimeTitle} : ${thisModel.contactUs.physicalStore}</div>                                    
                                     <div>${thisModel.contactUs.onlineStore}</div>
                                 </div>
                                 <button class="w-100 serviceBTN border-0" onclick="${gvc.event(() => {
