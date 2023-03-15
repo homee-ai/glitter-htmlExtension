@@ -596,11 +596,11 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading = true;
                                         gvc.notifyDataChange('cardGroup');
                                         resetSort();
+                                        sortSelect = 0;
                                         new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
                                             viewModel.product = response;
                                             viewModel.loading = false;
-                                            gvc.notifyDataChange('sortBar');
-                                            gvc.notifyDataChange('cardGroup');
+                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, "manual");
                                     }
                                 };
@@ -613,11 +613,11 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading = true;
                                         gvc.notifyDataChange('cardGroup');
                                         resetSort();
+                                        sortSelect = 1;
                                         new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
                                             viewModel.product = response;
                                             viewModel.loading = false;
-                                            gvc.notifyDataChange('sortBar');
-                                            gvc.notifyDataChange('cardGroup');
+                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, "best-selling");
                                     }
                                 };
@@ -626,17 +626,18 @@ color: #1E1E1E;">${data.title}</div>
                             (() => {
                                 const map = {
                                     text: '價格', img: new URL('../img/sample/category/sort.svg', import.meta.url).href, click: (e) => {
-                                        sortSelect = 1;
+                                        sortSelect = 2;
                                         sortPriceOrder *= -1;
-                                        if (sortPriceOrder == 1) {
-                                            sortRow[2].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
-                                        }
-                                        else if (sortPriceOrder) {
-                                            sortRow[2].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
+                                        if (sortSelect == 2) {
+                                            if (sortPriceOrder == 1) {
+                                                sortRow[2].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
+                                            }
+                                            else {
+                                                sortRow[2].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
+                                            }
                                         }
                                         viewModel.product.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
-                                        gvc.notifyDataChange('sortBar');
-                                        gvc.notifyDataChange('cardGroup');
+                                        gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                     }
                                 };
                                 return map;
@@ -679,9 +680,11 @@ color: #1E1E1E;">${data.title}</div>
                                             view: () => {
                                                 let returnHTML = ``;
                                                 sortRow.forEach((element, index) => {
-                                                    let style = (index == sortSelect) ? "color: #292929;font-weight: 500;" : "";
+                                                    let style = (index == sortSelect) ? "color: #1E1E1E;" : "color: #858585;";
+                                                    console.log("style");
+                                                    console.log(style);
                                                     returnHTML += `
-                                    <div class="sortRawText" style="padding: 0 24px;${style}" onclick="${gvc.event((e) => {
+                                    <div class="sortRawText" style="padding: 0 24px;font-weight: 500;${style}" onclick="${gvc.event((e) => {
                                                         element.click(e);
                                                     })}">
                                         ${element.text}
