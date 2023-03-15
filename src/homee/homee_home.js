@@ -386,7 +386,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
             }
         },
         productItem: {
-            style: "width:calc(50% - 8px);",
+            style: "",
             defaultData: {
                 "data": {
                     "id": 8837303,
@@ -418,8 +418,9 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                     view: () => {
                         var _b, _c, _d, _e;
                         return `
-                            <div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""} p-0 " style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""} 
-                                height: autobackground: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                            <div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""} p-0 " style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""}; 
+                                break-inside: avoid;margin-top: 16px;
+                                height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc,
                                 widget,
@@ -435,17 +436,17 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                                 <!-- Slides -->
                                                 ${(() => {
                                     let returnHTML = ``;
-                                    images.forEach((image) => {
+                                    console.log(images);
+                                    for (let i = 0; i < 3 && i < images.length; i++) {
                                         returnHTML += `
-                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/contain no-repeat url('${image}') , white;border-radius: 16px;"></div>
+                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${images[i]}') , white;border-radius: 16px;"></div>
                                                         `;
-                                    });
+                                    }
                                     return returnHTML;
                                 })()}                                                                                
                                               </div>
                                               <!-- If we need pagination -->
-                                              <div class="swiper-pagination"></div>                                                                                                                              
-                                            
+                                              <div class="swiper-pagination"></div>                                                                                                                                                                          
                                         `;
                             }, divCreate: { class: `swiper ${productID} w-100`, style: `background: (251, 249, 246 , 0.3);padding:4px;border-radius: 16px;` },
                             onCreate: () => {
