@@ -636,19 +636,25 @@ ${glitter.htmlGenerate.editeInput({
                         let sku_list = (_c = (widget.data.productData && widget.data.productData.sku_list)) !== null && _c !== void 0 ? _c : {};
                         let key = [];
                         let btnChange = false;
+                        const sel = Object.values(sku_list).find((dd) => {
+                            return dd.sku_id === glitter.getUrlParameter("reselect");
+                        });
+                        console.log(`widget.data.attribute_list===${glitter.getUrlParameter("reselect")}---${JSON.stringify(sel)}`);
                         (_d = widget.data.attribute_list) === null || _d === void 0 ? void 0 : _d.map((dd) => {
                             const select = dd.attribute_values.find((d2) => {
+                                if (!widget.data.orgSelectSku && glitter.getUrlParameter("reselect") != "false" && sel) {
+                                    d2.selected = sel.attribute_key.indexOf(d2.value) !== -1;
+                                }
                                 return d2.selected;
                             });
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
                         console.log("選擇");
-                        console.log(widget.data.orgSelectSku);
-                        if (!widget.data.orgSelectSku) {
-                            console.log("test");
+                        if (!widget.data.orgSelectSku && glitter.getUrlParameter("reselect") != "false" && sel) {
                             widget.data.orgSelectSku = selectSku;
                         }
+                        console.log(JSON.stringify(selectSku));
                         setTimeout(() => {
                             goToSlide(selectSku.image_index);
                         }, 250);
@@ -718,25 +724,37 @@ ${glitter.htmlGenerate.editeInput({
                         ${gvc.bindView({
                             bind: "BTN",
                             view: () => {
-                                if (widget.data.orgSelectSku != selectSku) {
+                                if (!selectSku["t3dModel"]) {
+                                    return ``;
+                                }
+                                if (glitter.getUrlParameter('reselect') == "false") {
                                     return `
-                                    <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
+                                   <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
                                         <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(() => {
-                                        glitter.runJsInterFace("addToSpace", selectSku, () => {
-                                        });
-                                    })}">更換規格</div>                                        
+                                        glitter.runJsInterFace("addToSpace", selectSku, () => { });
+                                    })}">加入空間</div>                                        
                                     </div>
-                                `;
+                                   `;
                                 }
                                 else {
-                                    return `
+                                    if (widget.data.orgSelectSku != selectSku) {
+                                        return `
                                     <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
-                                        <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #E0E0E0;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #858585;" onclick="${gvc.event(() => {
-                                        glitter.runJsInterFace("addToSpace", selectSku, () => {
-                                        });
-                                    })}">已加入至空間</div>                                        
+                                        <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(() => {
+                                            glitter.runJsInterFace("addToSpace", selectSku, () => {
+                                            });
+                                        })}">更換規格</div>                                        
                                     </div>
                                 `;
+                                    }
+                                    else {
+                                        return `
+                                    <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
+                                        <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #E0E0E0;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #858585;" onclick="${gvc.event(() => {
+                                        })}">已加入至空間</div>                                        
+                                    </div>
+                                `;
+                                    }
                                 }
                             },
                             divCreate: {}

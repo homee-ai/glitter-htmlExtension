@@ -42,7 +42,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             if (result) {
                                 widget.data.orderData = result.map((orderData) => {
                                     return {
-                                        number: orderData.id,
+                                        number: orderData.name,
                                         date: orderData.created_at.substring(0, 10),
                                         paysStatus: (() => {
                                             if (orderData.financial_status === 'paid') {
@@ -641,7 +641,24 @@ line-height: 14px;">${index2[index]}</div>`;
 </div>
           <div class="addr">
             <h1>帳單地址</h1>
-            <h4><span class="fw-bolder">付款狀態：</span>${order.billing_address.state}</h4>
+            <h4><span class="fw-bolder">付款狀態：</span>${order.billing_address.state}${(order.billing_address.state === "未付款") ? `
+                                    <span class="ms-2" style="font-family: 'Noto Sans TC';
+font-style: normal;
+font-weight: 700;
+font-size: 15px;
+color: #FE5541;
+line-height: 22px;" onclick="${gvc.event(() => {
+                                    origin.homeeCartToken;
+                                    gvc.glitter.runJsInterFace("openWeb", {
+                                        url: `${appConfig().serverURL}/store-front/index.html?cart_token=${origin.homeeCartToken}&page=checkout`
+                                    }, (data) => {
+                                    }, {
+                                        webFunction(data, callback) {
+                                            gvc.glitter.openNewTab(data.data.url);
+                                        }
+                                    });
+                                })}">現在付款</span>
+                                    ` : ``}</h4>
             <h2 style="margin-bottom: 0px;">${order.billing_address.first_name} ${order.billing_address.last_name}</h2>
             <h4 style="margin-top: 16px;margin-bottom: 0px;">${order.billing_address.address1}</h4>
             <h4 style="margin-top: 0px;margin-bottom: 0px;">${order.billing_address.phone}</h4>

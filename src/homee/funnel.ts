@@ -37,13 +37,16 @@ export class Funnel {
                         method: 'get',
                     },
                     (data) => {
+
                         let t = '';
 
                         ((set.searchData!==undefined) ? data[set.searchData]:data).map((x: any) => {
+
                             t += /*html*/ `<li
                                 class="${ra}_li"
                                 style="cursor:pointer"
                                 onclick="${gvc.event(() => {
+                                    
                                     if (set.multi) {
                                         if (Array.isArray(set.def) && set.def.findIndex((z: any) => funnel.ObjCompare(z, x)) == -1) {
                                             let rn = funnel.randomString(6);
@@ -129,6 +132,7 @@ export class Funnel {
                             class="form-control"
                             id="${ra}_input"
                             onclick="${gvc.event((e: any) => {
+                               
                                 $(`#${ra}_option`).css('display', '');
                                 caller();
                                 $(e).on('input', function (ele: { timeStamp: number }) {

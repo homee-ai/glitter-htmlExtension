@@ -3,7 +3,7 @@ import { Plugin } from '../glitterBundle/plugins/plugin-creater.js';
 import { SharedView } from "../homee/shareView.js";
 import { appConfig } from "../config.js";
 import { Checkout } from "../api/checkout.js";
-import { Dialog } from "../homee/legacy/widget/dialog.js";
+import { Dialog } from "../dialog/dialog-mobile.js";
 import { Product } from "../api/product.js";
 Plugin.create(import.meta.url, (glitter, editMode) => {
     return {
@@ -316,6 +316,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     widget.data.cartItem = [];
                                 }
                                 else {
+                                    console.log("getCartSkuInfo:" + JSON.stringify(response));
                                     response.map((dd) => {
                                         skuDataInfo[dd.sku_id] = dd;
                                     });
@@ -324,7 +325,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         return {
                                             category: dd,
                                             category_id: dd,
-                                            item: Object.keys(obj).map((d4) => {
+                                            item: Object.keys(obj).filter((d2) => {
+                                                return skuDataInfo[d2].availableForSale;
+                                            }).map((d4) => {
                                                 var _a, _b;
                                                 const oc = obj[d4];
                                                 needGetInfoSku.push(d4);
@@ -568,9 +571,21 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     if (item.kind) {
                                                                         return `
                                                                         <div class="item-kind" onclick="${gvc.event(() => {
+                                                                            const dialog = new Dialog();
+                                                                            dialog.dataLoading(true);
                                                                             Product.productDetailwithSkuid(item.item_id, (result) => {
                                                                                 console.log(result);
-                                                                                glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', { item: item, other: result, callback: () => { refreshCart(); } }, { animation: glitter.animation.topToBottom });
+                                                                                dialog.dataLoading(false);
+                                                                                glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
+                                                                                    item: item,
+                                                                                    other: result,
+                                                                                    callback: () => {
+                                                                                        refreshCart();
+                                                                                    }
+                                                                                }, {
+                                                                                    animation: glitter.animation.fade,
+                                                                                    backGroundColor: "rgba(0,0,0,0.5);"
+                                                                                });
                                                                             });
                                                                         })}">${item.kind}</div>
                                                                         <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">

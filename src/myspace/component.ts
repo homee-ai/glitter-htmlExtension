@@ -672,8 +672,15 @@ ${glitter.htmlGenerate.editeInput({
                         let sku_list = (widget.data.productData && widget.data.productData.sku_list) ?? {}
                         let key: string[] = [];
                         let btnChange = false;
+                        const sel:any=Object.values(sku_list).find((dd:any)=>{
+                            return dd.sku_id===glitter.getUrlParameter("reselect")
+                        })
+                        console.log(`widget.data.attribute_list===${glitter.getUrlParameter("reselect")}---${JSON.stringify(sel)}`)
                         widget.data.attribute_list?.map((dd: any) => {
                             const select = dd.attribute_values.find((d2: any) => {
+                                if(!widget.data.orgSelectSku&&glitter.getUrlParameter("reselect")!="false" && sel){
+                                    d2.selected=sel.attribute_key.indexOf(d2.value)!==-1
+                                }
                                 return d2.selected
                             })
                             select && key.push(select.value)
@@ -681,11 +688,11 @@ ${glitter.htmlGenerate.editeInput({
                         const selectSku = sku_list[key.join(' / ')]
 
                         console.log("選擇")
-                        console.log(widget.data.orgSelectSku)
-                        if (!widget.data.orgSelectSku){
-                            console.log("test")
+
+                        if (!widget.data.orgSelectSku&&glitter.getUrlParameter("reselect")!="false" && sel){
                             widget.data.orgSelectSku = selectSku;
                         }
+                        console.log(JSON.stringify(selectSku))
                         setTimeout(()=>{
                             goToSlide(selectSku.image_index);
                         },250)
@@ -722,7 +729,6 @@ ${glitter.htmlGenerate.editeInput({
 
                                                 <div class="d-flex flex-wrap" style="overflow: scroll;padding: 8px;">
                                                     ${gvc.map(sizeType.attribute_values.map((data: any, index: number) => {
-                                                
                                                 let className = "kindUnselected"
                                                 if (data.selected) {
                                                     className += " kindSelected"
@@ -763,30 +769,40 @@ ${glitter.htmlGenerate.editeInput({
                         ${gvc.bindView({
                             bind:"BTN",
                             view:()=>{
-                                if (widget.data.orgSelectSku!= selectSku){
-                                    return `
+                                if(!selectSku["t3dModel"]){
+                                    return  ``
+                                }
+                               if(glitter.getUrlParameter('reselect')=="false"){
+                                   return  `
+                                   <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
+                                        <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(()=>{
+                                       glitter.runJsInterFace("addToSpace",selectSku,()=>{})
+                                   })}">加入空間</div>                                        
+                                    </div>
+                                   `
+                               }else{
+                                   if (widget.data.orgSelectSku!= selectSku){
+                                       return `
                                     <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
                                         <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(()=>{
-                                        glitter.runJsInterFace("addToSpace",selectSku,()=>{
+                                           glitter.runJsInterFace("addToSpace",selectSku,()=>{
 
-                                        })
-                                    })}">更換規格</div>                                        
+                                           })
+                                       })}">更換規格</div>                                        
                                     </div>
                                 `
-                                }else {
-                                    return `
+                                   }else {
+                                       return `
                                     <div class="w-100 d-flex  flex-fill " style="padding: 0 59px;height: 48px;">
                                         <div class="d-flex align-items-center justify-content-center flex-fill" style="background: #E0E0E0;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;color: #858585;" onclick="${gvc.event(()=>{
-                                        glitter.runJsInterFace("addToSpace",selectSku,()=>{
-
-                                        })
-                                    })}">已加入至空間</div>                                        
+                                       })}">已加入至空間</div>                                        
                                     </div>
                                 `
-                                }
+                                   } 
+                               }
+                                
                             },
                             divCreate:{}
-                            
                         })}
             
                         ${gvc.bindView({

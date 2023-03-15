@@ -975,7 +975,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             <!--                    todo 黑轉色 時間count-->
                                                     <div class="authBtn d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
                                     })}">
-                                                        下一步
+                                                        確認
                                                     </div>
                                                 </div>
 <!--                                                todo 協助沒有 目前先拿掉-->

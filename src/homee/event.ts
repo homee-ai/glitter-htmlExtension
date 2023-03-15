@@ -493,6 +493,7 @@ ${
             return {
                 editor: () => {
                     const funnel = new Funnel(gvc)
+
                     return funnel.optionSreach(
                         {
                             path: Api.serverURL + '/api/v1/product?product_name=',
@@ -502,6 +503,7 @@ ${
                         },
                         (res) => {
                             obj.data = res
+
                             widget.refreshAll()
                         }
                     )

@@ -728,8 +728,8 @@ color: #1E1E1E;">${data.title}</div>
                                                             "js": "$homee/official/official.js",
                                                             "data": {
                                                                 "class": "m-0 p-0 flex-wrap justify-content-around",
-                                                                "style": "gap:10px;",
-                                                                "layout": "d-flex",
+                                                                "style": "gap:16px;column-count: 2;",
+                                                                "layout": "",
                                                                 "marginB": "86px",
                                                                 "marginL": "0px",
                                                                 "marginR": "0px",
@@ -757,7 +757,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                         "type": "productItem",
                                                                         "label": "商品",
                                                                         "route": "homee_home",
-                                                                        "style": "width:calc(50% - 8px);",
+                                                                        "style": "",
                                                                         "expandStyle": false,
                                                                         "refreshAllParameter": {},
                                                                         "refreshComponentParameter": {}
