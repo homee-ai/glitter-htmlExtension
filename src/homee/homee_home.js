@@ -406,12 +406,20 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 let productID = "d" + widget.data.data.id;
                 let images = (_c = widget.data.data.images) !== null && _c !== void 0 ? _c : [widget.data.data.preview_image];
                 gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`);
+                gvc.addStyle(`
+                    .swiper-pagination-bullet {
+                        background: #E0E0E0!important;;                    
+                    }
+                    .swiper-pagination-bullet-active{
+                        background: #FE5541!important;;
+                    }
+                `);
                 return {
                     view: () => {
                         var _b, _c, _d, _e;
                         return `
                             <div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""} p-0 " style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""} 
-                                height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                                height: autobackground: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
                             ClickEvent.trigger({
                                 gvc,
                                 widget,
@@ -429,7 +437,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                     let returnHTML = ``;
                                     images.forEach((image) => {
                                         returnHTML += `
-                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${image}') , white;border-radius: 16px;"></div>
+                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/contain no-repeat url('${image}') , white;border-radius: 16px;"></div>
                                                         `;
                                     });
                                     return returnHTML;

@@ -415,13 +415,20 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 let productID = "d"+widget.data.data.id;
                 let images = widget.data.data.images ?? [widget.data.data.preview_image];
                 gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`)
-
+                gvc.addStyle(`
+                    .swiper-pagination-bullet {
+                        background: #E0E0E0!important;;                    
+                    }
+                    .swiper-pagination-bullet-active{
+                        background: #FE5541!important;;
+                    }
+                `)
                 return {
                     view: () => {
 
                         return `
                             <div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""} 
-                                height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                                height: autobackground: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
                                 ClickEvent.trigger({
                                     gvc,
                                     widget,
@@ -439,7 +446,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                                     let returnHTML = ``;
                                                     images.forEach((image:string)=>{
                                                         returnHTML += `
-                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${image}') , white;border-radius: 16px;"></div>
+                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/contain no-repeat url('${image}') , white;border-radius: 16px;"></div>
                                                         `    
                                                     })
                                             
