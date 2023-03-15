@@ -411,54 +411,82 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 }
             },
             render: (gvc, widget, setting, hoverID) => {
-                widget.data.data = widget.data.data ?? {}
+                widget.data.data = widget.data.data ?? {};
+                let productID = "d"+widget.data.data.id;
+                let images = widget.data.data.images ?? [widget.data.data.preview_image];
+                gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`)
+
                 return {
                     view: () => {
-                        return `<div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""} 
-height: auto;background: #FBF9F6;border: 4px solid rgba(248, 243, 237, 0.3);
-border-radius: 16px;" onclick="${gvc.event(() => {
-                            ClickEvent.trigger({
-                                gvc,
-                                widget,
-                                clickEvent: widget.data
-                            })
-                        })}">
-<div class=" w-100 m-0" style="
-box-sizing:border-box;
-border-radius: 16px;
-padding-bottom: 100%;background: 50%/cover no-repeat url('${widget.data.data.preview_image}'), white;"></div>
-<h3 class="w-100" style="font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 700;
-font-size: 14px;
-margin-top: 8px;
-word-break: break-word;
-white-space: normal;
-margin-bottom: 0px;
-color: #292929;">${widget.data.data.name ?? "尚未設定"}</h3>
-<div class="d-flex align-items-baseline" style="margin-top: 8px;margin-bottom: 8px;">
-<span style="font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-color: #FD6A58;
-line-height: 150%;">
-NT$ ${widget.data.data.price ?? "尚未設定"} up
-</span>
-<div class="flex-fill"></div>
-<span class="${(widget.data.data.price === widget.data.data.sale_price) ? `d-none` : ``}" style="font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 400;
-font-size: 10px;
-line-height: 14px;
-text-align: right;
-text-decoration-line: line-through;
-color: #858585;" >
- NT$ ${widget.data.data.sale_price}
-</span>
-</div>
 
-</div>`
+                        return `
+                            <div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""} 
+                                height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                                ClickEvent.trigger({
+                                    gvc,
+                                    widget,
+                                    clickEvent: widget.data
+                                })
+                            })}">
+                                ${gvc.bindView({
+                                    bind : productID,
+                                    view : ()=>{
+                                        return `
+                                              <!-- Additional required wrapper -->
+                                              <div class="swiper-wrapper w-100">
+                                                <!-- Slides -->
+                                                ${(()=>{
+                                                    let returnHTML = ``;
+                                                    images.forEach((image:string)=>{
+                                                        returnHTML += `
+                                                            <div class="swiper-slide me-2" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${image}') , white;border-radius: 16px;"></div>
+                                                        `    
+                                                    })
+                                            
+                                                    return returnHTML    
+                                                })()}                                                                                
+                                              </div>
+                                              <!-- If we need pagination -->
+                                              <div class="swiper-pagination"></div>                                                                                                                              
+                                            
+                                        `
+                                    },divCreate : {class:`swiper ${productID} w-100` , style:`background: (251, 249, 246 , 0.3);padding:4px;border-radius: 16px;`},
+                                    onCreate : ()=>{
+                                        glitter.addMtScript([{
+                                            src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
+                                        }], () => {
+                                            const Swiper = (window as any).Swiper
+                                            
+                                            
+                                            const swiper = new Swiper(`.${productID}`, {
+                                                // Optional parameters
+                                                direction: 'horizontal',
+                                                loop: false,
+                                                // If we need pagination
+                                                pagination: {
+                                                    el: `.${productID} .swiper-pagination`,
+                                                },
+                                            });
+                                            
+                                        }, () => {
+                                        })
+                                    }
+                                })}
+<!--                                <div class="w-100 m-0" style="box-sizing:border-box;border-radius: 16px;padding-bottom: 100%;background: 50%/cover no-repeat url('${widget.data.data.preview_image}'), white;"></div>-->
+                                <h3 class="w-100" style="padding:0 8px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 14px;margin-top: 8px;word-break: break-word;white-space: normal;margin-bottom: 0px;color: #292929;">
+                                    ${widget.data.data.name ?? "尚未設定"}
+                                </h3>
+                                <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
+                                    <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
+                                        NT$ ${widget.data.data.price ?? "尚未設定"} up
+                                    </span>
+                                    <div class="flex-fill"></div>
+                                    <span class="${(widget.data.data.price === widget.data.data.sale_price) ? `d-none` : ``}" style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 10px;line-height: 14px;text-align: right;text-decoration-line: line-through;color: #858585;" >
+                                        NT$ ${widget.data.data.sale_price}
+                                    </span>
+                                </div>
+                            </div>
+                        `
                     },
                     editor: () => {
                         return gvc.map([
