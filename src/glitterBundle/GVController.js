@@ -361,7 +361,7 @@ export function init(fun, gt) {
     switch ((_j = gvc.parameter.pageConfig) === null || _j === void 0 ? void 0 : _j.type) {
         case GVCType.Dialog:
             $('#glitterPage').append(`<div  id="page${gvc.parameter.pageConfig.id}" style="width:100vw;height:100vh;
-background: transparent;display: none;position: absolute;top: 0;left: 0;z-index: 999999;overflow: hidden;">
+background: ${gvc.parameter.pageConfig.backGroundColor};display: none;position: absolute;top: 0;left: 0;z-index: 999999;overflow: hidden;">
 ${lifeCycle.onCreateView()}
 </div>`);
             glitter.setAnimation(gvc.parameter.pageConfig);

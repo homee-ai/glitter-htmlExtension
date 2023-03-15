@@ -424,7 +424,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     <div class="footerBTN  flex-fill ${selectSku.t3dModel ? `d-none`:``} d-flex flex-fill align-items-center justify-content-center text-white" style="background: #FFDC6A;
                                         padding:14px 29px;
                                         border-radius: 24px;
-                                        background: #FE5541;
+                                        background: ${(selectSku.availableForSale) ? `#FE5541`:`grey`};
                                         font-family: 'Noto Sans TC';
                                         font-style: normal;
                                         font-weight: 700;
@@ -432,16 +432,21 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         margin-left: 20px;" onclick="${
                                     gvc.event((e)=>{
                                         const dialog=new Dialog(gvc)
-                                        Checkout.addToCart({
-                                            category:"購物車",
-                                            skuID:selectSku.sku_id,
-                                            amount:widget.data.qty,
-                                            callback:(response)=>{
-                                                dialog.showInfo('已加入購物車')
-                                            }
-                                        })
+                                        if(selectSku.availableForSale){
+                                            Checkout.addToCart({
+                                                category:"購物車",
+                                                skuID:selectSku.sku_id,
+                                                amount:widget.data.qty,
+                                                callback:(response)=>{
+                                                    dialog.showInfo('已加入購物車')
+                                                }
+                                            })
+                                        }else{
+                                            dialog.showInfo("產品已售完")
+                                        }
+                                       
                                     })
-                                }">加入購物車
+                                }">${(selectSku.availableForSale) ? `加入購物車`:`已售完`}
                                     </div>
                                     <div class="footerBTN ms-auto d-flex  flex-fill ${selectSku.t3dModel ? ``:`d-none`}">
                                         <div class="footerBTNLeft d-flex align-items-center justify-content-center flex-fill" onclick="${gvc.event(()=>{
@@ -453,19 +458,24 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                 product:data
                                             },{})
                                 })}">加入至空間</div>
-                                        <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" onclick="${
+                                        <div class="footerBTNRight d-flex align-items-center justify-content-center flex-fill" style="background: ${(selectSku.availableForSale) ? `#FE5541`:`grey`};" onclick="${
                                     gvc.event((e)=>{
                                         const dialog=new Dialog(gvc)
-                                        Checkout.addToCart({
-                                            category:"購物車",
-                                            skuID:selectSku.sku_id,
-                                            amount:widget.data.qty,
-                                            callback:(response)=>{
-                                                dialog.showInfo('已加入購物車')
-                                            }
-                                        })
+                                        if(selectSku.availableForSale){
+                                            Checkout.addToCart({
+                                                category:"購物車",
+                                                skuID:selectSku.sku_id,
+                                                amount:widget.data.qty,
+                                                callback:(response)=>{
+                                                    dialog.showInfo('已加入購物車')
+                                                }
+                                            })
+                                        }else{
+                                            dialog.showInfo("產品已售完")
+                                        }
+                                      
                                     })
-                                }">加入購物車</div>
+                                }">${(selectSku.availableForSale) ? `加入購物車`:`已售完`}</div>
                                     </div>
                                 </div>
                                 `

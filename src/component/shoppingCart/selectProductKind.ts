@@ -13,6 +13,7 @@ init((gvc, glitter, gBundle) => {
             let viewModel = {
                 title: passData.item.name,
                 price: passData.item.subtotal,
+                isEnable:true
             }
             let key: string[] = passData.item.kind.split(" / ");
 
@@ -90,14 +91,9 @@ init((gvc, glitter, gBundle) => {
                                                     return `
                                                     <div class="" style="margin-top: 8px;${className}" onclick="${gvc.event(() => {
                                                         key[index] = data.value;
-                                                        let temp = "";
-                                                        key.forEach((e) => {
-                                                            temp += e + " / "
-                                                        })
-                                                        temp = temp.slice(0, -3);
-                                                        viewModel.price = passData.other.sku_list[temp].sale_price
-                                                        gvc.notifyDataChange("price")
-                                                        gvc.notifyDataChange("sizeSelect")
+                                                        viewModel.isEnable=passData.other.sku_list[key.join(" / ")].availableForSale
+                                                        viewModel.price = passData.other.sku_list[key.join(" / ")].sale_price
+                                                        gvc.notifyDataChange(["price","sizeSelect","addbt"])
                                                         // widget.refreshComponent()
                                                     })}">${data.value}
                                                                         </div>
@@ -130,32 +126,40 @@ init((gvc, glitter, gBundle) => {
                 
                             })}
                         </div>
-                        <div style="padding: 0 24px;">
-                            <div class="w-100 d-flex align-items-center justify-content-center" style="padding:7px 0;background: #FE5541;border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;font-feature-settings: 'pnum' on, 'lnum' on;color: #FFFFFF;" onclick="${gvc.event(() => {
-                                passData.item.kind = ""
-                                key.forEach((e) => {
-                                    passData.item.kind += e + " / "
-                                })
-                
-                
-                                passData.item.kind = passData.item.kind.slice(0, -3)
-                
-                
-                                console.log("修改資訊")
-                                console.log(passData)
-                                console.log(passData.item.kind)
-                                console.log(passData.other.sku_list[passData.item.kind])
-                                passData.item.item_id = passData.other.sku_list[passData.item.kind].sku_id;
-                                passData.item.price = passData.other.sku_list[passData.item.kind].price;
-                                passData.item.subtotal = passData.other.sku_list[passData.item.kind].sale_price;
-                                let imageIndex = passData.other.sku_list[passData.item.kind].image_index;
-                                passData.item.img = passData.other.product_detail.images[imageIndex];
-                                passData.callback();
-                                glitter.closeDiaLog("changeSku")
-                            })}">
-                                確認
+                        ${gvc.bindView(()=>{
+                            return {
+                                bind:`addbt`,
+                                view:()=>{
+                                    return `<div style="padding: 0 24px;">
+                            <div class="w-100 d-flex align-items-center justify-content-center" style="padding:7px 0;background:  ${(viewModel.isEnable) ? `#FE5541`:`grey`};border-radius: 24px;font-weight: 700;font-size: 18px;line-height: 26px;text-align: center;letter-spacing: 0.15em;font-feature-settings: 'pnum' on, 'lnum' on;color: #FFFFFF;" onclick="${gvc.event(() => {
+                                        if(!viewModel.isEnable){
+                                            return
+                                        }
+                                        passData.item.kind = ""
+                                        key.forEach((e) => {
+                                            passData.item.kind += e + " / "
+                                        })
+                                        passData.item.kind = passData.item.kind.slice(0, -3)
+                                        console.log("修改資訊")
+                                        console.log(passData)
+                                        console.log(passData.item.kind)
+                                        console.log(passData.other.sku_list[passData.item.kind])
+                                        passData.item.item_id = passData.other.sku_list[passData.item.kind].sku_id;
+                                        passData.item.price = passData.other.sku_list[passData.item.kind].price;
+                                        passData.item.subtotal = passData.other.sku_list[passData.item.kind].sale_price;
+                                        let imageIndex = passData.other.sku_list[passData.item.kind].image_index;
+                                        passData.item.img = passData.other.product_detail.images[imageIndex];
+                                        passData.callback();
+                                        glitter.closeDiaLog("changeSku")
+                                    })}">
+                            ${(viewModel.isEnable) ? `確認`:`已售完`}
+                                
                             </div>
-                        </div>
+                        </div>`
+                                },
+                                divCreate:{}
+                            }
+            })}
                     </div>
                 </div>
             `
