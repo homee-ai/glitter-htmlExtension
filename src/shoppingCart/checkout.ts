@@ -3,7 +3,7 @@ import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {SharedView} from "../homee/shareView.js";
 import {appConfig} from "../config.js"
 import {Checkout, CheckOutData} from "../api/checkout.js";
-import {Dialog} from "../homee/legacy/widget/dialog.js";
+import {Dialog} from "../dialog/dialog-mobile.js"
 import {Product} from "../api/product.js";
 
 Plugin.create(import.meta.url, (glitter, editMode) => {
@@ -329,15 +329,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     })
                             }
                         })
-                        // console.log(needGetInfoSku)
-
                         Checkout.getCartSkuInfo({skuID: needGetInfoSku, next: (response) => {
-
                             dialog.dataLoading(false)
                             if (!response) {
                                 widget.data.cartItem = []
                                 // dialog.showInfo("取得資料異常．")
                             } else {
+                                console.log("getCartSkuInfo:"+JSON.stringify(response))
                                 response.map((dd: any) => {
                                     skuDataInfo[dd.sku_id] = dd;
                                 })
@@ -346,7 +344,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     return {
                                         category: dd,
                                         category_id: dd,
-                                        item: Object.keys(obj).map((d4) => {
+                                        item: Object.keys(obj).filter((d2)=>{
+                                            return skuDataInfo[d2].availableForSale
+                                        }).map((d4) => {
                                             const oc = obj[d4]
                                             needGetInfoSku.push(d4)
                                             if (!skuDataInfo[d4]) {
@@ -595,10 +595,22 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     ${(() => {
                                                                     if (item.kind) {
                                                                         return `
-                                                                        <div class="item-kind" onclick="${gvc.event(()=>{
-                                                                            Product.productDetailwithSkuid(item.item_id , (result:any)=>{
-                                                                                console.log(result)
-                                                                                glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{item:item , other:result , callback : ()=>{refreshCart()}},{animation:glitter.animation.topToBottom})
+                                                                        <div class="item-kind" onclick="${gvc.event(() => {
+                                                                            const dialog = new Dialog()
+                                                                            dialog.dataLoading(true);
+                                                                            Product.productDetailwithSkuid(item.item_id, (result: any) => {
+                                                                                console.log(result);
+                                                                                dialog.dataLoading(false);
+                                                                                glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
+                                                                                    item: item,
+                                                                                    other: result,
+                                                                                    callback: () => {
+                                                                                        refreshCart()
+                                                                                    }
+                                                                                }, {
+                                                                                    animation: glitter.animation.fade,
+                                                                                    backGroundColor: "rgba(0,0,0,0.5);"
+                                                                                })
                                                                             })
                                                                             // Checkout.getCartSkuInfo({skuID: item.item_id, next: (response) => {
                                                                             //     Product.productDetail(response[0].productId.replace("gid://shopify/Product/" , "") , (result:any)=>{
@@ -607,13 +619,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             //     })    
                                                                             //        
                                                                             // }})
-                                                                            
+
                                                                             // glitter.openDiaLog(`${new URL(`../dialog/dialog-helper.js`, import.meta.url)}`,"selectKind",skuDataInfo[item["item_id"]])
                                                                             // Product.productDetail("123",(result)=>{
                                                                             //    
                                                                             // })
-                                                                    
-                                                                            
+
+
                                                                         })}">${item.kind}</div>
                                                                         <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `
@@ -625,7 +637,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             <div class="d-flex" style="">
                                                                                 <img style="width: 24px;height: 24px;" src="${new URL('../img/component/minusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
                                                                     item.qty--;
-                                                                    if (item.qty == 0){
+                                                                    if (item.qty == 0) {
                                                                         dialog.confirm("確定要刪除嘛?", (result) => {
                                                                             if (result == true) {
                                                                                 item.deleteEvent()
@@ -641,11 +653,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                                                                             }
                                                                         })
-                                                                    }else{
+                                                                    } else {
                                                                         refreshCart();
                                                                     }
-                                                                    
-                                                                    
+
+
                                                                 })}">
                                                                     ${gvc.bindView({
                                                                     bind: `qtyNumber${item.item_id}`,
@@ -659,7 +671,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                             item.subtotal = item.qty * item.price;
                                                                             refreshCart()
                                                                         })}">`
-                                                                    }, 
+                                                                    },
                                                                     divCreate: {class: `qtyNumber`, style: ``}
                                                                 })}
                                                                 <img style="width: 24px;height: 24px;" src="${new URL('../img/component/plusCircle.svg', import.meta.url)}" onclick="${gvc.event(() => {
