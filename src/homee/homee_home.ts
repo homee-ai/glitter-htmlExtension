@@ -460,7 +460,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                               </div>
                                               <div class="w-100" style="position:absolute;left:0;top:0;height:100%;border: 4px solid rgba(248, 243, 237, 0.3);background:transparent;z-index: 3;border-radius: 16px;pointer-events:none;" onscroll=""></div>
                                               <!-- If we need pagination -->
-                                              <div class="swiper-pagination"></div>                                                                                                                                                                          
+                                              <div class=".${productID} swiper-pagination"></div>                                                                                                                                                                          
                                         `
                                     },divCreate : {class:`swiper ${productID} w-100` , style:`border-radius: 16px;position: relative;`},
                                     onCreate : ()=>{

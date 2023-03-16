@@ -591,43 +591,33 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     <img class="itemImg" src="${item.img}">
                                                                     <div class="d-flex flex-column flex-grow-1">
                                                                         <div class="item-name" style="white-space:normal;word-wrap:break-word;word-break:break-all;">${item.name}</div>
-                                                                        <div class="d-flex">
+                                                                        <div class="d-flex" onclick="${gvc.event(()=>{
+                                                                            if (item.kind){
+                                                                                const dialog = new Dialog()
+                                                                                dialog.dataLoading(true);
+                                                                                Product.productDetailwithSkuid(item.item_id, (result: any) => {
+
+                                                                                    dialog.dataLoading(false);
+                                                                                    glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
+                                                                                        item: item,
+                                                                                        other: result,
+                                                                                        callback: () => {
+                                                                                            refreshCart()
+                                                                                        }
+                                                                                    }, {
+                                                                                        animation: glitter.animation.fade,
+                                                                                        backGroundColor: "rgba(0,0,0,0.5);"
+                                                                                    })
+                                                                                })
+                                                                            }
+                                                                        })}">
                                                                     ${(() => {
                                                                     if (item.kind) {
                                                                         return `
                                                                         <div class="item-kind" onclick="${gvc.event(() => {
-                                                                            const dialog = new Dialog()
-                                                                            dialog.dataLoading(true);
-                                                                            Product.productDetailwithSkuid(item.item_id, (result: any) => {
-                                                                                console.log(result);
-                                                                                dialog.dataLoading(false);
-                                                                                glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
-                                                                                    item: item,
-                                                                                    other: result,
-                                                                                    callback: () => {
-                                                                                        refreshCart()
-                                                                                    }
-                                                                                }, {
-                                                                                    animation: glitter.animation.fade,
-                                                                                    backGroundColor: "rgba(0,0,0,0.5);"
-                                                                                })
-                                                                            })
-                                                                            // Checkout.getCartSkuInfo({skuID: item.item_id, next: (response) => {
-                                                                            //     Product.productDetail(response[0].productId.replace("gid://shopify/Product/" , "") , (result:any)=>{
-                                                                            //         glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`,'changeSku',{item:item , other:result , callback : ()=>{refreshCart()}},{animation:glitter.animation.topToBottom})
-                                                                            //        
-                                                                            //     })    
-                                                                            //        
-                                                                            // }})
-
-                                                                            // glitter.openDiaLog(`${new URL(`../dialog/dialog-helper.js`, import.meta.url)}`,"selectKind",skuDataInfo[item["item_id"]])
-                                                                            // Product.productDetail("123",(result)=>{
-                                                                            //    
-                                                                            // })
-
-
+                                                                            
                                                                         })}">${item.kind}</div>
-                                                                        <img style="width:16px;height:16px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
+                                                                        <img style="width:16px;height:16px;margin-left: 8px;" src="${new URL('../img/component/shoppingCart/downArrow.svg', import.meta.url)}">
                                                                                         `
                                                                     }
                                                                     return ``

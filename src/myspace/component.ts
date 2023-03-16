@@ -16,6 +16,9 @@ Plugin.create(import.meta.url, (glitter) => {
 
                 return {
                     view: () => {
+                        // glitter.setPro("firstMyspace" , undefined ,()=>{})
+
+
                         return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID()
                             let vm: {
@@ -163,16 +166,24 @@ font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height
 padding: 0;margin: 0 59px;bottom:25px;width:calc(100vw - 108px);height:48px;
 background: #FE5541;border-radius: 24px; " onclick="${
                                         gvc.event((e) => {
-                                            const dialog = new Dialog()
-                                            dialog.dataLoading(true)
-                                            glitter.runJsInterFace("startScan", {}, () => {
-                                                getData()
-                                                },
-                                                {
-                                                    webFunction: () => {
-                                                        dialog.showInfo("僅支援APP版本")
-                                                    }
-                                                })
+                                            glitter.getPro("confirmGuide" , (res:any)=>{
+                                                // glitter.setPro("firstMyspace" , undefined ,()=>{})
+                                                if (!res.data){
+                                                    appConfig().changePage(gvc ,"guide1" )
+                                                }else{
+                                                    const dialog = new Dialog()
+                                                    dialog.dataLoading(true)
+                                                    glitter.runJsInterFace("startScan", {}, () => {
+                                                            getData()
+                                                        },
+                                                        {
+                                                            webFunction: () => {
+                                                                dialog.showInfo("僅支援APP版本")
+                                                            }
+                                                        })
+                                                }
+                                            })
+                                            
                                         })
                                     }">
 <h3 style="

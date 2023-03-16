@@ -39,8 +39,12 @@ init((gvc, glitter, gBundle) => {
                                     `;
             }
             return `
-                <div class="position-relative h-100" style="width:100vw;padding: 0 31px;;top: 25%;z-index: 99999;">
-                    <div class="d-flex flex-column" style="width: 100%;padding: 16px 24px;background: #FFFFFF;border-radius: 24px;font-family: 'Noto Sans TC';font-style: normal;">
+                <div class="position-relative h-100" style="width:100vw;padding: 0 31px;z-index: 99999;" onclick="${gvc.event(() => {
+                glitter.closeDiaLog("changeSku");
+            })}">
+                    <div class="d-flex flex-column position-relative avoidDom" style="top: 25%;  width: 100%;padding: 16px 24px;background: #FFFFFF;border-radius: 24px;font-family: 'Noto Sans TC';font-style: normal;" onclick="${gvc.event((e, event) => {
+                event.stopPropagation();
+            })}">
                         <div style="font-weight: 700;font-size: 24px;line-height: 35px;font-feature-settings: 'pnum' on, 'lnum' on;color: #1E1E1E;">
                             ${viewModel.title}
                         </div>

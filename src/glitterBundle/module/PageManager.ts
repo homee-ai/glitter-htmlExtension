@@ -316,7 +316,7 @@ export class PageManager {
         }
     };
 
-    public static openDiaLog(url: string, tag: string, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string } = {}) {
+    public static openDiaLog(url: string, tag: string, obj: any, option: { animation?: AnimationConfig, backGroundColor?: string , backgroundBack?:boolean } = {}) {
         const glitter = Glitter.glitter;
         if (glitter.waitChangePage || PageManager.clock.stop() < 300) {
             setTimeout(() => {

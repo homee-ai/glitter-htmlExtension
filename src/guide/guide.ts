@@ -3,6 +3,8 @@ import {Plugin} from '../glitterBundle/plugins/plugin-creater.js'
 import {Api} from "../homee/api/homee-api.js";
 import {SharedView} from "../homee/shareView.js";
 import {appConfig} from "../config.js";
+import {Dialog} from "../dialog/dialog-mobile.js"
+
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -85,7 +87,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                             ${gvc.bindView({
                             bind:"laravel",
                             view : ()=>{
-
                                 return `
                                     <div class="laravel" >
                                         <div class="remind d-flex flex-wrap justify-content-center align-items-center">
@@ -112,7 +113,7 @@ Plugin.create(import.meta.url,(glitter)=>{
         guide1: {
             defaultData:{
                 model:{
-                    title:"點擊按鈕開始空間掃描",
+                    title:"填充陰影完成空間掃描",
                     slogan:"探索空間搭配創意世界！",
                     BTN:"下一步",
                     nextPage:"guide2",
@@ -123,6 +124,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                 let bottomInset = 0
                 return {
                     view: ()=>{
+                        let backBTN = false;
                         gvc.addStyle(`
                             body{
                                 background-color: transparent!important;
@@ -177,18 +179,52 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
-                        return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
-                            <div class="w-100" style="">
-                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                            appConfig().setHome(gvc, "myspace", {})
-                                })}">
-                            </div>
-                            <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%">
-                                <source src="${new URL!(`video/homee 操作教學(步驟一).mp4`, import.meta.url)}" type="video/mp4">
-                            </video>
-                            
-                        </div>
+                        glitter.getPro("firstGuide",(res:any)=>{
+                            backBTN = !!res.data;
+                            gvc.notifyDataChange("guideNav")
+                        })
+                        return `      
+                        ${gvc.bindView({
+                            bind:"guideNav",
+                            view:()=>{
+                                return `
+                                    <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
+                                        <div class="w-100" style="">
+                                            <img class="${(()=>{
+                                                if (backBTN){
+                                                    return ``
+                                                }else
+                                                    return 'd-none'                                     
+                                            })()}" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                                const dialog=new Dialog(gvc)
+                                                glitter.getPro("confirmGuide",(result:any)=>{
+                                                    if (!result.data){
+                                                        dialog.confirm("不再自動進去教學畫面",(result)=>{
+                                                            if (result){
+                                                                glitter.setPro("confirmGuide" , "true",()=>{
+                                                                    appConfig().setHome(gvc, "myspace", {});
+                                                                })}
+                                                            else {
+                                                                appConfig().setHome(gvc, "myspace", {});
+                                                            }
+
+                                                        })
+                                                    }
+                                                })
+                                                
+                                                
+                                            })}">
+                                        </div>
+                                        <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%">
+                                            <source src="${new URL!(`video/homee 操作教學(步驟一).mp4`, import.meta.url)}" type="video/mp4">
+                                        </video>
+                                        
+                                    </div>
+                                `
+                            },
+                            divCreate : {}
+                        })}                          
+                        
                         ${gvc.bindView({
                             bind:"laravel",
                             view : ()=>{
@@ -595,8 +631,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     glitter.goBack()
                                 })}">
                                     <button class="border-0 nextBTN" onclick="${gvc.event(()=>{
-                                       appConfig().setHome(gvc,'myspace',{})
-                                       gvc.glitter.runJsInterFace("startScan",{},(response:any)=>{})
+                                        glitter.setPro("firstGuide" , "true" , (res)=>{
+                                            appConfig().setHome(gvc,'myspace',{})
+                                            gvc.glitter.runJsInterFace("startScan",{},(response:any)=>{})    
+                                        })
+                                        
                                     })}">${widget.data.model.BTN}</button>
                                 </div>
                                 
