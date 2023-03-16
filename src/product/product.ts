@@ -407,7 +407,17 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 `)
                                 return `
                                 <div class="footer d-flex align-items-center " style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
-                                    <div class="d-flex flex-column align-items-center d-none" style="width: 40px;">
+                                    <div class="d-flex flex-column align-items-center" style="width: 40px;" onclick="${gvc.event(()=>{
+                                    gvc.glitter.runJsInterFace("openWeb", {
+                                        url: "m.me/142541949661977"
+                                    }, (data) => {
+                                    }, {
+                                        webFunction(data: any, callback: (data: any) => void): any {
+                                            gvc.glitter.openNewTab("https://m.me/142541949661977")
+                                            // gvc.glitter.location.href=object.link
+                                        }
+                                    })
+                                })}">
                                         <img class="footerIMG" src="${new URL('../img/component/customer_service.png', import.meta.url)}" >
                                         <div class="footerText">
                                             客服
