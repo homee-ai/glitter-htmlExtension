@@ -457,6 +457,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                     }], () => {
                                     const Swiper = window.Swiper;
                                     const swiper = new Swiper(`.${productID}`, {
+                                        slidesPerView: 'auto',
                                         direction: 'horizontal',
                                         loop: false,
                                         pagination: {
