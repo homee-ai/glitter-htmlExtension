@@ -414,7 +414,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     }, {
                                         webFunction(data: any, callback: (data: any) => void): any {
                                             gvc.glitter.openNewTab(data.data.url)
-                                            // gvc.glitter.location.href=object.link
                                         }
                                     })
                                 })}">
