@@ -577,7 +577,8 @@ color: #1E1E1E;">${data.title}</div>
                                 });
                             },
                             loading: true,
-                            product: []
+                            product: [],
+                            allData: []
                         };
                         let sortSelect = 0;
                         let title = (_e = gBundle.title) !== null && _e !== void 0 ? _e : "分類頁";
@@ -597,11 +598,9 @@ color: #1E1E1E;">${data.title}</div>
                                         gvc.notifyDataChange('cardGroup');
                                         resetSort();
                                         sortSelect = 0;
-                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                            viewModel.product = response;
-                                            viewModel.loading = false;
-                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
-                                        }, "manual");
+                                        viewModel.product = viewModel.allData[0];
+                                        viewModel.loading = false;
+                                        gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                     }
                                 };
                                 return map;
@@ -614,11 +613,9 @@ color: #1E1E1E;">${data.title}</div>
                                         gvc.notifyDataChange('cardGroup');
                                         resetSort();
                                         sortSelect = 1;
-                                        new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                            viewModel.product = response;
-                                            viewModel.loading = false;
-                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
-                                        }, "best-selling");
+                                        viewModel.product = viewModel.allData[1];
+                                        viewModel.loading = false;
+                                        gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                     }
                                 };
                                 return map;
@@ -796,9 +793,16 @@ color: #1E1E1E;">${data.title}</div>
                                             const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
                                             new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
                                                 viewModel.product = response;
+                                                viewModel.allData.push(response);
+                                                console.log(response);
                                                 viewModel.loading = false;
                                                 gvc.notifyDataChange('cardGroup');
                                             }, "manual");
+                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                                viewModel.allData.push(response);
+                                                console.log(response);
+                                                gvc.notifyDataChange('cardGroup');
+                                            }, "best-selling");
                                         }
                                         else {
                                             viewModel.loading = false;

@@ -545,7 +545,8 @@ color: #1E1E1E;">${data.title}</div>
                             select:number,
                             setSubCategoryRow:(category: string)=>string,
                             loading:boolean,
-                            product:any
+                            product:any,
+                            allData:any
                         } = {
                             select:gBundle.selectIndex??0,
                             setSubCategoryRow:(category: string) => {
@@ -612,8 +613,6 @@ color: #1E1E1E;">${data.title}</div>
                                             }
                                         }
 
-
-
                                         parent.scrollLeft = scrollTo;
 
 
@@ -623,7 +622,8 @@ color: #1E1E1E;">${data.title}</div>
 
                         },
                             loading:true,
-                            product:[]
+                            product:[],
+                            allData:[]
                         }
 
                         let sortSelect = 0;
@@ -649,13 +649,15 @@ color: #1E1E1E;">${data.title}</div>
                                         gvc.notifyDataChange('cardGroup')
                                         resetSort();
                                         sortSelect = 0
-                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                            viewModel.product=response
-
-                                            viewModel.loading=false;
-                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
-
-                                        },"manual")
+                                        viewModel.product = viewModel.allData[0];
+                                        viewModel.loading=false;
+                                        gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                        //     viewModel.product=response
+                                        //
+                                        //
+                                        //
+                                        // },"manual")
                                     }
                                 }
                                 return map
@@ -667,12 +669,14 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading=true
                                         gvc.notifyDataChange('cardGroup')
                                         resetSort();
-                                        sortSelect = 1
-                                        new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                            viewModel.product=response
-                                            viewModel.loading=false
-                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
-                                        },"best-selling")
+                                        sortSelect = 1;
+                                        viewModel.product = viewModel.allData[1];
+                                        viewModel.loading=false
+                                        gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                        //     viewModel.product=response
+                                        //
+                                        // },"best-selling")
                                     }
                                 }
                                 return map
@@ -863,11 +867,19 @@ color: #1E1E1E;">${data.title}</div>
 
                                         if (gBundle.object.subCategory){
                                             const id = gBundle.object.subCategory[viewModel?.select].value
+
                                             new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                                viewModel.product=response
+                                                viewModel.product=response;
+                                                viewModel.allData.push(response);
+                                                console.log(response)
                                                 viewModel.loading=false
                                                 gvc.notifyDataChange('cardGroup')
                                             },"manual")
+                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                                viewModel.allData.push(response);
+                                                console.log(response)
+                                                gvc.notifyDataChange('cardGroup')
+                                            },"best-selling")
                                         }else{
                                             viewModel.loading=false;
                                         }
