@@ -481,7 +481,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 return {
                     view: () => {
                         return `
-                        <div style="max-height: 100vh;">
+                        <div style="">
                         ${gvc.bindView({
                             bind: "cartIn",
                             view: () => {

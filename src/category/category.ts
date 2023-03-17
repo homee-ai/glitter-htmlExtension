@@ -868,6 +868,7 @@ color: #1E1E1E;">${data.title}</div>
                                         if (gBundle.object.subCategory){
                                             const id = gBundle.object.subCategory[viewModel?.select].value
 
+
                                             new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                                 viewModel.product=response;
                                                 viewModel.allData.push(response);
