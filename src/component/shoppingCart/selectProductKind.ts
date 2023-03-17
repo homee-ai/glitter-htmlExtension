@@ -17,6 +17,8 @@ init((gvc, glitter, gBundle) => {
             }
             let key: string[] = passData.item.kind.split(" / ");
 
+            document.body.style.overflow = 'hidden';
+
 
             function productKindDom(index: number, sizeType: any) {
                 return `
@@ -46,11 +48,9 @@ init((gvc, glitter, gBundle) => {
                                         
                                     `
             }
+
             return `
-                <div></div>
-            `
-            return `
-                <div class="position-relative" style="width:100vw;padding: 0 31px;z-index: 99999;" onclick="${gvc.event(()=>{
+                <div class="position-fixed" style="height:100vh;width:100vw;padding: 0 31px;z-index: 99999;background: rgba(0,0,0,0.5);;" onclick="${gvc.event(()=>{
                     glitter.closeDiaLog("changeSku");
                 
                     

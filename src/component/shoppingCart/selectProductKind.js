@@ -10,6 +10,7 @@ init((gvc, glitter, gBundle) => {
                 isEnable: true
             };
             let key = passData.item.kind.split(" / ");
+            document.body.style.overflow = 'hidden';
             function productKindDom(index, sizeType) {
                 return `
                     ${gvc.bindView({
@@ -39,10 +40,7 @@ init((gvc, glitter, gBundle) => {
                                     `;
             }
             return `
-                <div></div>
-            `;
-            return `
-                <div class="position-relative" style="width:100vw;padding: 0 31px;z-index: 99999;" onclick="${gvc.event(() => {
+                <div class="position-fixed" style="height:100vh;width:100vw;padding: 0 31px;z-index: 99999;background: rgba(0,0,0,0.5);;" onclick="${gvc.event(() => {
                 glitter.closeDiaLog("changeSku");
             })}">
                     <div class="d-flex flex-column position-relative avoidDom" style="top: 50%;transform: translate(0, -50%);  width: 100%;padding: 16px 24px;background: #FFFFFF;border-radius: 24px;font-family: 'Noto Sans TC';font-style: normal;" onclick="${gvc.event((e, event) => {

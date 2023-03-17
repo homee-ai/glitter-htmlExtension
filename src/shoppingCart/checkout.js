@@ -185,7 +185,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
-                                         html{
+                     html{
                         margin: 0;
                         box-sizing: border-box;    
                         font-family: 'Noto Sans TC';        
@@ -458,6 +458,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 return {
                     view: () => {
                         return `
+                        <div style="max-height: 100vh;">
                         ${gvc.bindView({
                             bind: "cartIn",
                             view: () => {
@@ -579,8 +580,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                                     refreshCart();
                                                                                 }
                                                                             }, {
-                                                                                animation: glitter.animation.fade,
-                                                                                backGroundColor: "rgba(0,0,0,0.5);"
+                                                                                animation: glitter.animation.fade
                                                                             });
                                                                         });
                                                                     }
@@ -1036,6 +1036,7 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e) =>
                             },
                             divCreate: { class: `d-flex flex-column`, style: `padding-bottom:100px;` }
                         })}
+                        </div>
                         `;
                     },
                     editor: () => {
