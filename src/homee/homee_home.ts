@@ -413,6 +413,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
             render: (gvc, widget, setting, hoverID) => {
                 widget.data.data = widget.data.data ?? {};
                 let productID = "d"+widget.data.data.id;
+
                 let images = widget.data.data.images ?? [widget.data.data.preview_image];
                 gvc.addStyleLink(`https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css`)
                 gvc.addStyle(`
@@ -491,7 +492,12 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                 </h3>
                                 <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
                                     <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
-                                        NT$ ${widget.data.data.price ?? "尚未設定"} up
+                                        NT$ ${widget.data.data.price ?? "尚未設定"} ${(()=>{
+                                            if (widget.data.data?.max_price && widget.data.data?.max_price !=  widget.data.data?.min_price){
+                                                return "up"
+                                            }
+                                            return  ""
+                                        })()}
                                     </span>
                                     <div class="flex-fill"></div>
                                     <span class="${(widget.data.data.price === widget.data.data.sale_price) ? `d-none` : ``}" style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 10px;line-height: 14px;text-align: right;text-decoration-line: line-through;color: #858585;" >

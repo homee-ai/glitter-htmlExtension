@@ -485,6 +485,8 @@ ${gvc.bindView(() => {
                         searchData: "product_list"
                     }, (res) => {
                         obj.data = res;
+                        console.log("widget.data.data");
+                        console.log(res);
                         widget.refreshAll();
                     });
                 },

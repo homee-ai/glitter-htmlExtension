@@ -174,7 +174,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             }
                         });
                         glitter.getPro("firstGuide", (res) => {
-                            backBTN = !!res.data;
+                            backBTN = (res.data == "true");
                             gvc.notifyDataChange("guideNav");
                         });
                         return `      
@@ -192,20 +192,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         return 'd-none';
                                 })()}" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog = new Dialog(gvc);
-                                    glitter.getPro("confirmGuide", (result) => {
-                                        if (!result.data) {
-                                            dialog.confirm("不再自動進去教學畫面", (result) => {
-                                                if (result) {
-                                                    glitter.setPro("confirmGuide", "true", () => {
-                                                        appConfig().setHome(gvc, "myspace", {});
-                                                    });
-                                                }
-                                                else {
-                                                    appConfig().setHome(gvc, "myspace", {});
-                                                }
-                                            });
-                                        }
-                                    });
+                                    appConfig().setHome(gvc, "myspace", {});
                                 })}">
                                         </div>
                                         <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%">
@@ -612,7 +599,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     glitter.goBack();
                                 })}">
                                     <button class="border-0 nextBTN" onclick="${gvc.event(() => {
-                                    glitter.setPro("firstGuide", "true", (res) => {
+                                    glitter.setPro("loginWatchGuide", "false", (res) => {
                                         appConfig().setHome(gvc, 'myspace', {});
                                         gvc.glitter.runJsInterFace("startScan", {}, (response) => { });
                                     });

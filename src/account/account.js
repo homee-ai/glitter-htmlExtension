@@ -195,6 +195,8 @@ Plugin.create(import.meta.url, (glitter) => {
                             account: '',
                             password: ''
                         };
+                        glitter.setPro("loginWatchGuide", "true", () => {
+                        });
                         gvc.addMtScript([{ src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js` }], () => {
                             gvc.notifyDataChange('mainView');
                         }, () => {

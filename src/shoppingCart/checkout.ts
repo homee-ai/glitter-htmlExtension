@@ -613,8 +613,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                         })}">
                                                                     ${(() => {
                                                                     if (item.kind && item.kind != "Default Title") {
-                                                                        console.log("kind資料---------")
-                                                                        console.log(item.kind)
+                                                                   
                                                                         return `
                                                                         <div class="item-kind" onclick="${gvc.event(() => {
                                                                             

@@ -14,6 +14,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     view: () => {
                         return gvc.bindView(() => {
                             const id = gvc.glitter.getUUID();
+                            let viewGuide = false;
                             let vm = {
                                 loading: true,
                                 height: `100vh`,
@@ -24,6 +25,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                 vm.data = [];
                                 vm.loading = true;
                                 gvc.notifyDataChange(id);
+                                glitter.getPro("loginWatchGuide", (res) => {
+                                    viewGuide = (res.data == "true");
+                                });
                                 Myspace.getModelList((data) => {
                                     vm.loading = false;
                                     if (data) {
@@ -59,19 +63,55 @@ Plugin.create(import.meta.url, (glitter) => {
                                 gvc.notifyDataChange(id);
                             }
                             getPageHeight();
+                            let topInset = 0;
                             let spaceData = [];
                             let clickEvent = glitter.ut.clock();
+                            glitter.runJsInterFace("getTopInset", {}, (response) => {
+                                topInset = response.data;
+                                gvc.notifyDataChange(['coverGuide']);
+                            }, {
+                                webFunction: () => {
+                                    return { data: 0 };
+                                }
+                            });
                             return {
                                 bind: id,
                                 view: () => {
                                     if (vm.loading) {
                                         return `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`;
                                     }
                                     return `
+                                    ${gvc.bindView({
+                                        bind: "coverGuide",
+                                        view: () => {
+                                            if (viewGuide) {
+                                                return `
+                                                <div  style="position:fixed;z-index:999999;top:0;height: 100vh;width: 100vw;background: #1E1E1E;opacity: 0.5">
+                                                    
+                                                </div>
+                                                <div style="position:fixed;z-index:999999;top:0;height: 100vh;width: 100vw;">
+                                                    <div class="d-flex align-items-center justify-content-end" style="height: ${topInset + 63}px; padding: 0 26px;">
+                                                        <div style="padding:6px 9px;position:relative;background: white;opacity: 1;border-radius: 14px;color: #FE5541;font-family: 'Noto Sans TC';font-style: normal;font-weight: 500;font-size: 17px;line-height: 25px;text-align: center;" onclick="${gvc.event(() => {
+                                                    appConfig().changePage(gvc, "guide1");
+                                                })}">
+                                                            掃描教學
+                                                            <div style="background:white;border-radius: 16px;position: absolute;right:calc(100% + 2px);top:calc(100% + 4px);padding: 8px 12px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 18px;line-height: 26px;color: #1E1E1E;">觀看掃描教學影片</div>
+                                                            <img  src="${new URL('../img/component/mysapce/leadingGuide.svg', import.meta.url).href}" class="" style="position:absolute;right:calc(100% - 5px);top:calc(100% + 4px);height:12px;width: 13px;">
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                `;
+                                            }
+                                            else {
+                                                return ``;
+                                            }
+                                        }, divCreate: {}
+                                    })}
 <div class="w-100 position-fixed  d-flex align-items-center justify-content-center flex-column"
 style="background: #F8F3ED;height: ${vm.height};">
 <div class="d-flex flex-column align-items-center" style="width: calc(100% - 48px);transform: translateY(-40px);">

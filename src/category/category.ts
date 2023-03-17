@@ -812,7 +812,9 @@ color: #1E1E1E;">${data.title}</div>
                                                                                     "id": dd.id,
                                                                                     "name": dd.name,
                                                                                     "price": dd.price,
-                                                                                    "quantity": dd.quantity,
+                                                                                    "max_price": dd.max_price,
+                                                                                    "min_price": dd.min_price,
+                                                                                    "quantity": dd?.quantity ?? 1,
                                                                                     "sale_price": dd.sale_price,
                                                                                     "preview_image": dd.preview_image
                                                                                 },
