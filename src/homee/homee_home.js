@@ -440,7 +440,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                     let returnHTML = ``;
                                     for (let i = 0; i < 3 && i < images.length; i++) {
                                         returnHTML += `
-                                                    <div class="swiper-slide" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${images[i]}') , white;"></div>
+                                                    <div class="swiper-slide" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${images[i].url}') , white;"></div>
                                                 `;
                                     }
                                     return returnHTML;
@@ -474,9 +474,9 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                 </h3>
                                 <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
                                     <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
-                                        NT$ ${(_e = widget.data.data.price) !== null && _e !== void 0 ? _e : "尚未設定"} ${(() => {
-                            var _b, _c, _d;
-                            if (((_b = widget.data.data) === null || _b === void 0 ? void 0 : _b.max_price) && ((_c = widget.data.data) === null || _c === void 0 ? void 0 : _c.max_price) != ((_d = widget.data.data) === null || _d === void 0 ? void 0 : _d.min_price)) {
+                                        NT$ ${(_e = widget.data.data.sale_price) !== null && _e !== void 0 ? _e : "尚未設定"} ${(() => {
+                            console.log(widget.data.data.showUp);
+                            if (widget.data.data.showUp) {
                                 return "up";
                             }
                             return "";

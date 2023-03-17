@@ -451,7 +451,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
 
                                             for (let i = 0; i < 3 && i < images.length; i++) {
                                                 returnHTML += `
-                                                    <div class="swiper-slide" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${images[i]}') , white;"></div>
+                                                    <div class="swiper-slide" style="padding-bottom: 100%;background: 50%/cover no-repeat url('${images[i].url}') , white;"></div>
                                                 `
                                             }
 
@@ -492,8 +492,9 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                 </h3>
                                 <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
                                     <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
-                                        NT$ ${widget.data.data.price ?? "尚未設定"} ${(()=>{
-                                            if (widget.data.data?.max_price && widget.data.data?.max_price !=  widget.data.data?.min_price){
+                                        NT$ ${widget.data.data.sale_price ?? "尚未設定"} ${(()=>{
+                                            console.log(widget.data.data.showUp)
+                                            if (widget.data.data.showUp){
                                                 return "up"
                                             }
                                             return  ""

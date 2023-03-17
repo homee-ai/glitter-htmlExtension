@@ -743,11 +743,11 @@ color: #1E1E1E;">${data.title}</div>
                                                                                 "id": dd.id,
                                                                                 "name": dd.name,
                                                                                 "price": dd.price,
-                                                                                "max_price": dd.max_price,
-                                                                                "min_price": dd.min_price,
+                                                                                "images": dd.images,
                                                                                 "quantity": (_a = dd === null || dd === void 0 ? void 0 : dd.quantity) !== null && _a !== void 0 ? _a : 1,
                                                                                 "sale_price": dd.sale_price,
-                                                                                "preview_image": dd.preview_image
+                                                                                "preview_image": dd.preview_image,
+                                                                                "showUp": dd.showUp
                                                                             },
                                                                             "style": "\n",
                                                                             "paddingL": "",

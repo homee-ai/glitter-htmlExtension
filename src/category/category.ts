@@ -804,6 +804,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                     "marginL": "0px",
                                                                     "marginR": "0px",
                                                                     "setting": viewModel.product.map((dd:any)=>{
+                                                                        
                                                                         return {
                                                                             "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                                             "js": "$homee/homee/homee_home.js",
@@ -812,11 +813,12 @@ color: #1E1E1E;">${data.title}</div>
                                                                                     "id": dd.id,
                                                                                     "name": dd.name,
                                                                                     "price": dd.price,
-                                                                                    "max_price": dd.max_price,
-                                                                                    "min_price": dd.min_price,
+                                                                                    "images":dd.images,
                                                                                     "quantity": dd?.quantity ?? 1,
                                                                                     "sale_price": dd.sale_price,
-                                                                                    "preview_image": dd.preview_image
+                                                                                    "preview_image": dd.preview_image,
+                                                                                    "showUp":dd.showUp 
+                                                                                    
                                                                                 },
                                                                                 "style": "\n",
                                                                                 "paddingL": "",
