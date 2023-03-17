@@ -722,136 +722,135 @@ color: #1E1E1E;">${data.title}</div>
                             return gvc.bindView({
                                 bind: `mainView`,
                                 view: () => {
-
                                     if (topInset !== undefined && bottomInset !== undefined) {
                                         return /* HTML */ `
-                        <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
-                            <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 16px; background: #FFFFFF;position:relative;">
-                                <div class="me-auto p-0 d-flex align-items-center" style="">
-                                    <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676803803897" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                            //todo 回哪裡
-                                            glitter.goBack()
-                                        })}">
-                                </div>
-                                <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="color: #292929;;position: absolute;top: 50%;   font-family: 'Noto Sans TC';font-style: normal;font-size: 16px;font-weight: 700;">
-                                    ${title}
-                                </div>
-                            
-                            </div>
-                            <banner style="">
-                               ${((gBundle.object.subCategory ?? []).length>0) ? viewModel.setSubCategoryRow(gBundle.parent_category_id):``}
-    <!--                            todo 之後如果有需要要加東西-->
-                                ${gvc.bindView({
-                                            bind: 'sortBar',
-                                            view: () => {
-                                                
-                                                let returnHTML = ``;
-                                                // alert(sortSelect)
-                                                sortRow.forEach((element, index: number) => {
-                                                    let style = (index == sortSelect) ? "color: #1E1E1E;" : "color: #858585;"
-                                                    console.log("style")
-                                                    console.log(style)
-                                                    returnHTML += `
-                                    <div class="sortRawText" style="padding: 0 24px;font-weight: 500;${style}" onclick="${gvc.event((e)=>{
-                                                        element.click(e);
-                                                    })}">
-                                        ${element.text}
-                                        ${gvc.bindView({
-                                            bind: "",
-                                            view: () => {
-                                                if (element.img) {
-                                                    return `<img src="${element.img}" style="height: 16px;width: 16px;">`
-                                                }
-                                                return ``
-                                            }
-                                        })}
-                                    </div>
-                                    `
-                                                    //直槓
-                                                    if (index != sortRow.length - 1) {
-                                                        returnHTML += `
-                                                <div style="background: #858585; height: 5px;width: 1px;"></div>
-                                            `
-                                                    }
-                                                })
-                                                return returnHTML
-                                            },
-                                            divCreate: {style: `margin-top:${(((gBundle.object.subCategory ?? []).length>0) ? 24:0)}px;padding-bottom:9px;`, class: `d-flex align-items-center`}
-                                        })}
-                            </banner>       
-                        </nav>
-                        <main style="background: white;padding-top:${topInset - 20 + (((gBundle.object.subCategory ?? []).length>0) ? 150:120)}px;padding-left: 23px;padding-right: 23px;">
-                            ${gvc.bindView({
-                                bind: "cardGroup",
-                                view: () => {
-                                    if (viewModel.loading) {
-                                        let returnHTML = `
-                                        <div class="w-100">
-                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                                                <div class="spinner-border" role="status"></div>
+                                        <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
+                                            <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 16px; background: #FFFFFF;position:relative;">
+                                                <div class="me-auto p-0 d-flex align-items-center" style="">
+                                                    <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676803803897" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                                            //todo 回哪裡
+                                                            glitter.goBack()
+                                                        })}">
+                                                </div>
+                                                <div class=" d-flex align-items-center justify-content-center translate-middle-y translate-middle-x" style="color: #292929;;position: absolute;top: 50%;   font-family: 'Noto Sans TC';font-style: normal;font-size: 16px;font-weight: 700;">
+                                                    ${title}
+                                                </div>
+                                            
                                             </div>
-                                        </div>`;
-                                        return returnHTML
-                                    } else {
-                                        return new glitter.htmlGenerate([
-                                            {
-                                                "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
-                                                "js": "$homee/official/official.js",
-                                                "data": {
-                                                    "class": "m-0 p-0 flex-wrap justify-content-around",
-                                                    "style": "gap:16px;column-count: 2;",
-                                                    "layout": "",
-                                                    "marginB": "86px",
-                                                    "marginL": "0px",
-                                                    "marginR": "0px",
-                                                    "setting": viewModel.product.map((dd:any)=>{
-                                                        return {
-                                                            "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
-                                                            "js": "$homee/homee/homee_home.js",
-                                                            "data": {
-                                                                "data": {
-                                                                    "id": dd.id,
-                                                                    "name": dd.name,
-                                                                    "price": dd.price,
-                                                                    "quantity": dd.quantity,
-                                                                    "sale_price": dd.sale_price,
-                                                                    "preview_image": dd.preview_image
-                                                                },
-                                                                "style": "\n",
-                                                                "paddingL": "",
-                                                                "paddingR": "",
-                                                                "clickEvent": {
-                                                                    "src": "$homee/homee/event.js",
-                                                                    "route": "toProductDetail"
+                                            <banner style="">
+                                               ${((gBundle.object.subCategory ?? []).length>0) ? viewModel.setSubCategoryRow(gBundle.parent_category_id):``}
+                    <!--                            todo 之後如果有需要要加東西-->
+                                                ${gvc.bindView({
+                                                            bind: 'sortBar',
+                                                            view: () => {
+                                                                
+                                                                let returnHTML = ``;
+                                                                // alert(sortSelect)
+                                                                sortRow.forEach((element, index: number) => {
+                                                                    let style = (index == sortSelect) ? "color: #1E1E1E;" : "color: #858585;"
+                                                                    console.log("style")
+                                                                    console.log(style)
+                                                                    returnHTML += `
+                                                    <div class="sortRawText" style="padding: 0 24px;font-weight: 500;${style}" onclick="${gvc.event((e)=>{
+                                                                        element.click(e);
+                                                                    })}">
+                                                        ${element.text}
+                                                        ${gvc.bindView({
+                                                            bind: "",
+                                                            view: () => {
+                                                                if (element.img) {
+                                                                    return `<img src="${element.img}" style="height: 16px;width: 16px;">`
                                                                 }
+                                                                return ``
+                                                            }
+                                                        })}
+                                                    </div>
+                                                    `
+                                                                    //直槓
+                                                                    if (index != sortRow.length - 1) {
+                                                                        returnHTML += `
+                                                                <div style="background: #858585; height: 5px;width: 1px;"></div>
+                                                            `
+                                                                    }
+                                                                })
+                                                                return returnHTML
                                                             },
-                                                            "type": "productItem",
-                                                            "label": "商品",
-                                                            "route": "homee_home",
-                                                            "style": "",
-                                                            "expandStyle": false,
-                                                            "refreshAllParameter": {},
-                                                            "refreshComponentParameter": {}
-                                                        }
-                                                    }),
-                                                    "paddingB": "16px",
-                                                    "paddingL": "",
-                                                    "paddingR": ""
+                                                            divCreate: {style: `margin-top:${(((gBundle.object.subCategory ?? []).length>0) ? 24:0)}px;padding-bottom:9px;`, class: `d-flex align-items-center`}
+                                                        })}
+                                            </banner>       
+                                        </nav>
+                                        <main style="background: white;padding-top:${topInset - 20 + (((gBundle.object.subCategory ?? []).length>0) ? 150:120)}px;padding-left: 23px;padding-right: 23px;">
+                                            ${gvc.bindView({
+                                                bind: "cardGroup",
+                                                view: () => {
+                                                    if (viewModel.loading) {
+                                                        let returnHTML = `
+                                                        <div class="w-100">
+                                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                                <div class="spinner-border" role="status"></div>
+                                                            </div>
+                                                        </div>`;
+                                                        return returnHTML
+                                                    } else {
+                                                        return new glitter.htmlGenerate([
+                                                            {
+                                                                "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
+                                                                "js": "$homee/official/official.js",
+                                                                "data": {
+                                                                    "class": "m-0 p-0 flex-wrap justify-content-around",
+                                                                    "style": "gap:16px;column-count: 2;",
+                                                                    "layout": "",
+                                                                    "marginB": "86px",
+                                                                    "marginL": "0px",
+                                                                    "marginR": "0px",
+                                                                    "setting": viewModel.product.map((dd:any)=>{
+                                                                        return {
+                                                                            "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
+                                                                            "js": "$homee/homee/homee_home.js",
+                                                                            "data": {
+                                                                                "data": {
+                                                                                    "id": dd.id,
+                                                                                    "name": dd.name,
+                                                                                    "price": dd.price,
+                                                                                    "quantity": dd.quantity,
+                                                                                    "sale_price": dd.sale_price,
+                                                                                    "preview_image": dd.preview_image
+                                                                                },
+                                                                                "style": "\n",
+                                                                                "paddingL": "",
+                                                                                "paddingR": "",
+                                                                                "clickEvent": {
+                                                                                    "src": "$homee/homee/event.js",
+                                                                                    "route": "toProductDetail"
+                                                                                }
+                                                                            },
+                                                                            "type": "productItem",
+                                                                            "label": "商品",
+                                                                            "route": "homee_home",
+                                                                            "style": "",
+                                                                            "expandStyle": false,
+                                                                            "refreshAllParameter": {},
+                                                                            "refreshComponentParameter": {}
+                                                                        }
+                                                                    }),
+                                                                    "paddingB": "16px",
+                                                                    "paddingL": "",
+                                                                    "paddingR": ""
+                                                                },
+                                                                "type": "container",
+                                                                "class": " ",
+                                                                "label": "元件容器",
+                                                                "route": "Glitter",
+                                                                "style": ""
+                                                            }
+                                                        ], []).render(gvc);
+                                                    }
+                
                                                 },
-                                                "type": "container",
-                                                "class": " ",
-                                                "label": "元件容器",
-                                                "route": "Glitter",
-                                                "style": ""
-                                            }
-                                        ], []).render(gvc);
-                                    }
-
-                                },
-                                divCreate: {style: `padding-top:20px;`, class: ``}
-                            })}
-                        </main>                         
-                        `
+                                                divCreate: {style: `padding-top:20px;`, class: ``}
+                                            })}
+                                        </main>                         
+                                        `
                                     } else {
                                         return `
                             
