@@ -46,9 +46,11 @@ init((gvc, glitter, gBundle) => {
                                         
                                     `
             }
-
             return `
-                <div class="position-relative h-100" style="width:100vw;padding: 0 31px;z-index: 99999;" onclick="${gvc.event(()=>{
+                <div></div>
+            `
+            return `
+                <div class="position-relative" style="width:100vw;padding: 0 31px;z-index: 99999;" onclick="${gvc.event(()=>{
                     glitter.closeDiaLog("changeSku");
                 
                     
