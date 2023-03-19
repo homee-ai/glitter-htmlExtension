@@ -9,6 +9,7 @@ import {DialogHelper} from "../dialog/dialog-helper.js";
 import {GVC} from "../glitterBundle/GVController";
 import {appConfig} from "../config.js";
 
+
 Plugin.create(import.meta.url, (glitter) => {
     const rootURL = new URL("../", import.meta.url).href
     const api = {
@@ -141,26 +142,26 @@ Plugin.create(import.meta.url, (glitter) => {
                                 src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                             }], () => {
                                 const Swiper = (window as any).Swiper
-                                
-                                const swiper = new Swiper(`.${id}`, {
+                              
+                                const swiper = new Swiper(`#${id}`, {
                                     // Optional parameters
                                     direction: 'horizontal',
                                     loop: true,
 
                                     // If we need pagination
                                     pagination: {
-                                        el: `.${id} .swiper-pagination`,
+                                        el: `#${id}>.swiper-pagination`,
                                     },
 
                                     // Navigation arrows
                                     navigation: {
-                                        nextEl: `.${id} .swiper-button-next`,
-                                        prevEl: `.${id} .swiper-button-prev`,
+                                        nextEl: `#${id}>.swiper-button-next`,
+                                        prevEl: `#${id}>.swiper-button-prev`,
                                     },
 
                                     // And if we need scrollbar
                                     scrollbar: {
-                                        el: `.${id} .swiper-scrollbar`,
+                                        el: `#${id}>.swiper-scrollbar`,
                                     },
 
 
@@ -465,24 +466,38 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                         `
                                     },divCreate : {class:`swiper ${productID} w-100` , style:`border-radius: 16px;position: relative;`},
                                     onCreate : ()=>{
+                                        
+                               
+                                      
+                                        
+                                      
+                                        
+                                     
                                         glitter.addMtScript([{
-                                            src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
+                                            src: 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js'
                                         }], () => {
+
+
+
                                             const Swiper = (window as any).Swiper
-                                            
-                                            
-                                            const swiper = new Swiper(`.${productID}`, {
+                                            const swiper = new Swiper(`#${productID}`, {
                                                 // Optional parameters
                                                 slidesPerView: 'auto',
                                                 direction: 'horizontal',
                                                 loop: false,
                                                 // If we need pagination
                                                 pagination: {
-                                                    el: `.${productID} .swiper-pagination`,
+                                                    el: `#${productID}>.swiper-pagination`,
                                                 },
                                             });
-                                            
+
+                                            glitter.share.swiper=glitter.share.swiper ?? []
+                                            glitter.share.swiper.push(swiper)
+
+                                     
+
                                         }, () => {
+
                                         })
                                     }
                                 })}
@@ -493,7 +508,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                 <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
                                     <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
                                         NT$ ${widget.data.data.sale_price ?? "尚未設定"} ${(()=>{
-                                            console.log(widget.data.data.showUp)
+                                     
                                             if (widget.data.data.showUp){
                                                 return "up"
                                             }

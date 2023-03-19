@@ -146,18 +146,18 @@ Plugin.create(import.meta.url, (glitter) => {
                                 }], () => {
                                 var _b;
                                 const Swiper = window.Swiper;
-                                const swiper = new Swiper(`.${id}`, {
+                                const swiper = new Swiper(`#${id}`, {
                                     direction: 'horizontal',
                                     loop: true,
                                     pagination: {
-                                        el: `.${id} .swiper-pagination`,
+                                        el: `#${id}>.swiper-pagination`,
                                     },
                                     navigation: {
-                                        nextEl: `.${id} .swiper-button-next`,
-                                        prevEl: `.${id} .swiper-button-prev`,
+                                        nextEl: `#${id}>.swiper-button-next`,
+                                        prevEl: `#${id}>.swiper-button-prev`,
                                     },
                                     scrollbar: {
-                                        el: `.${id} .swiper-scrollbar`,
+                                        el: `#${id}>.swiper-scrollbar`,
                                     },
                                 });
                                 glitter.share.swiper = (_b = glitter.share.swiper) !== null && _b !== void 0 ? _b : [];
@@ -453,17 +453,20 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                             }, divCreate: { class: `swiper ${productID} w-100`, style: `border-radius: 16px;position: relative;` },
                             onCreate: () => {
                                 glitter.addMtScript([{
-                                        src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
+                                        src: 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js'
                                     }], () => {
+                                    var _b;
                                     const Swiper = window.Swiper;
-                                    const swiper = new Swiper(`.${productID}`, {
+                                    const swiper = new Swiper(`#${productID}`, {
                                         slidesPerView: 'auto',
                                         direction: 'horizontal',
                                         loop: false,
                                         pagination: {
-                                            el: `.${productID} .swiper-pagination`,
+                                            el: `#${productID}>.swiper-pagination`,
                                         },
                                     });
+                                    glitter.share.swiper = (_b = glitter.share.swiper) !== null && _b !== void 0 ? _b : [];
+                                    glitter.share.swiper.push(swiper);
                                 }, () => {
                                 });
                             }
@@ -475,7 +478,6 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                 <div class="d-flex align-items-baseline" style="padding:0 8px;margin-top: 8px;padding-bottom: 8px;">
                                     <span style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 14px;color: #FD6A58;line-height: 150%;">
                                         NT$ ${(_e = widget.data.data.sale_price) !== null && _e !== void 0 ? _e : "尚未設定"} ${(() => {
-                            console.log(widget.data.data.showUp);
                             if (widget.data.data.showUp) {
                                 return "up";
                             }
