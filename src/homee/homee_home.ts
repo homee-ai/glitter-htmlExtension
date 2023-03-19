@@ -143,25 +143,25 @@ Plugin.create(import.meta.url, (glitter) => {
                             }], () => {
                                 const Swiper = (window as any).Swiper
                               
-                                const swiper = new Swiper(`#${id}`, {
+                                const swiper = new Swiper(`.${id}`, {
                                     // Optional parameters
                                     direction: 'horizontal',
                                     loop: true,
 
                                     // If we need pagination
                                     pagination: {
-                                        el: `#${id}>.swiper-pagination`,
+                                        el: `.${id} .swiper-pagination`,
                                     },
 
                                     // Navigation arrows
                                     navigation: {
-                                        nextEl: `#${id}>.swiper-button-next`,
-                                        prevEl: `#${id}>.swiper-button-prev`,
+                                        nextEl: `.${id} .swiper-button-next`,
+                                        prevEl: `.${id} .swiper-button-prev`,
                                     },
 
                                     // And if we need scrollbar
                                     scrollbar: {
-                                        el: `#${id}>.swiper-scrollbar`,
+                                        el: `.${id} .swiper-scrollbar`,
                                     },
 
 
@@ -467,38 +467,34 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                     },divCreate : {class:`swiper ${productID} w-100` , style:`border-radius: 16px;position: relative;`},
                                     onCreate : ()=>{
                                         
-                               
-                                      
                                         
-                                      
-                                        
-                                     
                                         glitter.addMtScript([{
-                                            src: 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js'
+                                            src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                         }], () => {
-
-
-
+                                            console.log(productID)
                                             const Swiper = (window as any).Swiper
-                                            const swiper = new Swiper(`#${productID}`, {
+                                            const swiper = new Swiper(`.${productID}`, {
                                                 // Optional parameters
                                                 slidesPerView: 'auto',
                                                 direction: 'horizontal',
                                                 loop: false,
                                                 // If we need pagination
                                                 pagination: {
-                                                    el: `#${productID}>.swiper-pagination`,
+                                                    el: `.${productID} .swiper-pagination`,
                                                 },
                                             });
-
+                                            // gvc.notifyDataChange(productID);
                                             glitter.share.swiper=glitter.share.swiper ?? []
                                             glitter.share.swiper.push(swiper)
 
-                                     
+
 
                                         }, () => {
 
                                         })
+                                            
+                                        
+                                        
                                     }
                                 })}
 <!--                                <div class="w-100 m-0" style="box-sizing:border-box;border-radius: 16px;padding-bottom: 100%;background: 50%/cover no-repeat url('${widget.data.data.preview_image}'), white;"></div>-->
