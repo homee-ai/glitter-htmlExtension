@@ -391,8 +391,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     <div class="d-flex flex-column align-items-center" style="width: 40px;" onclick="${gvc.event(() => {
                                     gvc.glitter.runJsInterFace("openWeb", {
                                         url: "https://m.me/142541949661977"
-                                    }, (data) => {
-                                    }, {
+                                    }, (data) => { }, {
                                         webFunction(data, callback) {
                                             gvc.glitter.openNewTab(data.data.url);
                                         }
