@@ -389,8 +389,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 return `
                                 <div class="footer d-flex align-items-center " style="padding:12px 20px ${bottomInset}px;background: #FFFFFF;box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.05);">
                                     <div class="d-flex flex-column align-items-center" style="width: 40px;" onclick="${gvc.event(() => {
-                                    gvc.glitter.runJsInterFace("openWeb", {
-                                        url: "https://m.me/142541949661977"
+                                    gvc.glitter.runJsInterFace("intentOutSide", {
+                                        url: "fb-messenger-public://user-thread/142541949661977?intent_trigger=mme&source_id=1441792&nav=discover"
                                     }, (data) => { }, {
                                         webFunction(data, callback) {
                                             gvc.glitter.openNewTab(data.data.url);
