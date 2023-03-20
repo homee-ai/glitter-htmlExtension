@@ -746,8 +746,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                 // alert(sortSelect)
                                                                 sortRow.forEach((element, index: number) => {
                                                                     let style = (index == sortSelect) ? "color: #1E1E1E;" : "color: #858585;"
-                                                                    console.log("style")
-                                                                    console.log(style)
+                                                                    
                                                                     returnHTML += `
                                                     <div class="sortRawText" style="padding: 0 24px;font-weight: 500;${style}" onclick="${gvc.event((e)=>{
                                                                         element.click(e);
@@ -795,16 +794,13 @@ color: #1E1E1E;">${data.title}</div>
                                                                 "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
                                                                 "js": "$homee/official/official.js",
                                                                 "data": {
-                                                                    "class": "m-0 p-0 flex-wrap justify-content-around",
-                                                                    "style": "gap:16px;column-count: 2;",
+                                                                    "style": "",
                                                                     "layout": "",
                                                                     "marginB": "86px",
                                                                     "marginL": "0px",
                                                                     "marginR": "0px",
-                                                                    "setting": viewModel.product.map((dd:any)=>{
-                                                                        
+                                                                    "setting": viewModel.product.map((dd:any,index:number)=>{
                                                                         return {
-                                                                            "id": "sas0sesbs3sds2sa-s7s4s4sf-4s9sesa-sases9sf-sfs3s0s6sfs2s6sasasfscs1",
                                                                             "js": "$homee/homee/homee_home.js",
                                                                             "data": {
                                                                                 "data": {
@@ -815,10 +811,11 @@ color: #1E1E1E;">${data.title}</div>
                                                                                     "quantity": dd?.quantity ?? 1,
                                                                                     "sale_price": dd.sale_price,
                                                                                     "preview_image": dd.preview_image,
-                                                                                    "showUp":dd.showUp 
-                                                                                    
+                                                                                    "showUp":dd.showUp
+
                                                                                 },
-                                                                                "style": "\n",
+                                                                                "style": "",
+
                                                                                 "paddingL": "",
                                                                                 "paddingR": "",
                                                                                 "clickEvent": {
@@ -826,30 +823,76 @@ color: #1E1E1E;">${data.title}</div>
                                                                                     "route": "toProductDetail"
                                                                                 }
                                                                             },
+
                                                                             "type": "productItem",
                                                                             "label": "商品",
                                                                             "route": "homee_home",
                                                                             "style": "",
+                                                                            "class" : "d-flex ",
                                                                             "expandStyle": false,
                                                                             "refreshAllParameter": {},
                                                                             "refreshComponentParameter": {}
                                                                         }
                                                                     }),
+                                                                    "class": "productCardParent",
                                                                     "paddingB": "16px",
                                                                     "paddingL": "",
                                                                     "paddingR": ""
                                                                 },
-                                                                "type": "container",
-                                                                "class": " ",
+                                                                "type": "container",                                                                 
                                                                 "label": "元件容器",
                                                                 "route": "Glitter",
                                                                 "style": ""
                                                             }
-                                                        ], []).render(gvc);
+                                                        ], []).render(gvc)
+                                                        
                                                     }
                 
                                                 },
-                                                divCreate: {style: `padding-top:20px;`, class: ``}
+                                                divCreate: {style: `padding-top:20px;`, class: ``},
+                                                onCreate : ()=>{
+                                                   
+                                                    setTimeout(()=>{
+                                                        let element = window.document?.querySelector('.productCardParent') ?? "";
+                                                       
+                                                        if (element){
+                                                            element = element as HTMLElement
+                                                            if (!(document.querySelector(".colum-left"))){
+                                                                element.innerHTML = `<div class="colum-left w-50" style="padding-right:8px;"></div>`+`<div class="colum-right w-50" style="padding-right:8px;"></div>`+ element.innerHTML
+                                                                let leftElement = (document.querySelector(".colum-left")) as HTMLElement;
+                                                                let rightElement = (document.querySelector(".colum-right")) as HTMLElement;
+                                                                // leftElement.innerHTML += element.innerHTML;
+                                                                console.log(element.children.length)
+                                                                while (element.children.length > 2){
+                                                                    if (leftElement.getBoundingClientRect().height < rightElement.getBoundingClientRect().height){
+                                                                        leftElement.appendChild(element.children[2]) ;
+                                                                    }else {
+                                                                        rightElement.appendChild(element.children[2]) ;
+                                                                    }
+                                                                }
+                                                                console.log(element.children)
+                                                                element.classList += " d-flex "
+                                                                // element.innerHTML = "";
+                                                                // element.appendChild(leftElement);
+                                                                
+                                                                // alert("OK")
+                                                                // console.log(leftElement)
+                                                                // element.innerHTML = `
+                                                                //     <div class="d-flex ">
+                                                                //         ${leftElement}
+                                                                //         ${rightElement}
+                                                                //     </div>
+                                                                // ` 
+                                                                
+                                                                // console.log(leftElement.offsetHeight)
+                                                            }
+                                                            
+                                                       
+                                                        }
+                                                    },100)
+                                                    
+                                             
+                                                }
                                             })}
                                         </main>                         
                                         `
@@ -880,7 +923,7 @@ color: #1E1E1E;">${data.title}</div>
                                             },"manual")
                                             new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                                 viewModel.allData.push(response);
-                                                console.log(response)
+
                                                 gvc.notifyDataChange('cardGroup')
                                             },"best-selling")
                                         }else{

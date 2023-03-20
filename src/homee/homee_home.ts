@@ -429,7 +429,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                     view: () => {
                         const pageID=glitter.getUUID()
                         return `
-                            <div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""}; 
+                            <div class=" ${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""}; 
                                 break-inside: avoid;margin-top: 16px;
                                 
                                 height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
@@ -472,7 +472,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                             src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                         }], () => {
                                             const Swiper = (window as any).Swiper
-                                            const swiper = new Swiper(`${pageID}`, {
+                                            const swiper = new Swiper(`.${pageID}`, {
                                                 // Optional parameters
                                                 slidesPerView: 'auto',
                                                 direction: 'horizontal',
@@ -536,7 +536,6 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 const shareView = new SharedView(gvc)
                 return {
                     view: () => {
-
                         return shareView.navigationBar({
                             title: `<span style="font-family: 'Noto Sans TC';
 font-style: normal;

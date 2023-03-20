@@ -701,7 +701,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         
                                 <div class="lastSectionTitle d-flex justify-content-center align-items-center">${thisModel.contactUs.title}</div>
                                 <div class="servicePhoneBlock d-flex flex-column align-items-start justify-content-start" style="margin-bottom: 16px;">
-                                    <div>${thisModel.contactUs.servicePhoneTitle} : ${thisModel.contactUs.servicePhone}</div>
+                                    <div>客服專線：0972-636-236</div>
                                     
                                 </div>
                                 <div class="serviceTimeBlock" >

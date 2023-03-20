@@ -38,9 +38,6 @@ export class Category {
             type: 'get',
             contentType: 'application/json; charset=utf-8',
             success: (response) => {
-                console.log("資料");
-                console.log(`${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`);
-                console.log(response);
                 callback(response["product_list"]);
             },
             error: (e) => {
