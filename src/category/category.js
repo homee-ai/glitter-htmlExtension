@@ -785,7 +785,6 @@ color: #1E1E1E;">${data.title}</div>
                                                             element.innerHTML = `<div class="colum-left w-50" style="padding-right:8px;"></div>` + `<div class="colum-right w-50" style="padding-right:8px;"></div>` + element.innerHTML;
                                                             let leftElement = (document.querySelector(".colum-left"));
                                                             let rightElement = (document.querySelector(".colum-right"));
-                                                            console.log(element.children.length);
                                                             while (element.children.length > 2) {
                                                                 if (leftElement.getBoundingClientRect().height < rightElement.getBoundingClientRect().height) {
                                                                     leftElement.appendChild(element.children[2]);
@@ -794,8 +793,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                     rightElement.appendChild(element.children[2]);
                                                                 }
                                                             }
-                                                            console.log(element.children);
-                                                            element.classList += " d-flex ";
+                                                            element.classList.add("d-flex");
                                                         }
                                                     }
                                                 }, 100);

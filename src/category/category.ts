@@ -862,7 +862,6 @@ color: #1E1E1E;">${data.title}</div>
                                                                 let leftElement = (document.querySelector(".colum-left")) as HTMLElement;
                                                                 let rightElement = (document.querySelector(".colum-right")) as HTMLElement;
                                                                 // leftElement.innerHTML += element.innerHTML;
-                                                                console.log(element.children.length)
                                                                 while (element.children.length > 2){
                                                                     if (leftElement.getBoundingClientRect().height < rightElement.getBoundingClientRect().height){
                                                                         leftElement.appendChild(element.children[2]) ;
@@ -870,21 +869,9 @@ color: #1E1E1E;">${data.title}</div>
                                                                         rightElement.appendChild(element.children[2]) ;
                                                                     }
                                                                 }
-                                                                console.log(element.children)
-                                                                element.classList += " d-flex "
-                                                                // element.innerHTML = "";
-                                                                // element.appendChild(leftElement);
+                                                              
+                                                                element.classList.add("d-flex");
                                                                 
-                                                                // alert("OK")
-                                                                // console.log(leftElement)
-                                                                // element.innerHTML = `
-                                                                //     <div class="d-flex ">
-                                                                //         ${leftElement}
-                                                                //         ${rightElement}
-                                                                //     </div>
-                                                                // ` 
-                                                                
-                                                                // console.log(leftElement.offsetHeight)
                                                             }
                                                             
                                                        
