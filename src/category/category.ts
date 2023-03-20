@@ -646,7 +646,6 @@ color: #1E1E1E;">${data.title}</div>
                                     text: '精選', img: '', click: (e:HTMLElement) => {
                                         const id = gBundle.object.subCategory[viewModel.select].value
                                         viewModel.loading=true
-                                        gvc.notifyDataChange('cardGroup')
                                         resetSort();
                                         sortSelect = 0
                                         viewModel.product = viewModel.allData[0];
@@ -667,7 +666,6 @@ color: #1E1E1E;">${data.title}</div>
                                     text: '銷量', img: '', click: (e:HTMLElement) => {
                                         const id = gBundle.object.subCategory[viewModel.select].value
                                         viewModel.loading=true
-                                        gvc.notifyDataChange('cardGroup')
                                         resetSort();
                                         sortSelect = 1;
                                         viewModel.product = viewModel.allData[1];
@@ -873,9 +871,10 @@ color: #1E1E1E;">${data.title}</div>
 
 
                                             new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+
                                                 viewModel.product=response;
                                                 viewModel.allData.push(response);
-                                                console.log(response)
+
                                                 viewModel.loading=false
                                                 gvc.notifyDataChange('cardGroup')
                                             },"manual")

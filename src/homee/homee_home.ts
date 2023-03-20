@@ -427,7 +427,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 `)
                 return {
                     view: () => {
-const pageID=glitter.getUUID()
+                        const pageID=glitter.getUUID()
                         return `
                             <div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""}; 
                                 break-inside: avoid;margin-top: 16px;
@@ -441,7 +441,7 @@ const pageID=glitter.getUUID()
                             })}">
                                 
                                 ${gvc.bindView({
-                                    bind : productID,
+                                    bind : pageID,
                                     view : ()=>{
                                         return `
                                               <!-- Additional required wrapper -->
@@ -464,16 +464,15 @@ const pageID=glitter.getUUID()
                                               <!-- If we need pagination -->
                                               <div class="swiper-pagination" id="${pageID}"></div>                                                                                                                                                                          
                                         `
-                                    },divCreate : {class:`swiper ${productID} w-100` , style:`border-radius: 16px;position: relative;`},
+                                    },divCreate : {class:`swiper ${pageID} w-100` , style:`border-radius: 16px;position: relative;`},
                                     onCreate : ()=>{
                                         
                                         
                                         glitter.addMtScript([{
                                             src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                         }], () => {
-                                            console.log(productID)
                                             const Swiper = (window as any).Swiper
-                                            const swiper = new Swiper(`.${productID}`, {
+                                            const swiper = new Swiper(`${pageID}`, {
                                                 // Optional parameters
                                                 slidesPerView: 'auto',
                                                 direction: 'horizontal',
@@ -492,9 +491,6 @@ const pageID=glitter.getUUID()
                                         }, () => {
 
                                         })
-                                            
-                                        
-                                        
                                     }
                                 })}
 <!--                                <div class="w-100 m-0" style="box-sizing:border-box;border-radius: 16px;padding-bottom: 100%;background: 50%/cover no-repeat url('${widget.data.data.preview_image}'), white;"></div>-->
@@ -540,6 +536,7 @@ const pageID=glitter.getUUID()
                 const shareView = new SharedView(gvc)
                 return {
                     view: () => {
+
                         return shareView.navigationBar({
                             title: `<span style="font-family: 'Noto Sans TC';
 font-style: normal;

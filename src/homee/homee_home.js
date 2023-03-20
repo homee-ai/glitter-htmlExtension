@@ -431,7 +431,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                         })}">
                                 
                                 ${gvc.bindView({
-                            bind: productID,
+                            bind: pageID,
                             view: () => {
                                 return `
                                               <!-- Additional required wrapper -->
@@ -451,15 +451,14 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                               <!-- If we need pagination -->
                                               <div class="swiper-pagination" id="${pageID}"></div>                                                                                                                                                                          
                                         `;
-                            }, divCreate: { class: `swiper ${productID} w-100`, style: `border-radius: 16px;position: relative;` },
+                            }, divCreate: { class: `swiper ${pageID} w-100`, style: `border-radius: 16px;position: relative;` },
                             onCreate: () => {
                                 glitter.addMtScript([{
                                         src: 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js'
                                     }], () => {
                                     var _b;
-                                    console.log(productID);
                                     const Swiper = window.Swiper;
-                                    const swiper = new Swiper(`.${productID}`, {
+                                    const swiper = new Swiper(`${pageID}`, {
                                         slidesPerView: 'auto',
                                         direction: 'horizontal',
                                         loop: false,
