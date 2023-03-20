@@ -417,6 +417,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 return {
                     view: () => {
                         var _b, _c, _d, _e;
+                        const pageID = glitter.getUUID();
                         return `
                             <div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""} p-0 " style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""}; 
                                 break-inside: avoid;margin-top: 16px;
@@ -448,7 +449,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                               </div>
                                               <div class="w-100" style="position:absolute;left:0;top:0;height:100%;border: 4px solid rgba(248, 243, 237, 0.3);background:transparent;z-index: 3;border-radius: 16px;pointer-events:none;" onscroll=""></div>
                                               <!-- If we need pagination -->
-                                              <div class=".${productID} swiper-pagination"></div>                                                                                                                                                                          
+                                              <div class="swiper-pagination" id="${pageID}"></div>                                                                                                                                                                          
                                         `;
                             }, divCreate: { class: `swiper ${productID} w-100`, style: `border-radius: 16px;position: relative;` },
                             onCreate: () => {
@@ -463,7 +464,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                         direction: 'horizontal',
                                         loop: false,
                                         pagination: {
-                                            el: `.${productID} .swiper-pagination`,
+                                            el: `#${pageID}`,
                                         },
                                     });
                                     glitter.share.swiper = (_b = glitter.share.swiper) !== null && _b !== void 0 ? _b : [];

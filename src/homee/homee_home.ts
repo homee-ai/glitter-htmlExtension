@@ -427,7 +427,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                 `)
                 return {
                     view: () => {
-
+const pageID=glitter.getUUID()
                         return `
                             <div class="${widget.data.class ?? ""} p-0 " style="${widget.data.style ?? ""}; 
                                 break-inside: avoid;margin-top: 16px;
@@ -462,7 +462,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                               </div>
                                               <div class="w-100" style="position:absolute;left:0;top:0;height:100%;border: 4px solid rgba(248, 243, 237, 0.3);background:transparent;z-index: 3;border-radius: 16px;pointer-events:none;" onscroll=""></div>
                                               <!-- If we need pagination -->
-                                              <div class=".${productID} swiper-pagination"></div>                                                                                                                                                                          
+                                              <div class="swiper-pagination" id="${pageID}"></div>                                                                                                                                                                          
                                         `
                                     },divCreate : {class:`swiper ${productID} w-100` , style:`border-radius: 16px;position: relative;`},
                                     onCreate : ()=>{
@@ -480,7 +480,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                                                 loop: false,
                                                 // If we need pagination
                                                 pagination: {
-                                                    el: `.${productID} .swiper-pagination`,
+                                                    el: `#${pageID}`,
                                                 },
                                             });
                                             // gvc.notifyDataChange(productID);
