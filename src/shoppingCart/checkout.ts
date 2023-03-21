@@ -311,7 +311,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
 
                 const skuDataInfo: any = {}
                 let cartData: any = undefined
+
                 const dialog = new Dialog(gvc);
+                let rebat = 0;
+                Checkout.getRebat((response:any)=>{
+                    console.log(response.data[0].credit_balance);
+                    rebat = response.data[0].credit_balance;
+                });
                 dialog.dataLoading(true)
 
                 function getCartProData() {
@@ -341,6 +347,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 })
                                 widget.data.cartItem = Object.keys(cartData).map((dd: any) => {
                                     const obj: any = cartData[dd]
+
                                     return {
                                         category: dd,
                                         category_id: dd,
@@ -454,26 +461,28 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                 return d2.code
                             }).map((dd: any) => {
                                 return dd.code
-                            })
+                            }),
+                            use_rebate:voucherUse
                         },
                         callback: (response) => {
                             dialog.dataLoading(false)
-                            if (response) {
-                                console.log(`redirect:${(response as any).redirect}`)
-                                // return
-                                Checkout.deleteCart(() => {
-                                    getCartProData();
-                                    gvc.glitter.runJsInterFace("openWeb", {
-                                        url: (response as any).redirect
-                                    }, (data) => { }, {
-                                        webFunction(data: any, callback: (data: any) => void): any {
-                                           location.href=(response as any).redirect
-                                        }
-                                    })
-                                })
-                            } else {
-                                dialog.showInfo('訂單新增異常!');
-                            }
+                            console.log()
+                            // if (response) {
+                            //     console.log(`redirect:${(response as any).redirect}`)
+                            //     // return
+                            //     Checkout.deleteCart(() => {
+                            //         getCartProData();
+                            //         gvc.glitter.runJsInterFace("openWeb", {
+                            //             url: (response as any).redirect
+                            //         }, (data) => { }, {
+                            //             webFunction(data: any, callback: (data: any) => void): any {
+                            //                location.href=(response as any).redirect
+                            //             }
+                            //         })
+                            //     })
+                            // } else {
+                            //     dialog.showInfo('訂單新增異常!');
+                            // }
                         }
                     })
                 }
@@ -864,18 +873,23 @@ color: #1E1E1E;">${dd.discount}</span>
                                             return ``
                                         }
                                     })()}
-                                       
-                                    <div class="d-flex align-items-center justify-content-between subTotal" style="padding:0 12px;margin-bottom:13px;">
-                                        <div style="font-size: 12px;">你有<span class="voucher mx-1" style="font-size: 15px;">${voucher.toLocaleString()}</span>點數回饋</div>
-                                        <div class="d-flex align-items-center">- NT$
-                                            <input class="voucherInput ms-1" type="number" value="${voucherUse}" style="border: 1px solid #E0E0E0;
-border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HTMLInputElement) => {
-                                        voucherUse = (Number(e.value) > voucher) ? voucher : Number(e.value);
-                                        gvc.notifyDataChange('cartSubtotal');
-                                    })}">
-                                        </div>
-                                       
-                                    </div>
+                                    ${gvc.bindView({
+                                        bind : "rebat",
+                                        view : ()=>{
+                                            return `                                                
+                                                <div style="font-size: 12px;">你有<span class="voucher mx-1" style="font-size: 15px;">${rebat.toLocaleString()}</span>點數回饋</div>
+                                                <div class="d-flex align-items-center">- NT$
+                                                    <input class="voucherInput ms-1" type="number" value="${voucherUse}" style="border: 1px solid #E0E0E0;
+                                                        border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                        voucherUse = (Number(e.value) > rebat) ? rebat : Number(e.value);
+                                                        gvc.notifyDataChange('cartSubtotal');
+                                                    })}">
+                                                </div>                                                                           
+                                            `
+                                        },
+                                        divCreate:{class : `d-flex align-items-center justify-content-between subTotal` , style : `padding:0 12px;margin-bottom:13px;`}
+                                    })}                                    
+                                    
                                     
                                     <div style="height:1px; width: 100%;background: #E0E0E0;"></div>
                                     <div class="d-flex justify-content-between" style="padding:12px;">
@@ -883,13 +897,13 @@ border-radius: 4px;text-align: center;width: 48px;" onchange="${gvc.event((e: HT
                                         <div class="d-flex">
                                             <div class="totalText">總計金額:</div>
                                             <div class="total">
-                                                NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount).toLocaleString()}
+                                                NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount - voucherUse).toLocaleString()}
                                             </div>
                                         </div>
                                         
                                     </div>
                                     <div class="d-flex" style="position:fixed;left:0;bottom:${widget.data.buttonPadding ?? 106}px;height:52px;width: calc(100% - 24px);margin-left: 12px;">
-                                        <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount).toLocaleString()}</div>
+                                        <div class="checkout-left d-flex align-items-center">NT$ ${(cartSubTotalVM.loading) ? `計算中...` : (cartSubTotalVM.data!.total_amount + cartSubTotalVM.data!.discount - voucherUse).toLocaleString()}</div>
                                         <div class="checkout-right d-flex align-items-center justify-content-center" onclick="${gvc.event(() => {
                                         checkOut();
                                     })}">結帳</div>

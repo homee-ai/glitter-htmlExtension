@@ -35,6 +35,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     { tit: "d-inline-flex", value: `d-inline-flex` },
                                     { tit: "d-flex", value: `d-flex` },
                                     { tit: "row", value: `row` },
+                                    { tit: "瀑布流", value: `waterfall` }
                                 ];
                                 return gvc.map(data.map((it) => {
                                     return `<option value="${it.value}" ${(widget.data.layout === it.value) ? `selected` : ``} >${it.tit}</option>`;
@@ -117,6 +118,148 @@ Plugin.create(import.meta.url, (glitter) => {
                                     return ``;
                                 }
                             })()
+                        ]);
+                    })
+                };
+            }
+        },
+        productWaterfallContainer: {
+            defaultData: {
+                setting: [],
+                data: [],
+                product: []
+            },
+            render: (gvc, widget, setting, hoverID) => {
+                var _a;
+                widget.data.setting = (_a = widget.data.setting) !== null && _a !== void 0 ? _a : [];
+                let viewModel = {
+                    loading: false,
+                    product: [],
+                };
+                return {
+                    view: () => {
+                        return `${gvc.bindView({
+                            bind: "cardGroup",
+                            view: () => {
+                                console.log("資料");
+                                console.log(widget.data.product);
+                                if (viewModel.loading) {
+                                    let returnHTML = `
+                                        <div class="w-100">
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`;
+                                    return returnHTML;
+                                }
+                                else {
+                                    return new glitter.htmlGenerate([
+                                        {
+                                            "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
+                                            "js": "$homee/official/official.js",
+                                            "data": {
+                                                "style": "",
+                                                "layout": "",
+                                                "marginB": "0px",
+                                                "marginL": "0px",
+                                                "marginR": "0px",
+                                                "setting": widget.data.product.map((modelData, index) => {
+                                                    var _a;
+                                                    let dd = modelData === null || modelData === void 0 ? void 0 : modelData.data;
+                                                    if (dd) {
+                                                        return {
+                                                            "js": "$homee/homee/homee_home.js",
+                                                            "data": {
+                                                                "data": {
+                                                                    "id": dd.id,
+                                                                    "name": dd.name,
+                                                                    "price": dd.price,
+                                                                    "images": dd.images,
+                                                                    "quantity": (_a = dd === null || dd === void 0 ? void 0 : dd.quantity) !== null && _a !== void 0 ? _a : 1,
+                                                                    "sale_price": dd.sale_price,
+                                                                    "preview_image": dd.preview_image,
+                                                                    "showUp": dd.showUp
+                                                                },
+                                                                "style": "",
+                                                                "paddingL": "",
+                                                                "paddingR": "",
+                                                                "clickEvent": {
+                                                                    "src": "$homee/homee/event.js",
+                                                                    "route": "toProductDetail"
+                                                                }
+                                                            },
+                                                            "type": "productItem",
+                                                            "label": "商品",
+                                                            "route": "homee_home",
+                                                            "style": "width:100%",
+                                                            "class": "d-flex ",
+                                                            "expandStyle": false,
+                                                            "refreshAllParameter": {},
+                                                            "refreshComponentParameter": {}
+                                                        };
+                                                    }
+                                                    else {
+                                                        return ``;
+                                                    }
+                                                }),
+                                                "class": "productCardParent",
+                                                "paddingB": "",
+                                                "paddingL": "",
+                                                "paddingR": ""
+                                            },
+                                            "type": "container",
+                                            "label": "元件容器",
+                                            "route": "Glitter",
+                                            "style": ""
+                                        }
+                                    ], []).render(gvc);
+                                }
+                            },
+                            divCreate: { style: ``, class: `` },
+                            onCreate: () => {
+                                setTimeout(() => {
+                                    var _a, _b;
+                                    let element = (_b = (_a = window.document) === null || _a === void 0 ? void 0 : _a.querySelector('.productCardParent')) !== null && _b !== void 0 ? _b : "";
+                                    if (element) {
+                                        element = element;
+                                        if (!(document.querySelector(".colum-left"))) {
+                                            element.innerHTML = `<div class="colum-left w-50" style="padding-right:8px;"></div>` + `<div class="colum-right w-50" style="padding-right:8px;"></div>` + element.innerHTML;
+                                            let leftElement = (document.querySelector(".colum-left"));
+                                            let rightElement = (document.querySelector(".colum-right"));
+                                            while (element.children.length > 2) {
+                                                if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
+                                                    leftElement.appendChild(element.children[2]);
+                                                }
+                                                else {
+                                                    rightElement.appendChild(element.children[2]);
+                                                }
+                                            }
+                                            element.classList.add("d-flex");
+                                        }
+                                    }
+                                }, 100);
+                            }
+                        })}`;
+                    },
+                    editor: (() => {
+                        return gvc.map([
+                            `
+                            ${(() => {
+                                var _a;
+                                let returnHTML = ``;
+                                for (let i = 0; i < ((_a = widget.data.product) === null || _a === void 0 ? void 0 : _a.length); i++) {
+                                    returnHTML += ClickEvent.editer(gvc, widget, widget.data.product[i], {
+                                        option: ['toProductDetail'],
+                                        hover: true
+                                    });
+                                }
+                                return returnHTML;
+                            })()}
+                            `,
+                            `<div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
+                                widget.data.product.push({});
+                                widget.refreshAll();
+                            })}">添加商品</div>`
                         ]);
                     })
                 };

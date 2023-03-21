@@ -754,7 +754,7 @@ color: #1E1E1E;">${data.title}</div>
                                                                         "type": "productItem",
                                                                         "label": "商品",
                                                                         "route": "homee_home",
-                                                                        "style": "",
+                                                                        "style": "width:100%",
                                                                         "class": "d-flex ",
                                                                         "expandStyle": false,
                                                                         "refreshAllParameter": {},
@@ -786,7 +786,7 @@ color: #1E1E1E;">${data.title}</div>
                                                             let leftElement = (document.querySelector(".colum-left"));
                                                             let rightElement = (document.querySelector(".colum-right"));
                                                             while (element.children.length > 2) {
-                                                                if (leftElement.getBoundingClientRect().height < rightElement.getBoundingClientRect().height) {
+                                                                if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
                                                                     leftElement.appendChild(element.children[2]);
                                                                 }
                                                                 else {

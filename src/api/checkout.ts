@@ -380,7 +380,8 @@ export class Checkout {
                 "email": string
             },
             "mainURL"?: string,
-            "voucherArray": string[]
+            "voucherArray": string[],
+            use_rebate:number
         }
         callback: (response: boolean | {
             "result": boolean,
@@ -390,7 +391,7 @@ export class Checkout {
         }) => void
     }) {
         obj.data.mainURL = appConfig().serverURL
-
+        console.log(obj)
         appConfig().getUserData({
             callback: (response: any) => {
                 obj.data.customerInfo = {
@@ -404,11 +405,31 @@ export class Checkout {
                     data: JSON.stringify(obj.data),
                     contentType: 'application/json; charset=utf-8',
                     success: (response: any) => {
-                        console.log(response)
                         obj.callback(response)
                     },
                     error: (err: any) => {
                         obj.callback(false)
+                    },
+                });
+
+            }
+        })
+    }
+
+    public static getRebat(callback:(response:any)=>void){
+        appConfig().getUserData({
+            callback: (response: any) => {
+                let rebundUrl = `${appConfig().serverURL}/api/v1/user/customerRebate?l=1&p=1&s=${response.email}`
+                $.ajax({
+                    url: rebundUrl,
+                    type: 'get',
+                    headers: {Authorization: response.token},
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response: any) => {
+                        callback(response);
+                    },
+                    error: (err: any) => {
+
                     },
                 });
             }

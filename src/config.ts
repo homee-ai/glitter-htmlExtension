@@ -128,6 +128,7 @@ export function appConfig(): {
         },
         setUserData: ({value, callback}: { value: any, callback: (result: any) => void }) => {
             const glitter = (window as any).glitter
+            // todo value.pwd cry
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response: any) => {
                 callback(response)
             })
