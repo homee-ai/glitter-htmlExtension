@@ -173,10 +173,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return { data: 10 };
                             }
                         });
-                        glitter.getPro("firstGuide", (res) => {
-                            backBTN = (res.data == "true");
-                            gvc.notifyDataChange("guideNav");
-                        });
                         return `      
                         ${gvc.bindView({
                             bind: "guideNav",
@@ -184,15 +180,23 @@ Plugin.create(import.meta.url, (glitter) => {
                                 return `
                                     <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                                         <div class="w-100" style="">
-                                            <img class="${(() => {
-                                    if (backBTN) {
-                                        return ``;
-                                    }
-                                    else
-                                        return 'd-none';
-                                })()}" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                            <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog = new Dialog(gvc);
-                                    appConfig().setHome(gvc, "myspace", {});
+                                    glitter.getPro("reShow", (res) => {
+                                        backBTN = (res.data == "true");
+                                        if (!backBTN) {
+                                            glitter.openDiaLog(`${new URL(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
+                                                callback: () => {
+                                                }
+                                            }, {
+                                                animation: glitter.animation.fade
+                                            });
+                                        }
+                                        else {
+                                            appConfig().setHome(gvc, "myspace", {});
+                                        }
+                                        gvc.notifyDataChange("guideNav");
+                                    });
                                 })}">
                                         </div>
                                         <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%">

@@ -26,7 +26,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                 vm.loading = true;
                                 gvc.notifyDataChange(id);
                                 glitter.getPro("loginWatchGuide", (res) => {
-                                    viewGuide = (res.data == "true");
+                                    glitter.getPro("reShow", (res2) => {
+                                        viewGuide = ((res.data == "true") && (res2 == "true"));
+                                    });
                                 });
                                 Myspace.getModelList((data) => {
                                     vm.loading = false;
