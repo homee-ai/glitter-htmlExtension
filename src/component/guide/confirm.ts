@@ -22,7 +22,30 @@ init((gvc, glitter, gBundle) => {
         onCreateView: () => {
             return `
                 <div class="w-100 d-flex justify-content-center align-items-center" style="position: fixed;top: 25%;">
-                
+                    <div style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 14px;line-height: 150%;text-align: center;background: #D9D9D9;padding-top: 15px;">
+                        <div style="padding: 0 50px;">HOMEE</div>
+                        <div style="padding: 0 50px;">確定退出教學影片嗎?</div>
+                        <div class="d-flex align-items-center" style="margin-top: 17px;padding: 0 50px;">
+                            <input style="background: #D9D9D9;" type="checkbox" id="confirm-appear" >不再顯示教學影片
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="w-50" style="padding: 16px 0;" onclick="${gvc.event(()=>{
+                                glitter.closeDiaLog("leaveGuide")
+                            })}">取消</div>
+                            <div class="w-50" style="padding: 16px 0;" onclick="${gvc.event(()=>{
+                                let inputElement = (document.querySelector('#confirm-appear')) as HTMLInputElement;
+                                if (inputElement.checked){
+                                    glitter.setPro("reShow" , "true" , ()=>{
+                                        glitter.closeDiaLog("leaveGuide")
+                                        appConfig().setHome(gvc, "myspace", {});
+                                    })
+                                }else {
+                                    glitter.closeDiaLog("leaveGuide")
+                                    appConfig().setHome(gvc, "myspace", {});
+                                }
+                            })}">確認</div>
+                        </div>
+                    </div>
                 </div>
             `
         }

@@ -190,12 +190,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                                 const dialog=new Dialog(gvc)
                                                 glitter.getPro("reShow",(res:any)=>{
-                                                    
                                                     backBTN = (res.data == "true");
                                                     if (!backBTN){
                                                     //    顯示確定退出
-                                                        glitter.openDiaLog(`${new URL!(`../component/shoppingCart/selectProductKind.js`, import.meta.url)}`, 'changeSku', {
-                                                            
+                                                        glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                                             callback: () => {
                                                                 
                                                             }
@@ -247,7 +245,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                     },
                     editor: ()=>{
                         return gvc.map([ `
-                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景圖片</h3>
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景影片</h3>
                             <div class="mt-2"></div>
                             <div class="d-flex align-items-center mb-3">
                                 <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.model.background}">
@@ -265,7 +263,38 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     })
                                 })}"></i>
                             </div>
-                        `])
+                        `,
+                        glitter.htmlGenerate.editeInput({
+                            gvc: gvc,
+                            title: "最上方文字",
+                            default: widget.data.model.title ?? "",
+                            placeHolder: `請輸入最上方文字內容`,
+                            callback: (text: string) => {
+                                widget.data.model.title = text
+                                widget.refreshAll()
+                            }
+                        }),
+                        glitter.htmlGenerate.editeInput({
+                            gvc: gvc,
+                            title: "灰色文字",
+                            default: widget.data.model.slogan ?? "",
+                            placeHolder: `請輸入最上方文字內容`,
+                            callback: (text: string) => {
+                                widget.data.model.slogan = text
+                                widget.refreshAll()
+                            }
+                        }),
+                        glitter.htmlGenerate.editeInput({
+                            gvc: gvc,
+                            title: "按鍵文字",
+                            default: widget.data.model.BTN ?? "",
+                            placeHolder: `請輸入最上方文字內容`,
+                            callback: (text: string) => {
+                                widget.data.model.BTN = text
+                                widget.refreshAll()
+                            }
+                        })
+                        ])
                     }
                 }
             },
@@ -374,12 +403,14 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${widget.data.model.slogan}
                                 </div>
                                 <div class="d-flex align-items-center" style="margin-top:38px;">
-                                    <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;margin-right: 8px" alt="" onclick="${gvc.event(() => {
-                                    glitter.goBack()
-                                })}">
-                                    <button class="border-0 nextBTN" onclick="${gvc.event(()=>{
+                                    
+                                    <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
-                                    })}">${widget.data.model.BTN}</button>
+                                    })}">${widget.data.model.BTN}
+                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
+                                            glitter.goBack()
+                                        })}">
+                                    </button>
                                 </div>
                                 
                             </div>
@@ -391,7 +422,57 @@ Plugin.create(import.meta.url,(glitter)=>{
                     `
                     },
                     editor: ()=>{
-                        return ``
+                        return gvc.map([ `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景影片</h3>
+                            <div class="mt-2"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.model.background}">
+                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                            glitter.ut.chooseMediaCallback({
+                                single:true,
+                                accept:'image/*',
+                                callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                    glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                        widget.data.model.background=link;
+                                        widget.refreshAll!()
+                                    })
+                                }
+                            })
+                        })}"></i>
+                            </div>
+                        `,
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "最上方文字",
+                                default: widget.data.model.title ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.title = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "灰色文字",
+                                default: widget.data.model.slogan ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.slogan = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "按鍵文字",
+                                default: widget.data.model.BTN ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.BTN = text
+                                    widget.refreshAll()
+                                }
+                            })
+                        ])
                     }
                 }
             },
@@ -492,20 +573,21 @@ Plugin.create(import.meta.url,(glitter)=>{
                             view : ()=>{
 
                                 return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;">
-                                <div class="titleText d-flex flex-wrap justify-content-center align-items-center">
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;font-family: 'Noto Sans TC';font-style: normal;">
+                                <div class="titleText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 700;font-size: 32px;line-height: 46px;color: #1E1E1E;">
                                     ${widget.data.model.title}
                                 </div>
-                                <div class="sloganText d-flex flex-wrap justify-content-center align-items-center">
+                                <div class="sloganText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 400;font-size: 14px;line-height: 150%;color: #858585;">
                                     ${widget.data.model.slogan}
                                 </div>
-                                <div class="d-flex align-items-center" style="margin-top:38px;">
-                                    <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;margin-right: 8px" alt="" onclick="${gvc.event(() => {
-                                        glitter.goBack()
-                                    })}">
-                                    <button class="border-0 nextBTN" onclick="${gvc.event(()=>{
+                                <div class="d-flex align-items-center" style="margin-top:38px;">                                
+                                    <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
-                                    })}">${widget.data.model.BTN}</button>
+                                    })}">${widget.data.model.BTN}
+                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
+                                            glitter.goBack()
+                                        })}">
+                                    </button>
                                 </div>
                                 
                             </div>
@@ -517,7 +599,57 @@ Plugin.create(import.meta.url,(glitter)=>{
                     `
                     },
                     editor: ()=>{
-                        return ``
+                        return gvc.map([ `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景影片</h3>
+                            <div class="mt-2"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.model.background}">
+                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                            glitter.ut.chooseMediaCallback({
+                                single:true,
+                                accept:'image/*',
+                                callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                    glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                        widget.data.model.background=link;
+                                        widget.refreshAll!()
+                                    })
+                                }
+                            })
+                        })}"></i>
+                            </div>
+                        `,
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "最上方文字",
+                                default: widget.data.model.title ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.title = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "灰色文字",
+                                default: widget.data.model.slogan ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.slogan = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "按鍵文字",
+                                default: widget.data.model.BTN ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.BTN = text
+                                    widget.refreshAll()
+                                }
+                            })
+                        ])
                     }
                 }
             },
@@ -623,17 +755,14 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 <div class="sloganText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.slogan}
                                 </div>
-                                <div class="d-flex align-items-center" style="margin-top:38px;">
-                                    <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;margin-right: 8px" alt="" onclick="${gvc.event(() => {
-                                    glitter.goBack()
-                                })}">
-                                    <button class="border-0 nextBTN" onclick="${gvc.event(()=>{
-                                        glitter.setPro("loginWatchGuide" , "false" , (res)=>{
-                                            appConfig().setHome(gvc,'myspace',{})
-                                            gvc.glitter.runJsInterFace("startScan",{},(response:any)=>{})    
-                                        })
-                                        
-                                    })}">${widget.data.model.BTN}</button>
+                                 <div class="d-flex align-items-center" style="margin-top:38px;">                                
+                                    <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
+                                        appConfig().changePage(gvc ,widget.data.model.nextPage)
+                                    })}">${widget.data.model.BTN}
+                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
+                                            glitter.goBack()
+                                        })}">
+                                    </button>
                                 </div>
                                 
                             </div>
@@ -645,7 +774,57 @@ Plugin.create(import.meta.url,(glitter)=>{
                     `
                     },
                     editor: ()=>{
-                        return ``
+                        return gvc.map([ `
+                            <h3 style="color: white;font-size: 16px;margin-bottom: 10px;" class="mt-2">背景影片</h3>
+                            <div class="mt-2"></div>
+                            <div class="d-flex align-items-center mb-3">
+                                <input class="flex-fill form-control " placeholder="請輸入圖片連結" value="${widget.data.model.background}">
+                                <div class="" style="width: 1px;height: 25px;background-color: white;"></div>
+                                <i class="fa-regular fa-upload text-white ms-2" style="cursor: pointer;" onclick="${gvc.event(()=>{
+                            glitter.ut.chooseMediaCallback({
+                                single:true,
+                                accept:'image/*',
+                                callback(data: { file:any;data: any; type: string; name: string; extension: string }[]) {
+                                    glitter.share.publicInterface["glitter"].upload(data[0].file,(link:string)=>{
+                                        widget.data.model.background=link;
+                                        widget.refreshAll!()
+                                    })
+                                }
+                            })
+                        })}"></i>
+                            </div>
+                        `,
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "最上方文字",
+                                default: widget.data.model.title ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.title = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "灰色文字",
+                                default: widget.data.model.slogan ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.slogan = text
+                                    widget.refreshAll()
+                                }
+                            }),
+                            glitter.htmlGenerate.editeInput({
+                                gvc: gvc,
+                                title: "按鍵文字",
+                                default: widget.data.model.BTN ?? "",
+                                placeHolder: `請輸入最上方文字內容`,
+                                callback: (text: string) => {
+                                    widget.data.model.BTN = text
+                                    widget.refreshAll()
+                                }
+                            })
+                        ])
                     }
                 }
             },

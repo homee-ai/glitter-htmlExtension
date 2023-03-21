@@ -25,10 +25,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                 vm.data = [];
                                 vm.loading = true;
                                 gvc.notifyDataChange(id);
-                                glitter.getPro("loginWatchGuide", (res) => {
-                                    glitter.getPro("reShow", (res2) => {
-                                        viewGuide = ((res.data == "true") && (res2 == "true"));
-                                    });
+                                glitter.getPro("reShow", (res2) => {
+                                    viewGuide = (res2.data == "true");
                                 });
                                 Myspace.getModelList((data) => {
                                     vm.loading = false;
@@ -90,7 +88,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     ${gvc.bindView({
                                         bind: "coverGuide",
                                         view: () => {
-                                            if (viewGuide) {
+                                            if (!viewGuide) {
                                                 return `
                                                 <div  style="position:fixed;z-index:999999;top:0;height: 100vh;width: 100vw;background: #1E1E1E;opacity: 0.5">
                                                     
