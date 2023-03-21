@@ -1280,8 +1280,12 @@ color: #1E1E1E;">${data.title}</div>
                                                                 gvc.notifyDataChange('leftMain');
                                                                 gvc.notifyDataChange('rightMain');
                                                             })}">                        
-                                                            <a class="d-flex align-items-center justify-content-start" href="#pageIndex${data.title}"
-                                                            style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;"
+                                                            <a class="d-flex align-items-center justify-content-start" target="_self" href="#pageIndex${data.title}"
+                                                            style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;" onclick="${gvc.event(()=>{
+                                                                event.preventDefault();
+                                                                const section1 = document.getElementById(`pageIndex${data.title}`);
+                                                                section1?.scrollIntoView({ behavior: "smooth" });
+                                                            })}"
                                                             >${data.title}</a>
                                                         </div>
                                                     `
