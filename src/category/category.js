@@ -611,9 +611,17 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading = true;
                                         resetSort();
                                         sortSelect = 1;
-                                        viewModel.product = viewModel.allData[1];
-                                        viewModel.loading = false;
-                                        gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                        if (viewModel.allData[1].length == 0) {
+                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
+                                                viewModel.allData.push(response);
+                                                viewModel.loading = false;
+                                                gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                            }, "best-selling");
+                                        }
+                                        else {
+                                            viewModel.product = viewModel.allData[1];
+                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                        }
                                     }
                                 };
                                 return map;
@@ -818,10 +826,7 @@ color: #1E1E1E;">${data.title}</div>
                                                 viewModel.loading = false;
                                                 gvc.notifyDataChange('cardGroup');
                                             }, "manual");
-                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                                viewModel.allData.push(response);
-                                                gvc.notifyDataChange('cardGroup');
-                                            }, "best-selling");
+                                            viewModel.allData.push([]);
                                         }
                                         else {
                                             viewModel.loading = false;
@@ -1147,7 +1152,7 @@ color: #1E1E1E;">${data.title}</div>
                                                         })}">                        
                                                             <a class="d-flex align-items-center justify-content-start" target="_self" href="#pageIndex${data.title}"
                                                             style="color:${(index == widget.data.selectIndex) ? `#FD6A58` : `#858585`};text-decoration: inherit;" onclick="${gvc.event(() => {
-                                                            event.preventDefault();
+                                                            event === null || event === void 0 ? void 0 : event.preventDefault();
                                                             const section1 = document.getElementById(`pageIndex${data.title}`);
                                                             section1 === null || section1 === void 0 ? void 0 : section1.scrollIntoView({ behavior: "smooth" });
                                                         })}"

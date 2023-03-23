@@ -3,61 +3,61 @@ export class ViewModel {
         this.inputRow = (data, readonly = "") => {
             const gvc = this.gvc;
             const glitter = this.gvc.glitter;
-            gvc.addStyle(`
-             select{
-               color:black!important;
-               border: none;
-               background-color: transparent;
-               font-family: 'Noto Sans TC';
+            let classStyle = {
+                select: `
+                color:black!important;
+                border: none;
+                background-color: transparent;
+                font-family: 'Noto Sans TC';
                 font-style: normal;
                 font-weight: 400;
                 font-size: 16px;
                 line-height: 23px;
-             }
-            .input-row{
+            `,
+                inputRow: `
                 margin-bottom : 28px;
-            }
-            .left{
+            `,
+                left: `
                 width : 21%;
-                font-family: 'Noto Sans TC';
-                font-style: normal;
                 font-weight: 500;
                 font-size: 16px;
-                line-height: 26px;
-                /* identical to box height */
-                
-                
-                /* HOMEE black */
-                
+                line-height: 26px;               
                 color: #292929;
-            }
-            .right{
-                font-family: 'Noto Sans TC';
-                font-style: normal;
+            `,
+                right: `
                 font-weight: 400;
                 font-size: 16px;
                 line-height: 23px;
-                
-                /* HOMEE black */
-                
-                color: #292929;
-                
+                color: #292929;                
                 border-bottom: 1px solid #E0E0E0;
-            }
-            .city{
+            `,
+                city: `
                 height : 28px;
                 width : 45%;
                 margin-right:12px;
                 border:0;
                 border-bottom: 1px solid #E0E0E0;
-                
-            }
-            .town{
+            `,
+                town: `
                 height : 28px;
                 width : 45%;
                 border:0;
                 border-bottom: 1px solid #E0E0E0;
-            }
+            `,
+                pwCheck: `
+                height: 17px;
+                font-family: 'Noto Sans TC';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 17px;
+                color: #FD6A58;
+                position: absolute;
+                right:0;
+                bottom:calc(50% - 8.5px);
+            `
+            };
+            gvc.addStyle(`
             .pwInput::placeholder {
                 font-family: 'Noto Sans TC';
                 font-style: normal;
@@ -69,23 +69,8 @@ export class ViewModel {
 
                 color: #E0E0E0;
             }
-            .pwCheck{
-                height: 17px;
-                font-family: 'Noto Sans TC';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 12px;
-                line-height: 17px;
-                color: #FD6A58;
-                position: absolute;
-                right:0;
-                bottom:calc(50% - 8.5px);
-            }
 
-            }   
         `);
-            function changeInputData() {
-            }
             switch (data.type) {
                 case "name":
                     return `
@@ -93,19 +78,19 @@ export class ViewModel {
                         bind: `${data.name}-inputRow`,
                         view: () => {
                             return `                            
-                                <div class="left" style="">${data.left}</div>
-                                <div class="right" style="width: calc(39% - 12px);margin-right: 12px;">
+                                <div class="" style="${classStyle.left} ">${data.left}</div>
+                                <div class="" style="${classStyle.right} width: calc(39% - 12px);margin-right: 12px;">
                                     <input class="w-100 border-0" name="lastName" type="text" value="${data.placehold.last}" ${readonly} 
                                     onblur="${gvc.event((e) => { data.placehold.last = e.value; })}">                                                                        
                                 </div>
-                                <div class="right" style="width: 39%">
+                                <div class="" style="${classStyle.right} width: 39%">
                                     <input class="w-100 border-0" name="firstName" type="text" value="${data.placehold.first}" ${readonly}                                    
                                     onblur="${gvc.event((e) => { data.placehold.first = e.value; })}">
                                 </div>
                                 
                             `;
                         },
-                        divCreate: { style: ``, class: `d-flex align-items-center input-row` }
+                        divCreate: { style: `${classStyle.inputRow}`, class: `d-flex align-items-center ` }
                     })}
                 
                 `;
@@ -115,8 +100,8 @@ export class ViewModel {
                         bind: `${data.name}-inputRow`,
                         view: () => {
                             return `                            
-                                <div class="left" style="">${data.left}</div>
-                                <div class="right" style="width: 78%;position: relative">
+                                <div class="" style="${classStyle.left} ">${data.left}</div>
+                                <div class="" style="${classStyle.right} width: 78%;position: relative">
                                     <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入新密碼" ${readonly} onchange="${gvc.event((e) => {
                                 data.placehold = e.value;
                             })}">                               
@@ -124,7 +109,7 @@ export class ViewModel {
                                 
                             `;
                         },
-                        divCreate: { style: ``, class: `d-flex align-items-center input-row` }
+                        divCreate: { style: `${classStyle.inputRow}`, class: `d-flex align-items-center` }
                     })}
                 `;
                 case "address":
@@ -133,8 +118,8 @@ export class ViewModel {
                         bind: `${data.name}-inputRow`,
                         view: () => {
                             return `                            
-                        <div class="left" style="">${data.left}</div>
-                        <div class="right"  style="width: 78%;margin-right: 12px;">
+                        <div class="" style="${classStyle.left}">${data.left}</div>
+                        <div class=""  style="${classStyle.left} width: 78%;margin-right: 12px;">
                             <div id="zipcode">
                                                               
                             </div>   
@@ -147,7 +132,7 @@ export class ViewModel {
                                
                         `;
                         },
-                        divCreate: { style: ``, class: `w-100 d-flex align-items-center input-row` },
+                        divCreate: { style: `${classStyle.inputRow}`, class: `w-100 d-flex align-items-center` },
                         onCreate: () => {
                             if (data.type == "address") {
                                 gvc.addMtScript([{
@@ -188,15 +173,15 @@ export class ViewModel {
                     bind: `${data.name}-inputRow`,
                     view: () => {
                         return `                            
-                            <div class="left" style="">${data.left}</div>
-                            <div class="right" style="width: 78%;">
+                            <div class="left" style="${classStyle.left}">${data.left}</div>
+                            <div class="" style="${classStyle.right} width: 78%;">
                                 <input class="w-100 border-0" name="${data.name}" type="${data.type}" ${readonly} value="${data.placehold}"
                                 onchange="${gvc.event((e) => { data.placehold = e.value; })}">
                             </div>
                             
                         `;
                     },
-                    divCreate: { style: ``, class: `d-flex align-items-center input-row` }
+                    divCreate: { style: `${classStyle.inputRow}`, class: `d-flex align-items-center ` }
                 })}
                 
             

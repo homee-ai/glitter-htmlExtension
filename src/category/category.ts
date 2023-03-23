@@ -668,9 +668,19 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading=true
                                         resetSort();
                                         sortSelect = 1;
-                                        viewModel.product = viewModel.allData[1];
-                                        viewModel.loading=false
-                                        gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        if (viewModel.allData[1].length == 0){
+                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                                viewModel.allData.push(response);
+                                                viewModel.loading=false
+                                                gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                            },"best-selling")
+                                        }else {
+                                            viewModel.product = viewModel.allData[1];
+                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        }
+
+                                        // viewModel.loading=false
+                                        // gvc.notifyDataChange(['sortBar' , 'cardGroup']);
                                         // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                         //     viewModel.product=response
                                         //
@@ -898,21 +908,18 @@ color: #1E1E1E;">${data.title}</div>
 
                                         if (gBundle.object.subCategory){
                                             const id = gBundle.object.subCategory[viewModel?.select].value
-
-
                                             new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-
                                                 viewModel.product=response;
                                                 viewModel.allData.push(response);
-
                                                 viewModel.loading=false
                                                 gvc.notifyDataChange('cardGroup')
                                             },"manual")
-                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                                viewModel.allData.push(response);
-
-                                                gvc.notifyDataChange('cardGroup')
-                                            },"best-selling")
+                                            viewModel.allData.push([]);
+                                            // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                            //     viewModel.allData.push(response);
+                                            //
+                                            //     gvc.notifyDataChange('cardGroup')
+                                            // },"best-selling")
                                         }else{
                                             viewModel.loading=false;
                                         }
@@ -1282,7 +1289,7 @@ color: #1E1E1E;">${data.title}</div>
                                                             })}">                        
                                                             <a class="d-flex align-items-center justify-content-start" target="_self" href="#pageIndex${data.title}"
                                                             style="color:${(index == widget.data.selectIndex) ? `#FD6A58`:`#858585`};text-decoration: inherit;" onclick="${gvc.event(()=>{
-                                                                event.preventDefault();
+                                                                event?.preventDefault();
                                                                 const section1 = document.getElementById(`pageIndex${data.title}`);
                                                                 section1?.scrollIntoView({ behavior: "smooth" });
                                                             })}"

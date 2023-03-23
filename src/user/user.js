@@ -471,165 +471,65 @@ Plugin.create(import.meta.url, (glitter) => {
                 const data = widget.data;
                 return {
                     view: () => {
-                        gvc.addStyle(`
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Bold.otf);
-            font-weight: bold;
-        }
-
-        @font-face {
-            font-family: 'Noto Sans TC';
-            src: url(assets/Font/NotoSansTC-Regular.otf);
-            font-weight: normal;
-        }
-
-        html {
-            width: 100%;
-            height: 100%;
-
-        }
-
-        body {
-            width: 100%;
-            height: 100%;
-     
-        }
-
-        main {
-            padding: 24px 35px 44px;
-         
-            font-family: 'Noto Sans TC';
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        `);
-                        gvc.addStyle(`
-        html{
-            overflow-y : auto;
-        }
-        main{
-            width:100%;
-            padding-left:19px;
-            padding-right:19px;
-        }
-        .addr-add{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-      
-            
-            
-            /* HOMEE red */
-            
-            color: #FD6A58;
-        }
-        .addr-edit{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-            color: #FD6A58;
-            margin-right : 12px;
-        }
-        .addr-del{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-            color: #858585;
-           
-        }
-    `);
                         return `
                         ${gvc.bindView({
                             bind: "serviceListGroup",
                             view: () => {
-                                gvc.addStyle(`
-                                    .serviceCard{
+                                let classStyle = {
+                                    serviceCard: `
                                         background: #FBF9F6;
                                         border-radius: 24px;
                                         padding: 16px 0px 7px;
                                         margin-bottom:16px;
-                                    }
-                                    
-                                    .serviceTitle{
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
+                                    `,
+                                    serviceTitle: `
                                         font-weight: 700;
                                         font-size: 24px;
                                         line-height: 35px;
                                         color: #292929;
                                         margin-bottom:24px;
-                                    }
-                                    .serviceText{
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
+                                    `,
+                                    serviceText: `
                                         font-weight: 400;
                                         font-size: 15px;
                                         line-height: 150%;
                                         color: #858585;
-                                    }
-                                `);
+                                    `,
+                                    serviceRow: `
+                                        padding-left : 32px;
+                                        padding-right : 24px;
+                                        gap : 8px;
+                                        margin-bottom:17px;                          
+                                        height : 23px;
+                                    `,
+                                    left: `
+                                        font-weight: 400;
+                                        font-size: 15px;
+                                        line-height: 150%;                                        
+                                        color: #858585;
+                                    `,
+                                    right: `
+                                    font-weight: 400;
+                                    font-size: 13px;
+                                    line-height: 14px;                                                                        
+                                    color: #858585;
+                                    `
+                                };
                                 let returnHTML = ``;
                                 widget.data.section.forEach((serviceList) => {
                                     returnHTML += `                           
                                     ${gvc.bindView({
                                         bind: "service",
                                         view: () => {
-                                            gvc.addStyle(`
-            .serviceRow{
-                padding-left : 32px;
-                padding-right : 24px;
-                gap : 8px;
-                margin-bottom:17px;                          
-                height : 23px;
-                               
-            }      
-            .left{
-                font-family: 'Noto Sans TC';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 15px;
-                line-height: 150%;
-                /* identical to box height, or 22px */
-                
-                
-                /* HOMEE grey */
-                
-                color: #858585;
-
-            }   
-            .right{
-                font-family: 'Noto Sans TC';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 13px;
-                line-height: 14px;
-                /* identical to box height, or 108% */
-                
-                
-                /* HOMEE dark grey */
-                
-                color: #858585;
-
-            }   
-        `);
                                             let serviceGroup = ``;
                                             serviceGroup = gvc.map(serviceList.service.map((service) => {
-                                                console.log(service);
                                                 return `
-                                                <div class="d-flex align-items-center  w-100 serviceRow" onclick="${gvc.event(() => {
+                                                <div class="d-flex align-items-center  w-100 " style="${classStyle.serviceRow}" onclick="${gvc.event(() => {
                                                     ClickEvent.trigger({
                                                         gvc, widget, clickEvent: service
                                                     });
                                                 })}">
-                                                    <div class="d-flex me-auto left" style="padding-left:2px;height: 29px;align-items: center;" >
+                                                    <div class="d-flex me-auto" style="${classStyle.left} padding-left:2px;height: 29px;align-items: center;" >
                                                         ${service.text}
                                                     </div>
                                                     <div class="d-flex align-items-center ms-auto">                                                        
@@ -640,8 +540,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                               `;
                                             }));
                                             return `
-                                    <div class="d-flex align-items-center flex-column serviceCard">
-                                        <div class="serviceTitle">${serviceList.title}</div>
+                                    <div class="d-flex align-items-center flex-column" style="${classStyle.serviceCard}">
+                                        <div class="" style="${classStyle.serviceTitle}">${serviceList.title}</div>
                                         ${serviceGroup}
                                     </div>
                                 `;
@@ -650,65 +550,57 @@ Plugin.create(import.meta.url, (glitter) => {
                                 `;
                                 });
                                 return returnHTML;
-                            }, divCreate: { style: `margin-top: 26px;`, class: `` }
+                            }, divCreate: { style: `margin-top: 26px;font-family: 'Noto Sans TC';font-style: normal;`, class: `` }
                         })}
                         ${gvc.bindView({
                             bind: "lastSection",
                             view: () => {
-                                gvc.addStyle(`
-                                .lastSectionTitle{
-                                    font-family: 'Noto Sans TC';
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    font-size: 24px;
-                                    line-height: 35px;
-                                    
-                                    color: #292929;
-                                    
-                                    margin-bottom : 24px;
-                                }
-                                .serviceTimeBlock * ,.servicePhoneBlock *{
-                                    font-family: 'Noto Sans TC';
-                                    font-style: normal;
-                                    font-weight: 400;
-                                    font-size: 15px;
-                                    line-height: 150%;
-                                    color: #858585;
-                                }
-                                .serviceBTN{
-                                    height: 48px;
-                                    margin-top:24px;
-                                    font-family: 'Noto Sans TC';
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    font-size: 18px;
-                                    line-height: 26px;
-                                    
-                                    text-align: center;
-                                    letter-spacing: 0.15em;
-        
-                                    background: #FD6A58;
-                                    border-radius: 28px;
-                                    
-                                    
-                                    color: #FFFFFF;
-                                    
-                                    
-                                }
-                            `);
+                                let styleClass = {
+                                    lastSectionTitle: `
+                                        font-weight: 700;
+                                        font-size: 24px;
+                                        line-height: 35px;                                    
+                                        color: #292929;                                    
+                                        margin-bottom : 24px;
+                                    `,
+                                    serviceTimeBlock: `
+                                        font-weight: 400;
+                                        font-size: 15px;
+                                        line-height: 150%;
+                                        color: #858585;
+                                    `,
+                                    servicePhoneBlock: `
+                                        font-weight: 400;
+                                        font-size: 15px;
+                                        line-height: 150%;
+                                        color: #858585;
+                                    `,
+                                    serviceBTN: `
+                                        height: 48px;
+                                        margin-top:24px;                  
+                                        font-weight: 700;
+                                        font-size: 18px;
+                                        line-height: 26px;                                        
+                                        text-align: center;
+                                        letter-spacing: 0.15em;            
+                                        background: #FD6A58;
+                                        border-radius: 28px;                                                                                
+                                        color: #FFFFFF;
+                                    `
+                                };
                                 let thisModel = widget.data.lastSection;
                                 return `
                         
-                                <div class="lastSectionTitle d-flex justify-content-center align-items-center">${thisModel.contactUs.title}</div>
-                                <div class="servicePhoneBlock d-flex flex-column align-items-start justify-content-start" style="margin-bottom: 16px;">
+                                <div class="d-flex justify-content-center align-items-center" style="${styleClass.lastSectionTitle}">${thisModel.contactUs.title}</div>
+                                <div class=" d-flex flex-column align-items-start justify-content-start" style="${styleClass.servicePhoneBlock} margin-bottom: 16px;">
                                     <div>客服專線：0972-636-236</div>
                                     
                                 </div>
-                                <div class="serviceTimeBlock" >
+                                <div class="" style="${styleClass.serviceTimeBlock} ">
                                     <div>${thisModel.contactUs.serviceTimeTitle} : ${thisModel.contactUs.physicalStore}</div>                                    
                                     <div>${thisModel.contactUs.onlineStore}</div>
                                 </div>
-                                <button class="w-100 serviceBTN border-0" onclick="${gvc.event(() => {
+                                <button class="w-100  border-0" style="${styleClass.serviceBTN}" onclick="${gvc.event(() => {
                                     thisModel.contactUs.service1v1.onclick();
                                 })}">${thisModel.contactUs.service1v1.title}</button>
                                 
@@ -716,7 +608,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     bind: "kanban",
                                     view: () => {
                                         return `
-                                            <div class="" style="padding-top: 57%;width : 100%;background:50% / cover url(${new URL(`../img/component/kanban.png`, import.meta.url)})"></div>
+                                            <div class="" style="position: absolute;bottom: 0;left:0;transform: translate(0 , 100%);padding-top: 57%;width : 100%;background:50% / cover url(${new URL(`../img/component/kanban.png`, import.meta.url)})"></div>
                                         `;
                                     },
                                     divCreate: { class: ``, style: `width : 100%;` }
@@ -725,7 +617,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             },
                             divCreate: {
                                 class: ``,
-                                style: `background: #FBF9F6;border-radius: 24px;padding: 16px 32px 24px;`
+                                style: `background: #FBF9F6;border-radius: 24px;padding: 16px 32px 24px;margin-bottom:200px;position: relative;`
                             }
                         })}
                         `;
@@ -789,68 +681,6 @@ ${glitter.htmlGenerate.editeInput({
                 };
             },
         },
-        footer: {
-            defaultData: {
-                dataList: [
-                    {
-                        title: "首頁",
-                        icon: new URL('../img/component/footer/home.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "靈感",
-                        icon: new URL('../img/component/footer/idea.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "我的空間",
-                        icon: new URL('../img/component/footer/myspace.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "購物車",
-                        icon: new URL('../img/component/footer/shoopingCart.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                    {
-                        title: "會員",
-                        icon: new URL('../img/component/footer/user.svg', import.meta.url).href,
-                        toPage: "",
-                        click: () => {
-                        }
-                    },
-                ],
-            },
-            render: (gvc, widget, setting, hoverID) => {
-                glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                    var _a;
-                    if (((_a = widget.data) === null || _a === void 0 ? void 0 : _a.bottomInset) != response.data) {
-                        widget.data.bottomInset = response.data;
-                        widget.refreshAll();
-                    }
-                }, {
-                    webFunction: () => {
-                        return { data: 10 };
-                    }
-                });
-                return {
-                    view: () => {
-                        return ``;
-                    },
-                    editor: () => {
-                        return ``;
-                    }
-                };
-            },
-        },
         pointsRewardBlock: {
             defaultData: {
                 backPoint: 600,
@@ -862,26 +692,26 @@ ${glitter.htmlGenerate.editeInput({
                         ${gvc.bindView({
                             bind: 'backPoint',
                             view: () => {
-                                gvc.addStyle(`
-                                .giveBack {
-                                    font-weight: 500;
-                                    font-size: 18px;
-                                    line-height: 200%;
-                                    color: #292929;
-                                    font-feature-settings: 'pnum' on, 'lnum' on;
-                                }
-                                .backPoint {
-                                    font-weight: 700;
-                                    font-size: 32px;
-                                    line-height: 46px;
-                                    font-feature-settings: 'pnum' on, 'lnum' on;
-                                    color: #fd6a58;
-                                }
-                            `);
+                                let classStyle = {
+                                    giveBack: `
+                                        font-weight: 500;
+                                        font-size: 18px;
+                                        line-height: 200%;
+                                        color: #292929;
+                                        font-feature-settings: 'pnum' on, 'lnum' on;
+                                    `,
+                                    backPoint: `
+                                        font-weight: 700;
+                                        font-size: 32px;
+                                        line-height: 46px;
+                                        font-feature-settings: 'pnum' on, 'lnum' on;
+                                        color: #fd6a58;
+                                    `
+                                };
                                 return `
                                 <div class="d-flex align-items-baseline justify-content-center">
-                                    <div class="giveBack">點數回饋：</div>
-                                    <div class="backPoint">${widget.data.backPoint}</div>
+                                    <div class="" style="${classStyle.giveBack}">點數回饋：</div>
+                                    <div class="" style="${classStyle.backPoint}">${widget.data.backPoint}</div>
                                 </div>
                             `;
                             },
@@ -1174,6 +1004,11 @@ ${glitter.htmlGenerate.editeInput({
                 return {
                     view: () => {
                         var _a;
+                        let classStyle = {
+                            useBTNtext: `
+                                
+                            `
+                        };
                         gvc.addStyle(`
                             .normalDate{
                                 color : #858585;
@@ -1188,8 +1023,7 @@ ${glitter.htmlGenerate.editeInput({
                                 margin-right: 10px;
                                 width:48px;
                                 text-align: center;
-                                height: 20px;
-                                
+                                height: 20px;                                
                             }
                             .useBTNtext.on{
                                 background: #FE5541;
@@ -1398,158 +1232,87 @@ ${glitter.htmlGenerate.editeInput({
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        gvc.addStyle(`
-                        @font-face {
-                            font-family: 'Noto Sans TC';
-                            src: url(assets/Font/NotoSansTC-Bold.otf);
-                            font-weight: bold;
-                        }
-                
-                        @font-face {
-                            font-family: 'Noto Sans TC';
-                            src: url(assets/Font/NotoSansTC-Regular.otf);
-                            font-weight: normal;
-                        }
-                
-                        html {
-                            width: 100%;
-                            height: 100%;
-                
-                        }
-                
-                        body {
-                            width: 100%;
-                            height: 100%;
-                     
-                        }
-                
-                        main {
-                            padding: 24px 35px 44px;
-                         
-                            font-family: 'Noto Sans TC';
-                            margin: 0;
-                            box-sizing: border-box;
-                        }
-                
-                        .homeBlack {
-                            color: #292929;
-                        }
-                
-                        .mySpaceCount {
-                            width: 18px;
-                            height: 18px;
-                
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 12px;
-                            line-height: 15px;
-                            text-align: center;
-                  
-                            /* HOMEE white */
-                
-                            border: 1px solid #FFFFFF;
-                            border-radius: 8px;
-                            /* HOMEE white */
-                
-                            color: #FFFFFF;
-                
-                        }
-                
-                        .indexTitle {
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
+                        let classStyle = {
+                            mySpaceCount: `
+                                width: 18px;
+                                height: 18px;
+                    
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;                                
+                                font-weight: 700;
+                                font-size: 12px;
+                                line-height: 15px;
+                                text-align: center;                      
+                    
+                                border: 1px solid #FFFFFF;
+                                border-radius: 8px;                             
+                    
+                                color: #FFFFFF;
+                            `,
+                            indexTitle: `
                             font-weight: 400;
                             font-size: 15px;
-                            line-height: 150%;
-                
-                            /* HOMEE white */
+                            line-height: 150%;                
                             color: #292929;
-                        }
-                        
-                        .save{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 500;
-                            font-size: 17px;
-                            line-height: 25px;
-                            /* identical to box height */
-                            
-                            text-align: center;
-                            
-                            /* HOMEE red */
-                            
-                            color: #FD6A58;
-                        }
-                        .changePhoto{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 14px;
-                            line-height: 20px;
-                            font-feature-settings: 'pnum' on, 'lnum' on;
-                            
-                            /* HOMEE red */
-                            
-                            color: #FD6A58;
-                            
-                            margin-top : 8px;
-                        }
-                        .acc-title{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 24px;
-                            line-height: 35px;
-                            color: #292929;
-                            margin-bottom : 18px;
-                        }
-                        `);
-                        gvc.addStyle(`
-        html{
-            overflow-y : auto;
-            box-sizing: border-box;
-        }
-        main{
-            width:100%;
-
-        }
-        .addr-add{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-     
-            
-            
-            /* HOMEE red */
-            
-            color: #FD6A58;
-        }
-        .addr-edit{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-            color: #FD6A58;
-            margin-right : 12px;
-        }
-        .addr-del{
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 150%;
-            color: #858585;
-           
-        }
-    `);
+                            `,
+                            save: `
+                                font-weight: 500;
+                                font-size: 17px;
+                                line-height: 25px;                                                               
+                                text-align: center;                                                                                                
+                                color: #FD6A58;
+                            `,
+                            changePhoto: `
+                                font-weight: 700;
+                                font-size: 14px;
+                                line-height: 20px;
+                                font-feature-settings: 'pnum' on, 'lnum' on;
+                                color: #FD6A58;                            
+                                margin-top : 8px;
+                            `,
+                            accTitle: `
+                                font-weight: 700;
+                                font-size: 24px;
+                                line-height: 35px;
+                                color: #292929;
+                                margin-bottom : 18px;
+                            `,
+                            addrAdd: `
+                                font-weight: 400;
+                                font-size: 15px;
+                                line-height: 150%;
+                                color: #FD6A58;
+                            `,
+                            addrEdit: `
+                                font-weight: 400;
+                                font-size: 15px;
+                                line-height: 150%;
+                                color: #FD6A58;
+                                margin-right : 12px;
+                            `,
+                            addrDel: `
+                                font-weight: 400;
+                                font-size: 15px;
+                                line-height: 150%;
+                                color: #858585;
+                            `,
+                            left: `
+                                width: 21%;
+                                font-size: 18px;
+                                font-weight: 500;
+                                line-height: 26px;
+                                color: #1E1E1E;
+                            `,
+                            right: `
+                                font-weight: 400;
+                                font-size: 16px;
+                                line-height: 23px;
+                                color: #292929;
+                                border-bottom: 1px solid #E0E0E0;
+                            `
+                        };
                         const sharedView = new SharedView(gvc);
                         let viewModel = new ViewModel(gvc);
                         let dialog = new Dialog(gvc);
@@ -1736,7 +1499,7 @@ ${glitter.htmlGenerate.editeInput({
                             })}
                             `,
                             `
-                            <main style="overflow-x: hidden;">                                   
+                            <main style="overflow-x: hidden;margin-top: 50px;">                                   
                                 ${(() => {
                                 let funnel = new Funnel(gvc);
                                 return gvc.map([`
@@ -1811,7 +1574,7 @@ ${glitter.htmlGenerate.editeInput({
                                                     onclick="${gvc.event(() => {
                                                 $(`#${gvc.id("photo")}`).click();
                                             })}">
-                                                    <div class="changePhoto" onclick="${gvc.event(() => {
+                                                    <div class="" style="${classStyle.changePhoto}" onclick="${gvc.event(() => {
                                                 $(`#${gvc.id("photo")}`).click();
                                             })}">更換大頭貼</div>                                                      
                                                 </div>
@@ -1838,19 +1601,20 @@ ${glitter.htmlGenerate.editeInput({
                                     }
                                     return `
                                         <div class="w-100 d-flex flex-column">
-                                            <div class="acc-title">帳號資料</div>
+                                            <div class="" style="${classStyle.accTitle}">帳號資料</div>
                                             ${gvc.map(vm.data.map((dd) => {
                                         if (dd.name === 'password' && dd.check == false) {
                                             return gvc.bindView({
                                                 bind: `${dd.name}-inputRow`,
                                                 view: () => {
                                                     return `                   
-                                                                <div class="left" style="">${dd.left}</div>
-                                                                <div class="right" style="width: 78%;position: relative">
+                                                                <div class="" style="${classStyle.left}">${dd.left}</div>
+                                                                <div class="" style="${classStyle.right} width: 78%;position: relative">
                                                                 <input class="w-100 border-0 pwInput" name="password" type="password" placeholder="輸入原先密碼" onchange="${gvc.event((e) => {
                                                         dd.placehold = e.value;
                                                     })}" value="${dd.placehold}">
-                                                                    ${(dd.check) ? `` : ` <div class="pwCheck" onclick="${gvc.event(() => {
+                                                                    ${(dd.check) ? `` : ` 
+                                                                    <div class="pwCheck" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #FE5541;position: absolute;bottom: 0;right: 0;" onclick="${gvc.event(() => {
                                                         if (vm.userData.pwd !== dd.placehold) {
                                                             dialog.showInfo("密碼輸入錯誤!");
                                                         }
@@ -1868,7 +1632,7 @@ ${glitter.htmlGenerate.editeInput({
                                                             resetPassword = true;
                                                             gvc.notifyDataChange('accountData');
                                                         }
-                                                    })}">確認</div>    
+                                                    })}">更改密碼</div>    
                                                                 `}
                                                                                    
                                                 </div>                               
@@ -1941,126 +1705,56 @@ ${glitter.htmlGenerate.editeInput({
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
+                        let classStyle = {
+                            mySpaceCount: `
+                                width: 18px;
+                                height: 18px;
+                    
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;                         
+                                font-weight: 700;
+                                font-size: 12px;
+                                line-height: 15px;
+                                text-align: center; 
+                                border: 1px solid #FFFFFF;
+                                border-radius: 8px;                    
+                                color: #FFFFFF;
+                                `,
+                            indexTitle: `
+                                font-weight: 400;
+                                font-size: 15px;
+                                line-height: 150%;
+                    
+                                color: #292929;
+                            `,
+                            save: `
+                                font-weight: 500;
+                                font-size: 17px;
+                                line-height: 25px;                             
+                                
+                                text-align: center;
+                                
+                                color: #FD6A58;
+                            `,
+                            changePhoto: `
+                                font-weight: 700;
+                                font-size: 14px;
+                                line-height: 20px;
+                                font-feature-settings: 'pnum' on, 'lnum' on;                              
+                                color: #FD6A58;                                
+                                margin-top : 8px;
+                            `,
+                            accTitle: `
+                                font-weight: 700;
+                                font-size: 24px;
+                                line-height: 35px;
+                                color: #292929;
+                                margin-bottom : 18px;
+                            `
+                        };
                         gvc.addStyle(`
-                        @font-face {
-                            font-family: 'Noto Sans TC';
-                            src: url(assets/Font/NotoSansTC-Bold.otf);
-                            font-weight: bold;
-                        }
-                
-                        @font-face {
-                            font-family: 'Noto Sans TC';
-                            src: url(assets/Font/NotoSansTC-Regular.otf);
-                            font-weight: normal;
-                        }
-                
-                        html {
-                            width: 100%;
-                            height: 100%;
-                
-                        }
-                
-                        body {
-                            width: 100%;
-                            height: 100%;
-                     
-                        }
-                
-                        main {
-                            padding: 24px 35px 44px;
-                         
-                            font-family: 'Noto Sans TC';
-                            margin: 0;
-                            box-sizing: border-box;
-                        }
-                
-                        .homeBlack {
-                            color: #292929;
-                        }
-                
-                        .mySpaceCount {
-                            width: 18px;
-                            height: 18px;
-                
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 12px;
-                            line-height: 15px;
-                            text-align: center;
-                  
-                            /* HOMEE white */
-                
-                            border: 1px solid #FFFFFF;
-                            border-radius: 8px;
-                            /* HOMEE white */
-                
-                            color: #FFFFFF;
-                
-                        }
-                
-                        .indexTitle {
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 400;
-                            font-size: 15px;
-                            line-height: 150%;
-                
-                            /* HOMEE white */
-                            color: #292929;
-                        }
-                        
-                        .save{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 500;
-                            font-size: 17px;
-                            line-height: 25px;
-                            /* identical to box height */
-                            
-                            text-align: center;
-                            
-                            /* HOMEE red */
-                            
-                            color: #FD6A58;
-                        }
-                        .changePhoto{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 14px;
-                            line-height: 20px;
-                            font-feature-settings: 'pnum' on, 'lnum' on;
-                            
-                            /* HOMEE red */
-                            
-                            color: #FD6A58;
-                            
-                            margin-top : 8px;
-                        }
-                        .acc-title{
-                            font-family: 'Noto Sans TC';
-                            font-style: normal;
-                            font-weight: 700;
-                            font-size: 24px;
-                            line-height: 35px;
-                            color: #292929;
-                            margin-bottom : 18px;
-                        }
-                        `);
-                        gvc.addStyle(`
-        html{
-            overflow-y : auto;
-        }
-        main{
-            width:100%;
-            padding-left:19px;
-            padding-right:19px;
-        }
         .addr-add{
             font-family: 'Noto Sans TC';
             font-style: normal;
