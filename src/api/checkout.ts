@@ -212,7 +212,7 @@ export class Checkout {
             () => {
 
                 const moment = (window as any).moment;
-                console.log(new moment)
+                // console.log(new moment)
                 const nowTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
                 moment.locale('zh-tw');
                 const getEndtime = (t: string) => {
@@ -230,6 +230,11 @@ export class Checkout {
                     }
                     return end;
                 };
+                function addThousandSeparator(number: string): string {
+
+                    let temp = number.toString();
+                    return temp.toLocaleString();
+                }
 
                 const apiURL = (() => {
                     if (view === 'History') {
@@ -238,18 +243,27 @@ export class Checkout {
                         return `${appConfig().serverURL}/api/v1/cart/v2/voucher`;
                     }
                 })();
+
                 appConfig().getUserData({
+
                     callback: (response: any) => {
+
                         $.ajax({
                             url: apiURL,
                             type: 'get',
                             contentType: 'application/json; charset=utf-8',
                             headers: {Authorization: response.token},
                             success: (res: any) => {
+
+                                console.log("最低消費123")
+                                console.log(res)
+
                                 callback(
                                     res.voucherList.map((dd: any) => {
+
                                         const c = dd.config.config;
-                                        console.log(JSON.stringify(dd))
+
+
                                         return {
                                             id: dd.id,
                                             note: dd.config.note,
@@ -332,6 +346,22 @@ export class Checkout {
                                                 return text;
                                             })(),
                                             isUse: view === 'History',
+                                            lowCostText : "最低消費:",
+                                            lowCostNumber : (()=>{
+                                                let returnText = ""
+
+                                                switch (c.accord) {
+                                                    case 'consum':
+                                                        returnText = `NT$ ${addThousandSeparator(c?.accord_number ?? 0)}`
+                                                        returnText += '元';
+                                                        break;
+                                                    case 'product':
+                                                        returnText = 'NT$ 0';
+                                                        break;
+                                                }
+                                                return returnText
+                                            })(),
+
                                         };
                                     })
                                 );
@@ -352,7 +382,7 @@ export class Checkout {
     }) {
         appConfig().getUserData({
             callback: (response: any) => {
-                console.log(response.token)
+                // console.log(response.token)
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/order`,
                     type: 'get',
@@ -362,7 +392,7 @@ export class Checkout {
                         obj.callback(response)
                     },
                     error: (err: any) => {
-                        console.log(err)
+                        // console.log(err)
                         obj.callback(false)
                     },
                 });
@@ -391,7 +421,7 @@ export class Checkout {
         }) => void
     }) {
         obj.data.mainURL = appConfig().serverURL
-        console.log(obj)
+        // console.log(obj)
         appConfig().getUserData({
             callback: (response: any) => {
                 obj.data.customerInfo = {

@@ -369,19 +369,22 @@ Plugin.create(import.meta.url, (glitter) => {
 
                 return {
                     view: () => {
+
                         return gvc.map([
                             gvc.bindView({
                                 bind: "voucherCardList",
                                 view: () => {
                                     if(vm.loading){
-                                        return  `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`
+                                        return  `
+                                        <div class="w-100">
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`
                                     }
                                     let clock:any=gvc.glitter.ut.clock()
                                     return gvc.map(widget.data.voucherCardList.map((data: any) => {
+
                                         return `
                                         <div class="voucherCard overflow-hidden" onclick="${gvc.event(() => {
                                             if(clock.stop()<1000){
@@ -399,13 +402,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${data.vendor_name}</div>
                                                 <div class="vendor_context ms-auto" onclick="${gvc.event(() => {
-                                                   clock.zeroing()
-                                            data.selectBack=()=>{
-                                                gvc.parameter.pageConfig?.obj.data.callback(data.code)
-                                                gvc.glitter.goBack("shopping_cart")
-                                            }
+                                                    clock.zeroing()
+                                                    data.selectBack=()=>{
+                                                        gvc.parameter.pageConfig?.obj.data.callback(data.code)
+                                                        gvc.glitter.goBack("shopping_cart")
+                                                    }
                                                     appConfig().changePage(gvc,'user_couponDetail',data)
-                                        })}">${data.vendor_context}</div>
+                                    }           )}">${data.vendor_context}</div>
                                             </div>
                                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                                             <div class="" style="padding: 8px 22px;">

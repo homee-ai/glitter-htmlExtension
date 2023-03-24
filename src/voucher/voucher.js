@@ -367,11 +367,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                 bind: "voucherCardList",
                                 view: () => {
                                     if (vm.loading) {
-                                        return `<div class="w-100">
-            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>`;
+                                        return `
+                                        <div class="w-100">
+                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                <div class="spinner-border" role="status"></div>
+                                            </div>
+                                        </div>`;
                                     }
                                     let clock = gvc.glitter.ut.clock();
                                     return gvc.map(widget.data.voucherCardList.map((data) => {

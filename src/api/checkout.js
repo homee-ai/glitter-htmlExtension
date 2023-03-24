@@ -169,7 +169,6 @@ export class Checkout {
         const glitter = window.glitter;
         glitter.addMtScript([{ src: 'https://momentjs.com/downloads/moment-with-locales.js' }], () => {
             const moment = window.moment;
-            console.log(new moment);
             const nowTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
             moment.locale('zh-tw');
             const getEndtime = (t) => {
@@ -190,6 +189,10 @@ export class Checkout {
                 }
                 return end;
             };
+            function addThousandSeparator(number) {
+                let temp = number.toString();
+                return temp.toLocaleString();
+            }
             const apiURL = (() => {
                 if (view === 'History') {
                     return `${appConfig().serverURL}/api/v1/cart/v2/voucherHistory`;
@@ -206,9 +209,10 @@ export class Checkout {
                         contentType: 'application/json; charset=utf-8',
                         headers: { Authorization: response.token },
                         success: (res) => {
+                            console.log("最低消費123");
+                            console.log(res);
                             callback(res.voucherList.map((dd) => {
                                 const c = dd.config.config;
-                                console.log(JSON.stringify(dd));
                                 return {
                                     id: dd.id,
                                     note: dd.config.note,
@@ -291,6 +295,21 @@ export class Checkout {
                                         return text;
                                     })(),
                                     isUse: view === 'History',
+                                    lowCostText: "最低消費:",
+                                    lowCostNumber: (() => {
+                                        var _a;
+                                        let returnText = "";
+                                        switch (c.accord) {
+                                            case 'consum':
+                                                returnText = `NT$ ${addThousandSeparator((_a = c === null || c === void 0 ? void 0 : c.accord_number) !== null && _a !== void 0 ? _a : 0)}`;
+                                                returnText += '元';
+                                                break;
+                                            case 'product':
+                                                returnText = 'NT$ 0';
+                                                break;
+                                        }
+                                        return returnText;
+                                    })(),
                                 };
                             }));
                         },
@@ -304,7 +323,6 @@ export class Checkout {
     static getOrderList(obj) {
         appConfig().getUserData({
             callback: (response) => {
-                console.log(response.token);
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/order`,
                     type: 'get',
@@ -314,7 +332,6 @@ export class Checkout {
                         obj.callback(response);
                     },
                     error: (err) => {
-                        console.log(err);
                         obj.callback(false);
                     },
                 });
@@ -323,7 +340,6 @@ export class Checkout {
     }
     static checkOut(obj) {
         obj.data.mainURL = appConfig().serverURL;
-        console.log(obj);
         appConfig().getUserData({
             callback: (response) => {
                 obj.data.customerInfo = {

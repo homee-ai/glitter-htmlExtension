@@ -8,6 +8,7 @@ import {Funnel} from "../homee/funnel.js";
 import {Dialog} from "../homee/legacy/widget/dialog.js";
 import {ViewModel} from "../homee/legacy/view/userProfile.js";
 import {User} from "../api/user.js";
+import {Checkout} from "../api/checkout.js";
 
 
 Plugin.create(import.meta.url, (glitter) => {
@@ -740,7 +741,14 @@ ${
 
 
                 return {
+
                     view: () => {
+                        let rebat = 0;
+                        Checkout.getRebat((response:any)=>{
+                            console.log(response.data[0].credit_balance);
+                            widget.data.backPoint = response.data[0].credit_balance;
+                            gvc.notifyDataChange('backPoint');
+                        });
                         return `
                         ${gvc.bindView({
                             bind: 'backPoint',
@@ -771,7 +779,7 @@ ${
                             `;
                             },
                             divCreate: {
-                                style: `height:96px;background: #FBF9F6;border-radius: 20px;margin-top:24px;`,
+                                style: `height:96px;background: #FFFFFF;border-radius: 20px;margin-top:24px;`,
                                 class: `w-100 d-flex justify-content-center align-items-center `,
                             },
                         })}
@@ -860,6 +868,48 @@ ${
                     used,
                     passed
                 }
+                const vm={
+                    loading:false
+                }
+                try {
+
+
+                    vm.loading=true
+                    gvc.notifyDataChange('voucherCardList')
+                    // widget.data.voucherCardList = []
+                    Checkout.getVoucher('Select', (data) => {
+
+                        vm.loading=false
+
+                        console.log("原始資料")
+                        console.log(data)
+
+                        widget.data.voucherCardList = (data as any).map((dd: any) => {
+
+                            return {
+                                vendor_id: dd.id,
+                                vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
+                                vendor_name: dd.vendor_name,
+                                vendor_context: "優惠券內容",
+                                name: dd.subTitle,
+                                discount: dd.title,
+                                //最低消費：->後續要加
+                                lowCostText: dd.lowCostText,
+                                //NT$ 30,000->後續要加
+                                lowCostNumber: dd.lowCostNumber,
+                                dateText: "有效期限：",
+                                date: dd.formatEndTime,
+                                dateType: "",
+                                code: dd.code,
+                                ogData:dd
+                            }
+                        })
+                        gvc.notifyDataChange('voucherCardList')
+
+                    })
+
+                } catch (e) {
+                }
 
                 return {
                     view: () => {
@@ -901,134 +951,47 @@ ${
                                 color: #858585;
                             }
                         `)
-                        return gvc.map(widget.data.voucherList.map((coupon: any) => {
-                            return `
-                            <div
-                                class="d-flex align-items-center border"
-                                style="
-                                    padding:13px 16px;
-                                    height: 104px;
-                                    background: #FBF9F6;
-                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
-                                    border-radius: 20px;
-                                    margin-top:12px;
-                                "
-                                onclick="${gvc.event(() => {
-                                useVoucher(coupon.id);
-                            })}">
-                            <div
-                                class="d-flex flex-column align-items-center"
-                                style="width: 60px;overflow: hidden;"
-                            >
-                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        width: 60px;
-                                        line-height: 12px;
-                                        margin-top: 4px;
-                                        word-break: break-all;
-                                        overflow: hidden; 
-                                        white-space: nowrap;
-                                        text-overflow: ellipsis;
-                                        -webkit-line-clamp: 1;
-                                        -webkit-box-orient: vertical;  
-                                        overflow: hidden;
-                                        text-align: center;
-                                    "
-                                    >${coupon.vendor_name}</span
-                                >
-                            </div>
-                            <div
-                                style="
-                                    width: 1px;
-                                    height: 64px;
-                                    background: #D6D6D6;
-                                    margin-left: 24px;
-                                "
-                            ></div>
-                            <div
-                                class="d-flex flex-column justify-content-center"
-                                style="margin-left: 20px;width: calc(100% - 170px);">
-                                <span       
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 18px;
-                                        line-height: 26px;
-                                        font-feature-settings: 'pnum' on, 'lnum' on;
-                                        color: #FD6A58;
-                                    " 
-                                    >${coupon.title}</span
-                                >
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                    "
-                                    >${coupon.subTitle}</span
-                                >
-                                <span class="${(() => {
-                                if (coupon.status == voucherStatus.expire) {
+                        return gvc.bindView({
+                            bind:"voucherCardList",
+                            view : ()=>{
+                                widget.data.voucherCardList = widget.data.voucherCardList??[];
+                                return gvc.map(widget.data.voucherCardList.map((coupon: any) => {
+                                    console.log("資料")
+                                    console.log(coupon)
+                                    return `
+                                        <div class="voucherCard overflow-hidden" style="background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
+                                        })}"> 
+                                            <div class="d-flex" style="padding: 8px 22px;">
+                                                <img src="${coupon.vendor_icon.href}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
+                                                <div class="vendor_name">${coupon.vendor_name}</div>
+                                                <div class="ms-auto" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #FE5541;" onclick="${gvc.event(() => {
+                                                appConfig().changePage(gvc,'user_couponDetail',coupon)
+                                            })}">優惠卷內容</div>
+                                            </div>
+                                            <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
+                                            <div class="" style="padding: 8px 22px;">
+                                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;">${coupon.name}</div>
+                                                <div style="margin-top:4px;font-weight: 700;  font-size: 24px;line-height: 35px;color: #FE5541;">${coupon.discount}</div>
+                                                <div class="d-flex align-items-center" style="margin-top: 4px;">
+                                                    <div class="" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #858585;">${coupon.lowCostText}</div>
+                                                    <div style="font-weight: 700;font-size: 12px;line-height: 150%;color: #1E1E1E;">${coupon.lowCostNumber}</div>
+                                                    <div class="ms-auto d-flex">
+                                                        <div class="${coupon.dateType}dateText" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #858585;">${coupon.dateText}</div>
+                                                        <div class="${coupon.dateType}date" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #1E1E1E;">${coupon.date}</div>
+                                                    </div>                                                        
+                                                </div>
+                                            </div>
+                                            <div class="lackCircle leftCircle"></div>
+                                            <div class="lackCircle rightCircle"></div>
+                                        </div>    
+                                    `
 
-                                    return "unusedDate"
-                                } else {
-                                    return "normalDate"
-                                }
-                            })()}"
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        line-height: 14px;
-                                    "
-                                    >${coupon.formatEndTime}</span
-                                >
-                            </div>
-                            <div class="flex-fill" style=""></div>
-                            <div class="useBTNtext ${(() => {
-                                switch (coupon.status) {
-                                    case voucherStatus.unused: {
-                                        return `on`;
-                                    }
-                                    case voucherStatus.expire: {
-                                        return `on`;
-                                    }
-                                    case voucherStatus.used: {
-                                        return `off`;
-                                    }
-                                    case voucherStatus.passed: {
-                                        return `passed`;
-                                    }
-                                }
-                            })()}">${(() => {
-                                switch (coupon.status) {
-                                    case voucherStatus.unused: {
-                                        return `使用`;
-                                    }
-                                    case voucherStatus.expire: {
-                                        return `使用`;
-                                    }
-                                    case voucherStatus.used: {
-                                        return `已使用`;
-                                    }
-                                    case voucherStatus.passed: {
-                                        return `已過期`;
-                                    }
-                                }
-                            })()}</div>
-                               
-                        </div>
-                        `
-                        }))
+
+                                }))
+                            },
+                            divCreate:{}
+                        })
+
                     },
                     editor: () => {
                         return ClickEvent.editer(gvc, widget, widget.data, {
@@ -1111,7 +1074,7 @@ ${
                         `)
                         const data=gvc.parameter.pageConfig?.obj.data
                         let coupon = widget.data.coupon
-                        console.log(`vendor:${JSON.stringify(data)}`)
+
                         if(data.vendor_id){
                             coupon={
                                 id: data.vendor_id,
@@ -1136,130 +1099,71 @@ ${
                             coupon.vendor_name=data.vendor_name
                         }
                         return `
-                        <div class="w-100">                            
-                            <div
-                                class="d-flex align-items-center border w-100"
-                                style="
-                                    padding:13px 16px;
-                                    height: 104px;
-                                    background: #FBF9F6;
-                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
-                                    border-radius: 20px;
-                                    margin-top:12px;
-                                    margin-bottom:16px;
-                                "
-                                onclick="${gvc.event(() => {
-                                    if(data.selectBack){
-                                        data.selectBack();
-                                    }
-                        })}">
-                            <div
-                                class="d-flex flex-column align-items-center"
-                                style="width: 60px;overflow: hidden;"
-                            >
-                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        width: 60px;
-                                        line-height: 12px;
-                                        margin-top: 4px;
-                                        word-break: break-all;
-                                        overflow: hidden; 
-                                        white-space: nowrap;
-                                        text-overflow: ellipsis;
-                                        -webkit-line-clamp: 1;
-                                        -webkit-box-orient: vertical;  
-                                        overflow: hidden;
-                                        text-align: center;
-                                    "
-                                    >${coupon.vendor_name}</span
-                                >
+                        <div class="overflow-hidden" style="margin-top: 30px;background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
+                        })}"> 
+                            <div class="d-flex" style="padding: 8px 22px;">
+                                <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
+                                <div class="vendor_name" style="font-weight: 400;font-size: 15px;line-height: 150%;">${data.vendor_name??"廠商名稱"}</div>
+                                <div class="vendor_context ms-auto" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(()=>{
+                                    // console.log(data.code)
+                                    gvc.parameter.pageConfig?.obj.data.callback(data.code)
+                                    gvc.glitter.goBack("shopping_cart")
+                                    appConfig().changePage(gvc,'shopping_cart',data)
+                                })}">${data.vendor_context??"使用"}</div>
                             </div>
-                            <div
-                                style="
-                                    width: 1px;
-                                    height: 64px;
-                                    background: #D6D6D6;
-                                    margin-left: 24px;
-                                "
-                            ></div>
-                            <div
-                                class="d-flex flex-column justify-content-center"
-                                style="margin-left: 20px;width: calc(100% - 170px);">
-                                <span       
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 18px;
-                                        line-height: 26px;
-                                        font-feature-settings: 'pnum' on, 'lnum' on;
-                                        color: #FD6A58;
-                                    " 
-                                    >${coupon.title}</span
-                                >
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                    "
-                                    >${coupon.subTitle}</span
-                                >
-                                <span class="normalDate"
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        line-height: 14px;
-                                    "
-                                    >${coupon.formatEndTime}</span
-                                >
+                            <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
+                            <div class="" style="padding: 8px 22px;">
+                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;color: #1E1E1E;">${data.name??"優惠卷名稱"}</div>
+                                <div style="font-weight: 700;font-size: 24px;line-height: 35px;color: #FE5541;margin:4px 0;">${data.discount??"優惠卷折扣內容"}</div>
+                                <div class="d-flex ">
+                                    <div style="font-weight: 400;font-size: 12px;color: #858585;">${data.lowCostText??"最低消費:"}</div>
+                                    <div style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${data.lowCostNumber??"NT $0"}</div>
+                                    <div class="ms-auto d-flex">
+                                        <div class="${data.dateType}" style="font-weight: 400;font-size: 12px;color: #858585;">${data.dateText??"有效期限:"}</div>
+                                        <div class="${data.dateType}" style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${data.date??"31 三月 2025"}</div>
+                                    </div>
+                                    
+                                </div>
                             </div>
-                            <div class="flex-fill" style=""></div>
-                            <div class="useBTNtext on ">使用</div>                               
-                        </div>
-                            <div class="detailTitle">
+                            <div style="position: absolute;left: -12px;top: calc(50% - 12px);width: 24px;height: 24px;border-radius: 50%;background: #f8f3ed;"></div>
+                            <div style="width: 24px;height: 24px;border-radius: 50%;position: absolute;right: -12px;top: calc(50% - 12px);background: #f8f3ed;" class="lackCircle rightCircle"></div>
+                        </div>    
+                                        
+                        <div class="w-100">                                                     
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 優惠內容
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.content}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 有效期限
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.startTime}~${coupon.endTime}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 商品
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.product}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 付款
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.payway}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 物流
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.logistics}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 注意事項
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ※ 此優惠不可與其他優惠同時使用<br>
                                 ※ 訂單金額無法累計折扣<br>
                                 ※ 消費折扣金額僅以商品金額為限，不含運費等額外服務之費用<br>

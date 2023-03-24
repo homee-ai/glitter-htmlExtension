@@ -11,4 +11,6 @@ interface VoucherModel {
     formatEndTime?: string;
     isUse: boolean;
     code: string;
+    lowCostText?: string,
+    lowCostNumber?: string,
 }

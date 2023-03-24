@@ -72,7 +72,7 @@ export class SharedView {
                         if(item.hideTb){
                             return  ``
                         }
-                        return `<div class="w-100" style="height:calc(${topInset || 0}px);"></div>`
+                        return `<div class="w-100" style="height:calc(${topInset || 10}px);"></div>`
                     },
                     divCreate:{}
                 })

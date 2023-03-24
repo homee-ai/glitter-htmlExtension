@@ -7,6 +7,7 @@ import { Funnel } from "../homee/funnel.js";
 import { Dialog } from "../homee/legacy/widget/dialog.js";
 import { ViewModel } from "../homee/legacy/view/userProfile.js";
 import { User } from "../api/user.js";
+import { Checkout } from "../api/checkout.js";
 Plugin.create(import.meta.url, (glitter) => {
     return {
         nav: {
@@ -688,6 +689,12 @@ ${glitter.htmlGenerate.editeInput({
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
+                        let rebat = 0;
+                        Checkout.getRebat((response) => {
+                            console.log(response.data[0].credit_balance);
+                            widget.data.backPoint = response.data[0].credit_balance;
+                            gvc.notifyDataChange('backPoint');
+                        });
                         return `
                         ${gvc.bindView({
                             bind: 'backPoint',
@@ -716,7 +723,7 @@ ${glitter.htmlGenerate.editeInput({
                             `;
                             },
                             divCreate: {
-                                style: `height:96px;background: #FBF9F6;border-radius: 20px;margin-top:24px;`,
+                                style: `height:96px;background: #FFFFFF;border-radius: 20px;margin-top:24px;`,
                                 class: `w-100 d-flex justify-content-center align-items-center `,
                             },
                         })}
@@ -803,6 +810,38 @@ ${glitter.htmlGenerate.editeInput({
                     voucherStatus[voucherStatus["used"] = 2] = "used";
                     voucherStatus[voucherStatus["passed"] = 3] = "passed";
                 })(voucherStatus || (voucherStatus = {}));
+                const vm = {
+                    loading: false
+                };
+                try {
+                    vm.loading = true;
+                    gvc.notifyDataChange('voucherCardList');
+                    Checkout.getVoucher('Select', (data) => {
+                        vm.loading = false;
+                        console.log("原始資料");
+                        console.log(data);
+                        widget.data.voucherCardList = data.map((dd) => {
+                            return {
+                                vendor_id: dd.id,
+                                vendor_icon: new URL('../img/component/voucher/cardIcon.png', import.meta.url),
+                                vendor_name: dd.vendor_name,
+                                vendor_context: "優惠券內容",
+                                name: dd.subTitle,
+                                discount: dd.title,
+                                lowCostText: dd.lowCostText,
+                                lowCostNumber: dd.lowCostNumber,
+                                dateText: "有效期限：",
+                                date: dd.formatEndTime,
+                                dateType: "",
+                                code: dd.code,
+                                ogData: dd
+                            };
+                        });
+                        gvc.notifyDataChange('voucherCardList');
+                    });
+                }
+                catch (e) {
+                }
                 return {
                     view: () => {
                         function useVoucher(id) {
@@ -841,134 +880,45 @@ ${glitter.htmlGenerate.editeInput({
                                 color: #858585;
                             }
                         `);
-                        return gvc.map(widget.data.voucherList.map((coupon) => {
-                            return `
-                            <div
-                                class="d-flex align-items-center border"
-                                style="
-                                    padding:13px 16px;
-                                    height: 104px;
-                                    background: #FBF9F6;
-                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
-                                    border-radius: 20px;
-                                    margin-top:12px;
-                                "
-                                onclick="${gvc.event(() => {
-                                useVoucher(coupon.id);
-                            })}">
-                            <div
-                                class="d-flex flex-column align-items-center"
-                                style="width: 60px;overflow: hidden;"
-                            >
-                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        width: 60px;
-                                        line-height: 12px;
-                                        margin-top: 4px;
-                                        word-break: break-all;
-                                        overflow: hidden; 
-                                        white-space: nowrap;
-                                        text-overflow: ellipsis;
-                                        -webkit-line-clamp: 1;
-                                        -webkit-box-orient: vertical;  
-                                        overflow: hidden;
-                                        text-align: center;
-                                    "
-                                    >${coupon.vendor_name}</span
-                                >
-                            </div>
-                            <div
-                                style="
-                                    width: 1px;
-                                    height: 64px;
-                                    background: #D6D6D6;
-                                    margin-left: 24px;
-                                "
-                            ></div>
-                            <div
-                                class="d-flex flex-column justify-content-center"
-                                style="margin-left: 20px;width: calc(100% - 170px);">
-                                <span       
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 18px;
-                                        line-height: 26px;
-                                        font-feature-settings: 'pnum' on, 'lnum' on;
-                                        color: #FD6A58;
-                                    " 
-                                    >${coupon.title}</span
-                                >
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                    "
-                                    >${coupon.subTitle}</span
-                                >
-                                <span class="${(() => {
-                                if (coupon.status == voucherStatus.expire) {
-                                    return "unusedDate";
-                                }
-                                else {
-                                    return "normalDate";
-                                }
-                            })()}"
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        line-height: 14px;
-                                    "
-                                    >${coupon.formatEndTime}</span
-                                >
-                            </div>
-                            <div class="flex-fill" style=""></div>
-                            <div class="useBTNtext ${(() => {
-                                switch (coupon.status) {
-                                    case voucherStatus.unused: {
-                                        return `on`;
-                                    }
-                                    case voucherStatus.expire: {
-                                        return `on`;
-                                    }
-                                    case voucherStatus.used: {
-                                        return `off`;
-                                    }
-                                    case voucherStatus.passed: {
-                                        return `passed`;
-                                    }
-                                }
-                            })()}">${(() => {
-                                switch (coupon.status) {
-                                    case voucherStatus.unused: {
-                                        return `使用`;
-                                    }
-                                    case voucherStatus.expire: {
-                                        return `使用`;
-                                    }
-                                    case voucherStatus.used: {
-                                        return `已使用`;
-                                    }
-                                    case voucherStatus.passed: {
-                                        return `已過期`;
-                                    }
-                                }
-                            })()}</div>
-                               
-                        </div>
-                        `;
-                        }));
+                        return gvc.bindView({
+                            bind: "voucherCardList",
+                            view: () => {
+                                var _a;
+                                widget.data.voucherCardList = (_a = widget.data.voucherCardList) !== null && _a !== void 0 ? _a : [];
+                                return gvc.map(widget.data.voucherCardList.map((coupon) => {
+                                    console.log("資料");
+                                    console.log(coupon);
+                                    return `
+                                        <div class="voucherCard overflow-hidden" style="background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
+                                    })}"> 
+                                            <div class="d-flex" style="padding: 8px 22px;">
+                                                <img src="${coupon.vendor_icon.href}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
+                                                <div class="vendor_name">${coupon.vendor_name}</div>
+                                                <div class="ms-auto" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #FE5541;" onclick="${gvc.event(() => {
+                                        appConfig().changePage(gvc, 'user_couponDetail', coupon);
+                                    })}">優惠卷內容</div>
+                                            </div>
+                                            <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
+                                            <div class="" style="padding: 8px 22px;">
+                                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;">${coupon.name}</div>
+                                                <div style="margin-top:4px;font-weight: 700;  font-size: 24px;line-height: 35px;color: #FE5541;">${coupon.discount}</div>
+                                                <div class="d-flex align-items-center" style="margin-top: 4px;">
+                                                    <div class="" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #858585;">${coupon.lowCostText}</div>
+                                                    <div style="font-weight: 700;font-size: 12px;line-height: 150%;color: #1E1E1E;">${coupon.lowCostNumber}</div>
+                                                    <div class="ms-auto d-flex">
+                                                        <div class="${coupon.dateType}dateText" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #858585;">${coupon.dateText}</div>
+                                                        <div class="${coupon.dateType}date" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #1E1E1E;">${coupon.date}</div>
+                                                    </div>                                                        
+                                                </div>
+                                            </div>
+                                            <div class="lackCircle leftCircle"></div>
+                                            <div class="lackCircle rightCircle"></div>
+                                        </div>    
+                                    `;
+                                }));
+                            },
+                            divCreate: {}
+                        });
                     },
                     editor: () => {
                         return ClickEvent.editer(gvc, widget, widget.data, {
@@ -1003,7 +953,7 @@ ${glitter.htmlGenerate.editeInput({
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        var _a;
+                        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
                         let classStyle = {
                             useBTNtext: `
                                 
@@ -1051,7 +1001,6 @@ ${glitter.htmlGenerate.editeInput({
                         `);
                         const data = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data;
                         let coupon = widget.data.coupon;
-                        console.log(`vendor:${JSON.stringify(data)}`);
                         if (data.vendor_id) {
                             coupon = {
                                 id: data.vendor_id,
@@ -1076,130 +1025,71 @@ ${glitter.htmlGenerate.editeInput({
                             coupon.vendor_name = data.vendor_name;
                         }
                         return `
-                        <div class="w-100">                            
-                            <div
-                                class="d-flex align-items-center border w-100"
-                                style="
-                                    padding:13px 16px;
-                                    height: 104px;
-                                    background: #FBF9F6;
-                                    box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.05);
-                                    border-radius: 20px;
-                                    margin-top:12px;
-                                    margin-bottom:16px;
-                                "
-                                onclick="${gvc.event(() => {
-                            if (data.selectBack) {
-                                data.selectBack();
-                            }
-                        })}">
-                            <div
-                                class="d-flex flex-column align-items-center"
-                                style="width: 60px;overflow: hidden;"
-                            >
-                                <img src="${coupon.vendor_icon}" style="width: 56px;height: 56px;border-radius: 50%;" />
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        width: 60px;
-                                        line-height: 12px;
-                                        margin-top: 4px;
-                                        word-break: break-all;
-                                        overflow: hidden; 
-                                        white-space: nowrap;
-                                        text-overflow: ellipsis;
-                                        -webkit-line-clamp: 1;
-                                        -webkit-box-orient: vertical;  
-                                        overflow: hidden;
-                                        text-align: center;
-                                    "
-                                    >${coupon.vendor_name}</span
-                                >
+                        <div class="overflow-hidden" style="margin-top: 30px;background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
+                        })}"> 
+                            <div class="d-flex" style="padding: 8px 22px;">
+                                <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
+                                <div class="vendor_name" style="font-weight: 400;font-size: 15px;line-height: 150%;">${(_b = data.vendor_name) !== null && _b !== void 0 ? _b : "廠商名稱"}</div>
+                                <div class="vendor_context ms-auto" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(() => {
+                            var _a;
+                            (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.callback(data.code);
+                            gvc.glitter.goBack("shopping_cart");
+                            appConfig().changePage(gvc, 'shopping_cart', data);
+                        })}">${(_c = data.vendor_context) !== null && _c !== void 0 ? _c : "使用"}</div>
                             </div>
-                            <div
-                                style="
-                                    width: 1px;
-                                    height: 64px;
-                                    background: #D6D6D6;
-                                    margin-left: 24px;
-                                "
-                            ></div>
-                            <div
-                                class="d-flex flex-column justify-content-center"
-                                style="margin-left: 20px;width: calc(100% - 170px);">
-                                <span       
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 700;
-                                        font-size: 18px;
-                                        line-height: 26px;
-                                        font-feature-settings: 'pnum' on, 'lnum' on;
-                                        color: #FD6A58;
-                                    " 
-                                    >${coupon.title}</span
-                                >
-                                <span
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 12px;
-                                        line-height: 17px;
-                                    "
-                                    >${coupon.subTitle}</span
-                                >
-                                <span class="normalDate"
-                                    style="
-                                        font-family: 'Noto Sans TC';
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-size: 10px;
-                                        line-height: 14px;
-                                    "
-                                    >${coupon.formatEndTime}</span
-                                >
+                            <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
+                            <div class="" style="padding: 8px 22px;">
+                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;color: #1E1E1E;">${(_d = data.name) !== null && _d !== void 0 ? _d : "優惠卷名稱"}</div>
+                                <div style="font-weight: 700;font-size: 24px;line-height: 35px;color: #FE5541;margin:4px 0;">${(_e = data.discount) !== null && _e !== void 0 ? _e : "優惠卷折扣內容"}</div>
+                                <div class="d-flex ">
+                                    <div style="font-weight: 400;font-size: 12px;color: #858585;">${(_f = data.lowCostText) !== null && _f !== void 0 ? _f : "最低消費:"}</div>
+                                    <div style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_g = data.lowCostNumber) !== null && _g !== void 0 ? _g : "NT $0"}</div>
+                                    <div class="ms-auto d-flex">
+                                        <div class="${data.dateType}" style="font-weight: 400;font-size: 12px;color: #858585;">${(_h = data.dateText) !== null && _h !== void 0 ? _h : "有效期限:"}</div>
+                                        <div class="${data.dateType}" style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_j = data.date) !== null && _j !== void 0 ? _j : "31 三月 2025"}</div>
+                                    </div>
+                                    
+                                </div>
                             </div>
-                            <div class="flex-fill" style=""></div>
-                            <div class="useBTNtext on ">使用</div>                               
-                        </div>
-                            <div class="detailTitle">
+                            <div style="position: absolute;left: -12px;top: calc(50% - 12px);width: 24px;height: 24px;border-radius: 50%;background: #f8f3ed;"></div>
+                            <div style="width: 24px;height: 24px;border-radius: 50%;position: absolute;right: -12px;top: calc(50% - 12px);background: #f8f3ed;" class="lackCircle rightCircle"></div>
+                        </div>    
+                                        
+                        <div class="w-100">                                                     
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 優惠內容
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.content}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 有效期限
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.startTime}~${coupon.endTime}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 商品
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.product}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 付款
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.payway}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 物流
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ${coupon.logistics}
                             </div>
-                            <div class="detailTitle">
+                            <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 注意事項
                             </div>
-                            <div class="detailText">
+                            <div class="detailText" style="font-weight: 400;font-size: 12px;line-height: 17px;">
                                 ※ 此優惠不可與其他優惠同時使用<br>
                                 ※ 訂單金額無法累計折扣<br>
                                 ※ 消費折扣金額僅以商品金額為限，不含運費等額外服務之費用<br>
