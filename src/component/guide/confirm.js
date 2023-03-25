@@ -1,6 +1,7 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
 import { appConfig } from "../../config.js";
+import { Myspace } from "../../api/myspace";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);
@@ -16,23 +17,22 @@ init((gvc, glitter, gBundle) => {
     return {
         onCreateView: () => {
             return `
-                <div class="w-100 d-flex justify-content-center align-items-center" style="position: fixed;top: 25%;">
-                    <div style="font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 14px;line-height: 150%;text-align: center;background: #D9D9D9;padding-top: 15px;">
-                        <div style="padding: 0 50px;">HOMEE</div>
-                        <div style="padding: 0 50px;">確定退出教學影片嗎?</div>
-                        <div class="d-flex align-items-center" style="margin-top: 17px;padding: 0 50px;">
-                            <input style="background: #D9D9D9;" type="checkbox" id="confirm-appear" >不再顯示教學影片
+                <div class="w-100 d-flex justify-content-center align-items-center" style="position: fixed;top: 50%;left:50%;transform: translate(-50%, -50%);">
+                    <div style="width:288px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 14px;line-height: 150%;text-align: center;background: #FFFFFF;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.1);border-radius: 15px;padding-top: 18px;">
+                        <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">HOMEE</div>
+                        <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">確定退出教學影片嗎?</div>
+                        <div class="d-flex align-items-center justify-content-center w-100" style="margin-top: 8px;">
+                            <input style="background: #D9D9D9;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >不再顯示教學影片
                         </div>
-                        <div class="d-flex align-items-center">
-                            <div class="w-50" style="padding: 16px 0;" onclick="${gvc.event(() => {
+                        <div class="d-flex align-items-center" style="margin-top: 18px;border-top: 1px solid #E0E0E0;font-weight: 400;font-size: 18px;line-height: 26px;color: #FE5541;">
+                            <div class="w-50" style="height: 100%" onclick="${gvc.event(() => {
                 glitter.closeDiaLog("leaveGuide");
             })}">取消</div>
-                            <div class="w-50" style="padding: 16px 0;" onclick="${gvc.event(() => {
+                            <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(() => {
                 let inputElement = (document.querySelector('#confirm-appear'));
                 if (inputElement.checked) {
-                    glitter.setPro("reShow", "true", () => {
+                    Myspace.setFirstView(() => {
                         glitter.closeDiaLog("leaveGuide");
-                        appConfig().setHome(gvc, "myspace", {});
                     });
                 }
                 else {

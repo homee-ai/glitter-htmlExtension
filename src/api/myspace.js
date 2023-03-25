@@ -19,4 +19,40 @@ export class Myspace {
             }
         });
     }
+    static getFirstView(callback) {
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo?email=${response.email}`,
+                    type: 'get',
+                    headers: { Authorization: response.token },
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response) => {
+                        callback(response);
+                    },
+                    error: (err) => {
+                        callback(false);
+                    },
+                });
+            }
+        });
+    }
+    static setFirstView(callback) {
+        appConfig().getUserData({
+            callback: (response) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo?email=${response.email}`,
+                    type: 'put',
+                    headers: { Authorization: response.token },
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response) => {
+                        callback(response);
+                    },
+                    error: (err) => {
+                        callback(false);
+                    },
+                });
+            }
+        });
+    }
 }

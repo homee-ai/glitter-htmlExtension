@@ -38,10 +38,14 @@ Plugin.create(import.meta.url, (glitter) => {
                                 vm.data =[]
                                 vm.loading=true
                                 gvc.notifyDataChange(id)
-
-                                glitter.getPro("reShow" , (res2:any)=>{
-                                    viewGuide = (res2.data=="true");
+                                Myspace.getFirstView((res:any)=>{
+                                    if (res.result == "SUCCESS"){
+                                        viewGuide = res.watched;
+                                    }else {
+                                        alert("請檢察登入狀態或是網路資訊")
+                                    }
                                 })
+
 
                                 Myspace.getModelList((data) => {
                                     vm.loading=false

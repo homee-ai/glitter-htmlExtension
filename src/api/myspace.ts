@@ -33,4 +33,46 @@ export class Myspace {
             }
         })
     }
+    public static getFirstView(callback:(res:any)=>void) {
+        appConfig().getUserData({
+            callback: (response: any) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo?email=${response.email}`,
+                    type: 'get',
+                    headers: {Authorization: response.token},
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response: any) => {
+
+                        callback(response)
+                        // alert(JSON.stringify(response))
+                    },
+                    error: (err: any) => {
+                        callback(false)
+                        // alert(JSON.stringify(response))
+                    },
+                });
+            }
+        })
+    }
+    public static setFirstView(callback:(res:any)=>void) {
+        appConfig().getUserData({
+            callback: (response: any) => {
+                $.ajax({
+                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo?email=${response.email}`,
+                    type: 'put',
+                    headers: {Authorization: response.token},
+                    contentType: 'application/json; charset=utf-8',
+                    success: (response: any) => {
+
+                        callback(response)
+                        // alert(JSON.stringify(response))
+                    },
+                    error: (err: any) => {
+                        callback(false)
+                        // alert(JSON.stringify(response))
+                    },
+                });
+            }
+        })
+    }
 }
