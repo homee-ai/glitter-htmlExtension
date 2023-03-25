@@ -911,8 +911,8 @@ ${glitter.htmlGenerate.editeInput({
                                                     </div>                                                        
                                                 </div>
                                             </div>
-                                            <div class="lackCircle leftCircle"></div>
-                                            <div class="lackCircle rightCircle"></div>
+                                            <div class="" style="width:24px;height:24px;border-radius:50%;background:rgba(0, 0, 0, 0.05);position:absolute;left:-12px;top:calc(50% - 12px);"></div>
+                                            <div class="" style="width:24px;height:24px;border-radius:50%;background:rgba(0, 0, 0, 0.05);position:absolute;right:-12px;top:calc(50% - 12px);    "></div>
                                         </div>    
                                     `;
                                 }));
@@ -953,7 +953,7 @@ ${glitter.htmlGenerate.editeInput({
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
-                        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+                        var _a, _b, _c, _d, _e, _f, _g, _h;
                         let classStyle = {
                             useBTNtext: `
                                 
@@ -1030,23 +1030,22 @@ ${glitter.htmlGenerate.editeInput({
                             <div class="d-flex" style="padding: 8px 22px;">
                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                 <div class="vendor_name" style="font-weight: 400;font-size: 15px;line-height: 150%;">${(_b = data.vendor_name) !== null && _b !== void 0 ? _b : "廠商名稱"}</div>
-                                <div class="vendor_context ms-auto" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(() => {
-                            var _a;
-                            (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.data.callback(data.code);
-                            gvc.glitter.goBack("shopping_cart");
-                            appConfig().changePage(gvc, 'shopping_cart', data);
-                        })}">${(_c = data.vendor_context) !== null && _c !== void 0 ? _c : "使用"}</div>
+                                <div class="vendor_context ms-auto ${(() => { if (data.ogData.isUse)
+                            return "d-none"; })()}" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(() => {
+                            let code = data === null || data === void 0 ? void 0 : data.code;
+                            console.log(data);
+                        })}">使用</div>
                             </div>
                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                             <div class="" style="padding: 8px 22px;">
-                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;color: #1E1E1E;">${(_d = data.name) !== null && _d !== void 0 ? _d : "優惠卷名稱"}</div>
-                                <div style="font-weight: 700;font-size: 24px;line-height: 35px;color: #FE5541;margin:4px 0;">${(_e = data.discount) !== null && _e !== void 0 ? _e : "優惠卷折扣內容"}</div>
+                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;color: #1E1E1E;">${(_c = data.name) !== null && _c !== void 0 ? _c : "優惠卷名稱"}</div>
+                                <div style="font-weight: 700;font-size: 24px;line-height: 35px;color: #FE5541;margin:4px 0;">${(_d = data.discount) !== null && _d !== void 0 ? _d : "優惠卷折扣內容"}</div>
                                 <div class="d-flex ">
-                                    <div style="font-weight: 400;font-size: 12px;color: #858585;">${(_f = data.lowCostText) !== null && _f !== void 0 ? _f : "最低消費:"}</div>
-                                    <div style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_g = data.lowCostNumber) !== null && _g !== void 0 ? _g : "NT $0"}</div>
+                                    <div style="font-weight: 400;font-size: 12px;color: #858585;">${(_e = data.lowCostText) !== null && _e !== void 0 ? _e : "最低消費:"}</div>
+                                    <div style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_f = data.lowCostNumber) !== null && _f !== void 0 ? _f : "NT $0"}</div>
                                     <div class="ms-auto d-flex">
-                                        <div class="${data.dateType}" style="font-weight: 400;font-size: 12px;color: #858585;">${(_h = data.dateText) !== null && _h !== void 0 ? _h : "有效期限:"}</div>
-                                        <div class="${data.dateType}" style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_j = data.date) !== null && _j !== void 0 ? _j : "31 三月 2025"}</div>
+                                        <div class="${data.dateType}" style="font-weight: 400;font-size: 12px;color: #858585;">${(_g = data.dateText) !== null && _g !== void 0 ? _g : "有效期限:"}</div>
+                                        <div class="${data.dateType}" style="font-weight: 700;font-size: 12px;color: #1E1E1E;">${(_h = data.date) !== null && _h !== void 0 ? _h : "31 三月 2025"}</div>
                                     </div>
                                     
                                 </div>
@@ -1055,7 +1054,7 @@ ${glitter.htmlGenerate.editeInput({
                             <div style="width: 24px;height: 24px;border-radius: 50%;position: absolute;right: -12px;top: calc(50% - 12px);background: #f8f3ed;" class="lackCircle rightCircle"></div>
                         </div>    
                                         
-                        <div class="w-100">                                                     
+                        <div class="w-100" style="padding: 0 5px;">                                                     
                             <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 優惠內容
                             </div>

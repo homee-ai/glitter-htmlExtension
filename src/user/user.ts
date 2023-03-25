@@ -965,8 +965,9 @@ ${
                                                 <img src="${coupon.vendor_icon.href}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${coupon.vendor_name}</div>
                                                 <div class="ms-auto" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #FE5541;" onclick="${gvc.event(() => {
-                                                appConfig().changePage(gvc,'user_couponDetail',coupon)
-                                            })}">優惠卷內容</div>
+                                                    
+                                                    appConfig().changePage(gvc,'user_couponDetail',coupon)
+                                                })}">優惠卷內容</div>
                                             </div>
                                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                                             <div class="" style="padding: 8px 22px;">
@@ -981,8 +982,8 @@ ${
                                                     </div>                                                        
                                                 </div>
                                             </div>
-                                            <div class="lackCircle leftCircle"></div>
-                                            <div class="lackCircle rightCircle"></div>
+                                            <div class="" style="width:24px;height:24px;border-radius:50%;background:rgba(0, 0, 0, 0.05);position:absolute;left:-12px;top:calc(50% - 12px);"></div>
+                                            <div class="" style="width:24px;height:24px;border-radius:50%;background:rgba(0, 0, 0, 0.05);position:absolute;right:-12px;top:calc(50% - 12px);    "></div>
                                         </div>    
                                     `
 
@@ -1104,12 +1105,31 @@ ${
                             <div class="d-flex" style="padding: 8px 22px;">
                                 <img src="${data.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                 <div class="vendor_name" style="font-weight: 400;font-size: 15px;line-height: 150%;">${data.vendor_name??"廠商名稱"}</div>
-                                <div class="vendor_context ms-auto" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(()=>{
-                                    // console.log(data.code)
-                                    gvc.parameter.pageConfig?.obj.data.callback(data.code)
-                                    gvc.glitter.goBack("shopping_cart")
-                                    appConfig().changePage(gvc,'shopping_cart',data)
-                                })}">${data.vendor_context??"使用"}</div>
+                                <div class="vendor_context ms-auto ${(()=>{if (data.ogData.isUse) return "d-none"})()}" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(()=>{
+                                    let code = data?.code;
+                                    console.log(data)
+                                    // if (!code){
+                                    //     alert("此優惠卷有誤，請洽服務人員協助。")
+                                    // }else {
+                                    //     const dialog = new Dialog(gvc)
+                                    //     dialog.dataLoading(true)
+                                    //     Checkout.setVoucher({
+                                    //         code,
+                                    //         callback: (result: any) => {
+                                    //             dialog.dataLoading(false)
+                                    //             if (!result) {
+                                    //                 dialog.showInfo("無法使用此優惠券!")
+                                    //             }else{
+                                    //                 appConfig().changePage(gvc,'shopping_cart')    
+                                    //             }
+                                    //             
+                                    //         }
+                                    //     })                             
+                                    // }
+                                    
+                           
+                                    // 
+                                })}">使用</div>
                             </div>
                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                             <div class="" style="padding: 8px 22px;">
@@ -1129,7 +1149,7 @@ ${
                             <div style="width: 24px;height: 24px;border-radius: 50%;position: absolute;right: -12px;top: calc(50% - 12px);background: #f8f3ed;" class="lackCircle rightCircle"></div>
                         </div>    
                                         
-                        <div class="w-100">                                                     
+                        <div class="w-100" style="padding: 0 5px;">                                                     
                             <div class="detailTitle" style="font-weight: 700;font-size: 15px;line-height: 150%;color: #1E1E1E;">
                                 優惠內容
                             </div>
