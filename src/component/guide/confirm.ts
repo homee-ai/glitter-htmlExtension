@@ -5,7 +5,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.brow
 import {Dialog} from "../../dialog/dialog-mobile.js";
 import {appConfig} from "../../config.js";
 import {Api} from "../../homee/api/homee-api.js";
-import {Myspace} from "../../api/myspace";
+import {Myspace} from "../../api/myspace.js";
 
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID()
@@ -21,13 +21,39 @@ init((gvc, glitter, gBundle) => {
     })
     return {
         onCreateView: () => {
+            gvc.addStyle(`
+                @font-face {
+                        font-family: 'Noto Sans TC';
+                        src: url(assets/Font/NotoSansTC-Bold.otf);
+                        font-weight: bold;
+                    }
+            
+                @font-face {
+                    font-family: 'Noto Sans TC';
+                    src: url(assets/Font/NotoSansTC-Regular.otf);
+                    font-weight: normal;
+                }
+                #confirm-appear::before {
+                    content: "";
+                    display: inline-block;
+                    width: 15px;
+                    height: 15px;
+                    border: 1px solid #1E1E1E;
+                  
+                  
+                  
+                }
+                #confirm-appear:checked::before {
+                  background-color: #FE5541;
+                }
+            `)
             return `
                 <div class="w-100 d-flex justify-content-center align-items-center" style="position: fixed;top: 50%;left:50%;transform: translate(-50%, -50%);">
-                    <div style="width:288px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 14px;line-height: 150%;text-align: center;background: #FFFFFF;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.1);border-radius: 15px;padding-top: 18px;">
+                    <div style="width:288px;font-family: 'Noto Sans TC',serif;font-style: normal;font-feature-settings: 'pnum' on, 'lnum' on;font-size: 14px;line-height: 150%;text-align: center;background: #FFFFFF;box-shadow: -3px 3px 15px rgba(0, 0, 0, 0.1);border-radius: 15px;padding-top: 18px;">
                         <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">HOMEE</div>
                         <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">確定退出教學影片嗎?</div>
                         <div class="d-flex align-items-center justify-content-center w-100" style="margin-top: 8px;">
-                            <input style="background: #D9D9D9;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >不再顯示教學影片
+                            <input style="appearance: none;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >不再顯示教學影片
                         </div>
                         <div class="d-flex align-items-center" style="margin-top: 18px;border-top: 1px solid #E0E0E0;font-weight: 400;font-size: 18px;line-height: 26px;color: #FE5541;">
                             <div class="w-50" style="height: 100%" onclick="${gvc.event(()=>{
@@ -36,9 +62,9 @@ init((gvc, glitter, gBundle) => {
                             <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(()=>{
                                 let inputElement = (document.querySelector('#confirm-appear')) as HTMLInputElement;
                                 if (inputElement.checked){
-                                    Myspace.setFirstView(()=>{
-                                        glitter.closeDiaLog("leaveGuide");
-                                    })
+                                    // Myspace.setFirstView(()=>{
+                                    //     glitter.closeDiaLog("leaveGuide");
+                                    // })
                                 }else {
                                     glitter.closeDiaLog("leaveGuide")
                                     appConfig().setHome(gvc, "myspace", {});
