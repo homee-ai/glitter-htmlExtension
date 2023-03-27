@@ -702,7 +702,6 @@ ${glitter.htmlGenerate.editeInput({
                             select && key.push(select.value);
                         });
                         const selectSku = sku_list[key.join(' / ')];
-                        console.log("選擇");
                         if (!widget.data.orgSelectSku && glitter.getUrlParameter("reselect") != "false" && sel) {
                             widget.data.orgSelectSku = selectSku;
                         }

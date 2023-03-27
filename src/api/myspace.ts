@@ -57,13 +57,18 @@ export class Myspace {
     public static setFirstView(callback:(res:any)=>void) {
         appConfig().getUserData({
             callback: (response: any) => {
+                console.log(response.token)
+                let data = {
+                    email:response.email
+                };
                 $.ajax({
-                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo?email=${response.email}`,
+                    url: `${appConfig().serverURL}/api/v1/user/watchedVideo`,
                     type: 'put',
+                    data:JSON.stringify(data),
                     headers: {Authorization: response.token},
                     contentType: 'application/json; charset=utf-8',
                     success: (response: any) => {
-
+                        console.log(response)
                         callback(response)
                         // alert(JSON.stringify(response))
                     },

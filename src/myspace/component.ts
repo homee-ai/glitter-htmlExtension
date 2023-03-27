@@ -749,7 +749,6 @@ ${glitter.htmlGenerate.editeInput({
                         })
                         const selectSku = sku_list[key.join(' / ')]
 
-                        console.log("選擇")
 
                         if (!widget.data.orgSelectSku&&glitter.getUrlParameter("reselect")!="false" && sel){
                             widget.data.orgSelectSku = selectSku;
@@ -831,6 +830,7 @@ ${glitter.htmlGenerate.editeInput({
                         ${gvc.bindView({
                             bind:"BTN",
                             view:()=>{
+                                
                                 if(!selectSku["t3dModel"]){
                                     return  ``
                                 }
