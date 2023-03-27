@@ -663,7 +663,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                                                     bind: `qtyNumber${item.item_id}`,
                                                                     view: () => {
                                                                         return `
-                                                                                        <input class="border-0" style="width: 48px;text-align: center;" type="number" value="${item.qty}" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                                        <input class="border-0" style="width: 48px;text-align: center;" type="number" value="${item.qty}" onchange="${gvc.event((e: HTMLInputElement) => {
                                                                             item.qty = e.value
                                                                             if (widget.data.qty < 1) {
                                                                                 item.qty = 1;

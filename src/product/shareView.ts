@@ -37,11 +37,7 @@ export class ProductSharedView {
                     break-inside: avoid;margin-top: 16px;                                
                     height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
                         appConfig().changePage(gvc,"product_show",productData)
-                    // ClickEvent.trigger({
-                    //     gvc,
-                    //     widget,
-                    //     clickEvent: widget.data
-                    // })
+               
                 })}">
                     
                     ${gvc.bindView({

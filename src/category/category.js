@@ -481,6 +481,7 @@ color: #1E1E1E;">${data.title}</div>
                 return {
                     view: () => {
                         var _a, _b, _c, _d, _e;
+                        let isScrollListenerRegistered = false;
                         gvc.addStyle(`     
                         nav{
                             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
@@ -587,10 +588,40 @@ color: #1E1E1E;">${data.title}</div>
                         let origData = [];
                         let cursor = "";
                         let sortBy = "manual";
+                        let productSharedView = new ProductSharedView(gvc);
+                        const handleScroll = () => {
+                        };
                         glitter.share.productData = {};
                         function resetSort() {
                             sortRow[2].img = new URL('../img/sample/category/sort.svg', import.meta.url).href;
                             sortPriceOrder = -1;
+                        }
+                        function handleClick(event) {
+                            if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
+                                isScrollListenerRegistered = true;
+                                const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
+                                viewModel.loading = true;
+                                new Category(glitter).getPageCategoryData("sub_category_id", id, 6, cursor, (response) => {
+                                    cursor = "";
+                                    viewModel.product.push(response["product_list"]);
+                                    if (response["product_list"].length == 0) {
+                                        viewModel.loading = true;
+                                    }
+                                    response["product_list"].forEach((productData) => {
+                                        let element = productSharedView.productCard({ class: ``, style: `` }, productData);
+                                        let leftElement = document.querySelector('.left-line');
+                                        let rightElement = document.querySelector('.right-line');
+                                        if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
+                                            leftElement.innerHTML += element;
+                                        }
+                                        else {
+                                            rightElement.innerHTML += element;
+                                        }
+                                    });
+                                    cursor = response["cursor"];
+                                    viewModel.loading = false;
+                                }, sortBy);
+                            }
                         }
                         let sortRow = [
                             (() => {
@@ -603,12 +634,11 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 0;
                                         sortBy = "manual";
                                         cursor = "";
+                                        window.removeEventListener('scroll', handleClick);
                                         new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading = false;
-                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
-                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, sortBy);
                                     }
@@ -625,12 +655,11 @@ color: #1E1E1E;">${data.title}</div>
                                         sortBy = "best-selling";
                                         cursor = "";
                                         window.scrollTo(0, 0);
+                                        window.removeEventListener('scroll', handleClick);
                                         new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading = false;
-                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
-                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, sortBy);
                                     }
@@ -645,8 +674,7 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 2;
                                         sortPriceOrder *= -1;
                                         cursor = "";
-                                        let spinnerBlcok = document.querySelector('.spinnerBlcok');
-                                        spinnerBlcok.classList.remove("d-none");
+                                        window.removeEventListener('scroll', handleClick);
                                         if (sortSelect == 2) {
                                             if (sortPriceOrder == 1) {
                                                 sortRow[2].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
@@ -753,9 +781,7 @@ color: #1E1E1E;">${data.title}</div>
                                                 }
                                                 else {
                                                     return `
-                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;" onscroll="${gvc.event((e) => {
-                                                        console.log("test");
-                                                    })}"></div>
+                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;"></div>
                                                         <div class="right-line w-50" style="height:auto;padding-left:8px;"></div>                                                        
                                                         `;
                                                 }
@@ -765,7 +791,6 @@ color: #1E1E1E;">${data.title}</div>
                                                 let rightElement = document.querySelector('.right-line');
                                                 let CardGroup = document.querySelector('.CardGroup');
                                                 if (!viewModel.loading) {
-                                                    let productSharedView = new ProductSharedView(gvc);
                                                     viewModel.product.forEach((productData) => {
                                                         let element = productSharedView.productCard({ class: ``, style: `` }, productData);
                                                         if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
@@ -784,40 +809,15 @@ color: #1E1E1E;">${data.title}</div>
                                                             }
                                                         `);
                                                     let test = document.querySelector('main');
-                                                    window.addEventListener('scroll', function (e) {
-                                                        console.log("test");
-                                                        if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
-                                                            const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
-                                                            viewModel.loading = true;
-                                                            new Category(glitter).getPageCategoryData("sub_category_id", id, 6, cursor, (response) => {
-                                                                viewModel.product.push(response["product_list"]);
-                                                                if (response["product_list"].length == 0) {
-                                                                    let spinnerBlcok = document.querySelector('.spinnerBlcok');
-                                                                    spinnerBlcok.classList.add("d-none");
-                                                                    viewModel.loading = true;
-                                                                }
-                                                                response["product_list"].forEach((productData) => {
-                                                                    let element = productSharedView.productCard({ class: ``, style: `` }, productData);
-                                                                    if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
-                                                                        leftElement.innerHTML += element;
-                                                                    }
-                                                                    else {
-                                                                        rightElement.innerHTML += element;
-                                                                    }
-                                                                });
-                                                                cursor = response["cursor"];
-                                                                viewModel.loading = false;
-                                                            }, sortBy);
-                                                        }
-                                                    });
+                                                    window.addEventListener('scroll', handleClick);
                                                 }
                                             }
                                         })} 
-                                            <div class="w-100 spinnerBlcok">
-                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                                                    <div class="spinner-border" role="status"></div>
-                                                </div>
-                                            </div>                                          
+<!--                                            <div class="w-100 spinnerBlcok">-->
+<!--                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">-->
+<!--                                                    <div class="spinner-border" role="status"></div>-->
+<!--                                                </div>-->
+<!--                                            </div>                                          -->
                                         </main>                         
                                         `;
                                     }
