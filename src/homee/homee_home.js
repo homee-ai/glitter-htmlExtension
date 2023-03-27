@@ -422,6 +422,7 @@ color: #FE5541;">$ ${data.data.sale_price}</span>
                             <div class="${(_b = widget.data.class) !== null && _b !== void 0 ? _b : ""}p-0 w-100" style="${(_c = widget.data.style) !== null && _c !== void 0 ? _c : ""}; 
                                 break-inside: avoid;margin-top: 16px;                                
                                 height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                            console.log(widget.data);
                             ClickEvent.trigger({
                                 gvc,
                                 widget,

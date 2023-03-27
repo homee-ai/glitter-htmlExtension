@@ -828,7 +828,9 @@ color: #1E1E1E;">${data.title}</div>
                                                         return ``
                                                     }else{
                                                         return `
-                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;"></div>
+                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;" onscroll="${gvc.event((e:any)=>{
+                                                            console.log("test")
+                                                        })}"></div>
                                                         <div class="right-line w-50" style="height:auto;padding-left:8px;"></div>                                                        
                                                         `
                                                     }
@@ -867,7 +869,9 @@ color: #1E1E1E;">${data.title}</div>
                                                        
                                                         window.addEventListener('scroll', function(e) {
                                                             //滾輪事件
+                                                            console.log("test")
                                                             if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
+                                                                
                                                                 const id = gBundle.object.subCategory[viewModel?.select].value
                                                                 viewModel.loading = true;
                                                                 new Category(glitter).getPageCategoryData("sub_category_id",id, 6 , cursor,(response:any)=>{
