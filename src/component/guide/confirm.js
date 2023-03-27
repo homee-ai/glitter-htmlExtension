@@ -1,6 +1,7 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
 import { appConfig } from "../../config.js";
+import { Myspace } from "../../api/myspace.js";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);
@@ -58,6 +59,10 @@ init((gvc, glitter, gBundle) => {
                             <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(() => {
                 let inputElement = (document.querySelector('#confirm-appear'));
                 if (inputElement.checked) {
+                    Myspace.setFirstView(() => {
+                        glitter.closeDiaLog("leaveGuide");
+                        appConfig().setHome(gvc, "myspace", {});
+                    });
                 }
                 else {
                     glitter.closeDiaLog("leaveGuide");

@@ -370,7 +370,23 @@ Plugin.create(import.meta.url, (glitter) => {
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
                             <div class="w-100" style="">
-                              
+                                <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                            const dialog = new Dialog(gvc);
+                            Myspace.getFirstView((res) => {
+                                if (!res.watched) {
+                                    glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
+                                        callback: () => {
+                                        }
+                                    }, {
+                                        backGroundColor: "rgba(41, 41, 41, 0.3)",
+                                        animation: glitter.animation.fade
+                                    });
+                                }
+                                else {
+                                    appConfig().setHome(gvc, "myspace", {});
+                                }
+                            });
+                        })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
                                 <source src="${new URL(`video/homee 操作教學(步驟二).mp4`, import.meta.url)}" type="video/mp4">
@@ -545,7 +561,23 @@ Plugin.create(import.meta.url, (glitter) => {
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
                             <div class="w-100" style="">
-                               
+                                <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                            const dialog = new Dialog(gvc);
+                            Myspace.getFirstView((res) => {
+                                if (!res.watched) {
+                                    glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
+                                        callback: () => {
+                                        }
+                                    }, {
+                                        backGroundColor: "rgba(41, 41, 41, 0.3)",
+                                        animation: glitter.animation.fade
+                                    });
+                                }
+                                else {
+                                    appConfig().setHome(gvc, "myspace", {});
+                                }
+                            });
+                        })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
                                 <source src="${new URL(`video/homee 操作教學(步驟三).mp4`, import.meta.url)}" type="video/mp4">
@@ -718,7 +750,26 @@ Plugin.create(import.meta.url, (glitter) => {
                         });
                         return `                                
                         <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
-                           
+                        
+                            <div class="w-100" style="">
+                                <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                            const dialog = new Dialog(gvc);
+                            Myspace.getFirstView((res) => {
+                                if (!res.watched) {
+                                    glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
+                                        callback: () => {
+                                        }
+                                    }, {
+                                        backGroundColor: "rgba(41, 41, 41, 0.3)",
+                                        animation: glitter.animation.fade
+                                    });
+                                }
+                                else {
+                                    appConfig().setHome(gvc, "myspace", {});
+                                }
+                            });
+                        })}">
+                            </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
                                 <source src="${new URL(`video/homee 操作教學(步驟四).mp4`, import.meta.url)}" type="video/mp4">
                             </video>
