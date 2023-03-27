@@ -753,7 +753,9 @@ color: #1E1E1E;">${data.title}</div>
                                                 }
                                                 else {
                                                     return `
-                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;"></div>
+                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;" onscroll="${gvc.event((e) => {
+                                                        console.log("test");
+                                                    })}"></div>
                                                         <div class="right-line w-50" style="height:auto;padding-left:8px;"></div>                                                        
                                                         `;
                                                 }
@@ -783,6 +785,7 @@ color: #1E1E1E;">${data.title}</div>
                                                         `);
                                                     let test = document.querySelector('main');
                                                     window.addEventListener('scroll', function (e) {
+                                                        console.log("test");
                                                         if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
                                                             const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
                                                             viewModel.loading = true;

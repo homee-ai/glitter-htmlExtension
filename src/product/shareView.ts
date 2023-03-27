@@ -1,4 +1,5 @@
 import {GVC} from "../glitterBundle/GVController";
+import {appConfig} from "../config.js";
 
 export class ProductSharedView {
     public productCard: (css:{class:string , style:string}, productData:any) => string;
@@ -35,6 +36,7 @@ export class ProductSharedView {
                  <div class="${css.class ?? ""}p-0 w-100" style="${css.style ?? ""}; 
                     break-inside: avoid;margin-top: 16px;                                
                     height: auto;background: #FBF9F6;border-radius: 16px;" onclick="${gvc.event(() => {
+                        appConfig().changePage(gvc,"product_show",productData)
                     // ClickEvent.trigger({
                     //     gvc,
                     //     widget,

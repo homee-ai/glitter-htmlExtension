@@ -102,7 +102,7 @@ export class Category {
         if (cursor){
             url += "&cursor=" + cursor;
         }
-        console.log(url)
+
         // sort_by: 'manual' | 'best-selling' | 'alpha' | 'alpha-desc' | 'price' | 'price-desc' | 'lastest' | 'lastest-desc';
         $.ajax({
             url: url,

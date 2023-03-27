@@ -501,6 +501,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             render: (gvc, widget, setting, hoverID) => {
                 return {
                     view: () => {
+                        console.log("資料")
+                        console.log(gvc.parameter.pageConfig)
                         const config = gvc.parameter.pageConfig?.obj.config
                         const data = gvc.parameter.pageConfig?.obj.data
                         console.log("data::::" + JSON.stringify(data))

@@ -58,7 +58,6 @@ export class Category {
         if (cursor) {
             url += "&cursor=" + cursor;
         }
-        console.log(url);
         $.ajax({
             url: url,
             type: 'get',

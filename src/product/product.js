@@ -480,6 +480,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                 return {
                     view: () => {
                         var _a, _b;
+                        console.log("資料");
+                        console.log(gvc.parameter.pageConfig);
                         const config = (_a = gvc.parameter.pageConfig) === null || _a === void 0 ? void 0 : _a.obj.config;
                         const data = (_b = gvc.parameter.pageConfig) === null || _b === void 0 ? void 0 : _b.obj.data;
                         console.log("data::::" + JSON.stringify(data));
