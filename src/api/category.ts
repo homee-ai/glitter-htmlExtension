@@ -90,6 +90,35 @@ export class Category {
             },
         });
     }
+    public getPageCategoryData(parameter: string, value: string,  limit:number , cursor:string , callback: (data: any ) => void , sortby?:string): void {
+        const glitter = this.glitter;
+        const that = this;
+        let jsonData: any
+        let sortPara = (sortby)?`&sort_by=${sortby}`:""
+        let url = `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`;
+        if (limit){
+            url += "&limit=" + limit.toString();
+        }
+        if (cursor){
+            url += "&cursor=" + cursor;
+        }
+        console.log(url)
+        // sort_by: 'manual' | 'best-selling' | 'alpha' | 'alpha-desc' | 'price' | 'price-desc' | 'lastest' | 'lastest-desc';
+        $.ajax({
+            url: url,
+            type: 'get',
+            contentType: 'application/json; charset=utf-8',
+            success: (response: any) => {
+
+                callback(response)
+            },
+            error: (e) => {
+                setTimeout(() => {
+                    // this.getSubcategoryList(data,callback)
+                }, 1000)
+            },
+        });
+    }
 
     public getCategoryAllList(callback: (data: any) => void): void {
         const glitter = this.glitter;

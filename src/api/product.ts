@@ -84,6 +84,8 @@ export class Product {
         });
     }
 
+
+
     public static getCategoryAllList(callback: (data: any) => void): void {
         const that = this;
         let jsonData: any

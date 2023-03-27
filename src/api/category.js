@@ -46,6 +46,32 @@ export class Category {
             },
         });
     }
+    getPageCategoryData(parameter, value, limit, cursor, callback, sortby) {
+        const glitter = this.glitter;
+        const that = this;
+        let jsonData;
+        let sortPara = (sortby) ? `&sort_by=${sortby}` : "";
+        let url = `${appConfig().serverURL}/api/v1/product?easy_id=1&${parameter}=${value}${sortPara}`;
+        if (limit) {
+            url += "&limit=" + limit.toString();
+        }
+        if (cursor) {
+            url += "&cursor=" + cursor;
+        }
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: 'get',
+            contentType: 'application/json; charset=utf-8',
+            success: (response) => {
+                callback(response);
+            },
+            error: (e) => {
+                setTimeout(() => {
+                }, 1000);
+            },
+        });
+    }
     getCategoryAllList(callback) {
         const glitter = this.glitter;
         const that = this;

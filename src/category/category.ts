@@ -7,6 +7,7 @@ import {Dialog} from "../homee/legacy/widget/dialog.js";
 import {Category, CategoryListData, ProductData} from "../api/category.js";
 import {ViewModel} from "./view/categoryViewApi.js";
 import {Api} from '../homee/api/homee-api.js';
+import {ProductSharedView} from "../product/shareView.js";
 
 Plugin.create(import.meta.url,(glitter)=>{
     const api={
@@ -631,6 +632,8 @@ color: #1E1E1E;">${data.title}</div>
                         let title = gBundle.title ?? "分類頁";
                         let sortPriceOrder = -1;
                         let origData:ProductData[] = [];
+                        let cursor = "";
+                        let sortBy = "manual";
 
 
                         glitter.share.productData = {};
@@ -645,12 +648,22 @@ color: #1E1E1E;">${data.title}</div>
                                 const map={
                                     text: '精選', img: '', click: (e:HTMLElement) => {
                                         const id = gBundle.object.subCategory[viewModel.select].value
+                                        window.scrollTo(0, 0);
                                         viewModel.loading=true
                                         resetSort();
-                                        sortSelect = 0
-                                        viewModel.product = viewModel.allData[0];
-                                        viewModel.loading=false;
-                                        gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        sortSelect = 0;
+                                        sortBy = "manual";
+                                        cursor = "";
+
+                                        new Category(glitter).getPageCategoryData("sub_category_id",id, 6 ,"", (response:any)=>{
+
+                                            viewModel.product = response["product_list"];
+                                            cursor = response["cursor"];
+                                            viewModel.loading=false
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                            spinnerBlcok.classList.remove("d-none");
+                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        },sortBy)
                                         // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                         //     viewModel.product=response
                                         //
@@ -668,23 +681,20 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading=true
                                         resetSort();
                                         sortSelect = 1;
-                                        if (viewModel.allData[1].length == 0){
-                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                                viewModel.allData.push(response);
-                                                viewModel.loading=false
-                                                gvc.notifyDataChange(['sortBar' , 'cardGroup']);
-                                            },"best-selling")
-                                        }else {
-                                            viewModel.product = viewModel.allData[1];
-                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
-                                        }
+                                        sortBy = "best-selling";
+                                        cursor = "";
+                                        window.scrollTo(0, 0);
 
-                                        // viewModel.loading=false
-                                        // gvc.notifyDataChange(['sortBar' , 'cardGroup']);
-                                        // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                        //     viewModel.product=response
-                                        //
-                                        // },"best-selling")
+                                        new Category(glitter).getPageCategoryData("sub_category_id",id, 6 ,"", (response:any)=>{
+
+                                            viewModel.product = response["product_list"];
+                                            cursor = response["cursor"];
+                                            viewModel.loading=false
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                            spinnerBlcok.classList.remove("d-none");
+                                            gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                        },sortBy)
+
                                     }
                                 }
                                 return map
@@ -696,15 +706,35 @@ color: #1E1E1E;">${data.title}</div>
                                         //     origData = glitter.share.productData;
                                         // }
                                         //
+                                        const id = gBundle.object.subCategory[viewModel.select].value
+                                        window.scrollTo(0, 0);
 
                                         sortSelect = 2;
                                         sortPriceOrder *= -1;
+                                        cursor = "";
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                        spinnerBlcok.classList.remove("d-none");
 
                                         if (sortSelect==2){
                                             if (sortPriceOrder == 1){
                                                 sortRow[2].img = new URL('../img/sample/category/sortHigher.svg',import.meta.url).href ;
+                                                sortBy = "price"
+
+                                                new Category(glitter).getPageCategoryData("sub_category_id",id, 6 ,"", (response:any)=>{
+                                                    viewModel.product = response["product_list"];
+                                                    cursor = response["cursor"];
+                                                    viewModel.loading=false
+                                                    gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                                },sortBy)
                                             }else{
+                                                sortBy = "price-desc"
                                                 sortRow[2].img = new URL('../img/sample/category/sortSmaller.svg',import.meta.url).href ;
+                                                new Category(glitter).getPageCategoryData("sub_category_id",id, 6 ,"", (response:any)=>{
+                                                    viewModel.product = response["product_list"];
+                                                    cursor = response["cursor"];
+                                                    viewModel.loading=false
+                                                    gvc.notifyDataChange(['sortBar' , 'cardGroup']);
+                                                },sortBy)
                                             }
                                         }
                                         viewModel.product.sort((a:any, b:any)=>(a.sale_price - b.sale_price) * sortPriceOrder);
@@ -718,6 +748,9 @@ color: #1E1E1E;">${data.title}</div>
                         return (()=>{
                             let topInset: number = 0
                             let bottomInset: number = 0
+
+                            let leftHeight = 0;
+                            let rightHeight = 0;
                             glitter.runJsInterFace("getTopInset", {}, (response) => {
                                 topInset=response.data
                                 gvc.notifyDataChange(['mainView'])
@@ -776,8 +809,8 @@ color: #1E1E1E;">${data.title}</div>
                                                                     //直槓
                                                                     if (index != sortRow.length - 1) {
                                                                         returnHTML += `
-                                                                <div style="background: #858585; height: 5px;width: 1px;"></div>
-                                                            `
+                                                                            <div style="background: #858585; height: 5px;width: 1px;"></div>
+                                                                        `
                                                                     }
                                                                 })
                                                                 return returnHTML
@@ -788,109 +821,88 @@ color: #1E1E1E;">${data.title}</div>
                                         </nav>
                                         <main style="background: white;padding-top:${topInset - 20 + (((gBundle.object.subCategory ?? []).length>0) ? 150:120)}px;padding-left: 23px;padding-right: 23px;">
                                             ${gvc.bindView({
-                                                bind: "cardGroup",
-                                                view: () => {
+                                                bind:"cardGroup",
+                                                view :()=>{                                                     
                                                     if (viewModel.loading) {
-                                                        let returnHTML = `
-                                                        <div class="w-100">
-                                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                                                                <div class="spinner-border" role="status"></div>
-                                                            </div>
-                                                        </div>`;
-                                                        return returnHTML
-                                                    } else {
-                                                        return new glitter.htmlGenerate([
-                                                            {
-                                                                "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
-                                                                "js": "$homee/official/official.js",
-                                                                "data": {
-                                                                    "style": "",
-                                                                    "layout": "",
-                                                                    "marginB": "86px",
-                                                                    "marginL": "0px",
-                                                                    "marginR": "0px",
-                                                                    "setting": viewModel.product.map((dd:any,index:number)=>{
-                                                                        return {
-                                                                            "js": "$homee/homee/homee_home.js",
-                                                                            "data": {
-                                                                                "data": {
-                                                                                    "id": dd.id,
-                                                                                    "name": dd.name,
-                                                                                    "price": dd.price,
-                                                                                    "images":dd.images,
-                                                                                    "quantity": dd?.quantity ?? 1,
-                                                                                    "sale_price": dd.sale_price,
-                                                                                    "preview_image": dd.preview_image,
-                                                                                    "showUp":dd.showUp
-
-                                                                                },
-                                                                                "style": "",
-
-                                                                                "paddingL": "",
-                                                                                "paddingR": "",
-                                                                                "clickEvent": {
-                                                                                    "src": "$homee/homee/event.js",
-                                                                                    "route": "toProductDetail"
-                                                                                }
-                                                                            },
-
-                                                                            "type": "productItem",
-                                                                            "label": "商品",
-                                                                            "route": "homee_home",
-                                                                            "style": "width:100%",
-                                                                            "class" : "d-flex ",
-                                                                            "expandStyle": false,
-                                                                            "refreshAllParameter": {},
-                                                                            "refreshComponentParameter": {}
-                                                                        }
-                                                                    }),
-                                                                    "class": "productCardParent",
-                                                                    "paddingB": "16px",
-                                                                    "paddingL": "",
-                                                                    "paddingR": ""
-                                                                },
-                                                                "type": "container",                                                                 
-                                                                "label": "元件容器",
-                                                                "route": "Glitter",
-                                                                "style": ""
-                                                            }
-                                                        ], []).render(gvc)
                                                         
+                                                        return ``
+                                                    }else{
+                                                        return `
+                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;"></div>
+                                                        <div class="right-line w-50" style="height:auto;padding-left:8px;"></div>                                                        
+                                                        `
                                                     }
-                
-                                                },
-                                                divCreate: {style: `padding-top:20px;`, class: ``},
-                                                onCreate : ()=>{
-                                                   
-                                                    setTimeout(()=>{
-                                                        let element = window.document?.querySelector('.productCardParent') ?? "";
-                                                       
-                                                        if (element){
-                                                            element = element as HTMLElement
-                                                            if (!(document.querySelector(".colum-left"))){
-                                                                element.innerHTML = `<div class="colum-left w-50" style="padding-right:8px;"></div>`+`<div class="colum-right w-50" style="padding-right:8px;"></div>`+ element.innerHTML
-                                                                let leftElement = (document.querySelector(".colum-left")) as HTMLElement;
-                                                                let rightElement = (document.querySelector(".colum-right")) as HTMLElement;
-                                                                // leftElement.innerHTML += element.innerHTML;
-                                                                while (element.children.length > 2){
-                                                                    if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height){
-                                                                        leftElement.appendChild(element.children[2]) ;
-                                                                    }else {
-                                                                        rightElement.appendChild(element.children[2]) ;
-                                                                    }
-                                                                }
-                                                              
-                                                                element.classList.add("d-flex");
-                                                                
+
+                                                },divCreate:{class:`CardGroup d-flex align-items-start`}
+                                                ,onCreate : ()=>{
+                                                    
+                                                    let leftElement = document.querySelector('.left-line') as HTMLElement;
+                                                    let rightElement = document.querySelector('.right-line') as HTMLElement;
+                                                    let CardGroup = document.querySelector('.CardGroup') as HTMLElement;
+                                                // productSharedView.productCard({class:``,style:``} , viewModel.product[0])
+                                                    if (!viewModel.loading){
+                                                        
+                                                        let productSharedView = new ProductSharedView(gvc)
+                                                        viewModel.product.forEach((productData:any)=>{
+                                                            let element = productSharedView.productCard({class:``,style:``} , productData)
+                                                            
+                                                            if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height){
+                                                                leftElement.innerHTML += element
+                                                            }else {
+                                                                rightElement.innerHTML += element
                                                             }
                                                             
+                                                        })
+                                                        gvc.addStyle(`
+                                                            .swiper-pagination-bullet {
+                                                                background: #E0E0E0!important;;                    
+                                                            }
+                                                            .swiper-pagination-bullet-active{
+                                                                background: #FE5541!important;;
+                                                            }
+                                                        `)
+
+                                                        
+                                                        let test = document.querySelector('main') as HTMLElement;
                                                        
-                                                        }
-                                                    },100)
+                                                        window.addEventListener('scroll', function(e) {
+                                                            //滾輪事件
+                                                            if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
+                                                                const id = gBundle.object.subCategory[viewModel?.select].value
+                                                                viewModel.loading = true;
+                                                                new Category(glitter).getPageCategoryData("sub_category_id",id, 6 , cursor,(response:any)=>{
+                                                                    viewModel.product.push(response["product_list"]);
+                                                                    if (response["product_list"].length == 0){
+                                                                        let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                                                        spinnerBlcok.classList.add("d-none");
+                                                                        viewModel.loading = true;
+                                                                    }
+                                                                    response["product_list"].forEach((productData:any)=>{
+                                                                        let element = productSharedView.productCard({class:``,style:``} , productData)
+            
+                                                                        if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height){
+                                                                            leftElement.innerHTML += element
+                                                                        }else {
+                                                                            rightElement.innerHTML += element
+                                                                        }
+
+                                                                    })
+                                                                    cursor = response["cursor"];
+                                                                    // viewModel.allData.push(response);
+                                                                    viewModel.loading=false
+                                                                    
+                                                                },sortBy)
+                                                            }
+                                                        });
+                                                    }
                                                     
-                                             
                                                 }
-                                            })}
+                                            })} 
+                                            <div class="w-100 spinnerBlcok">
+                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                    <div class="spinner-border" role="status"></div>
+                                                </div>
+                                            </div>                                          
                                         </main>                         
                                         `
                                     } else {
@@ -908,12 +920,21 @@ color: #1E1E1E;">${data.title}</div>
 
                                         if (gBundle.object.subCategory){
                                             const id = gBundle.object.subCategory[viewModel?.select].value
-                                            new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
-                                                viewModel.product=response;
+
+                                            new Category(glitter).getPageCategoryData("sub_category_id",id, 6 , "",(response:any)=>{
+                                                viewModel.product = response["product_list"];
+                                                cursor = response["cursor"];
                                                 viewModel.allData.push(response);
                                                 viewModel.loading=false
-                                                gvc.notifyDataChange('cardGroup')
-                                            },"manual")
+                                                gvc.notifyDataChange(['cardGroup'])
+                                            },sortBy)
+
+                                            // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
+                                            //     viewModel.product=response;
+                                            //     viewModel.allData.push(response);
+                                            //     viewModel.loading=false
+                                            //     gvc.notifyDataChange('cardGroup')
+                                            // },"manual")
                                             viewModel.allData.push([]);
                                             // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
                                             //     viewModel.allData.push(response);

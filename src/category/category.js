@@ -7,6 +7,7 @@ import { Dialog } from "../homee/legacy/widget/dialog.js";
 import { Category } from "../api/category.js";
 import { ViewModel } from "./view/categoryViewApi.js";
 import { Api } from '../homee/api/homee-api.js';
+import { ProductSharedView } from "../product/shareView.js";
 Plugin.create(import.meta.url, (glitter) => {
     const api = {
         upload: (photoFile, callback) => {
@@ -584,6 +585,8 @@ color: #1E1E1E;">${data.title}</div>
                         let title = (_e = gBundle.title) !== null && _e !== void 0 ? _e : "分類頁";
                         let sortPriceOrder = -1;
                         let origData = [];
+                        let cursor = "";
+                        let sortBy = "manual";
                         glitter.share.productData = {};
                         function resetSort() {
                             sortRow[2].img = new URL('../img/sample/category/sort.svg', import.meta.url).href;
@@ -594,12 +597,20 @@ color: #1E1E1E;">${data.title}</div>
                                 const map = {
                                     text: '精選', img: '', click: (e) => {
                                         const id = gBundle.object.subCategory[viewModel.select].value;
+                                        window.scrollTo(0, 0);
                                         viewModel.loading = true;
                                         resetSort();
                                         sortSelect = 0;
-                                        viewModel.product = viewModel.allData[0];
-                                        viewModel.loading = false;
-                                        gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                        sortBy = "manual";
+                                        cursor = "";
+                                        new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
+                                            viewModel.product = response["product_list"];
+                                            cursor = response["cursor"];
+                                            viewModel.loading = false;
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                            spinnerBlcok.classList.remove("d-none");
+                                            gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                        }, sortBy);
                                     }
                                 };
                                 return map;
@@ -611,17 +622,17 @@ color: #1E1E1E;">${data.title}</div>
                                         viewModel.loading = true;
                                         resetSort();
                                         sortSelect = 1;
-                                        if (viewModel.allData[1].length == 0) {
-                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                                viewModel.allData.push(response);
-                                                viewModel.loading = false;
-                                                gvc.notifyDataChange(['sortBar', 'cardGroup']);
-                                            }, "best-selling");
-                                        }
-                                        else {
-                                            viewModel.product = viewModel.allData[1];
+                                        sortBy = "best-selling";
+                                        cursor = "";
+                                        window.scrollTo(0, 0);
+                                        new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
+                                            viewModel.product = response["product_list"];
+                                            cursor = response["cursor"];
+                                            viewModel.loading = false;
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar', 'cardGroup']);
-                                        }
+                                        }, sortBy);
                                     }
                                 };
                                 return map;
@@ -629,14 +640,33 @@ color: #1E1E1E;">${data.title}</div>
                             (() => {
                                 const map = {
                                     text: '價格', img: new URL('../img/sample/category/sort.svg', import.meta.url).href, click: (e) => {
+                                        const id = gBundle.object.subCategory[viewModel.select].value;
+                                        window.scrollTo(0, 0);
                                         sortSelect = 2;
                                         sortPriceOrder *= -1;
+                                        cursor = "";
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                        spinnerBlcok.classList.remove("d-none");
                                         if (sortSelect == 2) {
                                             if (sortPriceOrder == 1) {
                                                 sortRow[2].img = new URL('../img/sample/category/sortHigher.svg', import.meta.url).href;
+                                                sortBy = "price";
+                                                new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
+                                                    viewModel.product = response["product_list"];
+                                                    cursor = response["cursor"];
+                                                    viewModel.loading = false;
+                                                    gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                                }, sortBy);
                                             }
                                             else {
+                                                sortBy = "price-desc";
                                                 sortRow[2].img = new URL('../img/sample/category/sortSmaller.svg', import.meta.url).href;
+                                                new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
+                                                    viewModel.product = response["product_list"];
+                                                    cursor = response["cursor"];
+                                                    viewModel.loading = false;
+                                                    gvc.notifyDataChange(['sortBar', 'cardGroup']);
+                                                }, sortBy);
                                             }
                                         }
                                         viewModel.product.sort((a, b) => (a.sale_price - b.sale_price) * sortPriceOrder);
@@ -649,6 +679,8 @@ color: #1E1E1E;">${data.title}</div>
                         return (() => {
                             let topInset = 0;
                             let bottomInset = 0;
+                            let leftHeight = 0;
+                            let rightHeight = 0;
                             glitter.runJsInterFace("getTopInset", {}, (response) => {
                                 topInset = response.data;
                                 gvc.notifyDataChange(['mainView']);
@@ -702,8 +734,8 @@ color: #1E1E1E;">${data.title}</div>
                                                     `;
                                                     if (index != sortRow.length - 1) {
                                                         returnHTML += `
-                                                                <div style="background: #858585; height: 5px;width: 1px;"></div>
-                                                            `;
+                                                                            <div style="background: #858585; height: 5px;width: 1px;"></div>
+                                                                        `;
                                                     }
                                                 });
                                                 return returnHTML;
@@ -717,96 +749,72 @@ color: #1E1E1E;">${data.title}</div>
                                             bind: "cardGroup",
                                             view: () => {
                                                 if (viewModel.loading) {
-                                                    let returnHTML = `
-                                                        <div class="w-100">
-                                                            <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
-                                                                <div class="spinner-border" role="status"></div>
-                                                            </div>
-                                                        </div>`;
-                                                    return returnHTML;
+                                                    return ``;
                                                 }
                                                 else {
-                                                    return new glitter.htmlGenerate([
-                                                        {
-                                                            "id": "s4sas4s0sesbs6s3-sasds2se-4s3scs6-s8s8s1sa-s3sascs6s6s0sds5s3sfs0s7",
-                                                            "js": "$homee/official/official.js",
-                                                            "data": {
-                                                                "style": "",
-                                                                "layout": "",
-                                                                "marginB": "86px",
-                                                                "marginL": "0px",
-                                                                "marginR": "0px",
-                                                                "setting": viewModel.product.map((dd, index) => {
-                                                                    var _a;
-                                                                    return {
-                                                                        "js": "$homee/homee/homee_home.js",
-                                                                        "data": {
-                                                                            "data": {
-                                                                                "id": dd.id,
-                                                                                "name": dd.name,
-                                                                                "price": dd.price,
-                                                                                "images": dd.images,
-                                                                                "quantity": (_a = dd === null || dd === void 0 ? void 0 : dd.quantity) !== null && _a !== void 0 ? _a : 1,
-                                                                                "sale_price": dd.sale_price,
-                                                                                "preview_image": dd.preview_image,
-                                                                                "showUp": dd.showUp
-                                                                            },
-                                                                            "style": "",
-                                                                            "paddingL": "",
-                                                                            "paddingR": "",
-                                                                            "clickEvent": {
-                                                                                "src": "$homee/homee/event.js",
-                                                                                "route": "toProductDetail"
-                                                                            }
-                                                                        },
-                                                                        "type": "productItem",
-                                                                        "label": "商品",
-                                                                        "route": "homee_home",
-                                                                        "style": "width:100%",
-                                                                        "class": "d-flex ",
-                                                                        "expandStyle": false,
-                                                                        "refreshAllParameter": {},
-                                                                        "refreshComponentParameter": {}
-                                                                    };
-                                                                }),
-                                                                "class": "productCardParent",
-                                                                "paddingB": "16px",
-                                                                "paddingL": "",
-                                                                "paddingR": ""
-                                                            },
-                                                            "type": "container",
-                                                            "label": "元件容器",
-                                                            "route": "Glitter",
-                                                            "style": ""
-                                                        }
-                                                    ], []).render(gvc);
+                                                    return `
+                                                        <div class="left-line w-50" style="height:auto; padding-right:8px;"></div>
+                                                        <div class="right-line w-50" style="height:auto;padding-left:8px;"></div>                                                        
+                                                        `;
                                                 }
-                                            },
-                                            divCreate: { style: `padding-top:20px;`, class: `` },
+                                            }, divCreate: { class: `CardGroup d-flex align-items-start` },
                                             onCreate: () => {
-                                                setTimeout(() => {
-                                                    var _a, _b;
-                                                    let element = (_b = (_a = window.document) === null || _a === void 0 ? void 0 : _a.querySelector('.productCardParent')) !== null && _b !== void 0 ? _b : "";
-                                                    if (element) {
-                                                        element = element;
-                                                        if (!(document.querySelector(".colum-left"))) {
-                                                            element.innerHTML = `<div class="colum-left w-50" style="padding-right:8px;"></div>` + `<div class="colum-right w-50" style="padding-right:8px;"></div>` + element.innerHTML;
-                                                            let leftElement = (document.querySelector(".colum-left"));
-                                                            let rightElement = (document.querySelector(".colum-right"));
-                                                            while (element.children.length > 2) {
-                                                                if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
-                                                                    leftElement.appendChild(element.children[2]);
-                                                                }
-                                                                else {
-                                                                    rightElement.appendChild(element.children[2]);
-                                                                }
-                                                            }
-                                                            element.classList.add("d-flex");
+                                                let leftElement = document.querySelector('.left-line');
+                                                let rightElement = document.querySelector('.right-line');
+                                                let CardGroup = document.querySelector('.CardGroup');
+                                                if (!viewModel.loading) {
+                                                    let productSharedView = new ProductSharedView(gvc);
+                                                    viewModel.product.forEach((productData) => {
+                                                        let element = productSharedView.productCard({ class: ``, style: `` }, productData);
+                                                        if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
+                                                            leftElement.innerHTML += element;
                                                         }
-                                                    }
-                                                }, 100);
+                                                        else {
+                                                            rightElement.innerHTML += element;
+                                                        }
+                                                    });
+                                                    gvc.addStyle(`
+                                                            .swiper-pagination-bullet {
+                                                                background: #E0E0E0!important;;                    
+                                                            }
+                                                            .swiper-pagination-bullet-active{
+                                                                background: #FE5541!important;;
+                                                            }
+                                                        `);
+                                                    let test = document.querySelector('main');
+                                                    window.addEventListener('scroll', function (e) {
+                                                        if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
+                                                            const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
+                                                            viewModel.loading = true;
+                                                            new Category(glitter).getPageCategoryData("sub_category_id", id, 6, cursor, (response) => {
+                                                                viewModel.product.push(response["product_list"]);
+                                                                if (response["product_list"].length == 0) {
+                                                                    let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                                                    spinnerBlcok.classList.add("d-none");
+                                                                    viewModel.loading = true;
+                                                                }
+                                                                response["product_list"].forEach((productData) => {
+                                                                    let element = productSharedView.productCard({ class: ``, style: `` }, productData);
+                                                                    if (leftElement.getBoundingClientRect().height <= rightElement.getBoundingClientRect().height) {
+                                                                        leftElement.innerHTML += element;
+                                                                    }
+                                                                    else {
+                                                                        rightElement.innerHTML += element;
+                                                                    }
+                                                                });
+                                                                cursor = response["cursor"];
+                                                                viewModel.loading = false;
+                                                            }, sortBy);
+                                                        }
+                                                    });
+                                                }
                                             }
-                                        })}
+                                        })} 
+                                            <div class="w-100 spinnerBlcok">
+                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                    <div class="spinner-border" role="status"></div>
+                                                </div>
+                                            </div>                                          
                                         </main>                         
                                         `;
                                     }
@@ -820,12 +828,13 @@ color: #1E1E1E;">${data.title}</div>
                                     if (viewModel.loading) {
                                         if (gBundle.object.subCategory) {
                                             const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
-                                            new Category(glitter).getCategoryData("sub_category_id", id, (response) => {
-                                                viewModel.product = response;
+                                            new Category(glitter).getPageCategoryData("sub_category_id", id, 6, "", (response) => {
+                                                viewModel.product = response["product_list"];
+                                                cursor = response["cursor"];
                                                 viewModel.allData.push(response);
                                                 viewModel.loading = false;
-                                                gvc.notifyDataChange('cardGroup');
-                                            }, "manual");
+                                                gvc.notifyDataChange(['cardGroup']);
+                                            }, sortBy);
                                             viewModel.allData.push([]);
                                         }
                                         else {
