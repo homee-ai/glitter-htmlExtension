@@ -597,6 +597,9 @@ color: #1E1E1E;">${data.title}</div>
                             sortPriceOrder = -1;
                         }
                         function handleClick(event) {
+                            if (viewModel.loading) {
+                                return;
+                            }
                             if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
                                 isScrollListenerRegistered = true;
                                 const id = gBundle.object.subCategory[viewModel === null || viewModel === void 0 ? void 0 : viewModel.select].value;
@@ -605,6 +608,8 @@ color: #1E1E1E;">${data.title}</div>
                                     cursor = "";
                                     viewModel.product.push(response["product_list"]);
                                     if (response["product_list"].length == 0) {
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                        spinnerBlcok.classList.add("d-none");
                                         viewModel.loading = true;
                                     }
                                     response["product_list"].forEach((productData) => {
@@ -639,6 +644,8 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading = false;
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, sortBy);
                                     }
@@ -660,6 +667,8 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading = false;
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar', 'cardGroup']);
                                         }, sortBy);
                                     }
@@ -674,6 +683,8 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 2;
                                         sortPriceOrder *= -1;
                                         cursor = "";
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok');
+                                        spinnerBlcok.classList.remove("d-none");
                                         window.removeEventListener('scroll', handleClick);
                                         if (sortSelect == 2) {
                                             if (sortPriceOrder == 1) {
@@ -813,11 +824,11 @@ color: #1E1E1E;">${data.title}</div>
                                                 }
                                             }
                                         })} 
-<!--                                            <div class="w-100 spinnerBlcok">-->
-<!--                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">-->
-<!--                                                    <div class="spinner-border" role="status"></div>-->
-<!--                                                </div>-->
-<!--                                            </div>                                          -->
+                                            <div class="w-100 spinnerBlcok">
+                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                    <div class="spinner-border" role="status"></div>
+                                                </div>
+                                            </div>                                          
                                         </main>                         
                                         `;
                                     }

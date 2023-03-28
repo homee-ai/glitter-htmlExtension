@@ -650,6 +650,9 @@ color: #1E1E1E;">${data.title}</div>
 
                         }
                         function handleClick(event:Event) {
+                            if(viewModel.loading){
+                                return
+                            }
                             if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight && cursor) {
                                 isScrollListenerRegistered = true;
                                 const id = gBundle.object.subCategory[viewModel?.select].value
@@ -658,8 +661,8 @@ color: #1E1E1E;">${data.title}</div>
                                     cursor = "";
                                     viewModel.product.push(response["product_list"]);
                                     if (response["product_list"].length == 0){
-                                        // let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
-                                        // spinnerBlcok.classList.add("d-none");
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                        spinnerBlcok.classList.add("d-none");
                                         viewModel.loading = true;
                                     }
                                     response["product_list"].forEach((productData:any)=>{
@@ -704,8 +707,8 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading=false
-                                            // let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
-                                            // spinnerBlcok.classList.remove("d-none");
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar' , 'cardGroup']);
                                         },sortBy)
                                         // new Category(glitter).getCategoryData("sub_category_id",id,(response)=>{
@@ -736,8 +739,8 @@ color: #1E1E1E;">${data.title}</div>
                                             viewModel.product = response["product_list"];
                                             cursor = response["cursor"];
                                             viewModel.loading=false
-                                            // let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
-                                            // spinnerBlcok.classList.remove("d-none");
+                                            let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                            spinnerBlcok.classList.remove("d-none");
                                             gvc.notifyDataChange(['sortBar' , 'cardGroup']);
                                         },sortBy)
 
@@ -758,8 +761,8 @@ color: #1E1E1E;">${data.title}</div>
                                         sortSelect = 2;
                                         sortPriceOrder *= -1;
                                         cursor = "";
-                                        // let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
-                                        // spinnerBlcok.classList.remove("d-none");
+                                        let spinnerBlcok = document.querySelector('.spinnerBlcok') as HTMLElement;
+                                        spinnerBlcok.classList.remove("d-none");
 
                                         window.removeEventListener('scroll' ,handleClick);
 
@@ -925,11 +928,11 @@ color: #1E1E1E;">${data.title}</div>
                                                     
                                                 }
                                             })} 
-<!--                                            <div class="w-100 spinnerBlcok">-->
-<!--                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">-->
-<!--                                                    <div class="spinner-border" role="status"></div>-->
-<!--                                                </div>-->
-<!--                                            </div>                                          -->
+                                            <div class="w-100 spinnerBlcok">
+                                                <div class=" rounded py-5 h-100 d-flex align-items-center flex-column">
+                                                    <div class="spinner-border" role="status"></div>
+                                                </div>
+                                            </div>                                          
                                         </main>                         
                                         `
                                     } else {
