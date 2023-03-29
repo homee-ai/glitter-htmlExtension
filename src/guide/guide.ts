@@ -180,10 +180,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
-
+                        const guideNav=glitter.getUUID()
                         return `      
                         ${gvc.bindView({
-                            bind:"guideNav",
+                            bind:guideNav,
                             view:()=>{
                                 return `
                                     <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
@@ -218,7 +218,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         })}                          
                         
                         ${gvc.bindView({
-                            bind:"laravel",
+                            bind:glitter.getUUID(),
                             view : ()=>{
                                 return `
                                     <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;">
@@ -378,7 +378,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             }
                         })
                         return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                             <div class="w-100" style="">
                                 <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                 const dialog=new Dialog(gvc)
@@ -405,11 +405,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                            bind:"laravel",
+                            bind:glitter.getUUID(),
                             view : ()=>{
 
                                 return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;">
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.title}
                                 </div>
@@ -417,13 +417,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${widget.data.model.slogan}
                                 </div>
                                 <div class="d-flex align-items-center" style="margin-top:38px;">
-                                    
+                                         <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">        
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
                                     })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
-                                        })}">
                                     </button>
                                 </div>
                                 
@@ -573,7 +572,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                             }
                         })
                         return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                             <div class="w-100" style="">
                                 <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog=new Dialog(gvc)
@@ -600,24 +599,24 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                            bind:"laravel",
+                            bind:glitter.getUUID(),
                             view : ()=>{
 
                                 return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;font-family: 'Noto Sans TC';font-style: normal;">
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;font-family: 'Noto Sans TC';font-style: normal;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 700;font-size: 32px;line-height: 46px;color: #1E1E1E;">
                                     ${widget.data.model.title}
                                 </div>
                                 <div class="sloganText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 400;font-size: 14px;line-height: 150%;color: #858585;">
                                     ${widget.data.model.slogan}
                                 </div>
-                                <div class="d-flex align-items-center" style="margin-top:38px;">                                
+                                <div class="d-flex align-items-center" style="margin-top:38px;">   
+                                 <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">                             
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
                                     })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
-                                        })}">
                                     </button>
                                 </div>
                                 
@@ -767,9 +766,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                             }
                         })
                         return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                        <div class="w-100 background-guide" style="height: 100vh;padding-bottom: ${glitter.share?.bottomInset||10}px;padding-top: ${10 + glitter.share.topInset}px;">
                         
                             <div class="w-100" style="">
+                            
                                 <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog=new Dialog(gvc)
                                     Myspace.getFirstView((res:any)=>{
@@ -795,25 +795,26 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                            bind:"laravel",
+                            bind:glitter.getUUID(),
                             view : ()=>{
 
                                 return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;">
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.title}
                                 </div>
                                 <div class="sloganText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.slogan}
                                 </div>
-                                 <div class="d-flex align-items-center" style="margin-top:38px;">                                
+                                 <div class="d-flex align-items-center" style="margin-top:38px;">   
+                                  <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">                                
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
-                                        appConfig().changePage(gvc ,widget.data.model.nextPage)
+                                        glitter.runJsInterFace("startScan",{},()=>{})
                                     })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
-                                        })}">
                                     </button>
+                                   
                                 </div>
                                 
                             </div>
