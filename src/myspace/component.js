@@ -21,33 +21,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 data: [],
                                 showMore: true
                             };
-                            function checkFirstInto() {
-                                Myspace.getFirstView((res) => {
-                                    if (res.result == "SUCCESS") {
-                                        if (res.watched) {
-                                            viewGuide = res.watched;
-                                        }
-                                        else {
-                                            glitter.getPro("tempLeave", (data) => {
-                                                console.log("TETET");
-                                                console.log(data);
-                                                if (data.data == "true") {
-                                                    viewGuide = true;
-                                                    gvc.notifyDataChange("coverGuide");
-                                                }
-                                                else {
-                                                    viewGuide = false;
-                                                    gvc.notifyDataChange("coverGuide");
-                                                }
-                                            });
-                                        }
-                                    }
-                                    else {
-                                        alert("請檢察登入狀態或是網路資訊");
-                                    }
-                                });
-                            }
-                            checkFirstInto();
                             function getData() {
                                 vm.data = [];
                                 vm.loading = true;
