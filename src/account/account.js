@@ -191,6 +191,9 @@ Plugin.create(import.meta.url, (glitter) => {
                `);
                 return {
                     view: () => {
+                        glitter.share.viewGuide = false;
+                        glitter.setPro("viewGuide", "false", () => {
+                        });
                         widget.data.accountData = {
                             account: '',
                             password: ''

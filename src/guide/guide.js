@@ -182,7 +182,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="w-100" style="">
                                             <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     glitter.getPro("viewGuide", (response) => {
-                                        if ((response.data) !== 'true') {
+                                        if ((response.data) !== 'true' && glitter.share.blockBack) {
                                             glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                                 callback: () => {
                                                 }
@@ -370,7 +370,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             <div class="w-100" style="">
                                 <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                             glitter.getPro("viewGuide", (response) => {
-                                if ((response.data) !== 'true') {
+                                if ((response.data) !== 'true' && glitter.share.blockBack) {
                                     glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                         callback: () => {
                                         }
@@ -560,7 +560,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             <div class="w-100" style="">
                                 <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                             glitter.getPro("viewGuide", (response) => {
-                                if ((response.data) !== 'true') {
+                                if ((response.data) !== 'true' && glitter.share.blockBack) {
                                     glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                         callback: () => {
                                         }
@@ -753,7 +753,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             
                                 <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                             glitter.getPro("viewGuide", (response) => {
-                                if ((response.data) !== 'true') {
+                                if ((response.data) !== 'true' && glitter.share.blockBack) {
                                     glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                         callback: () => {
                                         }

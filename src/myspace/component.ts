@@ -106,7 +106,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             </div>
                                         </div>`
                                     }
-
+                                    glitter.share.blockBack=false
                                     return `
                                     ${gvc.bindView({
                                         bind:"coverGuide",
@@ -124,6 +124,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                     viewGuide=true
                                                     gvc.notifyDataChange('coverGuide')
                                                             appConfig().changePage(gvc , "guide1");
+                                                    glitter.share.blockBack=true
                                                     glitter.share.viewGuide=true
                                                         })}">
                                                             掃描教學
