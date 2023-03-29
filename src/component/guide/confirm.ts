@@ -33,8 +33,8 @@ init((gvc, glitter, gBundle) => {
                     src: url(assets/Font/NotoSansTC-Regular.otf);
                     font-weight: normal;
                 }
-                #confirm-appear::before {
-                    content: "";
+                 #confirm-appear::before {
+                    content: "✓";
                     display: inline-block;
                     width: 17px;
                     height: 17px;

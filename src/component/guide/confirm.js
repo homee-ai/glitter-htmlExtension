@@ -1,7 +1,6 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
 import { appConfig } from "../../config.js";
-import { Myspace } from "../../api/myspace.js";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);
@@ -28,8 +27,8 @@ init((gvc, glitter, gBundle) => {
                     src: url(assets/Font/NotoSansTC-Regular.otf);
                     font-weight: normal;
                 }
-                #confirm-appear::before {
-                    content: "";
+                 #confirm-appear::before {
+                    content: "✓";
                     display: inline-block;
                     width: 17px;
                     height: 17px;
