@@ -200,7 +200,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                                 animation: glitter.animation.fade
                                             })
                                         }else{
-                                            glitter.goBack()
+                                            appConfig().setHome(gvc, "myspace", {});
                                         }
                                     })
                                             })}">
@@ -390,7 +390,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         animation: glitter.animation.fade
                                     })
                                 }else{
-                                    glitter.goBack()
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             })
 
@@ -583,7 +583,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         animation: glitter.animation.fade
                                     })
                                 }else{
-                                    glitter.goBack()
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             })
         
@@ -778,7 +778,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         animation: glitter.animation.fade
                                     })
                                 }else{
-                                    glitter.goBack()
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             })
         

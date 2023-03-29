@@ -192,7 +192,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             });
                                         }
                                         else {
-                                            glitter.goBack();
+                                            appConfig().setHome(gvc, "myspace", {});
                                         }
                                     });
                                 })}">
@@ -380,7 +380,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     });
                                 }
                                 else {
-                                    glitter.goBack();
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             });
                         })}">
@@ -570,7 +570,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     });
                                 }
                                 else {
-                                    glitter.goBack();
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             });
                         })}">
@@ -763,7 +763,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     });
                                 }
                                 else {
-                                    glitter.goBack();
+                                    appConfig().setHome(gvc, "myspace", {});
                                 }
                             });
                         })}">

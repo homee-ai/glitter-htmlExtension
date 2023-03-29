@@ -197,6 +197,7 @@ Plugin.create(import.meta.url, (glitter) => {
                `)
                 return {
                     view: () => {
+                        glitter.share.viewGuide=false
                         widget.data.accountData= {
                             account : '',
                             password : ''
