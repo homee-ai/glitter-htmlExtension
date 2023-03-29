@@ -191,7 +191,8 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                                 const dialog=new Dialog(gvc)
                                                 Myspace.getFirstView((res:any)=>{
-                                                   
+                                                    console.log("test")
+                                                    console.log(res.watched)
                                                     if (!res.watched){
                                                         glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                                             callback: () => {
@@ -422,7 +423,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
                                     })}">${widget.data.model.BTN}
                                         <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
+                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
                                         })}">
                                     </button>
                                 </div>
@@ -616,7 +617,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
                                     })}">${widget.data.model.BTN}
                                         <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
+                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
                                         })}">
                                     </button>
                                 </div>
@@ -811,7 +812,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                         appConfig().changePage(gvc ,widget.data.model.nextPage)
                                     })}">${widget.data.model.BTN}
                                         <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            glitter.goBack()
+                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
                                         })}">
                                     </button>
                                 </div>

@@ -42,6 +42,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                     if (res.result == "SUCCESS"){
                                         viewGuide = res.watched;
                                     }else {
+                                        glitter.getPro("tempLeave" ,(data:any)=>{
+                                            console.log(data)
+                                            if (data=="true"){
+                                                alert("test");
+                                            }
+                                        })
                                         alert("請檢察登入狀態或是網路資訊")
                                     }
                                 })
@@ -217,11 +223,11 @@ font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height
 padding: 0;margin: 0 59px;bottom:25px;width:calc(100vw - 108px);height:48px;
 background: #FE5541;border-radius: 24px; " onclick="${
                                         gvc.event((e) => {
-                                            glitter.getPro("confirmGuide" , (res:any)=>{
+                                            // glitter.getPro("confirmGuide" , (res:any)=>{
                                                 // glitter.setPro("firstMyspace" , undefined ,()=>{})
-                                                if (!res.data){
-                                                    appConfig().changePage(gvc ,"guide1" )
-                                                }else{
+                                                // if (!res.data){
+                                                //     appConfig().changePage(gvc ,"guide1" )
+                                                // }else{
                                                     const dialog = new Dialog()
                                                     dialog.dataLoading(true)
                                                     glitter.runJsInterFace("startScan", {}, () => {
@@ -232,7 +238,7 @@ background: #FE5541;border-radius: 24px; " onclick="${
                                                                 dialog.showInfo("僅支援APP版本")
                                                             }
                                                         })
-                                                }
+                                                // }
                                             })
                                             
                                         })

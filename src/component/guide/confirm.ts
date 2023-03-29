@@ -34,7 +34,7 @@ init((gvc, glitter, gBundle) => {
                     font-weight: normal;
                 }
                 #confirm-appear::before {
-                    content: "";
+                    content: "✓";
                     display: inline-block;
                     width: 17px;
                     height: 17px;
@@ -54,7 +54,7 @@ init((gvc, glitter, gBundle) => {
                         <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">HOMEE</div>
                         <div style="font-weight: 400;font-size: 18px;line-height: 26px;color: #1E1E1E;">確定退出教學影片嗎?</div>
                         <div class="d-flex align-items-center justify-content-center w-100" style="margin-top: 8px;">
-                            <input style="border-radius: 4px;border: 1px solid #1E1E1E;appearance: none;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >不再顯示教學影片
+                            <input style="border-radius: 4px;border: 1px solid #1E1E1E;appearance: none;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >我已知道如何掃描
                         </div>
                         <div class="d-flex align-items-center" style=" margin-top: 18px;border-top: 1px solid #E0E0E0;font-weight: 400;font-size: 18px;line-height: 26px;color: #FE5541;">
                             <div class="w-50" style="height: 100%" onclick="${gvc.event(()=>{
@@ -68,8 +68,11 @@ init((gvc, glitter, gBundle) => {
                                         appConfig().setHome(gvc, "myspace", {});
                                     })
                                 }else {
-                                    glitter.closeDiaLog("leaveGuide")
-                                    appConfig().setHome(gvc, "myspace", {});
+                                    glitter.setPro("tempLeave","true" ,()=>{
+                                        glitter.closeDiaLog("leaveGuide")
+                                        appConfig().setHome(gvc, "myspace", {});
+                                    })
+                                    
                                 }
                             })}">確認</div>
                         </div>
