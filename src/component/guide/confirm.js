@@ -1,7 +1,6 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
 import { appConfig } from "../../config.js";
-import { Myspace } from "../../api/myspace.js";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);
@@ -29,7 +28,7 @@ init((gvc, glitter, gBundle) => {
                     font-weight: normal;
                 }
                 #confirm-appear::before {
-                    content: "✓";
+                    content: "";
                     display: inline-block;
                     width: 17px;
                     height: 17px;
@@ -49,7 +48,7 @@ init((gvc, glitter, gBundle) => {
                         <div style="font-weight: 700;font-size: 18px;line-height: 26px;color: #1E1E1E;">HOMEE</div>
                         <div style="font-weight: 400;font-size: 18px;line-height: 26px;color: #1E1E1E;">確定退出教學影片嗎?</div>
                         <div class="d-flex align-items-center justify-content-center w-100" style="margin-top: 8px;">
-                            <input style="border-radius: 4px;border: 1px solid #1E1E1E;appearance: none;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >我已知道如何掃描
+                            <input style="border-radius: 4px;border: 1px solid #1E1E1E;appearance: none;width: 16px;height: 16px;margin-right:8px;font-weight: 400;font-size: 12px;line-height: 17px;color: #1E1E1E;" type="checkbox" id="confirm-appear" >不再顯示教學影片
                         </div>
                         <div class="d-flex align-items-center" style=" margin-top: 18px;border-top: 1px solid #E0E0E0;font-weight: 400;font-size: 18px;line-height: 26px;color: #FE5541;">
                             <div class="w-50" style="height: 100%" onclick="${gvc.event(() => {
@@ -58,15 +57,15 @@ init((gvc, glitter, gBundle) => {
                             <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(() => {
                 let inputElement = (document.querySelector('#confirm-appear'));
                 if (inputElement.checked) {
-                    Myspace.setFirstView(() => {
-                        glitter.closeDiaLog("leaveGuide");
+                    glitter.setPro("viewGuide", "true", () => {
                         appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
                     });
                 }
                 else {
-                    glitter.setPro("tempLeave", "true", () => {
-                        glitter.closeDiaLog("leaveGuide");
+                    glitter.setPro("viewGuide", "false", () => {
                         appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
                     });
                 }
             })}">確認</div>

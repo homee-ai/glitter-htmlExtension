@@ -123,7 +123,6 @@ Plugin.create(import.meta.url,(glitter)=>{
             },
             render:(gvc, widget, setting, hoverID) => {
                 let bottomInset = 0
-                let topInset = 10
                 return {
                     view: ()=>{
                         let backBTN = false;
@@ -170,18 +169,6 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         
                         `)
-                        glitter.runJsInterFace("getTopInset", {}, (response) => {
-                            if (topInset != response.data){
-                                topInset = (response.data)
-                                gvc.notifyDataChange(guideNav)
-                            }
-
-                        }, {
-                            webFunction: () => {
-                                return {data: 10}
-                            }
-                        })
-
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data){
                                 bottomInset = (response.data)
@@ -199,25 +186,25 @@ Plugin.create(import.meta.url,(glitter)=>{
                             bind:guideNav,
                             view:()=>{
                                 return `
-                                    <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                                    <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                                         <div class="w-100" style="">
-                                            <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                                const dialog=new Dialog(gvc)
-                                                Myspace.getFirstView((res:any)=>{
-                                                    console.log("test")
-                                                    console.log(res.watched)
-                                                    if (!res.watched){
-                                                        glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
-                                                            callback: () => {
-                                                            }
-                                                        }, {
-                                                            backGroundColor:"rgba(41, 41, 41, 0.3)",
-                                                            animation: glitter.animation.fade
-                                                        })
-                                                    }else {
-                                                        appConfig().setHome(gvc, "myspace", {});
-                                                    }
-                                                })
+                                            <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                    glitter.getPro("viewGuide",(response:any)=>{
+                                        if((response.data)!=='true'){
+                                            glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
+                                                callback: () => {
+
+                                                }
+                                            }, {
+                                                backGroundColor:"rgba(41, 41, 41, 0.3)",
+                                                animation: glitter.animation.fade
+                                            })
+                                        }else{
+                                            glitter.goBack()
+                                        }
+                                    })
+
+                                
                                                                                 
                                             })}">
                                         </div>
@@ -369,22 +356,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         
                         `)
-                        let id = glitter.getUUID();
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             if (topInset != response.data){
                                 topInset = (response.data)
-                                gvc.notifyDataChange(id)
-                            }
-
-                        }, {
-                            webFunction: () => {
-                                return {data: 20}
-                            }
-                        })
-                        glitter.runJsInterFace("getBottomInset", {}, (response) => {
-                            if (bottomInset != response.data){
-                                bottomInset = (response.data)
-                                gvc.notifyDataChange(id)
+                                gvc.notifyDataChange('mainView')
                             }
 
                         }, {
@@ -392,30 +367,38 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
-                        return ` 
-                        ${gvc.bindView({
-                            bind:id,
-                            view : ()=>{
-                                return`<div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                        glitter.runJsInterFace("getBottomInset", {}, (response) => {
+                            if (bottomInset != response.data){
+                                bottomInset = (response.data)
+                                gvc.notifyDataChange('laravel')
+                            }
+
+                        }, {
+                            webFunction: () => {
+                                return {data: 10}
+                            }
+                        })
+                        return `                                
+                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                             <div class="w-100" style="">
-                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                    const dialog=new Dialog(gvc)
-                                    Myspace.getFirstView((res:any)=>{
+                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                const dialog=new Dialog(gvc)
+                                Myspace.getFirstView((res:any)=>{
 
-                                        if (!res.watched){
-                                            glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
-                                                callback: () => {
-                                                }
-                                            }, {
-                                                backGroundColor:"rgba(41, 41, 41, 0.3)",
-                                                animation: glitter.animation.fade
-                                            })
-                                        }else {
-                                            appConfig().setHome(gvc, "myspace", {});
+                                if (!res.watched){
+                                    glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
+                                        callback: () => {
                                         }
+                                    }, {
+                                        backGroundColor:"rgba(41, 41, 41, 0.3)",
+                                        animation: glitter.animation.fade
                                     })
+                                }else {
+                                    appConfig().setHome(gvc, "myspace", {});
+                                }
+                                })
 
-                                })}">
+                            })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
                                 <source src="${new URL!(`video/homee 操作教學(步驟二).mp4`, import.meta.url)}" type="video/mp4">
@@ -423,11 +406,11 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                                    bind:glitter.getUUID(),
-                                    view : ()=>{
+                            bind:glitter.getUUID(),
+                            view : ()=>{
 
-                                        return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;">
+                                return `
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.title}
                                 </div>
@@ -435,28 +418,21 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     ${widget.data.model.slogan}
                                 </div>
                                 <div class="d-flex align-items-center" style="margin-top:38px;">
-                                        
+                                         <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">        
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
-                                            appConfig().changePage(gvc ,widget.data.model.nextPage)
-                                        })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
-                                        })}">
+                                        appConfig().changePage(gvc ,widget.data.model.nextPage)
+                                    })}">${widget.data.model.BTN}
                                     </button>
                                 </div>
                                 
                             </div>
                         `
-                                    },
-                                    divCreate:{style:`animation-delay: 0s;`}
+                            },
+                            divCreate:{style:`animation-delay: 0s;`}
 
-                                })}`
-                            },divCreate:{},
-                            onCreate:()=>{
-                                
-                            }
-                        })}                               
-                        
+                        })}
                     `
                     },
                     editor: ()=>{
@@ -529,7 +505,6 @@ Plugin.create(import.meta.url,(glitter)=>{
             render:(gvc, widget, setting, hoverID) => {
                 let topInset = 0
                 let bottomInset = 0
-                let id = glitter.getUUID();
                 return {
                     view: ()=>{
                         gvc.addStyle(`
@@ -578,7 +553,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             if (topInset != response.data){
                                 topInset = (response.data)
-                                gvc.notifyDataChange('id')
+                                gvc.notifyDataChange('mainView')
                             }
 
                         }, {
@@ -589,7 +564,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
                             if (bottomInset != response.data){
                                 bottomInset = (response.data)
-                                gvc.notifyDataChange('id')
+                                gvc.notifyDataChange('laravel')
                             }
 
                         }, {
@@ -597,16 +572,13 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
-                        return gvc.bindView({
-                            bind:id,
-                            view:()=>{
-                                return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + topInset}px;">
+                        return `                                
+                        <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                             <div class="w-100" style="">
-                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset}px;z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog=new Dialog(gvc)
                                     Myspace.getFirstView((res:any)=>{
-
+    
                                         if (!res.watched){
                                             glitter.openDiaLog(`${new URL!(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                                 callback: () => {
@@ -619,7 +591,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             appConfig().setHome(gvc, "myspace", {});
                                         }
                                     })
-
+        
                                 })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
@@ -628,37 +600,34 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                                    bind:glitter.getUUID(),
-                                    view : ()=>{
+                            bind:glitter.getUUID(),
+                            view : ()=>{
 
-                                        return `
-                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${bottomInset||10}px;font-family: 'Noto Sans TC';font-style: normal;">
+                                return `
+                            <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;font-family: 'Noto Sans TC';font-style: normal;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 700;font-size: 32px;line-height: 46px;color: #1E1E1E;">
                                     ${widget.data.model.title}
                                 </div>
                                 <div class="sloganText d-flex flex-wrap justify-content-center align-items-center" style="font-weight: 400;font-size: 14px;line-height: 150%;color: #858585;">
                                     ${widget.data.model.slogan}
                                 </div>
-                                <div class="d-flex align-items-center" style="margin-top:38px;">                                                              
+                                <div class="d-flex align-items-center" style="margin-top:38px;">   
+                                 <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">                             
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
-                                            appConfig().changePage(gvc ,widget.data.model.nextPage)
-                                        })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
-                                        })}">
+                                        appConfig().changePage(gvc ,widget.data.model.nextPage)
+                                    })}">${widget.data.model.BTN}
                                     </button>
                                 </div>
                                 
                             </div>
                         `
-                                    },
-                                    divCreate:{style:`animation-delay: 0s;`}
+                            },
+                            divCreate:{style:`animation-delay: 0s;`}
 
-                                })}
+                        })}
                     `
-                            },divCreate:{}
-                        })
-
                     },
                     editor: ()=>{
                         return gvc.map([ `
@@ -730,9 +699,7 @@ Plugin.create(import.meta.url,(glitter)=>{
             render:(gvc, widget, setting, hoverID) => {
                 let topInset = 0
                 let bottomInset = 0
-                let id = glitter.getUUID();
                 return {
-
                     view: ()=>{
                         gvc.addStyle(`
                             body{
@@ -780,13 +747,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                         glitter.runJsInterFace("getTopInset", {}, (response) => {
                             if (topInset != response.data){
                                 topInset = (response.data)
-                                gvc.notifyDataChange(id)
+                                gvc.notifyDataChange('mainView')
                             }
 
                         }, {
                             webFunction: () => {
                                 return {data: 10}
-
                             }
                         })
                         glitter.runJsInterFace("getBottomInset", {}, (response) => {
@@ -800,15 +766,12 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 return {data: 10}
                             }
                         })
-                        return gvc.bindView({
-                            bind:id,
-                            view:()=>{
-                                return `                                
-                        <div class="w-100 background-guide" style="height: 100vh;padding-bottom: ${bottomInset||10}px;padding-top: ${10 + topInset}px;">
+                        return `                                
+                        <div class="w-100 background-guide" style="height: 100vh;padding-bottom: ${glitter.share?.bottomInset||10}px;padding-top: ${10 + glitter.share.topInset}px;">
                         
                             <div class="w-100" style="">
                             
-                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
+                                <img class="" src="${new URL!(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
                                     const dialog=new Dialog(gvc)
                                     Myspace.getFirstView((res:any)=>{
 
@@ -824,7 +787,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                             appConfig().setHome(gvc, "myspace", {});
                                         }
                                     })
-
+        
                                 })}">
                             </div>
                             <video autoplay loop muted playsinline defaultmuted preload="auto" style="height: 100%;width: 100%;position:absolute;left: 0;top: -10%" muted>
@@ -833,10 +796,10 @@ Plugin.create(import.meta.url,(glitter)=>{
                             
                         </div>
                         ${gvc.bindView({
-                                    bind:glitter.getUUID(),
-                                    view : ()=>{
+                            bind:glitter.getUUID(),
+                            view : ()=>{
 
-                                        return `
+                                return `
                             <div class="laravel w-100 d-flex flex-column align-items-center" style="padding-bottom: ${glitter.share?.bottomInset||10}px;">
                                 <div class="titleText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.title}
@@ -844,27 +807,25 @@ Plugin.create(import.meta.url,(glitter)=>{
                                 <div class="sloganText d-flex flex-wrap justify-content-center align-items-center">
                                     ${widget.data.model.slogan}
                                 </div>
-                                 <div class="d-flex align-items-center" style="margin-top:38px;">                                                                   
+                                 <div class="d-flex align-items-center" style="margin-top:38px;">   
+                                  <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px; margin-right: 10px;" alt="" onclick="${gvc.event(() => {
+                                    glitter.goBack()
+                                })}">                                
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
-                                            glitter.runJsInterFace("startScan",{},()=>{})
-                                        })}">${widget.data.model.BTN}
-                                        <img class="" src="${new URL!(`../img/guide-back.svg`, import.meta.url)}" style="width: 40px;height: 40px;position: absolute;top: 50%;left: 0;transform: translate(calc(-100% - 8px), -50%);" alt="" onclick="${gvc.event(() => {
-                                            appConfig().changePage(gvc ,widget.data.model.prevPage)
-                                        })}">
+                                        glitter.goBack("myspace")
+                                        glitter.runJsInterFace("startScan",{},()=>{})
+                                    })}">${widget.data.model.BTN}
                                     </button>
                                    
                                 </div>
                                 
                             </div>
                         `
-                                    },
-                                    divCreate:{style:`animation-delay: 0s;`}
+                            },
+                            divCreate:{style:`animation-delay: 0s;`}
 
-                                })}
+                        })}
                     `
-                            },divCreate:{}
-                        })
-
                     },
                     editor: ()=>{
                         return gvc.map([ `
