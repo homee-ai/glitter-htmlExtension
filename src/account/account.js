@@ -191,9 +191,6 @@ Plugin.create(import.meta.url, (glitter) => {
                `);
                 return {
                     view: () => {
-                        glitter.share.viewGuide = false;
-                        glitter.setPro("viewGuide", "false", () => {
-                        });
                         widget.data.accountData = {
                             account: '',
                             password: ''
@@ -224,8 +221,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                         dialog.showInfo('密碼輸入錯誤或是查無此帳號');
                                     }
                                     else {
-                                        glitter.setPro("viewGuide", "false", () => {
-                                        });
                                         dialog.showInfo('登入成功!');
                                         appConfig().setHome(gvc, 'user_setting', {});
                                     }
@@ -333,8 +328,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 }
                                                 else {
                                                     dialog.showInfo('登入成功!');
-                                                    glitter.setPro("viewGuide", "false", () => {
-                                                    });
                                                     appConfig().setHome(gvc, 'user_setting', {});
                                                 }
                                             });
@@ -363,8 +356,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 }
                                                 else {
                                                     dialog.showInfo('登入成功!');
-                                                    glitter.setPro("viewGuide", "false", () => {
-                                                    });
                                                     appConfig().setHome(gvc, 'user_setting', {});
                                                 }
                                             });
@@ -387,8 +378,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 }
                                                 else {
                                                     dialog.showInfo('登入成功!');
-                                                    glitter.setPro("viewGuide", "false", () => {
-                                                    });
                                                     appConfig().setHome(gvc, 'user_setting', {});
                                                 }
                                             });

@@ -197,14 +197,10 @@ Plugin.create(import.meta.url, (glitter) => {
                `)
                 return {
                     view: () => {
-                        glitter.share.viewGuide=false
-                        glitter.setPro("viewGuide", "false", () => {
-                        });
                         widget.data.accountData= {
                             account : '',
                             password : ''
                         };
-
 
                         gvc.addMtScript([{src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js`}], () => {
                             gvc.notifyDataChange('mainView')
@@ -232,8 +228,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                     if (!data) {
                                         dialog.showInfo('密碼輸入錯誤或是查無此帳號')
                                     } else {
-                                        glitter.setPro("viewGuide","false",()=>{
-                                        })
                                         dialog.showInfo('登入成功!')
                                         appConfig().setHome(gvc, 'user_setting', {})
 
@@ -340,8 +334,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                     })
                                                 }else {
                                                     dialog.showInfo('登入成功!')
-                                                    glitter.setPro("viewGuide","false",()=>{
-                                                    })
                                                     appConfig().setHome(gvc, 'user_setting', {})
                                                 }
                                             })
@@ -369,8 +361,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         })
                                                     }else {
                                                         dialog.showInfo('登入成功!')
-                                                        glitter.setPro("viewGuide","false",()=>{
-                                                        })
                                                         appConfig().setHome(gvc, 'user_setting', {})
                                                     }
                                                 })
@@ -392,8 +382,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                                    dialog.showInfo('驗證成功，登入或註冊後即可綁定遠傳帳號!')
                                                }else {
                                                    dialog.showInfo('登入成功!')
-                                                   glitter.setPro("viewGuide","false",()=>{
-                                                   })
                                                    appConfig().setHome(gvc, 'user_setting', {})
                                                }
                                            })
