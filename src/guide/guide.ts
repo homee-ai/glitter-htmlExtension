@@ -812,7 +812,7 @@ Plugin.create(import.meta.url,(glitter)=>{
                                     glitter.goBack()
                                 })}">                                
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(()=>{
-                                        glitter.goBack("myspace")
+                                        glitter.goBack("myspace");
                                         glitter.runJsInterFace("startScan",{},()=>{})
                                     })}">${widget.data.model.BTN}
                                     </button>
