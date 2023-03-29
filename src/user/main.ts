@@ -577,7 +577,10 @@ ${ClickEvent.editer(gvc,widget,dd)}
                                     if(result){
                                         appConfig().setUserData({
                                             value: {}, callback: (resonse) => {
-                                                appConfig().setHome(gvc, 'home')
+                                                glitter.setPro("tempLeave","falser" ,()=>{
+                                                    appConfig().setHome(gvc, 'home')
+                                                })
+
                                             }
                                         })
                                     }
