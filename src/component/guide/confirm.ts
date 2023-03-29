@@ -34,7 +34,7 @@ init((gvc, glitter, gBundle) => {
                     font-weight: normal;
                 }
                 #confirm-appear::before {
-                    content: "✔";
+                    content: "";
                     display: inline-block;
                     width: 17px;
                     height: 17px;
@@ -42,8 +42,7 @@ init((gvc, glitter, gBundle) => {
                     color:white;
                     font-size:15px;                   
                     border-radius: 4px;
-                    margin:-1px -1px;
-                    
+                    margin:-1px -1px;                   
                 }
                 #confirm-appear:checked::before {
                   background-color: #FE5541;
