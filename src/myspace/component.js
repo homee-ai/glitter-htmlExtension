@@ -194,20 +194,12 @@ font-style: normal;font-weight: 400;font-size: 15px;margin-top: 14px;line-height
 <div id="" class="position-absolute d-flex  flex-column align-items-center justify-content-center p-0" style="
 padding: 0;margin: 0 59px;bottom:25px;width:calc(100vw - 108px);height:48px;
 background: #FE5541;border-radius: 24px; " onclick="${gvc.event((e) => {
-                                        glitter.getPro("confirmGuide", (res) => {
-                                            if (!res.data) {
-                                                appConfig().changePage(gvc, "guide1");
-                                            }
-                                            else {
-                                                const dialog = new Dialog();
-                                                dialog.dataLoading(true);
-                                                glitter.runJsInterFace("startScan", {}, () => {
-                                                    getData();
-                                                }, {
-                                                    webFunction: () => {
-                                                        dialog.showInfo("僅支援APP版本");
-                                                    }
-                                                });
+                                        const dialog = new Dialog();
+                                        glitter.runJsInterFace("startScan", {}, () => {
+                                            getData();
+                                        }, {
+                                            webFunction: () => {
+                                                dialog.showInfo("僅支援APP版本");
                                             }
                                         });
                                     })}">
