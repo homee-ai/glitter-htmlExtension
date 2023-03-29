@@ -58,14 +58,16 @@ init((gvc, glitter, gBundle) => {
                             <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(() => {
                 let inputElement = (document.querySelector('#confirm-appear'));
                 if (inputElement.checked) {
-                    Myspace.setFirstView(() => {
-                        glitter.closeDiaLog("leaveGuide");
+                    glitter.setPro("viewGuide", "true", () => {
                         appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
                     });
                 }
                 else {
-                    glitter.closeDiaLog("leaveGuide");
-                    appConfig().setHome(gvc, "myspace", {});
+                    glitter.setPro("viewGuide", "false", () => {
+                        appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
+                    });
                 }
             })}">確認</div>
                         </div>

@@ -183,9 +183,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="w-100 background-guide" style="height: 100vh;padding-top: ${10 + glitter.share.topInset}px;">
                                         <div class="w-100" style="">
                                             <img class="" src="${new URL(`../img/sample/idea/left-arrow-white.svg`, import.meta.url)}" style="position:absolute; left:19px;top:${10 + glitter.share.topInset};z-index:3;width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
-                                    const dialog = new Dialog(gvc);
-                                    Myspace.getFirstView((res) => {
-                                        if (!res.watched) {
+                                    glitter.getPro("viewGuide", (response) => {
+                                        if ((response.data) !== 'true') {
                                             glitter.openDiaLog(`${new URL(`../component/guide/confirm.js`, import.meta.url)}`, 'leaveGuide', {
                                                 callback: () => {
                                                 }
@@ -195,7 +194,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             });
                                         }
                                         else {
-                                            appConfig().setHome(gvc, "myspace", {});
+                                            glitter.goBack();
                                         }
                                     });
                                 })}">
@@ -796,6 +795,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     glitter.goBack();
                                 })}">                                
                                     <button class="border-0 nextBTN" style="position: relative" onclick="${gvc.event(() => {
+                                    glitter.goBack("myspace");
                                     glitter.runJsInterFace("startScan", {}, () => { });
                                 })}">${widget.data.model.BTN}
                                     </button>
