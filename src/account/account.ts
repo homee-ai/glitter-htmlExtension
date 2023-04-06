@@ -440,7 +440,9 @@ Plugin.create(import.meta.url, (glitter) => {
                     gender: '-1',
                     birthDay: '',
                     name: '',
-                    inviteCode: ''
+                    inviteCode: '',
+                    email:'',
+                    pwd:''
                 },
                 topInset: 10,
                 background: new URL('../img/component/login/login_page.json', import.meta.url),
@@ -605,14 +607,26 @@ Plugin.create(import.meta.url, (glitter) => {
                     if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.name === '') {
                         dialog.showInfo("請填寫完整資料!")
                     } else {
+                        let temp = {
+                            third:gvc.parameter.pageConfig?.obj.data.third,
+                            first: widget.data.loginData.firstName,
+                            last: widget.data.loginData.lastName,
+                            inviteCode: (widget.data.loginData.inviteCode) || undefined,
+                            email: widget.data.loginData.email,
+                            pwd: widget.data.loginData.password,
+                            gender: widget.data.loginData.gender,
+                            birth: widget.data.loginData.birthDay,
+                            userName: widget.data.loginData.name,
+                        }
                         dialog.dataLoading(true)
+
                         User.register({
                             third:gvc.parameter.pageConfig?.obj.data.third,
                             first: widget.data.loginData.firstName,
                             last: widget.data.loginData.lastName,
                             inviteCode: (widget.data.loginData.inviteCode) || undefined,
-                            email: gvc.parameter.pageConfig?.obj.data.account,
-                            pwd: gvc.parameter.pageConfig?.obj.data.pwd,
+                            email: widget.data.loginData.email,
+                            pwd: widget.data.loginData.password,
                             gender: widget.data.loginData.gender,
                             birth: widget.data.loginData.birthDay,
                             userName: widget.data.loginData.name,
@@ -678,21 +692,32 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })}">
                                                     </div>                        
                                                 <!--四個註冊元素 每個都必填-->
-                                                    <div class="d-flex flex-wrap w-100" style="padding-left: 47px;padding-right: 47px;">
-                                                    ${(exists) ? ` <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;margin-bottom: 23px;">
-                                                    <img src="img/sample/login/message.svg" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e: HTMLInputElement) => {
-                                        widget.data.loginData.account = e.value;
-                                    })}">
-                                                </div>` : ``}
+                                                
+                                                <div class="d-flex flex-wrap w-100" style="padding-left: 47px;padding-right: 47px;">                                                    
+                                                    <div class="d-flex w-100 w-100 me-0">
+                                                        <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
+                                                            <img src="${new URL('../img/component/login/message.svg', import.meta.url)}">
+                                                            <input class="w-100" placeholder="電子郵件地址或手機號碼" name="email" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                                widget.data.loginData.email = e.value
+                                                            })}">                                                           
+                                                        </div>                       
+                                                    </div>
+                                                    <div class="d-flex w-100 w-100 me-0">
+                                                        <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
+                                                            <img src="${new URL('../img/component/login/password.svg', import.meta.url)}">
+                                                            <input class="w-100" placeholder="密碼" name="password" type="password" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                                widget.data.loginData.password = e.value
+                                                            })}">                                                           
+                                                        </div>                       
+                                                    </div>
                                                     <div class="d-flex w-100">
-                                                        <div class="registerElement d-flex">                                                           
+                                                        <div class="registerElement d-flex elementMargin">                                                           
                                                             <img src="${new URL('../img/component/login/L.svg', import.meta.url)}">
                                                             <input class="" placeholder="姓氏" name="last" onchange="${gvc.event((e: HTMLInputElement) => {
-                                        widget.data.loginData.firstName = e.value
-                                    })}">                                                           
+                                                                widget.data.loginData.firstName = e.value
+                                                            })}">                                                           
                                                         </div>
-                                                        <div class="registerElement d-flex m-0">
+                                                        <div class="registerElement d-flex  elementMargin">
                                                             <img src="${new URL('../img/component/login/F.svg', import.meta.url)}">
                                                             <input class="" placeholder="名稱" name="name" value="" onchange="${gvc.event((e: HTMLInputElement) => {
                                         widget.data.loginData.lastName = e.value
@@ -703,8 +728,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                             <img src="${new URL('../img/component/login/addUser.svg', import.meta.url)}">
                                                             <input class="w-100" placeholder="用戶名稱" name="name" onchange="${gvc.event((e: HTMLInputElement) => {
-                                        widget.data.loginData.name = e.value
-                                    })}">                                                           
+                                                                widget.data.loginData.name = e.value
+                                                            })}">                                                           
                                                         </div>                       
                                                     </div>
                                                     <div class="d-flex w-100">
@@ -747,8 +772,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <!--註冊-->
                                                 <!--todo click-->
                                                     <div class="loginBTN d-flex justify-content-center align-items-center" style="${(exists) ? `margin-top: 50px;` : ``}" onclick="${gvc.event(() => {
-                                        checkRegister()
-                                    })} ">
+                                                        checkRegister()
+                                                    })} ">
                                                         註冊
                                                     </div>
                                                 </div>                        
