@@ -197,11 +197,11 @@ Plugin.create(import.meta.url, (glitter) => {
                `)
                 return {
                     view: () => {
+                        glitter.share.viewGuide=false
                         widget.data.accountData= {
                             account : '',
                             password : ''
                         };
-
 
                         gvc.addMtScript([{src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js`}], () => {
                             gvc.notifyDataChange('mainView')
@@ -229,7 +229,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                     if (!data) {
                                         dialog.showInfo('密碼輸入錯誤或是查無此帳號')
                                     } else {
-
                                         dialog.showInfo('登入成功!')
                                         appConfig().setHome(gvc, 'user_setting', {})
 

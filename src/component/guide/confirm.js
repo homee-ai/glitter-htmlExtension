@@ -1,7 +1,6 @@
 import { init } from '../../glitterBundle/GVController.js';
 import { Funnel } from '../../glitterBundle/funnel.js';
 import { appConfig } from "../../config.js";
-import { Myspace } from "../../api/myspace.js";
 init((gvc, glitter, gBundle) => {
     const id = glitter.getUUID();
     let funnel = new Funnel(gvc);
@@ -28,8 +27,8 @@ init((gvc, glitter, gBundle) => {
                     src: url(assets/Font/NotoSansTC-Regular.otf);
                     font-weight: normal;
                 }
-                #confirm-appear::before {
-                    content: "✔";
+                 #confirm-appear::before {
+                    content: "✓";
                     display: inline-block;
                     width: 17px;
                     height: 17px;
@@ -37,8 +36,7 @@ init((gvc, glitter, gBundle) => {
                     color:white;
                     font-size:15px;                   
                     border-radius: 4px;
-                    margin:-1px -1px;
-                    
+                    margin:-1px -1px;                   
                 }
                 #confirm-appear:checked::before {
                   background-color: #FE5541;
@@ -59,14 +57,16 @@ init((gvc, glitter, gBundle) => {
                             <div class="w-50" style="height: 100%;padding:11px 0 ;font-weight: 500;border-left: 1px solid #E0E0E0;" onclick="${gvc.event(() => {
                 let inputElement = (document.querySelector('#confirm-appear'));
                 if (inputElement.checked) {
-                    Myspace.setFirstView(() => {
-                        glitter.closeDiaLog("leaveGuide");
+                    glitter.setPro("viewGuide", "true", () => {
                         appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
                     });
                 }
                 else {
-                    glitter.closeDiaLog("leaveGuide");
-                    appConfig().setHome(gvc, "myspace", {});
+                    glitter.setPro("viewGuide", "false", () => {
+                        appConfig().setHome(gvc, "myspace", {});
+                        glitter.closeDiaLog("leaveGuide");
+                    });
                 }
             })}">確認</div>
                         </div>

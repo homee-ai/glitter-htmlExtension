@@ -24,14 +24,10 @@ Plugin.create(import.meta.url, (glitter) => {
                             function getData() {
                                 vm.data = [];
                                 vm.loading = true;
-                                gvc.notifyDataChange(id);
-                                Myspace.getFirstView((res) => {
-                                    if (res.result == "SUCCESS") {
-                                        viewGuide = res.watched;
-                                    }
-                                    else {
-                                        alert("請檢察登入狀態或是網路資訊");
-                                    }
+                                glitter.getPro("viewGuide", (response) => {
+                                    viewGuide = (response.data) === 'true';
+                                    viewGuide = glitter.share.viewGuide || viewGuide;
+                                    gvc.notifyDataChange(id);
                                 });
                                 Myspace.getModelList((data) => {
                                     vm.loading = false;
@@ -89,6 +85,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                             </div>
                                         </div>`;
                                     }
+                                    glitter.share.blockBack = false;
                                     return `
                                     ${gvc.bindView({
                                         bind: "coverGuide",
@@ -101,7 +98,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <div style="position:fixed;z-index:999999;top:0;height: 100vh;width: 100vw;">
                                                     <div class="d-flex align-items-center justify-content-end" style="height: ${topInset + 63}px; padding: 0 26px;">
                                                         <div style="padding:6px 9px;position:relative;background: white;opacity: 1;border-radius: 14px;color: #FE5541;font-family: 'Noto Sans TC';font-style: normal;font-weight: 500;font-size: 17px;line-height: 25px;text-align: center;" onclick="${gvc.event(() => {
+                                                    viewGuide = true;
+                                                    gvc.notifyDataChange('coverGuide');
                                                     appConfig().changePage(gvc, "guide1");
+                                                    glitter.share.blockBack = true;
+                                                    glitter.share.viewGuide = true;
                                                 })}">
                                                             掃描教學
                                                             <div style="background:white;border-radius: 16px;position: absolute;right:calc(100% + 2px);top:calc(100% + 4px);padding: 8px 12px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 400;font-size: 18px;line-height: 26px;color: #1E1E1E;">觀看掃描教學影片</div>
