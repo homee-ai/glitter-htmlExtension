@@ -549,12 +549,12 @@ line-height: 14px;
             <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
               <span style="${st1}">小計</span>
               <div class="flex-fill"></div>
-              <span style="${st1}">NT$ ${parseInt(subTotal.toString(), 10)}</span>
+              <span style="${st1}">NT$ ${viewModel.addQuantile(subTotal)}</span>
             </div>
             <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
               <span style="${st1}">折扣</span>
               <div class="flex-fill"></div>
-              <span style="${st1}">-NT$ ${parseInt(order.discount, 10)}</span>
+              <span style="${st1}">-NT$ ${viewModel.addQuantile(parseInt(order.discount))}</span>
             </div>
              <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
               <span style="${st1}">運費 (專業物流及組裝服務)</span>
@@ -564,7 +564,7 @@ line-height: 14px;
              <div class="w-100 d-flex align-items-center" style="height: 46px;">
               <span style="${st2}">總數</span>
               <div class="flex-fill"></div>
-              <span style="${st2}">NT$ ${parseInt(order.total, 10)}</span>
+              <span style="${st2}">NT$ ${viewModel.addQuantile(order.total)}</span>
             </div>
             <div class="d-flex" style="font-family: 'Noto Sans TC';
 font-style: normal;
@@ -590,8 +590,8 @@ padding: 7px 32px;border-radius: 20px;font-family: 'Noto Sans TC';font-style: no
                                     });
                                 })}">立刻付款</div>
                                     ` : ``}
-            此筆交易總額: NT$ ${order.total}<br />
-            總退款總額: NT$ ${(_a = order.refunds) !== null && _a !== void 0 ? _a : 0}
+            此筆交易總額: NT$ ${viewModel.addQuantile(order.total)}<br />
+            總退款總額: NT$ ${(_a = viewModel.addQuantile(order.refunds)) !== null && _a !== void 0 ? _a : 0}
             </div>
           </div>
           <div class="addr">
