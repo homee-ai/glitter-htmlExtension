@@ -382,7 +382,7 @@ export class Checkout {
     }) {
         appConfig().getUserData({
             callback: (response: any) => {
-                // console.log(response.token)
+
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/order`,
                     type: 'get',

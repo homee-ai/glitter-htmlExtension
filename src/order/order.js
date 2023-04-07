@@ -542,7 +542,7 @@ line-height: 14px;
                                         });
                                         tmp += "</div>";
                                         tmp += "<div class='w-100' style='border-bottom: 1px solid #D6D6D6;width: 100%;margin-top: 3px;'></div>";
-                                        subTotal += parseInt(o.subtotal);
+                                        subTotal += parseInt(o.subtotal) * o.quantity;
                                     });
                                     return tmp;
                                 })}
