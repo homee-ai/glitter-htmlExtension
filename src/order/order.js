@@ -347,7 +347,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
     body{
       background-color: white;
     }`);
-                        console.log('gg');
                         let order = {};
                         var subTotal = 0;
                         var b = ["1.5", "1.3", "1.3", "1", "1"];
@@ -367,7 +366,9 @@ color: #292929;`;
                         loading = false;
                         origin.billing_address = (_a = origin.billing_address) !== null && _a !== void 0 ? _a : {};
                         order = {
-                            total: origin.current_subtotal_price,
+                            total: origin.current_total_price,
+                            subtotal: origin.current_subtotal_price,
+                            discount: origin.current_total_discounts,
                             status: (() => {
                                 if (origin.paysStatus === '已付款') {
                                     if (origin.processingStatus === '已出貨') {
@@ -541,14 +542,19 @@ line-height: 14px;
                                         });
                                         tmp += "</div>";
                                         tmp += "<div class='w-100' style='border-bottom: 1px solid #D6D6D6;width: 100%;margin-top: 3px;'></div>";
-                                        subTotal += parseInt(o.subtotal);
+                                        subTotal += parseInt(o.subtotal) * o.quantity;
                                     });
                                     return tmp;
                                 })}
             <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
-              <span style="${st1}">小總數</span>
+              <span style="${st1}">小計</span>
               <div class="flex-fill"></div>
-              <span style="${st1}">NT$ ${parseInt(order.total, 10) - parseInt(order.shipping_fees, 10)}</span>
+              <span style="${st1}">NT$ ${viewModel.addQuantile(subTotal)}</span>
+            </div>
+            <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
+              <span style="${st1}">折扣</span>
+              <div class="flex-fill"></div>
+              <span style="${st1}">-NT$ ${viewModel.addQuantile(parseInt(order.discount))}</span>
             </div>
              <div class="w-100 d-flex align-items-center" style="height: 46px;border-bottom: 1px solid #D6D6D6;width: 100%;">
               <span style="${st1}">運費 (專業物流及組裝服務)</span>
@@ -558,9 +564,9 @@ line-height: 14px;
              <div class="w-100 d-flex align-items-center" style="height: 46px;">
               <span style="${st2}">總數</span>
               <div class="flex-fill"></div>
-              <span style="${st2}">NT$ ${order.total}</span>
+              <span style="${st2}">NT$ ${viewModel.addQuantile(order.total)}</span>
             </div>
-            <div class="text-end" style="font-family: 'Noto Sans TC';
+            <div class="d-flex" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 400;
 font-size: 10px;
@@ -570,8 +576,22 @@ text-align: right;
 /* HOMEE black */
 
 color: #292929;">
-            此筆交易總額: NT$ ${order.total}<br />
-            總退款總額: NT$ ${(_a = order.refunds) !== null && _a !== void 0 ? _a : 0}
+            ${(order.billing_address.state === "未付款") ? `
+                                    <div class="me-auto d-flex align-items-center justify-content-center" style="background: #FE5541;
+padding: 7px 32px;border-radius: 20px;font-family: 'Noto Sans TC';font-style: normal;font-weight: 700;font-size: 18px;line-height: 150%;letter-spacing: 0.15em;color: #FFFFFF;" onclick="${gvc.event(() => {
+                                    origin.homeeCartToken;
+                                    gvc.glitter.runJsInterFace("openWeb", {
+                                        url: `${appConfig().serverURL}/store-front/index.html?cart_token=${origin.homeeCartToken}&page=checkout`
+                                    }, (data) => {
+                                    }, {
+                                        webFunction(data, callback) {
+                                            gvc.glitter.openNewTab(data.data.url);
+                                        }
+                                    });
+                                })}">立刻付款</div>
+                                    ` : ``}
+            此筆交易總額: NT$ ${viewModel.addQuantile(order.total)}<br />
+            總退款總額: NT$ ${(_a = viewModel.addQuantile(order.refunds)) !== null && _a !== void 0 ? _a : 0}
             </div>
           </div>
           <div class="addr">
@@ -641,24 +661,7 @@ line-height: 14px;">${index2[index]}</div>`;
 </div>
           <div class="addr">
             <h1>帳單地址</h1>
-            <h4><span class="fw-bolder">付款狀態：</span>${order.billing_address.state}${(order.billing_address.state === "未付款") ? `
-                                    <span class="ms-2" style="font-family: 'Noto Sans TC';
-font-style: normal;
-font-weight: 700;
-font-size: 15px;
-color: #FE5541;
-line-height: 22px;" onclick="${gvc.event(() => {
-                                    origin.homeeCartToken;
-                                    gvc.glitter.runJsInterFace("openWeb", {
-                                        url: `${appConfig().serverURL}/store-front/index.html?cart_token=${origin.homeeCartToken}&page=checkout`
-                                    }, (data) => {
-                                    }, {
-                                        webFunction(data, callback) {
-                                            gvc.glitter.openNewTab(data.data.url);
-                                        }
-                                    });
-                                })}">現在付款</span>
-                                    ` : ``}</h4>
+            <h4><span class="fw-bolder">付款狀態：</span>${order.billing_address.state}</h4>
             <h2 style="margin-bottom: 0px;">${order.billing_address.first_name} ${order.billing_address.last_name}</h2>
             <h4 style="margin-top: 16px;margin-bottom: 0px;">${order.billing_address.address1}</h4>
             <h4 style="margin-top: 0px;margin-bottom: 0px;">${order.billing_address.phone}</h4>
