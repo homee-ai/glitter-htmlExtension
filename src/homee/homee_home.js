@@ -223,7 +223,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll();
                             })}">
                             </div>
-
 <!--                                1px solid #FE5541-->
                             
                             `,
@@ -278,7 +277,6 @@ ${data.link.map((dd, index) => {
 </div>
 ${ClickEvent.editer(gvc, widget, dd)}
 </div>
-
 `;
                                     }).join(`<div class="w-100 my-3" style="background: white;height: 1px;"></div>`)}
 <div class="text-white align-items-center justify-content-center d-flex p-1 rounded mt-3" style="border: 2px dashed white;" onclick="${gvc.event(() => {
@@ -582,7 +580,6 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                     widget.refreshAll();
                                 })}"></input>
 </div>
-
 </div>`])}
 </div>`,
                             `<div class="alert alert-warning mt-2" >${gvc.map([glitter.htmlGenerate.editeInput({
@@ -720,11 +717,9 @@ ${gvc.map([EditerApi.upload("Logo", (_c = widget.data.logo.src) !== null && _c !
                                             return `<div class=" d-flex align-items-center justify-content-center" style="position: absolute;
 width: 16px;
 height: 16px;
-
 background: #FE5541;
 border: 1px solid #FFFFFF;
 font-size: 9px;
-
 color: white;
 border-radius: 8px;">${badge}</div>`;
                                         },
@@ -871,7 +866,6 @@ height: 16px;
 background: #FE5541;
 border: 1px solid #FFFFFF;
 font-size: 9px;
-
 color: white;
 border-radius: 8px;" >${badge}</div>`;
                                         },

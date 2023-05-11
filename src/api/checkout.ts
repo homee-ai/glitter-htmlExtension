@@ -212,7 +212,6 @@ export class Checkout {
             () => {
 
                 const moment = (window as any).moment;
-                // console.log(new moment)
                 const nowTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
                 moment.locale('zh-tw');
                 const getEndtime = (t: string) => {
@@ -255,14 +254,12 @@ export class Checkout {
                             headers: {Authorization: response.token},
                             success: (res: any) => {
 
-                                console.log("最低消費123")
-                                console.log(res)
-
                                 callback(
                                     res.voucherList.map((dd: any) => {
 
                                         const c = dd.config.config;
-
+                                        console.log("------------------------------------------")
+                                        console.log(dd)
 
                                         return {
                                             id: dd.id,
@@ -280,28 +277,361 @@ export class Checkout {
                                                 let text = '';
                                                 switch (c.howToPlay) {
                                                     case 'discount':
-                                                        switch (c.discount_rebate_select) {
-                                                            case 'basic_price':
-                                                                text = `現折 ${c.discount_rebate_value} 元`;
+                                                        switch (c.accord_rule){
+                                                            case "least":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        switch (c.applicability_product) {
+                                                                            case 'all':
+                                                                                text += '所有商品';
+                                                                                break;
+                                                                            case 'categories':
+                                                                                text += '指定分類';
+                                                                                break;
+                                                                            case 'products':
+                                                                                text += '指定商品';
+                                                                                break;
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        text += `滿 ${c.accord_number} 件 `;
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.discount_rebate_select) {
+                                                                    case 'basic_price':
+                                                                        text += `現折 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                    case 'percent':
+                                                                    function transToChinese(value:number){
+                                                                        let ten = value / 10;
+                                                                        let digit = value % 10;
+                                                                        function convertToChineseNumber(number:number) {
+                                                                            var chineseNumber;
+                                                                            switch (number) {
+                                                                                case 0:
+                                                                                    chineseNumber = "零";
+                                                                                    break;
+                                                                                case 1:
+                                                                                    chineseNumber = "一";
+                                                                                    break;
+                                                                                case 2:
+                                                                                    chineseNumber = "二";
+                                                                                    break;
+                                                                                case 3:
+                                                                                    chineseNumber = "三";
+                                                                                    break;
+                                                                                case 4:
+                                                                                    chineseNumber = "四";
+                                                                                    break;
+                                                                                case 5:
+                                                                                    chineseNumber = "五";
+                                                                                    break;
+                                                                                case 6:
+                                                                                    chineseNumber = "六";
+                                                                                    break;
+                                                                                case 7:
+                                                                                    chineseNumber = "七";
+                                                                                    break;
+                                                                                case 8:
+                                                                                    chineseNumber = "八";
+                                                                                    break;
+                                                                                case 9:
+                                                                                    chineseNumber = "九";
+                                                                                    break;
+                                                                                default:
+                                                                                    chineseNumber = "無對應中文數字";
+                                                                            }
+                                                                            return chineseNumber;
+                                                                        }
+                                                                        if (ten!=0){
+                                                                            if (digit==0){
+                                                                                return convertToChineseNumber(ten);
+                                                                            }else {
+                                                                                return `${convertToChineseNumber(ten)}${convertToChineseNumber(digit)}`
+                                                                            }
+                                                                        }else{
+
+                                                                        }
+                                                                    }
+                                                                        text += `即享 ${transToChinese(c.discount_rebate_value as number)}折 優惠`;
+                                                                        break;
+                                                                    case 'single_price':
+                                                                        text += `商品單價 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                    case 'unit_price':
+                                                                        text += `組合價 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                }
                                                                 break;
-                                                            case 'percent':
-                                                                text = `打 ${c.discount_rebate_value} 折`;
+                                                            }
+                                                            case "every":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        text += `每滿 ${c.accord_number} 元 `;
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        text += `每滿 ${c.accord_number} 件 `;
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.discount_rebate_select) {
+                                                                    case 'basic_price':
+                                                                        text += `現折 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                    case 'percent':
+                                                                    function transToChinese(value:number){
+                                                                        let ten = value / 10;
+                                                                        let digit = value % 10;
+                                                                        function convertToChineseNumber(number:number) {
+                                                                            var chineseNumber;
+                                                                            switch (number) {
+                                                                                case 0:
+                                                                                    chineseNumber = "零";
+                                                                                    break;
+                                                                                case 1:
+                                                                                    chineseNumber = "一";
+                                                                                    break;
+                                                                                case 2:
+                                                                                    chineseNumber = "二";
+                                                                                    break;
+                                                                                case 3:
+                                                                                    chineseNumber = "三";
+                                                                                    break;
+                                                                                case 4:
+                                                                                    chineseNumber = "四";
+                                                                                    break;
+                                                                                case 5:
+                                                                                    chineseNumber = "五";
+                                                                                    break;
+                                                                                case 6:
+                                                                                    chineseNumber = "六";
+                                                                                    break;
+                                                                                case 7:
+                                                                                    chineseNumber = "七";
+                                                                                    break;
+                                                                                case 8:
+                                                                                    chineseNumber = "八";
+                                                                                    break;
+                                                                                case 9:
+                                                                                    chineseNumber = "九";
+                                                                                    break;
+                                                                                default:
+                                                                                    chineseNumber = "無對應中文數字";
+                                                                            }
+                                                                            return chineseNumber;
+                                                                        }
+                                                                        if (ten!=0){
+                                                                            if (digit==0){
+                                                                                return convertToChineseNumber(ten);
+                                                                            }else {
+                                                                                return `${convertToChineseNumber(ten)}${convertToChineseNumber(digit)}`
+                                                                            }
+                                                                        }else{
+
+                                                                        }
+                                                                    }
+                                                                        text += `即享 ${transToChinese(c.discount_rebate_value as number)}折 優惠`;
+                                                                        break;
+                                                                    case 'single_price':
+                                                                        text += `商品單價 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                    case 'unit_price':
+                                                                        text += `組合價 ${c.discount_rebate_value} 元`;
+                                                                        break;
+                                                                }
                                                                 break;
-                                                            case 'single_price':
-                                                                text = `商品單價 ${c.discount_rebate_value} 元`;
-                                                                break;
-                                                            case 'unit_price':
-                                                                text = `組合價 ${c.discount_rebate_value} 元`;
-                                                                break;
+                                                            }
                                                         }
                                                         break;
                                                     case 'rebate':
-                                                        text = `回饋金 ${c.discount_rebate_value} 元`;
+                                                        let rebateImg = `<img style="height:23px;width: 20px;margin-left: 4px;" src="${new URL('../img/rebate.svg', import.meta.url)}">`
+                                                        switch (c.accord_rule){
+                                                            case "least":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        switch (c.applicability_product) {
+                                                                            case 'all':
+                                                                                text += '所有商品';
+                                                                                break;
+                                                                            case 'categories':
+                                                                                text += '指定分類';
+                                                                                break;
+                                                                            case 'products':
+                                                                                text += '指定商品';
+                                                                                break;
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        text += `滿 ${c.accord_number} 件 `;
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.discount_rebate_select) {
+                                                                    case 'basic_price':
+                                                                        text += `即贈 ${c.discount_rebate_value} ${rebateImg}`;
+                                                                        break;
+                                                                    case 'percent':
+                                                                        text += `即贈 15% ${rebateImg}`;
+                                                                        break;
+                                                                }
+                                                                break;
+                                                            }
+                                                            case "every":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        text += `每滿 ${c.accord_number} 元 `;
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        text += `每滿 ${c.accord_number} 件 `;
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.discount_rebate_select) {
+                                                                    case 'basic_price':
+                                                                        text += `即贈 ${c.discount_rebate_value} ${rebateImg}`;
+                                                                        break;
+                                                                    case 'percent':
+                                                                        text += `即贈 15% ${rebateImg}`;
+                                                                        break;
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
                                                         break;
                                                     case 'giveaway':
-                                                        text = `贈送指定商品`;
+                                                        switch (c.accord_rule){
+                                                            case "least":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        dd.config.name += `消費滿 NT$ ${c.accord_number}`
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        dd.config.name += `消費滿 ${c.accord_number} 件`
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.giveaway_select) {
+                                                                    case 'categories':
+                                                                        if (c.give_categories.length>1){
+                                                                            let temp = "";
+                                                                            c.give_categories.map((category:any , index:number)=>{
+                                                                                if (index>0){
+                                                                                    temp += "、"
+                                                                                }
+                                                                                let name:string = category.name;
+                                                                                name = name.replace("=== " , "");
+                                                                                name = name.replace(" ===" , "");
+                                                                                temp += name
+                                                                            })
+                                                                            text += `即贈 ${temp} 任選 1 個`
+                                                                        }else {
+
+                                                                            let temp:string = c.give_categories[0].name;
+                                                                            temp = temp.replace("=== " , "");
+                                                                            temp = temp.replace(" ===" , "");
+                                                                            text += `即贈 ${temp} 任選 1 個`;
+                                                                        }
+
+                                                                        break;
+                                                                    case 'products':
+                                                                        if (c.give_products.length>1){
+                                                                            let temp = "";
+                                                                            c.give_products.map((category:any , index:number)=>{
+                                                                                if (index>0){
+                                                                                    temp += "、"
+                                                                                }
+                                                                                let name:string = category.name;
+                                                                                name = name.replace("=== " , "");
+                                                                                name = name.replace(" ===" , "");
+                                                                                temp += name
+                                                                            })
+                                                                            text += `即贈 ${temp}  1 個`
+                                                                        }else {
+
+                                                                            let temp:string = c.give_products[0].name;
+                                                                            temp = temp.replace("=== " , "");
+                                                                            temp = temp.replace(" ===" , "");
+                                                                            text += `即贈 ${temp}  1 個`;
+                                                                        }
+                                                                        break;
+                                                                }
+                                                                break;
+                                                            }
+                                                            case "every":{
+                                                                switch (c.accord){
+                                                                    case "consum":{
+                                                                        dd.config.name += `消費每滿 NT$ ${c.accord_number}`
+                                                                        break;
+                                                                    }
+                                                                    case "product":{
+                                                                        dd.config.name += `消費每滿 ${c.accord_number} 件`
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                switch (c.giveaway_select) {
+                                                                    case 'categories':
+                                                                        if (c.give_categories.length>1){
+                                                                            let temp = "";
+                                                                            c.give_categories.map((category:any , index:number)=>{
+                                                                                if (index>0){
+                                                                                    temp += "、"
+                                                                                }
+                                                                                let name:string = category.name;
+                                                                                name = name.replace("=== " , "");
+                                                                                name = name.replace(" ===" , "");
+                                                                                temp += name
+                                                                            })
+                                                                            text += `即贈 ${temp} 任選 1 個`
+                                                                        }else {
+
+                                                                            let temp:string = c.give_categories[0].name;
+                                                                            temp = temp.replace("=== " , "");
+                                                                            temp = temp.replace(" ===" , "");
+                                                                            text += `即贈 ${temp} 任選 1 個`;
+                                                                        }
+
+                                                                        break;
+                                                                    case 'products':
+                                                                        if (c.give_products.length>1){
+                                                                            let temp = "";
+                                                                            c.give_products.map((category:any , index:number)=>{
+                                                                                if (index>0){
+                                                                                    temp += "、"
+                                                                                }
+                                                                                let name:string = category.name;
+                                                                                name = name.replace("=== " , "");
+                                                                                name = name.replace(" ===" , "");
+                                                                                temp += name
+                                                                            })
+                                                                            text += `即贈 ${temp}  1 個`
+                                                                        }else {
+
+                                                                            let temp:string = c.give_products[0].name;
+                                                                            temp = temp.replace("=== " , "");
+                                                                            temp = temp.replace(" ===" , "");
+                                                                            text += `即贈 ${temp}  1 個`;
+                                                                        }
+                                                                        break;
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
                                                         break;
                                                 }
+
+
                                                 return text;
                                             })(),
                                             subTitle: (() => {
@@ -309,57 +639,97 @@ export class Checkout {
                                                     return ``
                                                 }
                                                 let text = '';
-                                                switch (dd.config.type) {
-                                                    case 4:
-                                                        text += '彩蛋優惠券';
-                                                        break;
-                                                    default:
-                                                        switch (c.applicability_product) {
-                                                            case 'all':
-                                                                text += '全館商品';
-                                                                break;
-                                                            case 'categories':
-                                                                text += '指定商品類別';
-                                                                break;
-                                                            case 'products':
-                                                                text += '指定商品';
-                                                                break;
-                                                        }
-                                                        switch (c.accord_rule) {
-                                                            case 'least':
-                                                                text += `消費滿 ${c.accord_number} `;
-                                                                break;
-                                                            case 'every':
-                                                                text += `每消費 ${c.accord_number} `;
-                                                                break;
-                                                        }
-                                                        switch (c.accord) {
-                                                            case 'consum':
-                                                                text += '元';
-                                                                break;
-                                                            case 'product':
-                                                                text += '件';
-                                                                break;
-                                                        }
-                                                        break;
-                                                }
-                                                return text;
+                                                // switch (dd.config.type) {
+                                                //     case 4:
+                                                //         text += '彩蛋優惠券';
+                                                //         break;
+                                                //     default:
+                                                //
+                                                // }
+                                                // switch (c.applicability_product) {
+                                                //     case 'all':
+                                                //         text += '全館商品';
+                                                //         break;
+                                                //     case 'categories':
+                                                //         text += '指定商品類別';
+                                                //         break;
+                                                //     case 'products':
+                                                //         text += '指定商品';
+                                                //         break;
+                                                // }
+                                                // switch (c.accord_rule) {
+                                                //     case 'least':
+                                                //         text += `消費滿 ${c.accord_number} `;
+                                                //         break;
+                                                //     case 'every':
+                                                //         text += `每消費 ${c.accord_number} `;
+                                                //         break;
+                                                // }
+                                                // switch (c.accord) {
+                                                //     case 'consum':
+                                                //         text += '元';
+                                                //         break;
+                                                //     case 'product':
+                                                //         text += '件';
+                                                //         break;
+                                                // }
+
+                                                return dd.config.name;
                                             })(),
                                             isUse: view === 'History',
-                                            lowCostText : "最低消費:",
+                                            lowCostText : (()=>{
+                                                if (c.accord=="consum" && c.accord_rule == "least" && c.howToPlay != "giveaway"){
+                                                    return "最低消費："
+                                                }else {
+                                                    return "適用："
+                                                }
+
+                                            })(),
                                             lowCostNumber : (()=>{
                                                 let returnText = ""
 
-                                                switch (c.accord) {
-                                                    case 'consum':
-                                                        returnText = `NT$ ${addThousandSeparator(c?.accord_number ?? 0)}`
-                                                        returnText += '元';
-                                                        break;
-                                                    case 'product':
-                                                        returnText = 'NT$ 0';
-                                                        break;
+                                                if (c.accord=="consum" && c.accord_rule == "least" && c.howToPlay != "giveaway"){
+                                                    return `NT$ ${c.accord_number.toLocaleString()}`
                                                 }
-                                                return returnText
+                                                let text = ""
+                                                switch (c.applicability_product) {
+                                                    case 'all':
+                                                        return `所有商品（全館）`
+                                                    case 'categories':
+                                                        if (c.app_categories.length > 1){
+                                                            c.app_categories.map((data:any,index:number)=>{
+                                                                if (index!=0){
+                                                                    text += "、"
+                                                                }
+                                                                let temp:string = data.name;
+                                                                temp = temp.replace("=== " , "");
+                                                                temp = temp.replace(" ===" , "");
+                                                                text += temp
+                                                            })
+                                                            return text
+                                                        }else {
+                                                            let temp:string = c.app_categories[0].name;
+                                                            temp = temp.replace("=== " , "");
+                                                            temp = temp.replace(" ===" , "");
+                                                            return temp;
+                                                        }
+
+                                                    case 'products':
+                                                        if (c.app_products.length > 1){
+                                                            c.app_products.map((data:any,index:number)=>{
+                                                                if (index!=0){
+                                                                    text += "、"
+                                                                }
+                                                                text += data.name
+                                                            })
+                                                            return text
+                                                        }else {
+                                                            return c.app_products[0].name;
+                                                        }
+                                                }
+
+
+
                                             })(),
 
                                         };
@@ -382,7 +752,6 @@ export class Checkout {
     }) {
         appConfig().getUserData({
             callback: (response: any) => {
-
                 $.ajax({
                     url: `${appConfig().serverURL}/api/v1/order`,
                     type: 'get',
@@ -392,7 +761,6 @@ export class Checkout {
                         obj.callback(response)
                     },
                     error: (err: any) => {
-                        // console.log(err)
                         obj.callback(false)
                     },
                 });
@@ -421,7 +789,6 @@ export class Checkout {
         }) => void
     }) {
         obj.data.mainURL = appConfig().serverURL
-        // console.log(obj)
         appConfig().getUserData({
             callback: (response: any) => {
                 obj.data.customerInfo = {

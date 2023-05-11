@@ -380,7 +380,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                 widget.refreshAll!()
                                 element.style.height = "auto";
                                 element.style.height = (element.scrollHeight) + "px";
-                                console.log(e.scrollHeight)
                             })}" >${widget.data.text ?? ''}</textarea>`
                         ])
                     }
@@ -745,7 +744,6 @@ ${
                     view: () => {
                         let rebat = 0;
                         Checkout.getRebat((response:any)=>{
-                            console.log(response.data[0].credit_balance);
                             widget.data.backPoint = response.data[0].credit_balance;
                             gvc.notifyDataChange('backPoint');
                         });
@@ -881,9 +879,6 @@ ${
 
                         vm.loading=false
 
-                        console.log("原始資料")
-                        console.log(data)
-
                         widget.data.voucherCardList = (data as any).map((dd: any) => {
 
                             return {
@@ -956,8 +951,6 @@ ${
                             view : ()=>{
                                 widget.data.voucherCardList = widget.data.voucherCardList??[];
                                 return gvc.map(widget.data.voucherCardList.map((coupon: any) => {
-                                    console.log("資料")
-                                    console.log(coupon)
                                     return `
                                         <div class="voucherCard overflow-hidden" style="background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
                                         })}"> 
@@ -971,8 +964,8 @@ ${
                                             </div>
                                             <div class="w-100" style="background: #E0E0E0;height: 1px;"></div>
                                             <div class="" style="padding: 8px 22px;">
-                                                <div style="font-weight: 700;font-size: 16px;line-height: 23px;">${coupon.name}</div>
-                                                <div style="margin-top:4px;font-weight: 700;  font-size: 24px;line-height: 35px;color: #FE5541;">${coupon.discount}</div>
+                                                <div  style="font-weight: 700;font-size: 16px;line-height: 23px;">${coupon.name}</div>
+                                                <div class="d-flex align-items-center" style="margin-top:4px;font-weight: 700;  font-size: 24px;line-height: 35px;color: #FE5541;">${coupon.discount}</div>
                                                 <div class="d-flex align-items-center" style="margin-top: 4px;">
                                                     <div class="" style="font-weight: 400;font-size: 12px;line-height: 17px;color: #858585;">${coupon.lowCostText}</div>
                                                     <div style="font-weight: 700;font-size: 12px;line-height: 150%;color: #1E1E1E;">${coupon.lowCostNumber}</div>
@@ -1107,7 +1100,6 @@ ${
                                 <div class="vendor_name" style="font-weight: 400;font-size: 15px;line-height: 150%;">${data.vendor_name??"廠商名稱"}</div>
                                 <div class="vendor_context ms-auto ${(()=>{if (data.ogData.isUse) return "d-none"})()}" style="color: #FE5541;font-weight: 700;font-size: 15px;line-height: 150%;" onclick="${gvc.event(()=>{
                                     let code = data?.code;
-                                    console.log(data)
                                     // if (!code){
                                     //     alert("此優惠卷有誤，請洽服務人員協助。")
                                     // }else {
@@ -1999,7 +1991,7 @@ ${
                                 let inviteCode = ""
                                 appConfig().getUserData({
                                     callback: (response) => {
-                                        console.log(response)
+                                 
                                     }
                                 });
 
@@ -2043,7 +2035,6 @@ ${
                         })
                         appConfig().getUserData({
                             callback: (response: any) => {
-                                console.log()
                                 widget.data.inviteCode = response.invite_code;
                                 gvc.notifyDataChange('footer');
                             }
