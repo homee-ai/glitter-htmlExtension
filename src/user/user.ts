@@ -870,8 +870,6 @@ ${
                     loading:false
                 }
                 try {
-
-
                     vm.loading=true
                     gvc.notifyDataChange('voucherCardList')
                     // widget.data.voucherCardList = []
@@ -2074,7 +2072,7 @@ ${
 
                                 }
                                 return `
-                                <bottom style="margin-bottom: 30px;${classAdd.footerBTN}${classAdd.shareBTN}" class="w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
+                                <bottom style="padding-bottom: 30px;${classAdd.footerBTN}${classAdd.shareBTN}" class="w-100 d-flex align-items-center justify-content-center" onclick="${gvc.event(()=>{
                                     // todo
                                     glitter.runJsInterFace("shareText",{
                                         text:`趕快下載HOMEE APP:https://apps.apple.com/tw/app/homee-marketplace/id6444941721，註冊並輸入我的邀請碼:${widget.data.inviteCode}，立刻獲得200折 $ 100 優惠券`
