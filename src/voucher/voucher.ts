@@ -148,7 +148,7 @@ Plugin.create(import.meta.url, (glitter) => {
         },
         voucherInput: {
             defaultData: {
-                voucherPlaceholder: "輸入優惠代碼"
+
             },
             render: (gvc, widget, setting, hoverID) => {
                 gvc.addStyle(`
@@ -165,7 +165,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     }
                     
                 `)
-
+                widget.data.voucherPlaceholder = widget.data.voucherPlaceholder??"輸入優惠代碼";
                 return {
                     view: () => {
                         return gvc.map([

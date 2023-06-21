@@ -308,7 +308,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
-                                        <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';
+                                        <div class="indexTitle" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
 font-size: 16px;
@@ -453,7 +453,7 @@ ${ClickEvent.editer(gvc, widget, dd)}
                                     })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
-                                        <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';
+                                        <div class="indexTitle" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
 font-size: 16px;
