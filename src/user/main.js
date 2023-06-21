@@ -442,7 +442,7 @@ ${ClickEvent.editer(gvc, widget, dd)}
                                         ClickEvent.trigger({ gvc, widget, clickEvent: item
                                         });
                                     })}">
-                                        <div style="position: relative;width: 30px;height: 30px;margin-right: 16px;">
+                                        <div style="position: relative;width: 36px;height: 36px;margin-right: 16px;">
                                             ${(() => {
                                         if (item.count != 0) {
                                             return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`;
