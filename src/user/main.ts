@@ -246,14 +246,6 @@ Plugin.create(import.meta.url, (glitter) => {
                         }
                     },
                     {
-                        title: "我的靈感",
-                        icon: new URL!(`../img/component/footer/idea.svg`, import.meta.url),
-                        count: 0,
-                        click: () => {
-
-                        }
-                    },
-                    {
                         title: "回饋優惠",
                         icon: new URL!(`../img/component/discount.svg`, import.meta.url),
                         count: 0,
@@ -316,7 +308,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
-                                        <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';
+                                        <div class="indexTitle" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
 font-size: 16px;
@@ -454,7 +446,7 @@ ${ClickEvent.editer(gvc,widget,dd)}
                                         ClickEvent.trigger({gvc,widget,clickEvent:item
                                         })
                                     })}">
-                                        <div style="position: relative;width: 30px;height: 30px;margin-right: 16px;">
+                                        <div style="position: relative;width: 36px;height: 36px;margin-right: 16px;">
                                             ${(() => {
                                         if (item.count != 0) {
                                             return `<div class="mySpaceCount" style="position: absolute;right:-4px;top:-4px;z-index: 5;">${item.count}</div>`
@@ -464,7 +456,7 @@ ${ClickEvent.editer(gvc,widget,dd)}
                                     })()}
                                             <img class="h-100 w-100" src="${item.icon}" style="">
                                         </div>
-                                        <div class="indexTitle" style="margin-top: 5px;font-family: 'Noto Sans TC';
+                                        <div class="indexTitle" style="font-family: 'Noto Sans TC';
 font-style: normal;
 font-weight: 500;
 font-size: 16px;

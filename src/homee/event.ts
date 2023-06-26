@@ -582,6 +582,7 @@ ${
 
                     gvc.glitter.share.cart=gvc.glitter.share.cart??{}
                     gvc.glitter.share.cart.callback=gvc.glitter.share.cart.callback ?? []
+
                     function getCount(){
                         let count = 0
                         Checkout.getCart((cartData) => {
