@@ -190,7 +190,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             </div>
                             <div class="d-flex align-items-center ms-auto rightText">
                                 ${widget.data.right}
-                                <img class="ms-auto" src="${new URL!(`../img/component/angle-right.svg`, import.meta.url)}" alt="" style="width: 16px;height: 16px;">
+                                <img class="" src="https://prd-homee-api-public.s3.amazonaws.com/file/guest/1687763388684-rightarrow.svg" alt="" style="width: 16px;height: 16px;margin-left: 4px;">
                             </div>
                         </div>
                         `
@@ -387,7 +387,7 @@ ${ClickEvent.editer(gvc,widget,dd)}
                 model: [
                     {
                         title: "我的空間",
-                        icon: "https://prd-homee-api-public.s3.amazonaws.com/file/guest/1687325397951-newSpace.svg",
+                        icon: "https://prd-homee-api-public.s3.amazonaws.com/file/guest/1687763709865-space.svg",
                         count: 0,
                         click: () => {
 
@@ -395,7 +395,7 @@ ${ClickEvent.editer(gvc,widget,dd)}
                     },
                     {
                         title: "回饋優惠",
-                        icon: "https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676977138152.png",
+                        icon: "https://prd-homee-api-public.s3.amazonaws.com/file/guest/1687763239559-rebute.svg",
                         count: 0,
                         click: () => {
 
