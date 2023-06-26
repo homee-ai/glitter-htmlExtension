@@ -235,14 +235,6 @@ Plugin.create(import.meta.url, (glitter) => {
                         }
                     },
                     {
-                        title: "我的靈感",
-                        icon: new URL!(`../img/component/footer/idea.svg`, import.meta.url),
-                        count: 0,
-                        click: () => {
-
-                        }
-                    },
-                    {
                         title: "回饋優惠",
                         icon: new URL!(`../img/component/discount.svg`, import.meta.url),
                         count: 0,
