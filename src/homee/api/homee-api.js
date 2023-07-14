@@ -5,9 +5,7 @@ export class Api {
         const $ = window.$;
         this.homeeAJAX = (data, callback) => {
             const cont = data.api ? data.api : '/api/bm';
-            console.log("---------------");
-            console.log(data.route);
-            console.log(appConfig().token);
+
             if (data) {
                 $.ajax({
                     url: cont + data.route,

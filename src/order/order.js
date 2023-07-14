@@ -40,7 +40,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             vm.loading = false;
                             gvc.notifyDataChange(id);
                             if (result) {
-                                widget.data.orderData = result.map((orderData) => {
+                                widget.data.orderData = result.data.map((orderData) => {
                                     return {
                                         number: orderData.name,
                                         date: orderData.created_at.substring(0, 10),
@@ -68,6 +68,8 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             else {
                                 widget.data.orderData = [];
                             }
+                            console.log("----------------here--------------");
+                            console.log(widget.data.orderData);
                             gvc.notifyDataChange(id);
                         }
                     });
