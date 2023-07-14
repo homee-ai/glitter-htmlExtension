@@ -679,7 +679,7 @@ export class Checkout {
         appConfig().getUserData({
             callback: (response: any) => {
                 $.ajax({
-                    url: `${appConfig().serverURL}/api/v1/order`,
+                    url: `${appConfig().serverURL}/api/v1/order/orderList`,
                     type: 'get',
                     headers: {Authorization: response.token},
                     contentType: 'application/json; charset=utf-8',

@@ -24,6 +24,9 @@ Plugin.create(import.meta.url, (glitter) => {
                             function getData() {
                                 vm.data = [];
                                 vm.loading = true;
+                                Myspace.getFirstView((res) => {
+                                    console.log(res);
+                                });
                                 glitter.getPro("viewGuide", (response) => {
                                     viewGuide = (response.data) === 'true';
                                     viewGuide = glitter.share.viewGuide || viewGuide;
