@@ -39,11 +39,14 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                     vm.loading = true
                     Checkout.getOrderList({
                         callback: (result) => {
-                            console.log(result)
+
                             vm.loading = false
                             gvc.notifyDataChange(id)
                             if (result){
+
                                 widget.data.orderData = result.data.map((orderData: any) => {
+                                    console.log("--------------order-----------")
+                                    console.log(orderData)
                                     return {
                                         number: orderData.name,
                                         date: orderData.created_at.substring(0, 10),

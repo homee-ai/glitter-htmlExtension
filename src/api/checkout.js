@@ -580,6 +580,7 @@ export class Checkout {
                     headers: { Authorization: response.token },
                     contentType: 'application/json; charset=utf-8',
                     success: (response) => {
+                        console.log("---------test--------");
                         obj.callback(response);
                     },
                     error: (err) => {
