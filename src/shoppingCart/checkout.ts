@@ -469,16 +469,20 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             if (response) {
                                 console.log(`redirect:${(response as any).redirect}`)
                                 // return
-                                Checkout.deleteCart(() => {
-                                    getCartProData();
-                                    gvc.glitter.runJsInterFace("openWeb", {
-                                        url: (response as any).redirect
-                                    }, (data) => { }, {
-                                        webFunction(data: any, callback: (data: any) => void): any {
-                                           location.href=(response as any).redirect
-                                        }
-                                    })
+                                gvc.glitter.runJsInterFace("openWeb", {
+                                    url: (response as any).redirect
+                                }, (data) => {
+                                    //
+                                    // Checkout.deleteCart(() => {
+                                    //     getCartProData();
+                                    //
+                                    // })
+                                }, {
+                                    webFunction(data: any, callback: (data: any) => void): any {
+                                        location.href=(response as any).redirect
+                                    }
                                 })
+
                             } else {
                                 dialog.showInfo('訂單新增異常!');
                             }

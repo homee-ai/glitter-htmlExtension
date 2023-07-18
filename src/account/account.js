@@ -293,8 +293,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                     if (!widget.data.accountData.account) {
                                         alert("帳號不得為空!");
                                     }
-                                    else if (widget.data.accountData.password.length < 8) {
-                                        alert("密碼必須大於8位數");
+                                    else if (widget.data.accountData.password.length < 6) {
+                                        alert("密碼必須大於6位數");
                                     }
                                     else {
                                         login();

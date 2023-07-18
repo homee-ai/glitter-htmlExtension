@@ -443,15 +443,13 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                             dialog.dataLoading(false);
                             if (response) {
                                 console.log(`redirect:${response.redirect}`);
-                                Checkout.deleteCart(() => {
-                                    getCartProData();
-                                    gvc.glitter.runJsInterFace("openWeb", {
-                                        url: response.redirect
-                                    }, (data) => { }, {
-                                        webFunction(data, callback) {
-                                            location.href = response.redirect;
-                                        }
-                                    });
+                                gvc.glitter.runJsInterFace("openWeb", {
+                                    url: response.redirect
+                                }, (data) => {
+                                }, {
+                                    webFunction(data, callback) {
+                                        location.href = response.redirect;
+                                    }
                                 });
                             }
                             else {

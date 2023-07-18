@@ -384,8 +384,6 @@ Plugin.create(import.meta.url, (glitter) => {
                                     }
                                     let clock:any=gvc.glitter.ut.clock()
                                     return gvc.map(widget.data.voucherCardList.map((data: any) => {
-                                        console.log("------------------------------")
-                                        console.log(data)
                                         return `
                                         <div class="voucherCard overflow-hidden" onclick="${gvc.event(() => {
                                             if(clock.stop()<1000){
