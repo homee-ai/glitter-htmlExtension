@@ -191,10 +191,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data = widget.data;
-                Checkout.getOrderList({
-                    callback: (response) => {
-                    }
-                });
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -386,12 +382,14 @@ color: #292929;`;
                             order_number: "#" + data.orderData.number,
                             datetime: data.orderData.date,
                             line_items: origin.line_items.map((dd) => {
+                                console.log("-----------line items-----------");
+                                console.log(dd);
                                 return {
                                     product_name: dd.name,
                                     sku: dd.sku,
                                     price: dd.price,
                                     quantity: dd.quantity,
-                                    subtotal: dd.price,
+                                    subtotal: dd.price * dd.quantity,
                                 };
                             }),
                             shipping_fees: origin.total_shipping_price_set.shop_money.amount,

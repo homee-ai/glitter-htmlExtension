@@ -130,6 +130,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     return `
                                 <div class="d-flex flex-column fontHomee" style="${classStyle.ticket}" onclick="${
                                         gvc.event(() => {
+                                          
                                             appConfig().changePage(gvc, "order_detail", {orderData: orderData}, {})
                                         })
                                     }">
@@ -195,11 +196,11 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
             },
             render: (gvc, widget, setting, hoverID) => {
                 const data: { link: { img: string, code?: string }[] } = widget.data
-                Checkout.getOrderList({
-                    callback: (response) => {
-
-                    }
-                })
+                // Checkout.getOrderList({
+                //     callback: (response) => {
+                //
+                //     }
+                // })
                 return {
                     view: () => {
                         gvc.addStyle(`
@@ -393,12 +394,14 @@ color: #292929;`
                             order_number: "#" + data.orderData.number,
                             datetime: data.orderData.date,
                             line_items: origin.line_items.map((dd: any) => {
+                                console.log("-----------line items-----------")
+                                console.log(dd)
                                 return {
                                     product_name: dd.name,
                                     sku: dd.sku,
                                     price: dd.price,
                                     quantity: dd.quantity,
-                                    subtotal: dd.price,
+                                    subtotal: dd.price*dd.quantity,
                                 }
                             }),
                             shipping_fees: origin.total_shipping_price_set.shop_money.amount,
@@ -483,6 +486,7 @@ text-align: ${(() => {
                                     var tmp = "";
 
                                     order.line_items.map((o: any, index: number) => {
+                                        
                                         tmp += `<div class="bg-white d-flex align-items-center" style="min-height: 46px;">`;
                                         var array = ['product_name', 'sku', 'price', 'quantity', 'subtotal']
                                         array.map((v, index) => {
