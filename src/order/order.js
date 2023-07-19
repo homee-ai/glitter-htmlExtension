@@ -345,7 +345,6 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
       background-color: white;
     }`);
                         let order = {};
-                        var subTotal = 0;
                         var b = ["1.5", "1.3", "1.3", "1", "1"];
                         var st1 = `font-family: 'Noto Sans TC';
 font-style: normal;
@@ -382,8 +381,6 @@ color: #292929;`;
                             order_number: "#" + data.orderData.number,
                             datetime: data.orderData.date,
                             line_items: origin.line_items.map((dd) => {
-                                console.log("-----------line items-----------");
-                                console.log(dd);
                                 return {
                                     product_name: dd.name,
                                     sku: dd.sku,
@@ -421,6 +418,7 @@ color: #292929;`;
                             bind: `order-container`,
                             view: () => {
                                 var _a;
+                                let subTotal = 0;
                                 if (loading) {
                                     return ``;
                                 }
@@ -474,7 +472,7 @@ text-align: ${(() => {
                                     var tmp = "";
                                     order.line_items.map((o, index) => {
                                         tmp += `<div class="bg-white d-flex align-items-center" style="min-height: 46px;">`;
-                                        var array = ['product_name', 'sku', 'price', 'quantity', 'subtotal'];
+                                        let array = ['product_name', 'sku', 'price', 'quantity', 'subtotal'];
                                         array.map((v, index) => {
                                             var textAlign = (() => {
                                                 switch (index) {
