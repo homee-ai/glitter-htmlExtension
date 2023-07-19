@@ -130,7 +130,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                     return `
                                 <div class="d-flex flex-column fontHomee" style="${classStyle.ticket}" onclick="${
                                         gvc.event(() => {
-                                          
+                                            
                                             appConfig().changePage(gvc, "order_detail", {orderData: orderData}, {})
                                         })
                                     }">
@@ -358,7 +358,7 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
     }`)
 
                         let order: any = {}
-                        var subTotal = 0;
+
                         var b = ["1.5", "1.3", "1.3", "1", "1"]
                         var st1 = `font-family: 'Noto Sans TC';
 font-style: normal;
@@ -394,8 +394,6 @@ color: #292929;`
                             order_number: "#" + data.orderData.number,
                             datetime: data.orderData.date,
                             line_items: origin.line_items.map((dd: any) => {
-                                console.log("-----------line items-----------")
-                                console.log(dd)
                                 return {
                                     product_name: dd.name,
                                     sku: dd.sku,
@@ -432,6 +430,7 @@ color: #292929;`
                         return `${gvc.bindView({
                             bind: `order-container`,
                             view: () => {
+                                let subTotal = 0;
                                 if (loading) {
                                     return ``
                                 }
@@ -488,7 +487,7 @@ text-align: ${(() => {
                                     order.line_items.map((o: any, index: number) => {
                                         
                                         tmp += `<div class="bg-white d-flex align-items-center" style="min-height: 46px;">`;
-                                        var array = ['product_name', 'sku', 'price', 'quantity', 'subtotal']
+                                        let array = ['product_name', 'sku', 'price', 'quantity', 'subtotal']
                                         array.map((v, index) => {
                                             var textAlign = (() => {
                                                 switch (index) {
