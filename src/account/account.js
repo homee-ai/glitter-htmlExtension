@@ -274,7 +274,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         </div>
                                         <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;" onclick="${gvc.event(() => {
                                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                    if (emailRegex.test(widget.data.accountData.account)) {
+                                    if (!emailRegex.test(widget.data.accountData.account)) {
                                         alert("請輸入有效的 Email 格式！");
                                     }
                                     else if (!widget.data.accountData.account) {
