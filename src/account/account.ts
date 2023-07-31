@@ -237,27 +237,10 @@ Plugin.create(import.meta.url, (glitter) => {
                             })
                         }
                         function checkRegister() {
-                            dialog.dataLoading(true)
-                            User.checkUserExists(widget.data.accountData.account, (response) => {
-                                if (response === undefined) {
-                                    dialog.dataLoading(false)
-                                    dialog.showInfo("連線逾時")
-                                } else if (response) {
-                                    dialog.showInfo("此帳號已被使用")
-                                } else {
-
-                                    setTimeout(() => {
-                                        dialog.dataLoading(false)
-                                        appConfig().changePage(gvc, "register", {
-                                            pwd: widget.data.accountData.password,
-                                            account: widget.data.accountData.account,
-                                            third:vm.fet ? {type:'fet',uid:vm.fet} : undefined
-                                        }, {
-                                            animation: glitter.animation.fade
-                                        })
-                                    }, 500)
-
-                                }
+                            appConfig().changePage(gvc, "register", {
+                                third:vm.fet ? {type:'fet',uid:vm.fet} : undefined
+                            }, {
+                                animation: glitter.animation.fade
                             })
                         }
                         const vm={
@@ -604,7 +587,10 @@ Plugin.create(import.meta.url, (glitter) => {
                 function checkRegister() {
                     //todo 全部都填的話
                     const dialog = new Dialog(gvc)
-                    if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.name === '') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(widget.data.loginData.email)) {
+                        alert("請輸入有效的 Email 格式！");
+                    }else if (widget.data.loginData.gender === "-1" || widget.data.loginData.lastName === '' || widget.data.loginData.firstName === '' || widget.data.loginData.birthDay === '' || widget.data.loginData.name === '') {
                         dialog.showInfo("請填寫完整資料!")
                     } else {
                         let temp = {
@@ -613,7 +599,6 @@ Plugin.create(import.meta.url, (glitter) => {
                             last: widget.data.loginData.lastName,
                             inviteCode: (widget.data.loginData.inviteCode) || undefined,
                             email: widget.data.loginData.email,
-                            pwd: widget.data.loginData.password,
                             gender: widget.data.loginData.gender,
                             birth: widget.data.loginData.birthDay,
                             userName: widget.data.loginData.name,
@@ -685,8 +670,12 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         <div class="d-flex w-100 w-100 me-0">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}">
-                                                                <input class="w-100" placeholder="電子郵件地址或手機號碼" name="email" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                                <input class="w-100" placeholder="電子郵件地址(統一小寫)" name="email" onchange="${gvc.event((e: HTMLInputElement) => {
+                                                                    e.value = e.value.toLowerCase()
+                                                                    
                                                                     widget.data.loginData.email = e.value
+                                                                    
+                                                                    
                                                                 })}">                                                           
                                                             </div>                       
                                                         </div>
@@ -983,9 +972,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 </div>
                                                 <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e)=>{
-                                        email=e.value
-                                    })}">
+                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                                        e.value = e.value.toLowerCase();
+                                                        email=e.value
+                                                    })}">
                                                 </div>
                                                 <div class="d-flex d-none" style="margin-top: 32px">
                                                     <div class="authRow d-flex align-items-center">
@@ -1006,17 +996,23 @@ Plugin.create(import.meta.url, (glitter) => {
                                             <!--todo click-->
                                                 <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
                                                     const dialog=new Dialog();
-                                        dialog.dataLoading(true)
-                                        User.forgetPwd(email,(response,code)=>{
-                                            dialog.dataLoading(false)
-                                            if(response){
-                                                dialog.showInfo("驗證信已送出")
-                                                gvc.glitter.goBack()
-                                            }else{
-                                                dialog.showInfo("驗證信送出失敗")
-                                            }
-                                        })
-                                    })}">
+                                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                                    if (emailRegex.test(email)) {
+                                                        dialog.dataLoading(true)
+                                                        User.forgetPwd(email,(response,code)=>{
+                                                            dialog.dataLoading(false)
+                                                            if(response){
+                                                                dialog.showInfo("驗證信已送出")
+                                                                gvc.glitter.goBack()
+                                                            }else{
+                                                                dialog.showInfo("驗證信送出失敗")
+                                                            }
+                                                        })
+                                                    } else {
+                                                        alert("請輸入有效的 Email 格式！");
+                                                    }
+                                        
+                                                })}">
                                                     傳送驗證信
                                                 </div>
                                             </div>
