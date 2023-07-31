@@ -255,7 +255,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="loginInf d-flex flex-column align-items-center">
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                <input class="w-100 border-0 bg-white" placeholder="電子郵件地址或手機號碼" onchange="${gvc.event((e) => {
+                                                <input class="w-100 border-0 bg-white" placeholder="電子郵件地址" onchange="${gvc.event((e) => {
                                     widget.data.accountData.account = e.value;
                                 })}">
                                             </div>
@@ -273,7 +273,11 @@ Plugin.create(import.meta.url, (glitter) => {
                                            
                                         </div>
                                         <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;" onclick="${gvc.event(() => {
-                                    if (!widget.data.accountData.account) {
+                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    if (emailRegex.test(widget.data.accountData.account)) {
+                                        alert("請輸入有效的 Email 格式！");
+                                    }
+                                    else if (!widget.data.accountData.account) {
                                         alert("帳號不得為空!");
                                     }
                                     else if (widget.data.accountData.password.length < 6) {
