@@ -244,7 +244,7 @@ Plugin.create(import.meta.url, (glitter) => {
                             view: () => {
                                 return `
                             <main style="overflow-x: hidden;">
-                                <div class="" style="position: absolute;">
+                                <div class="w-100" style="position: absolute;">
                                     <lottie-player src="${new URL('../img/component/login/login_page.json', import.meta.url)}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
                                     appConfig().setHome(gvc, 'home', {});
                                 })}" style="width: 100%;height: 900px;position: absolute;transform: translateY(-350px);"  loop  autoplay></lottie-player>
@@ -294,8 +294,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })}">註冊帳號</div>
                                         <div class="w-100 text-danger text-center mt-2 ${vm.fet ? '' : 'd-none'}">驗證成功，登入或註冊後即可綁定遠傳帳號</div>
                                         <div class="moreLogin d-flex justify-content-center align-items-center">更多的登入方式</div>
-                                        <div class="d-flex  justify-content-center align-items-center w-100">
-                                            <img src="${new URL('../img/component/login/FB.svg', import.meta.url)}" style="height: 50px;width:50px;" alt="" onclick="${gvc.event(() => {
+                                        <div class="d-flex  justify-content-center align-items-center w-100" style="padding-top:16px;">
+                                            <img src="${new URL('../img/component/login/FB.svg', import.meta.url)}" style="height: 40px;width:40px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" alt="" onclick="${gvc.event(() => {
                                     glitter.runJsInterFace("loginWithFB", {}, (response) => {
                                         dialog.dataLoading(false);
                                         if (response.email && response.token) {
@@ -322,7 +322,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         }
                                     });
                                 })}">
-                                            <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 55px;width:55px;margin-left: 16px;margin-right: 16px;" onclick="${gvc.event(() => {
+                                            <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 40px;width:40px;margin-left: 32px;margin-right: 32px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" onclick="${gvc.event(() => {
                                     dialog.dataLoading(true);
                                     glitter.runJsInterFace("loginWithApple", {}, (response) => {
                                         dialog.dataLoading(false);
@@ -350,7 +350,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         }
                                     });
                                 })}" alt="">
-                                            <img src="${new URL('../img/component/login/FET.svg', import.meta.url)}"  style="height: 36px;width:36px;" onclick="${gvc.event(() => {
+                                            <img src="${new URL('../img/component/login/FET.svg', import.meta.url)}"  style="height: 40px;width:40px;" onclick="${gvc.event(() => {
                                     dialog.dataLoading(true);
                                     glitter.runJsInterFace("loginWithFet", {}, (response) => {
                                         dialog.dataLoading(false);
