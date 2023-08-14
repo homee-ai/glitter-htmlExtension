@@ -816,7 +816,7 @@ color: #1E1E1E;">${data.title}</div>
                                 view: () => {
                                     if (topInset !== undefined && bottomInset !== undefined) {
                                         return /* HTML */ `
-                                        <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset - 20}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
+                                        <nav class="bg-white w-100 position-fixed z-index-99"  style="padding-top: ${topInset}px;width: 100vw;box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);z-index: 9999;">
                                             <div class="d-flex justify-content-around w-100 align-items-center mt-auto" style="margin:0px;height: 63px; padding: 0 16px; background: #FFFFFF;position:relative;">
                                                 <div class="me-auto p-0 d-flex align-items-center" style="">
                                                     <img class="" src="https://stg-homee-api-public.s3.amazonaws.com/scene/undefined/1676803803897" style="width: 24px;height: 24px;margin-right: 16px" alt="" onclick="${gvc.event(() => {
@@ -870,7 +870,7 @@ color: #1E1E1E;">${data.title}</div>
                                                         })}
                                             </banner>       
                                         </nav>
-                                        <main style="background: white;padding-top:${topInset - 20 + (((gBundle.object.subCategory ?? []).length>0) ? 150:120)}px;padding-left: 23px;padding-right: 23px;">
+                                        <main style="background: white;padding-top:${topInset + 150}px;padding-left: 23px;padding-right: 23px;">
                                             ${gvc.bindView({
                                                 bind:"cardGroup",
                                                 view :()=>{                                                     

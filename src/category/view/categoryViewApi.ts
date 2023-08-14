@@ -48,7 +48,6 @@ export class ViewModel {
             `)
 
             categoryAPI.getSubcategoryList(category, (returnData:any) => {
-
                 getHtml(gvc.bindView({
                     bind: "subCategoryRow",
                     view: () => {
