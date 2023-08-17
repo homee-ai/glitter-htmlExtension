@@ -302,7 +302,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         word-wrap:break-word;
                                         word-break:break-all;                                                                               
                                     }
-                                
+                                    .introText h3{
+                                        color:black;
+                                    }
                                     
                                 `);
                                 return `
