@@ -316,9 +316,9 @@ Plugin.create(import.meta.url, (glitter, editMode) => {
                                         color: #292929;
                                         white-space:normal;
                                         word-wrap:break-word;
-                                        word-break:break-all;        
-                                                                       
+                                        word-break:break-all;                                                                               
                                     }
+                                
                                     
                                 `)
                                 return `
