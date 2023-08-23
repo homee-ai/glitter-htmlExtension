@@ -81,10 +81,15 @@ Plugin.create(import.meta.url, (glitter) => {
                     data: {},
                     loading: true
                 }
+
                 appConfig().getUserData({
                     callback: (response) => {
+
                         vm.data = response
                         vm.loading = false
+                        console.log("------------test------------")
+                        console.log(response)
+                        gvc.notifyDataChange('baseUserInf');
                     }
                 })
                 return {
@@ -94,6 +99,8 @@ Plugin.create(import.meta.url, (glitter) => {
                             dataList: [{obj: vm, key: 'loading'}],
                             bind: "baseUserInf",
                             view: () => {
+                                console.log("-------------------------")
+                                console.log(vm.data)
                                 if (vm.loading) {
                                     return ``
                                 }

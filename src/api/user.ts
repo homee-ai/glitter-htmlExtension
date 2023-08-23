@@ -71,7 +71,9 @@ export class User {
             contentType: 'application/json; charset=utf-8',
             success: (suss: any) => {
                 if(suss){
+
                     suss.pwd=pwd
+
                     appConfig().setUserData({
                         value:suss,callback:(response)=>{
                             Plugin.setAppConfig('HOMEEAppConfig',{
