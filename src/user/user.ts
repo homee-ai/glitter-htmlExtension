@@ -890,8 +890,6 @@ ${
                     status1: {},
                     status2: {}
                 }
-
-
             },
             render: (gvc, widget, setting, hoverID) => {
                 enum voucherStatus {
@@ -987,7 +985,7 @@ ${
                                         <div class="voucherCard overflow-hidden" style="background: #FFFFFF;border-radius: 20px;padding:8px 0;box-shadow: -2px 2px 15px rgba(0, 0, 0, 0.05);margin-bottom:16px;position:relative;" onclick="${gvc.event(() => {
                                         })}"> 
                                             <div class="d-flex" style="padding: 8px 22px;">
-                                                <img src="${coupon.vendor_icon.href}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
+                                                <img src="${coupon.vendor_icon}" style="width: 24px;height: 24px;border-radius: 50%;margin-right: 8px;">
                                                 <div class="vendor_name">${coupon.vendor_name}</div>
                                                 <div class="ms-auto" style="font-weight: 700;font-size: 12px;line-height: 150%;color: #FE5541;" onclick="${gvc.event(() => {
                                                     

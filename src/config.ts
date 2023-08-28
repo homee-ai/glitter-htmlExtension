@@ -27,7 +27,8 @@ export function appConfig(): {
     getBottomInset: (callback: (inset: number) => void) => void
 } {
     return Plugin.getAppConfig("HOMEEAppConfig", {
-        serverURL: "http://127.0.0.1:3080",
+        // serverURL: "http://127.0.0.1:3080",
+        serverURL: "https://machi-app.com",
         token: "",
         uploadImage: (photoFile: any, callback: (result: string) => void) => {
             const glitter = (window as any).glitter
@@ -128,6 +129,7 @@ export function appConfig(): {
         setUserData: ({value, callback}: { value: any, callback: (result: any) => void }) => {
             const glitter = (window as any).glitter
             // todo value.pwd cry
+            console.log(JSON.stringify(value))
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response: any) => {
                 callback(response)
             })

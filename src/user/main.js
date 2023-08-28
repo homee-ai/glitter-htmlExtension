@@ -79,6 +79,9 @@ Plugin.create(import.meta.url, (glitter) => {
                     callback: (response) => {
                         vm.data = response;
                         vm.loading = false;
+                        console.log("------------test------------");
+                        console.log(response);
+                        gvc.notifyDataChange('baseUserInf');
                     }
                 });
                 return {
@@ -89,6 +92,8 @@ Plugin.create(import.meta.url, (glitter) => {
                             bind: "baseUserInf",
                             view: () => {
                                 var _a, _b;
+                                console.log("-------------------------");
+                                console.log(vm.data);
                                 if (vm.loading) {
                                     return ``;
                                 }

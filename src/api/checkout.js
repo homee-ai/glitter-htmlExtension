@@ -215,7 +215,7 @@ export class Checkout {
                                     id: dd.id,
                                     note: dd.config.note,
                                     vendor_name: dd.config.vendor ? dd.config.vendor.name : 'HOMEE',
-                                    vendor_icon: dd.config.vendor ? dd.config.vendor.icon : 'img/coupon1.svg',
+                                    vendor_icon: dd.config.vendor ? dd.config.vendor.icon : 'https://prd-homee-api-public.s3.amazonaws.com/file/307772967/1692774426007-coupon1.svg',
                                     startTime: dd.startTime,
                                     endTime: dd.endTime,
                                     formatEndTime: getEndtime(dd.endTime),

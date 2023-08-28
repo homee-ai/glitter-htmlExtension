@@ -251,7 +251,11 @@ Plugin.create(import.meta.url, (glitter) => {
                             dataList:[{obj:vm,key:'fet'}],
                             view: () => {
                                 return `
-                            <main style="overflow-x: hidden;">
+                            <main style="overflow-x: hidden;position: relative;">
+                                
+                                <img src="https://homee-ai.github.io/glitter-htmlExtension/src/img/component/left-arrow.svg" alt="L" style="width: 36px;height: 36px;position: absolute;top:${widget.data.topInset + 20}px;left:16px;z-index: 3;background: white;border-radius: 50%;padding: 5px;" onclick="${gvc.event(()=>{
+                                    appConfig().setHome(gvc,"home")
+                                })}">
                                 <div class="w-100" style="position: absolute;">
                                     <lottie-player src="${new URL('../img/component/login/login_page.json', import.meta.url)}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
                                     appConfig().setHome(gvc, 'home', {})

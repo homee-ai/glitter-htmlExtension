@@ -3,7 +3,7 @@ import { Api } from "./homee/api/homee-api.js";
 import { Dialog } from "./dialog/dialog-mobile.js";
 export function appConfig() {
     return Plugin.getAppConfig("HOMEEAppConfig", {
-        serverURL: "http://127.0.0.1:3080",
+        serverURL: "https://machi-app.com",
         token: "",
         uploadImage: (photoFile, callback) => {
             const glitter = window.glitter;
@@ -97,6 +97,7 @@ export function appConfig() {
         },
         setUserData: ({ value, callback }) => {
             const glitter = window.glitter;
+            console.log(JSON.stringify(value));
             glitter.setPro("daiqdmoiwme21", JSON.stringify(value), (response) => {
                 callback(response);
             });
