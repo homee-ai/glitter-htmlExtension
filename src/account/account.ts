@@ -968,9 +968,9 @@ Plugin.create(import.meta.url, (glitter) => {
                                 if (widget.data.topInset !== undefined) {
                                     return `
                                     <main style="position: relative">  
-                                        <img src="https://homee-ai.github.io/glitter-htmlExtension/src/img/component/left-arrow.svg" alt="L" style="width: 28px;height: 28px;position: absolute;top:20px;left:16px;z-index: 3;" onclick="${gvc.event(() => {
-                                        appConfig().setHome(gvc, "login")
-                                    })}">                                     
+                                        <img src="https://homee-ai.github.io/glitter-htmlExtension/src/img/component/left-arrow.svg" alt="L" style="width: 28px;height: 28px;position: absolute;top:${20 + widget.data.topInset}px;left:16px;z-index: 3;" onclick="${gvc.event(()=>{
+                                            appConfig().setHome(gvc,"login")
+                                        })}">                                     
                                         <div class="w-100" style="position: absolute;">
                                             
                                             <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
