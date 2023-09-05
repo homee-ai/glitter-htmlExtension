@@ -261,6 +261,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                 <input class="w-100 border-0 bg-white " style="text-transform: lowercase;" placeholder="電子郵件地址" onchange="${gvc.event((e) => {
+                                    e.value = e.value.toLowerCase();
                                     widget.data.accountData.account = e.value;
                                 })}">
                                             </div>
@@ -277,7 +278,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })}">忘記密碼？</div>
                                            
                                         </div>
-                                        <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;padding:0 12px;" onclick="${gvc.event(() => {
+     <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;padding:0 12px;" onclick="${gvc.event(() => {
                                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                                     if (!emailRegex.test(widget.data.accountData.account)) {
                                         alert("請輸入有效的 Email 格式！");
@@ -305,7 +306,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                         dialog.dataLoading(false);
                                         if (response.email && response.token) {
                                             dialog.dataLoading(true);
-                                            User.loginFB(response.email, response.token, vm.fet ? { type: 'fet', uid: vm.fet } : undefined, (data, code) => {
+                                            User.loginFB(response.email, response.token, vm.fet ? {
+                                                type: 'fet',
+                                                uid: vm.fet
+                                            } : undefined, (data, code) => {
                                                 dialog.dataLoading(false);
                                                 if (!data) {
                                                     dialog.showInfo('登入失敗');
@@ -327,7 +331,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                         }
                                     });
                                 })}">
-                                            <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 40px;width:40px;margin-left: 32px;margin-right: 32px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" onclick="${gvc.event(() => {
+    <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 40px;width:40px;margin-left: 32px;margin-right: 32px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" onclick="${gvc.event(() => {
                                     dialog.dataLoading(true);
                                     glitter.runJsInterFace("loginWithApple", {}, (response) => {
                                         dialog.dataLoading(false);
@@ -673,10 +677,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         <div class="d-flex w-100 w-100 me-0">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}">
-                                                                <input class="w-100" placeholder="電子郵件地址(統一小寫)" name="email" onchange="${gvc.event((e) => {
+    <input class="w-100" placeholder="電子郵件地址(統一小寫)" name="email" onchange="${gvc.event((e) => {
                                         e.value = e.value.toLowerCase();
                                         widget.data.loginData.email = e.value;
-                                    })}">                                                           
+                                    })}">            
                                                             </div>                       
                                                         </div>
                                                         <div class="d-flex w-100 w-100 me-0">
@@ -966,7 +970,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 </div>
                                                 <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e) => {
+    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e) => {
                                         e.value = e.value.toLowerCase();
                                         email = e.value;
                                     })}">

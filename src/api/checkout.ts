@@ -638,7 +638,6 @@ export class Checkout {
                                                             temp = temp.replace(" ===" , "");
                                                             return temp;
                                                         }
-
                                                     case 'products':
                                                         if (c.app_products.length > 1){
                                                             c.app_products.map((data:any,index:number)=>{
