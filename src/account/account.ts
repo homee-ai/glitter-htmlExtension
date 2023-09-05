@@ -197,10 +197,10 @@ Plugin.create(import.meta.url, (glitter) => {
                `)
                 return {
                     view: () => {
-                        glitter.share.viewGuide=false
-                        widget.data.accountData= {
-                            account : '',
-                            password : ''
+                        glitter.share.viewGuide = false
+                        widget.data.accountData = {
+                            account: '',
+                            password: ''
                         };
 
                         gvc.addMtScript([{src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js`}], () => {
@@ -222,7 +222,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         function login(){
                             widget.data.accountData.account = widget.data.accountData.account.toLowerCase();
                             User.login({
-                                third:vm.fet ? {type:'fet',uid:vm.fet} : undefined,
+                                third: vm.fet ? {type: 'fet', uid: vm.fet} : undefined,
                                 pwd: widget.data.accountData.password,
                                 account: widget.data.accountData.account,
                                 callback(data: { user_id: number; last_name: string; first_name: string; name: string; photo: string; AUTH: string } | boolean): void {
@@ -237,6 +237,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                 },
                             })
                         }
+
                         function checkRegister() {
                             appConfig().changePage(gvc, "register", {
                                 third:vm.fet ? {type:'fet',uid:vm.fet} : undefined
@@ -244,12 +245,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                 animation: glitter.animation.fade
                             })
                         }
-                        const vm={
-                            fet:''
+
+                        const vm = {
+                            fet: ''
                         }
                         return gvc.bindView({
                             bind: `mainView`,
-                            dataList:[{obj:vm,key:'fet'}],
+                            dataList: [{obj: vm, key: 'fet'}],
                             view: () => {
                                 return `
                             <main style="overflow-x: hidden;position: relative;">
@@ -269,6 +271,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
                                                 <input class="w-100 border-0 bg-white " style="text-transform: lowercase;" placeholder="電子郵件地址" onchange="${gvc.event((e: HTMLInputElement) => {
+                                    e.value=e.value.toLowerCase() 
                                     widget.data.accountData.account = e.value;
                                 })}">
                                             </div>
@@ -285,26 +288,26 @@ Plugin.create(import.meta.url, (glitter) => {
                                 })}">忘記密碼？</div>
                                            
                                         </div>
-                                        <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;padding:0 12px;" onclick="${gvc.event(() => {
-                                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                            if (!emailRegex.test(widget.data.accountData.account)){
-                                                alert("請輸入有效的 Email 格式！");
-                                            }
-                                            else if (!widget.data.accountData.account){
-                                                alert("帳號不得為空!");
-                                            }else if (widget.data.accountData.password.length < 6){
-                                                alert("密碼必須大於6位數");
-                                            }else {
-                                                // checkRegister();
-                                                login();
-                                            }
-                                            
-                                        })}">
+     <div class="loginBTN d-flex justify-content-center align-items-center" style="margin-top: 40px;height: 56px;padding:0 12px;" onclick="${gvc.event(() => {
+                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    if (!emailRegex.test(widget.data.accountData.account)){
+                                        alert("請輸入有效的 Email 格式！");
+                                    }
+                                    else if (!widget.data.accountData.account){
+                                        alert("帳號不得為空!");
+                                    }else if (widget.data.accountData.password.length < 6){
+                                        alert("密碼必須大於6位數");
+                                    }else {
+                                        // checkRegister();
+                                        login();
+                                    }
+
+                                })}">
                                             登入
                                         </div>
-                                        <div class="w-100 d-flex align-items-center justify-content-center" style="margin-top:16px;font-weight: 500;font-size: 18px;line-height: 26px;font-feature-settings: 'pnum' on, 'lnum' on;color: #1E1E1E;" onclick="${gvc.event(()=>{
-                                            checkRegister();
-                                        })}">註冊帳號</div>
+                                        <div class="w-100 d-flex align-items-center justify-content-center" style="margin-top:16px;font-weight: 500;font-size: 18px;line-height: 26px;font-feature-settings: 'pnum' on, 'lnum' on;color: #1E1E1E;" onclick="${gvc.event(() => {
+                                    checkRegister();
+                                })}">註冊帳號</div>
                                         <div class="w-100 text-danger text-center mt-2 ${vm.fet ? '' : 'd-none'}">驗證成功，登入或註冊後即可綁定遠傳帳號</div>
                                         <div class="moreLogin d-flex justify-content-center align-items-center">更多的登入方式</div>
                                         <div class="d-flex  justify-content-center align-items-center w-100" style="padding-top:16px;">
@@ -313,19 +316,22 @@ Plugin.create(import.meta.url, (glitter) => {
                                         dialog.dataLoading(false)
                                         if (response.email && response.token) {
                                             dialog.dataLoading(true)
-                                            User.loginFB(response.email,response.token,vm.fet ? {type:'fet',uid:vm.fet} : undefined,(data, code)=>{
+                                            User.loginFB(response.email, response.token, vm.fet ? {
+                                                type: 'fet',
+                                                uid: vm.fet
+                                            } : undefined, (data, code) => {
                                                 dialog.dataLoading(false)
                                                 if (!data) {
                                                     dialog.showInfo('登入失敗')
-                                                } else if((data as any).type == 'signup'){
+                                                } else if ((data as any).type == 'signup') {
                                                     appConfig().changePage(gvc, "register", {
                                                         pwd: gvc.glitter.getUUID(),
                                                         account: response.email,
-                                                        third:(data as any)['third']
+                                                        third: (data as any)['third']
                                                     }, {
                                                         animation: glitter.animation.fade
                                                     })
-                                                }else {
+                                                } else {
                                                     dialog.showInfo('登入成功!')
                                                     appConfig().setHome(gvc, 'user_setting', {})
                                                 }
@@ -333,54 +339,54 @@ Plugin.create(import.meta.url, (glitter) => {
                                         }
                                     })
                                 })}">
-                                            <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 40px;width:40px;margin-left: 32px;margin-right: 32px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" onclick="${
-                                                gvc.event(() => {
-                                                    dialog.dataLoading(true)
-                                                    glitter.runJsInterFace("loginWithApple", {}, (response) => {
-                                                        dialog.dataLoading(false)
-                                                        if(response.result){
-                                                            dialog.dataLoading(true)
-                                                            User.loginApple(response.token,response.bundle,(data, code)=>{
-                                                                dialog.dataLoading(false)
-                                                                if (!data) {
-                                                                    dialog.showInfo('登入失敗')
-                                                                } else if((data as any).type == 'signup'){
-                                                                    appConfig().changePage(gvc, "register", {
-                                                                        pwd: gvc.glitter.getUUID(),
-                                                                        account: (data as any)['third'].email,
-                                                                        third:(data as any)['third']
-                                                                    }, {
-                                                                        animation: glitter.animation.fade
-                                                                    })
-                                                                }else {
-                                                                    dialog.showInfo('登入成功!')
-                                                                    appConfig().setHome(gvc, 'user_setting', {})
-                                                                }
-                                                            })
-                                                        }
-                                                    })
+    <img src="${new URL('../img/component/login/apple.svg', import.meta.url)}" style="height: 40px;width:40px;margin-left: 32px;margin-right: 32px;filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));" onclick="${
+                                    gvc.event(() => {
+                                        dialog.dataLoading(true)
+                                        glitter.runJsInterFace("loginWithApple", {}, (response) => {
+                                            dialog.dataLoading(false)
+                                            if(response.result){
+                                                dialog.dataLoading(true)
+                                                User.loginApple(response.token,response.bundle,(data, code)=>{
+                                                    dialog.dataLoading(false)
+                                                    if (!data) {
+                                                        dialog.showInfo('登入失敗')
+                                                    } else if((data as any).type == 'signup'){
+                                                        appConfig().changePage(gvc, "register", {
+                                                            pwd: gvc.glitter.getUUID(),
+                                                            account: (data as any)['third'].email,
+                                                            third:(data as any)['third']
+                                                        }, {
+                                                            animation: glitter.animation.fade
+                                                        })
+                                                    }else {
+                                                        dialog.showInfo('登入成功!')
+                                                        appConfig().setHome(gvc, 'user_setting', {})
+                                                    }
+                                                })
+                                            }
+                                        })
                                                 })
                                             }" alt="">
                                             <img src="${new URL('../img/component/login/FET.svg', import.meta.url)}"  style="height: 40px;width:40px;" onclick="${gvc.event(() => {
                                     dialog.dataLoading(true)
                                     glitter.runJsInterFace("loginWithFet", {}, (response) => {
                                         dialog.dataLoading(false)
-                                       if(response.result){
-                                           User.loginFet(response.fet,(data, code)=>{
-                                               dialog.dataLoading(false)
-                                               if (!data) {
-                                                   dialog.showInfo('登入失敗')
-                                               } else if((data as any).type == 'signup'){
-                                                  vm.fet=(data as any)['third'].uid
-                                                   dialog.showInfo('驗證成功，登入或註冊後即可綁定遠傳帳號!')
-                                               }else {
-                                                   dialog.showInfo('登入成功!')
-                                                   appConfig().setHome(gvc, 'user_setting', {})
-                                               }
-                                           })
-                                       }else{
-                                           dialog.showInfo('登入失敗')
-                                       }
+                                        if (response.result) {
+                                            User.loginFet(response.fet, (data, code) => {
+                                                dialog.dataLoading(false)
+                                                if (!data) {
+                                                    dialog.showInfo('登入失敗')
+                                                } else if ((data as any).type == 'signup') {
+                                                    vm.fet = (data as any)['third'].uid
+                                                    dialog.showInfo('驗證成功，登入或註冊後即可綁定遠傳帳號!')
+                                                } else {
+                                                    dialog.showInfo('登入成功!')
+                                                    appConfig().setHome(gvc, 'user_setting', {})
+                                                }
+                                            })
+                                        } else {
+                                            dialog.showInfo('登入失敗')
+                                        }
                                     })
                                 })}" alt="" >
                                         </div>
@@ -433,8 +439,8 @@ Plugin.create(import.meta.url, (glitter) => {
                     birthDay: '',
                     name: '',
                     inviteCode: '',
-                    email:'',
-                    pwd:''
+                    email: '',
+                    pwd: ''
                 },
                 topInset: 10,
                 background: new URL('../img/component/login/login_page.json', import.meta.url),
@@ -603,7 +609,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         dialog.showInfo("請填寫完整資料!")
                     } else {
                         let temp = {
-                            third:gvc.parameter.pageConfig?.obj.data.third,
+                            third: gvc.parameter.pageConfig?.obj.data.third,
                             first: widget.data.loginData.firstName,
                             last: widget.data.loginData.lastName,
                             inviteCode: (widget.data.loginData.inviteCode) || undefined,
@@ -615,7 +621,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         dialog.dataLoading(true)
 
                         User.register({
-                            third:gvc.parameter.pageConfig?.obj.data.third,
+                            third: gvc.parameter.pageConfig?.obj.data.third,
                             first: widget.data.loginData.firstName,
                             last: widget.data.loginData.lastName,
                             inviteCode: (widget.data.loginData.inviteCode) || undefined,
@@ -664,13 +670,13 @@ Plugin.create(import.meta.url, (glitter) => {
                                 if (widget.data.topInset !== undefined && widget.data.loginData.account !== undefined) {
                                     return `
                                         <main style="overflow-x: hidden;position: relative">
-                                            <img src="https://homee-ai.github.io/glitter-htmlExtension/src/img/component/left-arrow.svg" alt="L" style="width: 28px;height: 28px;position: absolute;top:${widget.data.topInset + 20}px;left:16px;z-index: 3;" onclick="${gvc.event(()=>{
-                                                appConfig().setHome(gvc,"login")
-                                            })}">
+                                            <img src="https://homee-ai.github.io/glitter-htmlExtension/src/img/component/left-arrow.svg" alt="L" style="width: 28px;height: 28px;position: absolute;top:${widget.data.topInset + 20}px;left:16px;z-index: 3;" onclick="${gvc.event(() => {
+                                        appConfig().setHome(gvc, "login")
+                                    })}">
                                             <div class="w-100" style="position: absolute;">
                                                 <lottie-player src="${new URL('../img/component/login/login_page.json', import.meta.url)}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                                    
-                                                })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
+
+                                    })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                             </div>
                                             <div class="loginBoard d-flex flex-column align-items-center">
                                                 <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="LOGO">
@@ -679,51 +685,51 @@ Plugin.create(import.meta.url, (glitter) => {
                                                         <div class="d-flex w-100 w-100 me-0">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}">
-                                                                <input class="w-100" placeholder="電子郵件地址(統一小寫)" name="email" onchange="${gvc.event((e: HTMLInputElement) => {
-                                                                    e.value = e.value.toLowerCase()
-                                                                    
-                                                                    widget.data.loginData.email = e.value
-                                                                    
-                                                                    
-                                                                })}">                                                           
+    <input class="w-100" placeholder="電子郵件地址(統一小寫)" name="email" onchange="${gvc.event((e: HTMLInputElement) => {
+                                        e.value = e.value.toLowerCase()
+
+                                        widget.data.loginData.email = e.value
+
+
+                                    })}">            
                                                             </div>                       
                                                         </div>
                                                         <div class="d-flex w-100 w-100 me-0">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/password.svg', import.meta.url)}">
                                                                 <input class="w-100" placeholder="密碼" name="password" type="password" onchange="${gvc.event((e: HTMLInputElement) => {
-                                                                    widget.data.loginData.password = e.value
-                                                                })}">                                                           
+                                        widget.data.loginData.password = e.value
+                                    })}">                                                           
                                                             </div>                       
                                                         </div>
                                                         <div class="d-flex w-100">
                                                             <div class="registerElement d-flex elementMargin">                                                           
                                                                 <img src="${new URL('../img/component/login/L.svg', import.meta.url)}">
                                                                 <input class="" placeholder="姓氏" name="last" onchange="${gvc.event((e: HTMLInputElement) => {
-                                                                    widget.data.loginData.firstName = e.value
-                                                                })}">                                                           
+                                        widget.data.loginData.firstName = e.value
+                                    })}">                                                           
                                                             </div>
                                                             <div class="registerElement d-flex  elementMargin">
                                                                 <img src="${new URL('../img/component/login/F.svg', import.meta.url)}">
                                                                 <input class="" placeholder="名稱" name="name" value="" onchange="${gvc.event((e: HTMLInputElement) => {
-                                            widget.data.loginData.lastName = e.value
-                                        })}">
+                                        widget.data.loginData.lastName = e.value
+                                    })}">
                                                             </div>
                                                         </div>
                                                         <div class="d-flex w-100 w-100 me-0">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/addUser.svg', import.meta.url)}">
                                                                 <input class="w-100" placeholder="用戶名稱" name="name" onchange="${gvc.event((e: HTMLInputElement) => {
-                                                                    widget.data.loginData.name = e.value
-                                                                })}">                                                           
+                                        widget.data.loginData.name = e.value
+                                    })}">                                                           
                                                             </div>                       
                                                         </div>
                                                         <div class="d-flex w-100">
                                                             <div class="registerElement d-flex elementMargin">
                                                                 <img src="${new URL('../img/component/login/profile.svg', import.meta.url)}">
                                                                 <select name="gender" style="background: none;color: black;" onchange="${gvc.event((e: HTMLInputElement) => {
-                                            widget.data.loginData.gender = e.value;
-                                        })}">
+                                        widget.data.loginData.gender = e.value;
+                                    })}">
                                                                     <option selected value="-1" hidden>性別</option>
                                                                     <option  value="1">男性</option>
                                                                     <option  value="0">女性</option>
@@ -732,24 +738,24 @@ Plugin.create(import.meta.url, (glitter) => {
                                                             <div class="registerElement d-flex me-0 elementMargin ">
                                                                 <img src="${new URL('../img/component/login/calender.svg', import.meta.url)}">
                                                                 <input class="w-100" type="date" style="background: none;color: black;"  name="birth" onchange="${gvc.event((e: HTMLInputElement) => {
-                                            widget.data.loginData.birthDay = e.value
-                                        })}" placeholder="出生日期" placeholder="MM/DD/YYYY"
+                                        widget.data.loginData.birthDay = e.value
+                                    })}" placeholder="出生日期" placeholder="MM/DD/YYYY"
                                                                 onclick="${gvc.event((e: HTMLInputElement) => {
-                                            glitter.runJsInterFace("datePicker", {}, (response) => {
-                                                //todo
-                                                glitter.$(e).val(response.data)
-                                                widget.data.loginData.birthDay = response.data
-                                            })
-                                            //todo readonly先拿起來了 等上面能正確使用記得加回去
-                                        })}"   >
+                                        glitter.runJsInterFace("datePicker", {}, (response) => {
+                                            //todo
+                                            glitter.$(e).val(response.data)
+                                            widget.data.loginData.birthDay = response.data
+                                        })
+                                        //todo readonly先拿起來了 等上面能正確使用記得加回去
+                                    })}"   >
                                                             </div>
                                                         </div>     
                                                         <div class="d-flex w-100">
                                                             <div class="registerElement d-flex elementMargin w-100 me-0">                                                           
                                                                 <img src="${new URL('../img/component/login/TicketStar.svg', import.meta.url)}">
                                                                 <input class="w-100 me-0" placeholder="用戶邀請碼" name="inviteCode" onchange="${gvc.event((e: HTMLInputElement) => {
-                                            widget.data.loginData.inviteCode = e.value
-                                        })}">                                                           
+                                        widget.data.loginData.inviteCode = e.value
+                                    })}">                                                           
                                                             </div>                       
                                                         </div>  
                                                                         
@@ -758,8 +764,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 <!--註冊-->
                                                 <!--todo click-->
                                                     <div class="loginBTN d-flex justify-content-center align-items-center" style="${(exists) ? `margin-top: 50px;` : ``}" onclick="${gvc.event(() => {
-                                                        checkRegister()
-                                                    })} ">
+                                        checkRegister()
+                                    })} ">
                                                         註冊
                                                     </div>
                                                 </div>                        
@@ -930,7 +936,8 @@ Plugin.create(import.meta.url, (glitter) => {
                     color: #FD6A58;
                 }
                `)
-                widget.data.background=new URL('../img/component/login/login_page.json', import.meta.url)
+                widget.data.background = new URL('../img/component/login/login_page.json', import.meta.url)
+
                 function checkRegister() {
                     //    todo 驗證碼驗證 跳至新設定密碼
                     appConfig().changePage(gvc, "newPW");
@@ -952,7 +959,7 @@ Plugin.create(import.meta.url, (glitter) => {
                     gvc.notifyDataChange('mainView')
                 }, () => {
                 })
-                let email=''
+                let email = ''
                 return {
                     view: () => {
                         return gvc.bindView({
@@ -967,8 +974,8 @@ Plugin.create(import.meta.url, (glitter) => {
                                         <div class="w-100" style="position: absolute;">
                                             
                                             <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                                
-                                            })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
+
+                                    })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                         </div>
                                         <div class="loginBoard d-flex flex-column align-items-center">
                                             <img src="${new URL('../img/component/login/logo.svg', import.meta.url)}" alt="LOGO">
@@ -981,10 +988,10 @@ Plugin.create(import.meta.url, (glitter) => {
                                                 </div>
                                                 <div class="loginRow d-flex align-items-center" style="height: 50px;">
                                                     <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e:HTMLInputElement)=>{
-                                                        e.value = e.value.toLowerCase();
-                                                        email=e.value
-                                                    })}">
+    <input class="w-100 border-0" placeholder="電子郵件地址" style="height: 30px;" onchange="${gvc.event((e:HTMLInputElement)=>{
+                                        e.value = e.value.toLowerCase();
+                                        email=e.value
+                                    })}">
                                                 </div>
                                                 <div class="d-flex d-none" style="margin-top: 32px">
                                                     <div class="authRow d-flex align-items-center">
@@ -1004,24 +1011,24 @@ Plugin.create(import.meta.url, (glitter) => {
                         
                                             <!--todo click-->
                                                 <div class="loginBTN d-flex justify-content-center align-items-center" onclick="${gvc.event(() => {
-                                                    const dialog=new Dialog();
-                                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                                    if (emailRegex.test(email)) {
-                                                        dialog.dataLoading(true)
-                                                        User.forgetPwd(email,(response,code)=>{
-                                                            dialog.dataLoading(false)
-                                                            if(response){
-                                                                dialog.showInfo("驗證信已送出")
-                                                                gvc.glitter.goBack()
-                                                            }else{
-                                                                dialog.showInfo("驗證信送出失敗")
-                                                            }
-                                                        })
-                                                    } else {
-                                                        alert("請輸入有效的 Email 格式！");
-                                                    }
-                                        
-                                                })}">
+                                        const dialog=new Dialog();
+                                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                        if (emailRegex.test(email)) {
+                                            dialog.dataLoading(true)
+                                            User.forgetPwd(email,(response,code)=>{
+                                                dialog.dataLoading(false)
+                                                if(response){
+                                                    dialog.showInfo("驗證信已送出")
+                                                    gvc.glitter.goBack()
+                                                }else{
+                                                    dialog.showInfo("驗證信送出失敗")
+                                                }
+                                            })
+                                        } else {
+                                            alert("請輸入有效的 Email 格式！");
+                                        }
+
+                                    })}">
                                                     傳送驗證信
                                                 </div>
                                             </div>
@@ -1049,7 +1056,7 @@ Plugin.create(import.meta.url, (glitter) => {
                 background: new URL('../img/component/login/login_page.json', import.meta.url),
             },
             render: (gvc, widget, setting, hoverID) => {
-                widget.data.background=new URL('../img/component/login/login_page.json', import.meta.url)
+                widget.data.background = new URL('../img/component/login/login_page.json', import.meta.url)
                 gvc.addMtScript([{src: `https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js`}], () => {
                     gvc.notifyDataChange('mainView')
                 }, () => {
@@ -1220,7 +1227,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <main>
                                         <div class="w-100" style="position: absolute;">
                                             <lottie-player src="${widget.data.background}"  background="#F8F3ED"  speed="1"  onclick="${gvc.event((e) => {
-                                   
+
                                     })}" style="width: 100%;height: 1073px;position: absolute;transform: translateY(-40%);"  loop  autoplay></lottie-player>
                                             <img class="arrow" src="${new URL('../img/component/left-arrow.svg', import.meta.url)}" style="top: ${widget.data.topInset}" alt="">
                                         </div>
