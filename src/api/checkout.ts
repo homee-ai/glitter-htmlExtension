@@ -450,7 +450,7 @@ export class Checkout {
                                                         }
                                                         break;
                                                     case 'rebate':
-                                                        let rebateImg = `<img style="height:23px;width: 20px;margin-left: 4px;" src="${new URL('../img/rebate.svg', import.meta.url)}">`
+                                                        let rebateImg = `<img style="height:23px;width: 20px;margin-left: 4px;" src="https://prd-homee-api-public.s3.amazonaws.com/file/307772967/1693904208909-HP.svg">`
                                                         switch (c.accord_rule){
                                                             case "least":{
                                                                 switch (c.accord){
