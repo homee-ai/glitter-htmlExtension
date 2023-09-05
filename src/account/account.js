@@ -212,6 +212,7 @@ Plugin.create(import.meta.url, (glitter) => {
                         });
                         const dialog = new Dialog(gvc);
                         function login() {
+                            widget.data.accountData.account = widget.data.accountData.account.toLowerCase();
                             User.login({
                                 third: vm.fet ? { type: 'fet', uid: vm.fet } : undefined,
                                 pwd: widget.data.accountData.password,
@@ -259,7 +260,7 @@ Plugin.create(import.meta.url, (glitter) => {
                                     <div class="loginInf d-flex flex-column align-items-center w-100">
                                          <div class="loginRow d-flex w-100" style="border-bottom: 1px solid #FD6A58;">
                                                 <img src="${new URL('../img/component/login/message.svg', import.meta.url)}" alt="" style="width: 24px;height: 24px;">
-                                                <input class="w-100 border-0 bg-white" placeholder="電子郵件地址" onchange="${gvc.event((e) => {
+                                                <input class="w-100 border-0 bg-white " style="text-transform: lowercase;" placeholder="電子郵件地址" onchange="${gvc.event((e) => {
                                     widget.data.accountData.account = e.value;
                                 })}">
                                             </div>
